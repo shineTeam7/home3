@@ -1,0 +1,5 @@
+BBenchmark                                                      Mode  Cnt       Score      Error  Units
+commonTest.jmh.collection.TestIntObjectMapForEach.testKey     thrpt   20  160634.838 ¡À  629.687  ops/s
+commonTest.jmh.collection.TestIntObjectMapForEach.testValue   thrpt   20  216719.526 ¡À 1204.279  ops/s
+commonTest.jmh.collection.TestIntObjectMapForEach.testValue2  thrpt   20  210895.460 ¡À  938.900  ops/s
+commonTest.jmh.collection.TestIntObjectMapForEach.testValue3  thrpt   20  314354.491 ¡À  510.528  ops/s

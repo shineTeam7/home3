@@ -1,0 +1,40 @@
+IntInt:1000
+Benchmark                                     Mode  Cnt       Score      Error  Units
+commonTest.jmh.TestIntIntMap.testCustomKolo  thrpt   20   97014.991 ¡À 1530.787  ops/s
+commonTest.jmh.TestIntIntMap.testFastUtil    thrpt   20   73029.452 ¡À 1917.505  ops/s
+commonTest.jmh.TestIntIntMap.testMyKolo      thrpt   20  102629.185 ¡À 1991.344  ops/s
+commonTest.jmh.TestIntIntMap.testMyKolo2     thrpt   20  121037.252 ¡À 1036.770  ops/s
+commonTest.jmh.TestIntIntMap.testNature      thrpt   20   50813.025 ¡À 1251.721  ops/s
+commonTest.jmh.TestIntIntMap.testTrove       thrpt   20   44215.502 ¡À  982.752  ops/s
+
+IntObj:1000
+Benchmark                                        Mode  Cnt      Score      Error  Units
+commonTest.jmh.TestIntObjectMap.testCustomKolo  thrpt   20  61591.797 ¡À  866.060  ops/s
+commonTest.jmh.TestIntObjectMap.testFastUtil    thrpt   20  52921.382 ¡À 1542.242  ops/s
+commonTest.jmh.TestIntObjectMap.testMyKolo      thrpt   20  88996.460 ¡À 1806.134  ops/s
+commonTest.jmh.TestIntObjectMap.testNature      thrpt   20  56715.640 ¡À  753.697  ops/s
+commonTest.jmh.TestIntObjectMap.testTrove       thrpt   20  40518.392 ¡À 1206.687  ops/s
+
+ObjObj:100
+Benchmark                                           Mode  Cnt       Score      Error  Units
+commonTest.jmh.TestObjectObjectMap.testCustomKolo  thrpt   20  352469.151 ¡À 1858.983  ops/s
+commonTest.jmh.TestObjectObjectMap.testFastUtil    thrpt   20  351611.506 ¡À 1997.479  ops/s
+commonTest.jmh.TestObjectObjectMap.testMyKolo      thrpt   20  548681.089 ¡À 2766.503  ops/s
+commonTest.jmh.TestObjectObjectMap.testNature      thrpt   20  486100.492 ¡À 3412.902  ops/s
+commonTest.jmh.TestObjectObjectMap.testTrove       thrpt   20  222094.939 ¡À  491.920  ops/s
+
+ObjObj:1000
+Benchmark                                           Mode  Cnt      Score     Error  Units
+commonTest.jmh.TestObjectObjectMap.testCustomKolo  thrpt   20  34739.439 ¡À 458.830  ops/s
+commonTest.jmh.TestObjectObjectMap.testFastUtil    thrpt   20  36345.781 ¡À 187.212  ops/s
+commonTest.jmh.TestObjectObjectMap.testMyKolo      thrpt   20  46534.601 ¡À 453.975  ops/s
+commonTest.jmh.TestObjectObjectMap.testNature      thrpt   20  40965.567 ¡À 299.442  ops/s
+commonTest.jmh.TestObjectObjectMap.testTrove       thrpt   20  18884.758 ¡À  98.402  ops/s
+
+ObjObj:10000
+Benchmark                                           Mode  Cnt     Score    Error  Units
+commonTest.jmh.TestObjectObjectMap.testCustomKolo  thrpt   20  1634.421 ¡À  7.035  ops/s
+commonTest.jmh.TestObjectObjectMap.testFastUtil    thrpt   20  1754.882 ¡À  9.077  ops/s
+commonTest.jmh.TestObjectObjectMap.testMyKolo      thrpt   20  1721.942 ¡À 15.727  ops/s
+commonTest.jmh.TestObjectObjectMap.testNature      thrpt   20  1832.709 ¡À 41.800  ops/s
+commonTest.jmh.TestObjectObjectMap.testTrove       thrpt   20  1227.073 ¡À  8.656  ops/s

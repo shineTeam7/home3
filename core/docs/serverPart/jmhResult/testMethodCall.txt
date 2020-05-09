@@ -1,0 +1,6 @@
+Benchmark                                         Mode  Cnt          Score         Error  Units
+commonTest.jmh.TestMethodCall.testDefault        thrpt   20  668350648.953 ¡À  782817.017  ops/s
+commonTest.jmh.TestMethodCall.testMethodHandle   thrpt   20  368702312.453 ¡À  625405.442  ops/s
+commonTest.jmh.TestMethodCall.testMethodHandle2  thrpt   20  366693989.185 ¡À 5738530.431  ops/s
+commonTest.jmh.TestMethodCall.testMethodHandle3  thrpt   20    8992440.851 ¡À   36768.738  ops/s
+commonTest.jmh.TestMethodCall.testMethodInvoke   thrpt   20  293721729.555 ¡À 2883382.533  ops/s

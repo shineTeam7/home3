@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="tools_jar" name="tools_jar_preEncrypt">
+    <!--this file was created by Eclipse Runnable JAR file Export Wizard-->
+    <!--ANT 1.7 is required-->
+    <!--define folder properties-->
+    <property name="dir.m2repository" value="${user.home}/.m2/repository"/>
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.server" value="../../"/>
+    <property name="dir.preJarfile" value="../preJar"/>
+	<property name="dir.jarfile" value="../jar"/>
+    <target name="preTools_jar">
+        <jar destfile="${dir.preJarfile}/tools.jar">
+		    <manifest>
+                <attribute name="Main-Class" value="com.home.commonTool.app.AllToolsApp"/>
+                <attribute name="Class-Path" value=". tools_lib/mysql-connector-java-8.0.11.jar tools_lib/log4j-1.2.17.jar tools_lib/netty-all-4.1.32.Final.jar tools_lib/json-20170516.jar tools_lib/commons-codec-1.4.jar tools_lib/koloboke-impl-common-jdk8-1.0.0.jar tools_lib/koloboke-api-jdk8-1.0.0.jar tools_lib/poi-ooxml-3.16.jar tools_lib/poi-3.16.jar tools_lib/commons-collections4-4.1.jar tools_lib/poi-ooxml-schemas-3.16.jar tools_lib/xmlbeans-2.6.0.jar tools_lib/stax-api-1.0.1.jar tools_lib/curvesapi-1.04.jar tools_lib/commons-dbcp2-2.5.0.jar tools_lib/commons-logging-1.2.jar tools_lib/commons-pool2-2.6.0.jar"/>
+            </manifest>
+			<fileset dir="${dir.server}/toolProject/commonTool/target/classes"/>
+            <fileset dir="${dir.server}/toolProject/shineTool/target/classes"/>
+            <fileset dir="${dir.server}/toolProject/shine8/target/classes"/>
+        </jar>
+		<delete dir="${dir.jarfile}/tools_lib"/>
+        <mkdir dir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/mysql/mysql-connector-java/8.0.11/mysql-connector-java-8.0.11.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/log4j/log4j/1.2.17/log4j-1.2.17.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/io/netty/netty-all/4.1.32.Final/netty-all-4.1.32.Final.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/json/json/20170516/json-20170516.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/com/koloboke/koloboke-impl-common-jdk8/1.0.0/koloboke-impl-common-jdk8-1.0.0.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/com/koloboke/koloboke-api-jdk8/1.0.0/koloboke-api-jdk8-1.0.0.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/apache/poi/poi-ooxml/3.16/poi-ooxml-3.16.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/apache/poi/poi/3.16/poi-3.16.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/apache/commons/commons-collections4/4.1/commons-collections4-4.1.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/apache/poi/poi-ooxml-schemas/3.16/poi-ooxml-schemas-3.16.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/apache/xmlbeans/xmlbeans/2.6.0/xmlbeans-2.6.0.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/stax/stax-api/1.0.1/stax-api-1.0.1.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/com/github/virtuald/curvesapi/1.04/curvesapi-1.04.jar" todir="${dir.jarfile}/tools_lib"/>
+        <copy file="${dir.m2repository}/org/apache/commons/commons-dbcp2/2.5.0/commons-dbcp2-2.5.0.jar" todir="${dir.jarfile}/tools_lib"/>
+		<copy file="${dir.m2repository}/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" todir="${dir.jarfile}/tools_lib"/>
+		<copy file="${dir.m2repository}/org/apache/commons/commons-pool2/2.6.0/commons-pool2-2.6.0.jar" todir="${dir.jarfile}/tools_lib"/>
+    </target>
+</project>

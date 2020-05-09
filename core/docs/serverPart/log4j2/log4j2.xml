@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="1">
+	<properties>
+		<property name="log_path">${sys:log_path}</property>
+	</properties>
+	<Appenders>
+		<RollingRandomAccessFile name="DailyRollingFile" fileName="aa/test.log" filePattern="aa/test%d{yyyy-MM-dd}.log" immediateFlush="false">
+			<PatternLayout charset="UTF-8" pattern="[%d][%t][%p][%c:%L] %m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="file" level="info" additivity="false" includeLocation="true">
+			<AppenderRef ref="DailyRollingFile" />
+		</Logger>
+		<Root level="all" additivity="false" includeLocation="true">
+			<AppenderRef ref="DailyRollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

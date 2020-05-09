@@ -1,0 +1,7 @@
+[
+	{ "keys": ["super+d"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Delete Line.sublime-macro"} },
+	{ "keys": ["ctrl+option+down"], "command": "duplicate_line" },
+	{ "keys": ["shift+enter"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Add Line.sublime-macro"} },
+	{ "keys": ["alt+left"], "command": "jump_back" },
+	{ "keys": ["alt+right"], "command": "jump_forward" },
+]

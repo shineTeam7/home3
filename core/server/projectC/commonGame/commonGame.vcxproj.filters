@@ -1,0 +1,89 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{fa96f573-1a4c-43fe-9038-922763e4c6d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\control">
+      <UniqueIdentifier>{ef7dbef8-a935-484e-a7f4-f7c608c1bc1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\app">
+      <UniqueIdentifier>{eaac0ce2-8d04-4ac3-9846-e85a184cf3c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\global">
+      <UniqueIdentifier>{9c7eceb7-4f13-4e1d-b82c-d1648bdd9bb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\navmesh">
+      <UniqueIdentifier>{f04891ec-e334-4af5-9d59-cecd7ea64d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\extern">
+      <UniqueIdentifier>{5de45e56-38f9-48d1-9e78-607ae1c75dac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scene">
+      <UniqueIdentifier>{04c6bbbd-696c-4f3b-aab6-e04aa43ac20f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\app\GameApp.h">
+      <Filter>src\app</Filter>
+    </ClInclude>
+    <ClInclude Include="src\control\GameFactoryControl.h">
+      <Filter>src\control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\control\SceneControl.h">
+      <Filter>src\control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extern\ExportCall.h">
+      <Filter>src\extern</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extern\JavaExportMethod.h">
+      <Filter>src\extern</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extern\UnityExportMethod.h">
+      <Filter>src\extern</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global\GameC.h">
+      <Filter>src\global</Filter>
+    </ClInclude>
+    <ClInclude Include="src\navmesh\NavMesh.h">
+      <Filter>src\navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\navmesh\NavMeshHit.h">
+      <Filter>src\navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\navmesh\NavMeshPath.h">
+      <Filter>src\navmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Scene.h">
+      <Filter>src\scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\app\GameApp.cpp">
+      <Filter>src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="src\control\SceneControl.cpp">
+      <Filter>src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extern\JavaExportMethod.cpp">
+      <Filter>src\extern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extern\UnityExportMethod.cpp">
+      <Filter>src\extern</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global\GameC.cpp">
+      <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\navmesh\NavMesh.cpp">
+      <Filter>src\navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\navmesh\NavMeshHit.cpp">
+      <Filter>src\navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\navmesh\NavMeshPath.cpp">
+      <Filter>src\navmesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>src\scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

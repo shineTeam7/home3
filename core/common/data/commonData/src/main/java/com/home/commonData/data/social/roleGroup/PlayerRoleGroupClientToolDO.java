@@ -1,0 +1,22 @@
+package com.home.commonData.data.social.roleGroup;
+
+import com.home.commonData.data.func.FuncToolDO;
+import com.home.shineData.support.MapKeyInValue;
+
+import java.util.List;
+import java.util.Map;
+
+/** 玩家群客户端工具数据 */
+public class PlayerRoleGroupClientToolDO extends FuncToolDO
+{
+	/** 群数据组 */
+	@MapKeyInValue("groupID")
+	Map<Long,PlayerRoleGroupDO> groups;
+	/** 申请记录字典 */
+	@MapKeyInValue("data.groupID")
+	Map<Long,PlayerApplyRoleGroupSelfDO> applyDic;
+	/** 被邀请时是否可直接入群(无需同意) */
+	boolean canInviteInAbs;
+	/** 被邀请记录字典 */
+	List<InviteRoleGroupReceiveDO> inviteList;
+}

@@ -1,0 +1,7 @@
+<info>
+    <!--<cls path="data.BaseData"/>-->
+    <!--<cls path="net.request.BaseRequest"/>-->
+    <!--<cls path="net.response.BaseResponse"/>-->
+    <!--<cls path="tool.DataMaker"/>-->
+    <!--<cls path="control.DebugControl"/>-->
+</info>

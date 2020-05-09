@@ -1,0 +1,29 @@
+<info>
+	<root path="src/commonGame">
+		<hotfixPath path="data" needFactory="true"/>
+		<hotfixPath path="scene" needFactory="true"/>
+		<hotfixPath path="logic" needFactory="true"/>
+		<hotfixPath path="view" needFactory="true"/>
+
+		<hotfixPath path="config/game" needFactory="false"/>
+		<hotfixPath path="player" needFactory="false"/>
+
+		<hotfixPath path="net/base" needFactory="false"/>
+		<hotfixPath path="net/centerResponse/func/base" needFactory="false"/>
+		<hotfixPath path="net/request/base" needFactory="false"/>
+		<hotfixPath path="net/request/func/base" needFactory="false"/>
+		<hotfixPath path="net/request/scene/base" needFactory="false"/>
+		<hotfixPath path="net/response/base" needFactory="false"/>
+		<hotfixPath path="net/response/func/base" needFactory="false"/>
+		<hotfixPath path="net/response/scene/base" needFactory="false"/>
+
+		<ignorePath path="adapters"/>
+		<ignorePath path="control/CILRuntimeControl.cs"/>
+		<ignorePath path="tool/generate"/>
+		<ignorePath path="tool/func"/>
+	</root>
+	<namespace name="ShineEngine"/>
+	<allowMethod cls="BaseConfig" methods="toReadBytesSimple,afterReadConfig,generateRefresh,clear"/>
+	<allowMethod cls="BaseRequest" methods="copyData,doWriteToStream,doWriteBytesSimple,toWriteBytesSimple,getDataClassName,toWriteDataString,clear"/>
+	<allowMethod cls="BaseResponse" methods="readFromStream,preExecute,execute,toReadBytesSimple,getDataClassName,toWriteDataString,clear"/>
+</info>

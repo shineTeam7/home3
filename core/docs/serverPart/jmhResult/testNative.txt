@@ -1,0 +1,7 @@
+Benchmark                                         Mode  Cnt          Score         Error  Units
+commonTest.jmh.TestNative.testAutoIncrement      thrpt   20  438003566.627 ¡À 1570782.949  ops/s
+commonTest.jmh.TestNative.testCurrentBaseThread  thrpt   20  366397049.517 ¡À 5753060.291  ops/s
+commonTest.jmh.TestNative.testCurrentThread      thrpt   20  409302273.809 ¡À  738604.503  ops/s
+commonTest.jmh.TestNative.testCurrentTimeMillis  thrpt   20   82040484.394 ¡À  529605.480  ops/s
+commonTest.jmh.TestNative.testInstanceof         thrpt   20  434547985.020 ¡À  730767.376  ops/s
+commonTest.jmh.TestNative.testRandom             thrpt   20   99364260.205 ¡À  157190.177  ops/s

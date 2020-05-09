@@ -1,0 +1,2 @@
+C#类模板位置如下,然后把Class.cs替换之
+E:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\ItemTemplates\CSharp\Code\2052\Class

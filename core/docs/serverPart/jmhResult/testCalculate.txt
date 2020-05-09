@@ -1,0 +1,19 @@
+第一轮直接运算
+Benchmark                                     Mode  Cnt          Score          Error  Units
+commonTest.jmh.TestCalculate.testDoubleAdd   thrpt   20  351255572.294 ±  1033867.363  ops/s
+commonTest.jmh.TestCalculate.testDoubleDiv   thrpt   20  431944077.785 ± 12742636.295  ops/s
+commonTest.jmh.TestCalculate.testDoubleMul   thrpt   20  436226857.151 ±   892771.772  ops/s
+commonTest.jmh.TestCalculate.testDoubleSqrt  thrpt   20  174356268.490 ±   369147.411  ops/s
+commonTest.jmh.TestCalculate.testFloatAdd    thrpt   20  352376003.086 ±   890037.900  ops/s
+commonTest.jmh.TestCalculate.testFloatDiv    thrpt   20  435173174.643 ±  1246634.977  ops/s
+commonTest.jmh.TestCalculate.testFloatMul    thrpt   20  433700127.056 ±  5645158.429  ops/s
+commonTest.jmh.TestCalculate.testFloatSqrt   thrpt   20  248373755.445 ±   808889.987  ops/s
+commonTest.jmh.TestCalculate.testIntAdd      thrpt   20  441537845.057 ±  1091501.313  ops/s
+commonTest.jmh.TestCalculate.testIntDiv      thrpt   20  407088729.809 ±   581967.375  ops/s
+commonTest.jmh.TestCalculate.testIntMul      thrpt   20  462550164.337 ±  3392618.469  ops/s
+
+第二轮遍历次数:10000
+Benchmark                                    Mode  Cnt       Score     Error  Units
+commonTest.jmh.TestCalculate.testDoubleMul  thrpt   20   87253.810 ±  94.447  ops/s
+commonTest.jmh.TestCalculate.testFloatMul   thrpt   20   87361.994 ± 164.421  ops/s
+commonTest.jmh.TestCalculate.testIntMul     thrpt   20  174728.539 ± 265.352  ops/s

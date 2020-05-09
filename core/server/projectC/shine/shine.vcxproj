@@ -1,0 +1,170 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\bytes\BytesReadStream.h"/>
+    <ClInclude Include="src\bytes\BytesWriteStream.h"/>
+    <ClInclude Include="src\contrib\fastlz\fastlz.h"/>
+    <ClInclude Include="src\control\BytesControl.h"/>
+    <ClInclude Include="src\ctrl\Ctrl.h"/>
+    <ClInclude Include="src\data\BaseData.h"/>
+    <ClInclude Include="src\dataEx\ExternBuf.h"/>
+    <ClInclude Include="src\extern\ExternHead.h"/>
+    <ClInclude Include="src\global\ShineDefine.h"/>
+    <ClInclude Include="src\global\ShineGlobal.h"/>
+    <ClInclude Include="src\global\ShineSetting.h"/>
+    <ClInclude Include="src\global\ShineToolGlobal.h"/>
+    <ClInclude Include="src\global\ShineToolSetup.h"/>
+    <ClInclude Include="src\SInclude.h"/>
+    <ClInclude Include="src\support\collection\SList.h"/>
+    <ClInclude Include="src\support\collection\SMap.h"/>
+    <ClInclude Include="src\support\collection\SSet.h"/>
+    <ClInclude Include="src\support\PerfTimer.h"/>
+    <ClInclude Include="src\support\SMath.h"/>
+    <ClInclude Include="src\utils\BytesUtils.h"/>
+    <ClInclude Include="src\utils\FileUtils.h"/>
+    <ClInclude Include="src\utils\MathUtils.h"/>
+    <ClInclude Include="src\utils\ObjectUtils.h"/>
+    <ClInclude Include="src\utils\StringUtils.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\bytes\BytesReadStream.cpp"/>
+    <ClCompile Include="src\bytes\BytesWriteStream.cpp"/>
+    <ClCompile Include="src\contrib\fastlz\fastlz.c"/>
+    <ClCompile Include="src\control\BytesControl.cpp"/>
+    <ClCompile Include="src\ctrl\Ctrl.cpp"/>
+    <ClCompile Include="src\data\BaseData.cpp"/>
+    <ClCompile Include="src\dataEx\ExternBuf.cpp"/>
+    <ClCompile Include="src\global\ShineGlobal.cpp"/>
+    <ClCompile Include="src\global\ShineSetting.cpp"/>
+    <ClCompile Include="src\global\ShineToolGlobal.cpp"/>
+    <ClCompile Include="src\global\ShineToolSetup.cpp"/>
+    <ClCompile Include="src\support\PerfTimer.cpp"/>
+    <ClCompile Include="src\support\SMath.cpp"/>
+    <ClCompile Include="src\utils\FileUtils.cpp"/>
+    <ClCompile Include="src\utils\StringUtils.cpp"/>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{016FA774-5CBB-4F97-8170-10D363287A58}</ProjectGuid>
+    <RootNamespace>shine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="include.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="Shared"/>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <IncludePath>..\shineLib\recastnavigation\Recast\Include;..\shineLib\recastnavigation\Detour\Include;..\shineLib\recastnavigation\DetourCrowd\Include;..\shineLib\recastnavigation\DetourTileCache\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+</Project>

@@ -1,0 +1,164 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{6a6f727e-1a97-4a6d-b9ed-9ef23481f02f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bytes">
+      <UniqueIdentifier>{324620e0-776c-4120-bad1-dbd100e4d1a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\global">
+      <UniqueIdentifier>{c0e269ee-63ba-4ff3-9302-fe457ed05130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ctrl">
+      <UniqueIdentifier>{4f9b9673-9f24-4c40-bd56-aa1d1ff0e52e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{212155a9-2297-4f64-902d-5936fdd103d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\data">
+      <UniqueIdentifier>{35f23288-eb18-4e3c-a0e3-e4791d372eed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\control">
+      <UniqueIdentifier>{e3e123bc-719a-4c24-a28d-67c739e94008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\extern">
+      <UniqueIdentifier>{cee41620-b53c-4d04-b5a2-ff8868e27ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\support">
+      <UniqueIdentifier>{c4995bdc-fd0f-4f22-acb9-370e651ecc62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\support\collection">
+      <UniqueIdentifier>{abe64447-cff2-4329-a5aa-ea45e0f8951b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\contrib">
+      <UniqueIdentifier>{ca39f5a0-b417-423e-b3ef-763eb6fdde66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\contrib\fastlz">
+      <UniqueIdentifier>{ac8212d1-4176-47d3-b79a-0afe17c8b607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\dataEx">
+      <UniqueIdentifier>{2f4fac0d-f458-4845-b2e1-be1d1289626a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\bytes\BytesReadStream.h">
+      <Filter>src\bytes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bytes\BytesWriteStream.h">
+      <Filter>src\bytes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\contrib\fastlz\fastlz.h">
+      <Filter>src\contrib\fastlz</Filter>
+    </ClInclude>
+    <ClInclude Include="src\control\BytesControl.h">
+      <Filter>src\control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ctrl\Ctrl.h">
+      <Filter>src\ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\data\BaseData.h">
+      <Filter>src\data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dataEx\ExternBuf.h">
+      <Filter>src\dataEx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extern\ExternHead.h">
+      <Filter>src\extern</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global\ShineDefine.h">
+      <Filter>src\global</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global\ShineGlobal.h">
+      <Filter>src\global</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global\ShineSetting.h">
+      <Filter>src\global</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global\ShineToolGlobal.h">
+      <Filter>src\global</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global\ShineToolSetup.h">
+      <Filter>src\global</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SInclude.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\support\collection\SList.h">
+      <Filter>src\support\collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\support\collection\SMap.h">
+      <Filter>src\support\collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\support\collection\SSet.h">
+      <Filter>src\support\collection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\support\PerfTimer.h">
+      <Filter>src\support</Filter>
+    </ClInclude>
+    <ClInclude Include="src\support\SMath.h">
+      <Filter>src\support</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\BytesUtils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\FileUtils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\MathUtils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\ObjectUtils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\StringUtils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\bytes\BytesReadStream.cpp">
+      <Filter>src\bytes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bytes\BytesWriteStream.cpp">
+      <Filter>src\bytes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\contrib\fastlz\fastlz.c">
+      <Filter>src\contrib\fastlz</Filter>
+    </ClCompile>
+    <ClCompile Include="src\control\BytesControl.cpp">
+      <Filter>src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ctrl\Ctrl.cpp">
+      <Filter>src\ctrl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\BaseData.cpp">
+      <Filter>src\data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dataEx\ExternBuf.cpp">
+      <Filter>src\dataEx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global\ShineGlobal.cpp">
+      <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global\ShineSetting.cpp">
+      <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global\ShineToolGlobal.cpp">
+      <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global\ShineToolSetup.cpp">
+      <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\support\PerfTimer.cpp">
+      <Filter>src\support</Filter>
+    </ClCompile>
+    <ClCompile Include="src\support\SMath.cpp">
+      <Filter>src\support</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\FileUtils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\StringUtils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

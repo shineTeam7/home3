@@ -1,0 +1,5 @@
+{
+    "typescript.check.tscVersion": false,
+    "editor.renderWhitespace": "none",
+    "editor.renderControlCharacters": false
+}

@@ -1,0 +1,6 @@
+Benchmark                                        Mode  Cnt         Score        Error  Units
+commonTest.jmh.TestArrayListForEach.testForI_1  thrpt   20  55405729.985 ¡À  67215.578  ops/s
+commonTest.jmh.TestArrayListForEach.testForI_2  thrpt   20  56002678.845 ¡À  58558.190  ops/s
+commonTest.jmh.TestArrayListForEach.testForI_3  thrpt   20  55653233.514 ¡À 492681.532  ops/s
+commonTest.jmh.TestArrayListForEach.testForI_4  thrpt   20  57736052.509 ¡À 243089.290  ops/s
+commonTest.jmh.TestArrayListForEach.testForI_5  thrpt   20  71888334.557 ¡À 221395.753  ops/s
