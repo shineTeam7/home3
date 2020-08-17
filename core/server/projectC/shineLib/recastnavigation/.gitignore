@@ -15,7 +15,11 @@ RecastDemo/Bin/Tests
 
 # Build directory
 RecastDemo/Build
-
+RecastDemo/Bin
+RecastDemo/RecastDemo.app
+RecastDemo/TestCases
+# Ignore meshes
+RecastDemo/Bin/Meshes/*
 
 ## Logs and databases #
 *.log
@@ -45,16 +49,12 @@ Docs/html
 ## IDE files
 .idea/
 cmake-build-*/
-
-
 # by shine
+
+!*.cmake
 
 DebugUtils/*.a
 Detour/*.a
 DetourCrowd/*.a
 DetourTileCache/*.a
 Recast/*.a
-
-RecastDemo
-Tests
-

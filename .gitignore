@@ -9,6 +9,7 @@ RemoteSystemsTempFiles
 .project
 .factorypath
 .DS_Store
+.vs
 target
 __pycache__
 *.pyc
@@ -45,6 +46,11 @@ CMakeFiles
 /core/server/testProject/commonGame8/src
 /core/server/testProject/commonCenter8/src
 
+/core/server/testProjectC/shineTest/x64
+/core/server/testProjectC/shineTest/*.a
+/core/server/testProjectC/commonTest/x64
+/core/server/testProjectC/commonTest/*.a
+
 /core/server/tools/preJar/tools.jar
 
 
@@ -61,4 +67,9 @@ CMakeFiles
 .~*.xlsx
 .~*.docx
 
+
+#gitHub
+/core/docs/工作计划
+/core/docs/tools
+/core/codeHistory
 
