@@ -5,6 +5,7 @@ import com.home.commonManager.net.serverResponse.center.ReMAddPlayerWorkToCenter
 import com.home.commonManager.net.serverResponse.center.ReMQueryPlayerWorkToCenterServerResponse;
 import com.home.commonManager.net.serverResponse.game.BeGameToManagerServerResponse;
 import com.home.commonManager.net.serverResponse.login.system.BeLoginToManagerServerResponse;
+import com.home.commonManager.net.serverResponse.scene.BeSceneToManagerServerResponse;
 import com.home.shine.data.BaseData;
 import com.home.shine.tool.CreateDataFunc;
 import com.home.shine.tool.DataMaker;
@@ -16,11 +17,12 @@ public class ManagerServerResponseMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
-		list[ServerMessageType.ReMAddPlayerWorkToCenter-offSet]=this::createReMAddPlayerWorkToCenterServerResponse;
-		list[ServerMessageType.ReMQueryPlayerWorkToCenter-offSet]=this::createReMQueryPlayerWorkToCenterServerResponse;
 		list[ServerMessageType.BeLoginToManager-offSet]=this::createBeLoginToManagerServerResponse;
 		list[ServerMessageType.BeCenterToManager-offSet]=this::createBeCenterToManagerServerResponse;
+		list[ServerMessageType.ReMAddPlayerWorkToCenter-offSet]=this::createReMAddPlayerWorkToCenterServerResponse;
+		list[ServerMessageType.ReMQueryPlayerWorkToCenter-offSet]=this::createReMQueryPlayerWorkToCenterServerResponse;
 		list[ServerMessageType.BeGameToManager-offSet]=this::createBeGameToManagerServerResponse;
+		list[ServerMessageType.BeSceneToManager-offSet]=this::createBeSceneToManagerServerResponse;
 	}
 	
 	private BaseData createReMAddPlayerWorkToCenterServerResponse()
@@ -46,6 +48,11 @@ public class ManagerServerResponseMaker extends DataMaker
 	private BaseData createBeGameToManagerServerResponse()
 	{
 		return new BeGameToManagerServerResponse();
+	}
+	
+	private BaseData createBeSceneToManagerServerResponse()
+	{
+		return new BeSceneToManagerServerResponse();
 	}
 	
 }

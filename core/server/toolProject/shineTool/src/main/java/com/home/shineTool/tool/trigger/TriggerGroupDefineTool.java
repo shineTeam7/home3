@@ -1,10 +1,8 @@
 package com.home.shineTool.tool.trigger;
 
-import com.home.shine.support.collection.StringIntMap;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.reflect.FieldInfo;
 import com.home.shineTool.tool.base.BaseExportTool;
-import com.home.shineTool.tool.data.DataDefineTool;
 
 /** group定义 */
 public class TriggerGroupDefineTool extends BaseExportTool
@@ -25,7 +23,7 @@ public class TriggerGroupDefineTool extends BaseExportTool
 			
 			String cName=StringUtils.ucWord(field.name);
 			
-			int index=doAddOneDefine(cName,field.describe);
+			int index=doAddOneDefine(cName,field.describe,null);
 			
 			_makeTool.groupDefineDic.put(s,index);
 			
@@ -63,7 +61,7 @@ public class TriggerGroupDefineTool extends BaseExportTool
 	}
 	
 	@Override
-	protected int addOneDefine(String cName,String des)
+	protected int addOneDefine(String cName,String des,String qName)
 	{
 		//不用默认
 		return -1;

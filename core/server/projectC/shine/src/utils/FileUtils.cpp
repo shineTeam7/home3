@@ -82,3 +82,14 @@ BytesReadStream* FileUtils::readFileForBytesReadStream(const char* path)
 
 	return new BytesReadStream(buf, size);
 }
+
+bool FileUtils::writeFileForBytes(const char* path, const void* ptr, int len)
+{
+	FILE* fp = fopen(path, "wb");
+
+	if (!fp)
+		return false;
+
+	fwrite(ptr, len, 1, fp);
+	fclose(fp);
+}

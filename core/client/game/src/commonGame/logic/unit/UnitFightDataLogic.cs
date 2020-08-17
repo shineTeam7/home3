@@ -45,11 +45,11 @@ public class UnitFightDataLogic
 	{
 		_isDriveAll=!CommonSetting.isSceneServerDrive;
 
-		status=new StatusDataLogic(this);
-		attribute=new AttributeDataLogic(this);
-		cd=new CDDataLogic(this);
+		(status=new StatusDataLogic()).setParent(this);
+		(attribute=new AttributeDataLogic()).setParent(this);
+		(cd=new CDDataLogic()).setParent(this);
 		(buff=GameC.factory.createBuffDataLogic()).setParent(this);
-		avatar=new AvatarDataLogic(this);
+		(avatar=new AvatarDataLogic()).setParent(this);
 	}
 
 	public void reloadConfig()
@@ -207,7 +207,7 @@ public class UnitFightDataLogic
 	//单位部分
 	
 	/** 绑定单位 */
-	public void setUnit(Unit unit)
+	public virtual void setUnit(Unit unit)
 	{
 		_unit=unit;
 		setScene(unit!=null ? unit.getScene() : null);
@@ -224,6 +224,15 @@ public class UnitFightDataLogic
 	{
 		_scene=scene;
 		_isDriveAll=scene!=null ? scene.isDriveAll() : !CommonSetting.isSceneServerDrive;
+	}
+
+	/** 切换拷贝 */
+	public void switchCopy()
+	{
+		status.writeForCopy();
+		attribute.writeForCopy();
+
+		buff.writeForCopy();
 	}
 
 	//接口

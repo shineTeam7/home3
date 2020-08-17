@@ -15,13 +15,13 @@ public class ManagerHttpResponseType
 	/** gm添加事务消息 */
 	public static final int MAddPlayerWork=3701;
 	
+	/** 生成激活码消息 */
+	public static final int MMakeActivationCode=3702;
+	
 	/** 角色查询事务消息 */
-	public static final int MPlayerQueryWork=3702;
+	public static final int MPlayerQueryWork=3703;
 	
 	/** 查询角色消息 */
-	public static final int MQueryPlayer=3703;
-	
-	/** 生成激活码消息 */
-	public static final int MMakeActivationCode=3704;
+	public static final int MQueryPlayer=3704;
 	
 }

@@ -15,7 +15,7 @@ public class RoleAttributeLogic extends RoleLogicBase
 	{
 		super.construct();
 		
-		_aTool=new RoleAttributeDataLogic(this);
+		(_aTool=new RoleAttributeDataLogic()).setParent(this);
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class RoleAttributeLogic extends RoleLogicBase
 	}
 	
 	/** 属性改变 */
-	public void onAttributeChange(int[] changeList,int num,boolean[] changeSet,int[] lastAttributes)
+	public void onAttributeChange(int[] changeList,int num,boolean[] changeSet)
 	{
 	
 	}

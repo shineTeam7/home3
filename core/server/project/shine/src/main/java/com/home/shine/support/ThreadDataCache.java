@@ -2,19 +2,20 @@ package com.home.shine.support;
 
 import com.home.shine.control.ThreadControl;
 import com.home.shine.data.BaseData;
+import com.home.shine.net.base.BaseResponse;
 import com.home.shine.support.pool.DataPool;
 import com.home.shine.thread.AbstractThread;
 
 /** 线程数据缓存 */
 public class ThreadDataCache
 {
-	private BaseData[] _threadCacheArr;
+	private BaseResponse[] _threadCacheArr;
 	
 	private boolean _isEmpty=false;
 	
 	public void init()
 	{
-		_threadCacheArr=new BaseData[ThreadControl.threadLength];
+		_threadCacheArr=new BaseResponse[ThreadControl.threadLength];
 	}
 	
 	public boolean isEmpty()
@@ -23,7 +24,7 @@ public class ThreadDataCache
 	}
 	
 	/** 暂时缓存数据 */
-	public void cacheData(BaseData data)
+	public void cacheData(BaseResponse data)
 	{
 		byte index;
 		if((index=data.createThreadInstance)==-1)
@@ -31,7 +32,7 @@ public class ThreadDataCache
 		
 		_isEmpty=false;
 		
-		BaseData head=_threadCacheArr[index];
+		BaseResponse head=_threadCacheArr[index];
 		
 		if(head!=null)
 		{
@@ -47,8 +48,8 @@ public class ThreadDataCache
 		if(_isEmpty)
 			return;
 		
-		BaseData[] arr;
-		BaseData head;
+		BaseResponse[] arr;
+		BaseResponse head;
 		
 		for(int i=(arr=_threadCacheArr).length-1;i>=0;--i)
 		{
@@ -62,15 +63,15 @@ public class ThreadDataCache
 		_isEmpty=true;
 	}
 	
-	private void sendHead(int instance,BaseData data)
+	private void sendHead(int instance,BaseResponse data)
 	{
 		AbstractThread thread=ThreadControl.getThreadByInstance(instance);
 		DataPool pool=thread.pool;
 		
 		thread.addFunc(()->
 		{
-			BaseData current=data;
-			BaseData next;
+			BaseResponse current=data;
+			BaseResponse next;
 			
 			while(current!=null)
 			{

@@ -5,8 +5,10 @@ import com.home.commonBase.control.BaseFactoryControl;
 import com.home.commonBase.control.FactoryControl;
 import com.home.commonBase.global.AppSetting;
 import com.home.commonBase.global.BaseC;
+import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.server.BaseGameServer;
 import com.home.commonBase.serverConfig.ServerNodeConfig;
+import com.home.commonBase.tool.DataRegister;
 import com.home.shine.ShineSetup;
 import com.home.shine.agent.AgentControl;
 import com.home.shine.control.BytesControl;
@@ -59,11 +61,17 @@ public class App
 			AgentControl.agentClass();
 		}
 		
-		BaseC.factory=createBaseFactoryControl();
+		initBaseFactory();
+	}
+	
+	protected void initBaseFactory()
+	{
+		if(BaseC.factory==null)
+			BaseC.factory=createBaseFactoryControl();
 	}
 
 	/** 启动(java主线程) */
-	public final void start()
+	public void start()
 	{
 		preInit();
 		
@@ -137,8 +145,11 @@ public class App
 		{
 			WatchControl.instance=_factory.createWatchControl();
 		}
-
-		messageRegist();
+		
+		//注册数据
+		DataRegister dataRegister=_factory.createDataRegister();
+		if(dataRegister!=null)
+			dataRegister.regist();
 		
 		//TODO:之后弄配置到 数据中心
 		
@@ -179,11 +190,7 @@ public class App
 	/** 协议注册相关 */
 	protected void messageRegist()
 	{
-		//注册数据
-		_factory.createDataRegister().regist();
-		
-		BytesControl.addMessageConst(ServerMessageType.class,true,true);
-		BytesControl.addMessageConst(ServerMessageType.class,false,true);
+	
 	}
 	
 	/** 构造必需的control组 */

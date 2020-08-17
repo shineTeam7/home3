@@ -13,19 +13,18 @@ import com.home.shine.data.trigger.TriggerLongData;
 import com.home.shine.data.trigger.TriggerObjData;
 import com.home.shine.data.trigger.TriggerStringData;
 import com.home.shine.support.XML;
-import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.support.collection.IntList;
 import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.SList;
 import com.home.shine.support.collection.SMap;
-import com.home.shine.support.collection.StringIntMap;
 import com.home.shine.utils.FileUtils;
 import com.home.shine.utils.StringUtils;
+import com.home.shineTool.constlist.CodeType;
 import com.home.shineTool.global.ShineToolSetting;
 import com.home.shineTool.reflect.FieldInfo;
-import com.home.shineTool.reflect.MainMethodInfo;
 import com.home.shineTool.reflect.MethodArgInfo;
 import com.home.shineTool.reflect.MethodInfo;
+import com.home.shineTool.reflect.cls.ClassInfo;
 import com.home.shineTool.tool.base.BaseExportTool;
 
 import java.io.File;
@@ -51,7 +50,9 @@ public class TriggerDataExportTool extends BaseExportTool
 	/** trigger index->cName */
 	private IntObjectMap<TriggerInfo> _indexDic2=new IntObjectMap<>();
 	
-	private int _maxIndex=0;
+	private IntObjectMap<TriggerConfigData> _allDic=new IntObjectMap<>(k->new TriggerConfigData[k]);
+	
+	private int _nextID=0;
 	
 	private IntObjectMap<TriggerConfigData> _serverDic=new IntObjectMap<>(k->new TriggerConfigData[k]);
 	private IntObjectMap<TriggerConfigData> _clientDic=new IntObjectMap<>(k->new TriggerConfigData[k]);
@@ -83,12 +84,21 @@ public class TriggerDataExportTool extends BaseExportTool
 					
 					_indexDic.put(info.name,info);
 					_indexDic2.put(info.id,info);
-					
-					if(_maxIndex<info.id)
-						_maxIndex=info.id;
 				});
 			}
 		}
+	}
+	
+	public int getNextID()
+	{
+		++_nextID;
+		
+		while(_indexDic2.contains(_nextID))
+		{
+			++_nextID;
+		}
+		
+		return _nextID;
 	}
 	
 	@Override
@@ -105,7 +115,7 @@ public class TriggerDataExportTool extends BaseExportTool
 		if(info==null)
 		{
 			info=new TriggerInfo();
-			info.id=++_maxIndex;
+			info.id=getNextID();
 			info.name=cName;
 			
 			String[] groupN=cName.substring(0,cName.indexOf(".")).split("_");
@@ -194,8 +204,9 @@ public class TriggerDataExportTool extends BaseExportTool
 		else
 			cData.actions=new TriggerFuncData[0];
 		
-		
 		int sc=_makeTool.groupDefineTypeDic.get(cData.groupType);
+		
+		_allDic.put(cData.id,cData);
 		
 		//c
 		if((sc & 1)==1)
@@ -229,7 +240,7 @@ public class TriggerDataExportTool extends BaseExportTool
 	}
 	
 	@Override
-	protected int addOneDefine(String cName,String des)
+	protected int addOneDefine(String cName,String des,String qName)
 	{
 		//不用默认
 		return -1;
@@ -240,6 +251,12 @@ public class TriggerDataExportTool extends BaseExportTool
 	{
 		super.endExecute();
 		
+		
+	}
+	
+	/** 写出到二进制 */
+	public void writeBin()
+	{
 		writeOne(_serverDic,_makeTool.getServerOutTempPath());
 		if(ShineToolSetting.needClient)
 			writeOne(_clientDic,_makeTool.getClientOutTempPath());
@@ -722,6 +739,36 @@ public class TriggerDataExportTool extends BaseExportTool
 				//值类型
 				if(v.indexOf('(')==-1)
 				{
+					int dIndex=v.indexOf('.');
+					
+					//枚举
+					if(dIndex!=-1)
+					{
+						boolean isNumber=true;
+						
+						try
+						{
+							Double.parseDouble(v);
+						}
+						catch(Exception e)
+						{
+							isNumber=false;
+						}
+						
+						if(!isNumber)
+						{
+							String constClsName=v.substring(0,dIndex);
+							String constFieldName=v.substring(dIndex+1,v.length());
+							
+							ClassInfo constCls=_makeTool.getInputCls(_inputCls.getImport(constClsName));
+							
+							FieldInfo field=constCls.getField(constFieldName);
+							
+							//替换值
+							v=field.defaultValue;
+						}
+					}
+					
 					//TODO:继续解析其他符号
 					
 					pp.argList.add(getValueData(aType,v));
@@ -926,5 +973,11 @@ public class TriggerDataExportTool extends BaseExportTool
 		public int groupType;
 		
 		public int groupID;
+	}
+	
+	/** 获取全部配置数据 */
+	public IntObjectMap<TriggerConfigData> getAllDic()
+	{
+		return _allDic;
 	}
 }

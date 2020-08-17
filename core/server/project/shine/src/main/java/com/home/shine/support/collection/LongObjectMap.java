@@ -6,12 +6,12 @@ import com.home.shine.support.collection.inter.ILongObjectConsumer;
 import com.home.shine.support.collection.inter.IObjectConsumer;
 import com.home.shine.support.func.ObjectLongFunc;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.LongArrays;
-import com.koloboke.collect.impl.hash.LHash;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 {
@@ -27,7 +27,7 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 	
 	public LongObjectMap()
 	{
-	
+		init(_minSize);
 	}
 
 	public LongObjectMap(int capacity)
@@ -38,20 +38,13 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 	public LongObjectMap(ICreateArray<V> createVArrFunc)
 	{
 		_createVArrFunc=createVArrFunc;
+		init(_minSize);
 	}
 
 	public LongObjectMap(ICreateArray<V> createVArrFunc,int capacity)
 	{
 		_createVArrFunc=createVArrFunc;
 		init(countCapacity(capacity));
-	}
-	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
 	}
 
 	public final long getFreeValue()
@@ -61,13 +54,11 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 
 	public final long[] getKeys()
 	{
-		checkInit();
 		return _set;
 	}
 
 	public final V[] getValues()
 	{
-		checkInit();
 		return _values;
 	}
 
@@ -81,9 +72,10 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 		return ((V[])(new Object[length]));
 	}
 
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 
 		_set=new long[capacity<<1];
 		if(_freeValue!=0L)
@@ -154,7 +146,17 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 	private long changeFree()
 	{
 		long newFree=findNewFreeOrRemoved();
-		LongArrays.replaceAll(_set,_freeValue,newFree);
+		
+		long free=_freeValue;
+		long[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -254,8 +256,6 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 	
 	public void put(long key,V value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		if(index<0)
 		{
@@ -447,28 +447,8 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 		}
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	public V putIfAbsent(long key,V value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -483,8 +463,6 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 	
 	public V computeIfAbsent(long key,ObjectLongFunc<? extends V> mappingFunction)
 	{
-		checkInit();
-		
 		if(mappingFunction==null)
 		{
 			throw new NullPointerException();
@@ -899,6 +877,32 @@ public class LongObjectMap<V> extends BaseHash implements Iterable<V>
 		{
 			LongObjectMap.this.remove(_k);
 		}
+	}
+	
+	/** 转化为原生集合 */
+	public HashMap<Long,V> toNatureMap()
+	{
+		HashMap<Long,V> re=new HashMap<>(size());
+		
+		long free=_freeValue;
+		long[] keys=_set;
+		V[] vals=_values;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			long key;
+			if((key=keys[i])!=free)
+			{
+				re.put(key,vals[i]);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Map<Long,V> map)
+	{
+		ensureCapacity(map.size());
+		map.forEach(this::put);
 	}
 	
 	public EntrySet entrySet()

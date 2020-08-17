@@ -49,12 +49,14 @@ public class UIElementType
 	public static final int ScrollBar=21;
 	/** 下拉列表 */
 	public static final int Dropdown=22;
-	/** 自定义滚动容器 */
-	public static final int SCustomScrollView=23;
+	///** 自定义滚动容器 */
+	//public static final int SCustomScrollView=23;
 	/** 国际化文本 */
 	public static final int I18NText=24;
 	/** RawImage图片加载器 */
 	public static final int RawImageLoader=25;
+	/** 伪3D滚动容器 */
+	public static final int SScrollViewFake3D = 26;
 	
 	/** 是否有泛型 */
 	public static boolean hasGenericity(int type)
@@ -63,7 +65,7 @@ public class UIElementType
 		{
 			case SScrollView:
 			case SPageView:
-			case SCustomScrollView:
+			case SScrollViewFake3D:
 				return true;
 		}
 		

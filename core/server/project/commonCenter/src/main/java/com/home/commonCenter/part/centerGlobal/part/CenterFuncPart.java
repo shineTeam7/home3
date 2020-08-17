@@ -78,7 +78,7 @@ public class CenterFuncPart extends CenterGlobalBasePart
 
 			if(v.isCenter)
 			{
-				funcTool=new CenterPlayerSubsectionRankTool(v.id,v.maxNum,v.minValue);
+				funcTool=CenterC.factory.createCenterPlayerSubsectionRankTool(v.id,v.maxNum,v.minValue);
 
 				registFuncTool(funcTool);
 			}
@@ -122,7 +122,10 @@ public class CenterFuncPart extends CenterGlobalBasePart
 		SList<FuncTool> list;
 		FuncTool[] values=(list=_funcToolList).getValues();
 		FuncTool v;
-		
+
+		FuncToolData data;
+		FuncToolData data2;
+
 		for(int i=list.size()-1;i>=0;--i)
 		{
 			v=values[i];
@@ -131,11 +134,18 @@ public class CenterFuncPart extends CenterGlobalBasePart
 			
 			if(dic!=null)
 			{
-				v.setData(dic.get(v.getFuncID()));
+				v.setData(data=dic.get(v.getFuncID()));
 			}
 			else
 			{
 				v.setData(null);
+				data=null;
+			}
+
+			//之前没有数据,后来有了数据(说明是新增的)
+			if(data==null && (data2=v.getData())!=null)
+			{
+				_d.funcTools.computeIfAbsent(v.getType(),k->new IntObjectMap<>(FuncToolData[]::new)).put(v.getFuncID(),data2);
 			}
 		}
 		

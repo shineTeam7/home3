@@ -61,7 +61,8 @@ public class UIBase:UILogicBase
 		_modelObject.GetComponent<RectTransform>().SetParent(UIControl.getUIRoot().transform);
 		_modelObject.layer=UIControl.getUILayer();
 		_modelObject.transform.localPosition=Vector3.zero;//归零
-		_modelObject.transform.localScale = Vector3.one;
+		_modelObject.transform.localScale = Vector3.one;//归1
+		_modelObject.transform.localRotation = Quaternion.identity;//归零
 	}
 
 	protected override void preShow()

@@ -36,15 +36,13 @@ public class MUnitRefreshAttributesRequest extends MUnitSRequest
 			if(!attributesTemp.isEmpty())
 			{
 				int attributesKFreeValue=attributesTemp.getFreeValue();
-				long[] attributesKTable=attributesTemp.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=attributesTemp.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						int attributesW;
 						int attributesU;
 						attributesW=attributesK;
@@ -91,15 +89,13 @@ public class MUnitRefreshAttributesRequest extends MUnitSRequest
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						writer.writeTabs();
 						writer.sb.append(attributesK);
 						
@@ -134,15 +130,13 @@ public class MUnitRefreshAttributesRequest extends MUnitSRequest
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						stream.writeInt(attributesK);
 						
 						stream.writeInt(attributesV);
@@ -171,15 +165,13 @@ public class MUnitRefreshAttributesRequest extends MUnitSRequest
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						stream.writeInt(attributesK);
 						
 						stream.writeInt(attributesV);

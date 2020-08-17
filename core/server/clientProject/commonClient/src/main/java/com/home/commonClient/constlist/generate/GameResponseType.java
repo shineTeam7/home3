@@ -4,575 +4,408 @@ package com.home.commonClient.constlist.generate;
 public class GameResponseType
 {
 	/** 起始 */
-	public static final int off=700;
+	public static final int off=13312;
 	
 	/** 计数 */
-	public static final int count=892;
-	
-	/** AOI灯塔刷新消息(删除一组+添加一组) */
-	public static final int AOITowerRefresh=700;
+	public static final int count=13447;
 	
 	/** 活动完成一次消息 */
-	public static final int ActivityCompleteOnce=701;
+	public static final int ActivityCompleteOnce=13312;
 	
 	/** 活动重置 */
-	public static final int ActivityReset=702;
+	public static final int ActivityReset=13313;
 	
 	/** 活动开启/关闭消息 */
-	public static final int ActivitySwitch=703;
-	
-	/** 单位发出子弹消息 */
-	public static final int AddBullet=704;
+	public static final int ActivitySwitch=13314;
 	
 	/** 新邮件消息 */
-	public static final int AddMail=705;
-	
-	/** 添加奖励消息 */
-	public static final int AddReward=706;
-	
-	/** 添加单位消息 */
-	public static final int AddUnit=707;
-	
-	/** 攻击伤害数据 */
-	public static final int AttackDamage=708;
-	
-	/** 建筑建造成功 */
-	public static final int BuildingBuildComplete=709;
-	
-	/** 建筑取消升级 */
-	public static final int BuildingCancelLevelUp=710;
-	
-	/** 建筑升级成功的广播协议 注意:包含父类参数 instanceID */
-	public static final int BuildingLevelUpingComplete=711;
-	
-	/** 建筑开始升级的广播协议  注意:包含父类参数 instanceID */
-	public static final int BuildingStartLevelUp=712;
-	
-	/** 中心服转发消息 */
-	public static final int CenterTransGameToClient=713;
-	
-	/** 更改角色名字消息 */
-	public static final int ChangeRoleName=714;
-	
-	/** 角色更新部分角色外显数据消息 */
-	public static final int CharacterRefreshPartRoleShowData=715;
-	
-	/** 客户端版本热更新消息 */
-	public static final int ClientHotfix=716;
-	
-	/** 创建角色成功消息 */
-	public static final int CreatePlayerSuccess=717;
-	
-	/** 每日消息 */
-	public static final int Daily=718;
-	
-	/** 删除角色成功消息 */
-	public static final int DeletePlayerSuccess=719;
-	
-	/** 进入空场景消息(为客户端显示) */
-	public static final int EnterNoneScene=720;
-	
-	/** 进入场景失败消息 */
-	public static final int EnterSceneFailed=721;
-	
-	/** 进入场景消息(依赖MessageCopy) */
-	public static final int EnterScene=722;
-	
-	/** 帧同步每帧消息 */
-	public static final int FrameSyncFrame=723;
-	
-	/** 帧同步起始消息 */
-	public static final int FrameSyncStart=724;
-	
-	/** 拍卖行更新自己出售物品数目消息 */
-	public static final int FuncAuctionRefreshSaleItem=725;
-	
-	/** 添加物品消息 */
-	public static final int FuncAddItem=726;
-	
-	/** 推送添加单个物品 */
-	public static final int FuncAddOneItem=727;
-	
-	/** 添加单个物品数目消息 */
-	public static final int FuncAddOneItemNum=728;
-	
-	/** 取消匹配消息 */
-	public static final int FuncCancelMatch=729;
-	
-	/** 匹配结束(成功结束) */
-	public static final int FuncMatchOver=730;
-	
-	/** 匹配成功消息 */
-	public static final int FuncMatchSuccess=731;
-	
-	/** 匹配超时消息 */
-	public static final int FuncMatchTimeOut=732;
-	
-	/** 重新加入匹配队列消息 */
-	public static final int FuncReAddMatch=733;
-	
-	/** 功能-回复查询每页排行 */
-	public static final int FuncReGetPageShow=734;
-	
-	public static final int FuncReGetSelfPageShow=735;
-	
-	public static final int FuncRefreshRank=736;
-	
-	/** 移除物品消息 */
-	public static final int FuncRemoveItem=737;
-	
-	/** 移除单个物品 */
-	public static final int FuncRemoveOneItem=738;
-	
-	/** 功能-重置排行消息 */
-	public static final int FuncResetRank=739;
-	
-	/** 功能发送消息 */
-	public static final int FuncS=740;
-	
-	/** 推送接受匹配 */
-	public static final int FuncSendAcceptMatch=741;
-	
-	/** 推送整理物品消息 */
-	public static final int FuncSendCleanUpItem=742;
-	
-	/** 移动装备消息 */
-	public static final int FuncSendMoveEquip=743;
-	
-	/** 脱装备 */
-	public static final int FuncSendPutOffEquip=744;
-	
-	/** 穿装备 */
-	public static final int FuncSendPutOnEquip=745;
-	
-	/** 开始匹配消息 */
-	public static final int FuncStartMatch=746;
-	
-	/** 使用物品结果消息 */
-	public static final int FuncUseItemResult=747;
-	
-	/** 初始化客户端消息(ClientListData)(此处需要使用copy,因工具已改为潜拷,为了逻辑层避开深拷问题) */
-	public static final int InitClient=748;
-	
-	/** 离开场景消息 */
-	public static final int LeaveScene=749;
-	
-	/** 升级消息 */
-	public static final int LevelUp=750;
-	
-	/** 主角加buff */
-	public static final int MUnitAddBuff=751;
-	
-	/** 控制单位添加组CD上限百分比 */
-	public static final int MUnitAddGroupTimeMaxPercent=752;
-	
-	/** 控制单位添加组CD上限值 */
-	public static final int MUnitAddGroupTimeMaxValue=753;
-	
-	/** 控制单位添加组时间经过 */
-	public static final int MUnitAddGroupTimePass=754;
-	
-	/** 主角加技能消息 */
-	public static final int MUnitAddSkill=755;
-	
-	/** 刷新主角属性 */
-	public static final int MUnitRefreshAttributes=756;
-	
-	/** 控制单位刷新造型消息 */
-	public static final int MUnitRefreshAvatar=757;
-	
-	/** 控制单位改变显示部件 */
-	public static final int MUnitRefreshAvatarPart=758;
-	
-	/** 主角刷buff剩余次数 */
-	public static final int MUnitRefreshBuffLastNum=759;
-	
-	/** 主角刷buff */
-	public static final int MUnitRefreshBuff=760;
-	
-	/** 刷新主角状态 */
-	public static final int MUnitRefreshStatus=761;
-	
-	/** 主角移除buff */
-	public static final int MUnitRemoveBuff=762;
-	
-	/** 控制单位移除组CD消息 */
-	public static final int MUnitRemoveGroupCD=763;
-	
-	/** 主角删技能消息 */
-	public static final int MUnitRemoveSkill=764;
-	
-	/** 玩家单位开始CD组 */
-	public static final int MUnitStartCDs=765;
-	
-	/** 预备进入场景消息 */
-	public static final int PreEnterScene=766;
-	
-	/** 预进入场景服务器就绪 */
-	public static final int PreEnterSceneNext=767;
-	
-	/** 单位拉回消息 */
-	public static final int ReCUnitPullBack=768;
-	
-	/** 回复技能失败消息 */
-	public static final int ReCUnitSkillFailedEx=769;
-	
-	/** 回复C单位技能失败 */
-	public static final int ReCUnitSkillFailed=770;
-	
-	/** 回复获取全部邮件消息 */
-	public static final int ReGetAllMail=771;
-	
-	/** 回复角色列表消息 */
-	public static final int RePlayerList=772;
-	
-	/** 回复查询角色消息 */
-	public static final int ReQueryPlayer=773;
-	
-	/** 返回搜索结果 */
-	public static final int ReSearchPlayer=774;
-	
-	/** 回复更新社交数据消息 */
-	public static final int ReUpdateRoleSocialData=775;
-	
-	/** 刷新单个社交数据(实时刷新用) */
-	public static final int ReUpdateRoleSocialDataOne=776;
-	
-	/** 收到客户端离线事务消息 */
-	public static final int ReceiveClientOfflineWork=777;
-	
-	/** 刷新货币消息 */
-	public static final int RefreshCurrency=778;
-	
-	/** 刷新当期线ID消息 */
-	public static final int RefreshCurrentLine=779;
-	
-	/** 刷经验消息 */
-	public static final int RefreshExp=780;
-	
-	/** 刷新角色战斗力消息 */
-	public static final int RefreshFightForce=781;
-	
-	/** 刷新引导步消息 */
-	public static final int RefreshMainGuideStep=782;
-	
-	/** 更新操作体状态消息 */
-	public static final int RefreshOperationState=783;
-	
-	/** 刷新服务器时间 */
-	public static final int RefreshServerTime=784;
-	
-	/** 刷新目标数目消息 */
-	public static final int RefreshTask=785;
-	
-	/** 刷新单位属性 */
-	public static final int RefreshUnitAttributes=786;
-	
-	/** 刷新单位造型消息 */
-	public static final int RefreshUnitAvatar=787;
-	
-	/** 刷新单位显示部件数据 */
-	public static final int RefreshUnitAvatarPart=788;
-	
-	/** 刷新单位状态 */
-	public static final int RefreshUnitStatus=789;
-	
-	/** 移除子弹 */
-	public static final int RemoveBullet=790;
-	
-	/** 移除单位协议 */
-	public static final int RemoveUnit=791;
-	
-	/** 推送场景广播消息 */
-	public static final int SceneRadio=792;
-	
-	/** 场景推送基类 */
-	public static final int SceneS=793;
-	
-	/** 推送添加成就消息 */
-	public static final int SendAcceptAchievement=794;
-	
-	/** 推送接任务消息 */
-	public static final int SendAcceptQuest=795;
-	
-	/** 推送成就完成消息 */
-	public static final int SendAchievementComplete=796;
-	
-	/** 推送添加好友黑名单 */
-	public static final int SendAddFriendBlackList=797;
-	
-	/** 推送添加好友消息 */
-	public static final int SendAddFriend=798;
-	
-	/** 推送申请添加好友消息 */
-	public static final int SendApplyAddFriend=799;
-	
-	/** 推送副本类场景状态信息 */
-	public static final int SendBattleState=800;
-	
-	/** 推送绑定平台消息 */
-	public static final int SendBindPlatform=801;
-	
-	/** 推送清空全部任务(gm) */
-	public static final int SendClearAllQuestByGM=802;
-	
-	/** 推送交任务消息 */
-	public static final int SendCommitQuest=803;
-	
-	/** 推送删除邮件消息 */
-	public static final int SendDeleteMail=804;
-	
-	/** 推送Game服息回执 */
-	public static final int SendGameReceiptToClient=805;
-	
-	/** 推送领取成就奖励成功消息 */
-	public static final int SendGetAchievementRewardSuccess=806;
-	
-	/** 推送任务放弃消息 */
-	public static final int SendGiveUpQuest=807;
-	
-	/** 推送信息码消息 */
-	public static final int SendInfoCode=808;
-	
-	/** 推送带参信息码消息 */
-	public static final int SendInfoCodeWithArgs=809;
-	
-	/** 推送任务失败消息 */
-	public static final int SendQuestFailed=810;
-	
-	/** 推送强制删除已接任务消息 */
-	public static final int SendRemoveAcceptQuest=811;
-	
-	/** 推送移除好友黑名单 */
-	public static final int SendRemoveFriendBlackList=812;
-	
-	/** 推送移除好友 */
-	public static final int SendRemoveFriend=813;
-	
-	/** 切换game服消息 */
-	public static final int SwitchGame=814;
-	
-	/** 领取邮件成功 */
-	public static final int TakeMailSuccess=815;
-	
-	/** 添加buff消息 */
-	public static final int UnitAddBuff=816;
-	
-	/** 单位添加组CD百分比 */
-	public static final int UnitAddGroupTimeMaxPercent=817;
-	
-	/** 单位添加组CD固定值 */
-	public static final int UnitAddGroupTimeMaxValue=818;
-	
-	/** 单位添加组CD时间经过 */
-	public static final int UnitAddGroupTimePass=819;
-	
-	/** 单位聊天消息 */
-	public static final int UnitChat=820;
-	
-	/** 单位死亡消息 */
-	public static final int UnitDead=821;
-	
-	/** 单位移动朝向消息 */
-	public static final int UnitMoveDir=822;
-	
-	/** 单位移动点组消息 */
-	public static final int UnitMovePosList=823;
-	
-	/** 单位移动位置 */
-	public static final int UnitMovePos=824;
-	
-	/** 单位确认选择 */
-	public static final int UnitPreBattleSure=825;
-	
-	/** 单位刷新buff剩余次数消息 */
-	public static final int UnitRefreshBuffLastNum=826;
-	
-	/** 单位刷新buff */
-	public static final int UnitRefreshBuff=827;
-	
-	/** 单位移除buff */
-	public static final int UnitRemoveBuff=828;
-	
-	/** 单位移除组CD */
-	public static final int UnitRemoveGroupCD=829;
-	
-	/** 单位复活消息 */
-	public static final int UnitRevive=830;
-	
-	public static final int UnitS=831;
-	
-	/** 单位释放技能结束(强制结束) */
-	public static final int UnitSkillOver=832;
-	
-	/** 单位特殊移动消息 */
-	public static final int UnitSpecialMove=833;
-	
-	/** 单位开始CD组 */
-	public static final int UnitStartCDs=834;
-	
-	/** 单位停止移动(reIdle) */
-	public static final int UnitStopMove=835;
-	
-	/** 单位同步指令消息 */
-	public static final int UnitSyncCommand=836;
-	
-	/** 单位使用技能 */
-	public static final int UnitUseSkill=837;
-	
-	/** 推送添加玩家群消息 */
-	public static final int FuncSendPlayerJoinRoleGroup=838;
-	
-	/** 推送玩家离开玩家群消息 */
-	public static final int FuncSendPlayerLeaveRoleGroup=839;
-	
-	/** 推送添加成员消息 */
-	public static final int FuncSendRoleGroupAddMember=840;
-	
-	/** 推送玩家群移除成员 */
-	public static final int FuncSendRoleGroupRemoveMember=841;
-	
-	/** 玩家群消息基类 */
-	public static final int FuncPlayerRoleGroupS=842;
-	
-	/** 添加申请消息 */
-	public static final int FuncSendAddApplyRoleGroup=843;
-	
-	/** 推送处理申请结果玩家群 */
-	public static final int FuncSendHandleApplyResultRoleGroup=844;
-	
-	/** 推送处理邀请结果到邀请者 */
-	public static final int FuncSendHandleInviteResultRoleGroup=845;
-	
-	/** 推送邀请加入玩家群消息 */
-	public static final int FuncSendInviteRoleGroup=846;
-	
-	/** 推送获取翻页显示内容，无缓存方式 */
-	public static final int FuncReGetPageShowList=847;
-	
-	/** 更新成员职位 */
-	public static final int FuncRefeshTitleRoleGroup=848;
-	
-	/** 推送更换队长消息 */
-	public static final int FuncSendChangeLeaderRoleGroup=849;
-	
-	public static final int FuncRefreshSubsectionRank=850;
-	
-	/** 逻辑服转发消息 */
-	public static final int GameTransGameToClient=851;
-	
-	/** 群里有权限成员通知处理申请结果 */
-	public static final int FuncSendHandleApplyResultToMember=852;
-	
-	/** 添加申请玩家群到自身消息 */
-	public static final int FuncSendAddApplyRoleGroupSelf=853;
-	
-	/** 推送玩家群变更数据 */
-	public static final int FuncSendRoleGroupChange=854;
-	
-	/** 推送信息日志消息 */
-	public static final int SendInfoLog=855;
-	
-	/** 推送获取分段翻页显示内容，无缓存方式 */
-	public static final int FuncReGetSubsectionPageShowList=856;
-	
-	/** 发送被邀请时是否可直接入群的变化 */
-	public static final int FuncSendChangeCanInviteInAbsRoleGroup=857;
-	
-	/** 客户端热更配置消息 */
-	public static final int ClientHotfixConfig=858;
-	
-	/** 玩家群信息日志消息 */
-	public static final int FuncSendRoleGroupInfoLog=859;
-	
-	/** 玩家群成员数据改变消息 */
-	public static final int FuncSendRoleGroupMemberChange=860;
-	
-	/** 回复获取玩家群数据消息 */
-	public static final int FuncReGetRoleGroupData=861;
-	
-	/** 单位直接更改位置朝向消息 */
-	public static final int UnitSetPosDir=862;
-	
-	/** 添加掉落物品包绑定消息 */
-	public static final int AddFieldItemBagBind=863;
-	
-	public static final int RemoveFieldItemBagBind=864;
-	
-	/** 角色刷新属性 */
-	public static final int RoleRefreshAttribute=865;
-	
-	/** 角色推送消息 */
-	public static final int RoleS=866;
-	
-	/** 推送角色聊天 */
-	public static final int SendPlayerChat=867;
+	public static final int AddMail=13315;
 	
 	/** 添加宠物 */
-	public static final int AddPet=868;
+	public static final int AddPet=13316;
 	
-	public static final int FuncSendRoleGroupMemberRoleShowChange=869;
+	/** 添加奖励消息 */
+	public static final int AddReward=13317;
 	
-	/** 添加绑定视野单位 */
-	public static final int AddBindVisionUnit=870;
+	/** 中心服转发消息 */
+	public static final int CenterTransGameToClient=13318;
 	
-	public static final int RemoveBindVisionUnit=871;
+	/** 更改角色名字消息 */
+	public static final int ChangeRoleName=13319;
 	
-	/** 刷新简版单位属性消息 */
-	public static final int RefreshSimpleUnitAttribute=872;
+	/** 客户端热更配置消息 */
+	public static final int ClientHotfixConfig=13320;
 	
-	/** 刷新简版单位位置消息 */
-	public static final int RefreshSimpleUnitPos=873;
+	/** 客户端版本热更新消息 */
+	public static final int ClientHotfix=13321;
 	
-	/** 推送移动物品 */
-	public static final int FuncSendMoveItem=874;
+	/** 创建角色成功消息 */
+	public static final int CreatePlayerSuccess=13322;
 	
-	/** 改变格子数 */
-	public static final int FuncRefreshItemGridNum=875;
+	/** 每日消息 */
+	public static final int Daily=13323;
 	
-	public static final int FuncRefreshRoleGroupRank=876;
+	/** 删除角色成功消息 */
+	public static final int DeletePlayerSuccess=13324;
 	
-	public static final int FuncResetRoleGroupRank=877;
+	/** 进入空场景消息(为客户端显示) */
+	public static final int EnterNoneScene=13325;
 	
-	/** 推送警告日志 */
-	public static final int SendWarningLog=878;
+	/** 进入场景失败消息 */
+	public static final int EnterSceneFailed=13326;
 	
-	/** 单位下载具消息 */
-	public static final int UnitGetOffVehicle=879;
+	/** 进入场景消息(依赖MessageCopy) */
+	public static final int EnterScene=13327;
 	
-	/** 单位上载具消息 */
-	public static final int UnitGetOnVehicle=880;
+	/** 添加物品消息 */
+	public static final int FuncAddItem=13328;
 	
-	public static final int UnitDrive=881;
+	/** 推送添加单个物品 */
+	public static final int FuncAddOneItem=13329;
 	
-	/** 功能关闭 */
-	public static final int FuncClose=882;
-	
-	/** 功能开启 */
-	public static final int FuncOpen=883;
+	/** 添加单个物品数目消息 */
+	public static final int FuncAddOneItemNum=13330;
 	
 	/** 拍卖行添加自己的出售物品消息 */
-	public static final int FuncAuctionAddSaleItem=884;
+	public static final int FuncAuctionAddSaleItem=13331;
 	
 	/** 返回拍卖行查询结果 */
-	public static final int FuncAuctionReQuery=885;
+	public static final int FuncAuctionReQuery=13332;
 	
-	/** 主单位消息基类 */
-	public static final int MUnitS=886;
-	
-	/** 更新宠物是否出战消息 */
-	public static final int RefreshPetIsWorking=887;
-	
-	/** 回复获取拍卖行物品推荐价格 */
-	public static final int FuncReGetAuctionItemSuggestPrice=888;
-	
-	/** 删除宠物 */
-	public static final int RemovePet=889;
+	/** 拍卖行更新自己出售物品数目消息 */
+	public static final int FuncAuctionRefreshSaleItem=13333;
 	
 	/** 拍卖行移除自己的物品消息 */
-	public static final int FuncAuctionRemoveSaleItem=890;
+	public static final int FuncAuctionRemoveSaleItem=13334;
 	
-	/** 攻击伤害单个数据() */
-	public static final int AttackDamageOne=891;
+	/** 取消匹配消息 */
+	public static final int FuncCancelMatch=13335;
+	
+	/** 功能关闭 */
+	public static final int FuncClose=13336;
+	
+	/** 匹配结束(成功结束) */
+	public static final int FuncMatchOver=13337;
+	
+	/** 匹配成功消息 */
+	public static final int FuncMatchSuccess=13338;
+	
+	/** 匹配超时消息 */
+	public static final int FuncMatchTimeOut=13339;
+	
+	/** 功能开启 */
+	public static final int FuncOpen=13340;
+	
+	/** 玩家群消息基类 */
+	public static final int FuncPlayerRoleGroupS=13341;
+	
+	/** 重新加入匹配队列消息 */
+	public static final int FuncReAddMatch=13342;
+	
+	/** 回复获取拍卖行物品推荐价格 */
+	public static final int FuncReGetAuctionItemSuggestPrice=13343;
+	
+	/** 推送获取翻页显示内容，无缓存方式 */
+	public static final int FuncReGetPageShowList=13344;
+	
+	/** 功能-回复查询每页排行 */
+	public static final int FuncReGetPageShow=13345;
+	
+	/** 回复获取玩家群数据消息 */
+	public static final int FuncReGetRoleGroupData=13346;
+	
+	public static final int FuncReGetSelfPageShow=13347;
+	
+	/** 推送获取分段翻页显示内容，无缓存方式 */
+	public static final int FuncReGetSubsectionPageShowList=13348;
+	
+	/** 更新成员职位 */
+	public static final int FuncRefeshTitleRoleGroup=13349;
+	
+	/** 改变格子数 */
+	public static final int FuncRefreshItemGridNum=13350;
+	
+	public static final int FuncRefreshRank=13351;
+	
+	public static final int FuncRefreshRoleGroupRank=13352;
+	
+	public static final int FuncRefreshSubsectionRank=13353;
+	
+	/** 移除物品消息 */
+	public static final int FuncRemoveItem=13354;
+	
+	/** 移除单个物品 */
+	public static final int FuncRemoveOneItem=13355;
+	
+	/** 功能-重置排行消息 */
+	public static final int FuncResetRank=13356;
+	
+	public static final int FuncResetRoleGroupRank=13357;
+	
+	/** 功能发送消息 */
+	public static final int FuncS=13358;
+	
+	/** 推送接受匹配 */
+	public static final int FuncSendAcceptMatch=13359;
+	
+	/** 添加申请消息 */
+	public static final int FuncSendAddApplyRoleGroup=13360;
+	
+	/** 添加申请玩家群到自身消息 */
+	public static final int FuncSendAddApplyRoleGroupSelf=13361;
+	
+	/** 发送被邀请时是否可直接入群的变化 */
+	public static final int FuncSendChangeCanInviteInAbsRoleGroup=13362;
+	
+	/** 推送更换队长消息 */
+	public static final int FuncSendChangeLeaderRoleGroup=13363;
+	
+	/** 推送整理物品消息 */
+	public static final int FuncSendCleanUpItem=13364;
+	
+	/** 推送处理申请结果玩家群 */
+	public static final int FuncSendHandleApplyResultRoleGroup=13365;
+	
+	/** 群里有权限成员通知处理申请结果 */
+	public static final int FuncSendHandleApplyResultToMember=13366;
+	
+	/** 推送处理邀请结果到邀请者 */
+	public static final int FuncSendHandleInviteResultRoleGroup=13367;
+	
+	/** 推送邀请加入玩家群消息 */
+	public static final int FuncSendInviteRoleGroup=13368;
+	
+	/** 移动装备消息 */
+	public static final int FuncSendMoveEquip=13369;
+	
+	/** 推送移动物品 */
+	public static final int FuncSendMoveItem=13370;
+	
+	/** 推送添加玩家群消息 */
+	public static final int FuncSendPlayerJoinRoleGroup=13371;
+	
+	/** 推送玩家离开玩家群消息 */
+	public static final int FuncSendPlayerLeaveRoleGroup=13372;
+	
+	/** 脱装备 */
+	public static final int FuncSendPutOffEquip=13373;
+	
+	/** 穿装备 */
+	public static final int FuncSendPutOnEquip=13374;
+	
+	/** 推送添加成员消息 */
+	public static final int FuncSendRoleGroupAddMember=13375;
+	
+	/** 推送玩家群变更数据 */
+	public static final int FuncSendRoleGroupChange=13376;
+	
+	/** 玩家群信息日志消息 */
+	public static final int FuncSendRoleGroupInfoLog=13377;
+	
+	/** 玩家群成员数据改变消息 */
+	public static final int FuncSendRoleGroupMemberChange=13378;
+	
+	public static final int FuncSendRoleGroupMemberRoleShowChange=13379;
+	
+	/** 推送玩家群移除成员 */
+	public static final int FuncSendRoleGroupRemoveMember=13380;
+	
+	/** 开始匹配消息 */
+	public static final int FuncStartMatch=13381;
+	
+	/** 使用物品结果消息 */
+	public static final int FuncUseItemResult=13382;
+	
+	/** 逻辑服转发消息 */
+	public static final int GameTransGameToClient=13383;
+	
+	/** 初始化客户端消息(ClientListData)(此处需要使用copy,因工具已改为潜拷,为了逻辑层避开深拷问题) */
+	public static final int InitClient=13384;
+	
+	/** 离开场景消息 */
+	public static final int LeaveScene=13385;
+	
+	/** 升级消息 */
+	public static final int LevelUp=13386;
+	
+	/** 主角加buff */
+	public static final int MUnitAddBuff=13387;
+	
+	/** 控制单位添加组CD上限百分比 */
+	public static final int MUnitAddGroupTimeMaxPercent=13388;
+	
+	/** 控制单位添加组CD上限值 */
+	public static final int MUnitAddGroupTimeMaxValue=13389;
+	
+	/** 控制单位添加组时间经过 */
+	public static final int MUnitAddGroupTimePass=13390;
+	
+	/** 主角加技能消息 */
+	public static final int MUnitAddSkill=13391;
+	
+	/** 刷新主角属性 */
+	public static final int MUnitRefreshAttributes=13392;
+	
+	/** 控制单位刷新造型消息 */
+	public static final int MUnitRefreshAvatar=13393;
+	
+	/** 控制单位改变显示部件 */
+	public static final int MUnitRefreshAvatarPart=13394;
+	
+	/** 主角刷buff剩余次数 */
+	public static final int MUnitRefreshBuffLastNum=13395;
+	
+	/** 主角刷buff */
+	public static final int MUnitRefreshBuff=13396;
+	
+	/** 刷新主角状态 */
+	public static final int MUnitRefreshStatus=13397;
+	
+	/** 主角移除buff */
+	public static final int MUnitRemoveBuff=13398;
+	
+	/** 控制单位移除组CD消息 */
+	public static final int MUnitRemoveGroupCD=13399;
+	
+	/** 主角删技能消息 */
+	public static final int MUnitRemoveSkill=13400;
+	
+	/** 主单位消息基类 */
+	public static final int MUnitS=13401;
+	
+	/** 玩家单位开始CD组 */
+	public static final int MUnitStartCDs=13402;
+	
+	/** 预备进入场景消息 */
+	public static final int PreEnterScene=13403;
+	
+	/** 预进入场景服务器就绪 */
+	public static final int PreEnterSceneNext=13404;
+	
+	/** 回复获取全部邮件消息 */
+	public static final int ReGetAllMail=13405;
+	
+	/** 回复角色列表消息 */
+	public static final int RePlayerList=13406;
+	
+	/** 回复查询角色消息 */
+	public static final int ReQueryPlayer=13407;
+	
+	/** 返回搜索结果 */
+	public static final int ReSearchPlayer=13408;
+	
+	/** 回复更新社交数据消息 */
+	public static final int ReUpdateRoleSocialData=13409;
+	
+	/** 刷新单个社交数据(实时刷新用) */
+	public static final int ReUpdateRoleSocialDataOne=13410;
+	
+	/** 收到客户端离线事务消息 */
+	public static final int ReceiveClientOfflineWork=13411;
+	
+	/** 刷新货币消息 */
+	public static final int RefreshCurrency=13412;
+	
+	/** 刷新当期线ID消息 */
+	public static final int RefreshCurrentLine=13413;
+	
+	/** 刷经验消息 */
+	public static final int RefreshExp=13414;
+	
+	/** 刷新角色战斗力消息 */
+	public static final int RefreshFightForce=13415;
+	
+	/** 刷新引导步消息 */
+	public static final int RefreshMainGuideStep=13416;
+	
+	/** 更新宠物是否出战消息 */
+	public static final int RefreshPetIsWorking=13417;
+	
+	/** 刷新服务器时间 */
+	public static final int RefreshServerTime=13418;
+	
+	/** 刷新目标数目消息 */
+	public static final int RefreshTask=13419;
+	
+	/** 删除宠物 */
+	public static final int RemovePet=13420;
+	
+	/** 推送添加成就消息 */
+	public static final int SendAcceptAchievement=13421;
+	
+	/** 推送接任务消息 */
+	public static final int SendAcceptQuest=13422;
+	
+	/** 推送成就完成消息 */
+	public static final int SendAchievementComplete=13423;
+	
+	/** 推送添加好友黑名单 */
+	public static final int SendAddFriendBlackList=13424;
+	
+	/** 推送添加好友消息 */
+	public static final int SendAddFriend=13425;
+	
+	/** 推送申请添加好友消息 */
+	public static final int SendApplyAddFriend=13426;
+	
+	/** 推送绑定平台消息 */
+	public static final int SendBindPlatform=13427;
+	
+	/** 推送清空全部任务(gm) */
+	public static final int SendClearAllQuestByGM=13428;
+	
+	/** 推送交任务消息 */
+	public static final int SendCommitQuest=13429;
+	
+	/** 推送删除邮件消息 */
+	public static final int SendDeleteMail=13430;
+	
+	/** 推送Game服息回执 */
+	public static final int SendGameReceiptToClient=13431;
+	
+	/** 推送领取成就奖励成功消息 */
+	public static final int SendGetAchievementRewardSuccess=13432;
+	
+	/** 推送任务放弃消息 */
+	public static final int SendGiveUpQuest=13433;
+	
+	/** 推送信息码消息 */
+	public static final int SendInfoCode=13434;
+	
+	/** 推送带参信息码消息 */
+	public static final int SendInfoCodeWithArgs=13435;
+	
+	/** 推送信息日志消息 */
+	public static final int SendInfoLog=13436;
+	
+	/** 推送角色聊天 */
+	public static final int SendPlayerChat=13437;
+	
+	/** 推送任务失败消息 */
+	public static final int SendQuestFailed=13438;
+	
+	/** 推送强制删除已接任务消息 */
+	public static final int SendRemoveAcceptQuest=13439;
+	
+	/** 推送移除好友黑名单 */
+	public static final int SendRemoveFriendBlackList=13440;
+	
+	/** 推送移除好友 */
+	public static final int SendRemoveFriend=13441;
+	
+	/** 推送警告日志 */
+	public static final int SendWarningLog=13442;
+	
+	/** 切换game服消息 */
+	public static final int SwitchGame=13443;
+	
+	/** 切换到场景服消息 */
+	public static final int SwitchScene=13444;
+	
+	/** 领取邮件成功 */
+	public static final int TakeMailSuccess=13445;
+	
+	/** 推送获取分段翻页显示内容 */
+	public static final int FuncRefreshSubsectionIndex=13446;
 	
 }

@@ -10,22 +10,15 @@ public class GameResponseMaker:DataMaker
 	{
 		offSet=GameResponseType.off;
 		list=new Func<BaseData>[GameResponseType.count-offSet];
-		list[GameResponseType.AOITowerRefresh-offSet]=createAOITowerRefreshResponse;
 		list[GameResponseType.ActivityCompleteOnce-offSet]=createActivityCompleteOnceResponse;
 		list[GameResponseType.ActivityReset-offSet]=createActivityResetResponse;
 		list[GameResponseType.ActivitySwitch-offSet]=createActivitySwitchResponse;
-		list[GameResponseType.AddBullet-offSet]=createAddBulletResponse;
 		list[GameResponseType.AddMail-offSet]=createAddMailResponse;
+		list[GameResponseType.AddPet-offSet]=createAddPetResponse;
 		list[GameResponseType.AddReward-offSet]=createAddRewardResponse;
-		list[GameResponseType.AddUnit-offSet]=createAddUnitResponse;
-		list[GameResponseType.AttackDamage-offSet]=createAttackDamageResponse;
-		list[GameResponseType.BuildingBuildComplete-offSet]=createBuildingBuildCompleteResponse;
-		list[GameResponseType.BuildingCancelLevelUp-offSet]=createBuildingCancelLevelUpResponse;
-		list[GameResponseType.BuildingLevelUpingComplete-offSet]=createBuildingLevelUpingCompleteResponse;
-		list[GameResponseType.BuildingStartLevelUp-offSet]=createBuildingStartLevelUpResponse;
 		list[GameResponseType.CenterTransGameToClient-offSet]=createCenterTransGameToClientResponse;
 		list[GameResponseType.ChangeRoleName-offSet]=createChangeRoleNameResponse;
-		list[GameResponseType.CharacterRefreshPartRoleShowData-offSet]=createCharacterRefreshPartRoleShowDataResponse;
+		list[GameResponseType.ClientHotfixConfig-offSet]=createClientHotfixConfigResponse;
 		list[GameResponseType.ClientHotfix-offSet]=createClientHotfixResponse;
 		list[GameResponseType.CreatePlayerSuccess-offSet]=createCreatePlayerSuccessResponse;
 		list[GameResponseType.Daily-offSet]=createDailyResponse;
@@ -33,31 +26,62 @@ public class GameResponseMaker:DataMaker
 		list[GameResponseType.EnterNoneScene-offSet]=createEnterNoneSceneResponse;
 		list[GameResponseType.EnterSceneFailed-offSet]=createEnterSceneFailedResponse;
 		list[GameResponseType.EnterScene-offSet]=createEnterSceneResponse;
-		list[GameResponseType.FrameSyncFrame-offSet]=createFrameSyncFrameResponse;
-		list[GameResponseType.FrameSyncStart-offSet]=createFrameSyncStartResponse;
-		list[GameResponseType.FuncAuctionRefreshSaleItem-offSet]=createFuncAuctionRefreshSaleItemResponse;
 		list[GameResponseType.FuncAddItem-offSet]=createFuncAddItemResponse;
 		list[GameResponseType.FuncAddOneItem-offSet]=createFuncAddOneItemResponse;
 		list[GameResponseType.FuncAddOneItemNum-offSet]=createFuncAddOneItemNumResponse;
+		list[GameResponseType.FuncAuctionAddSaleItem-offSet]=createFuncAuctionAddSaleItemResponse;
+		list[GameResponseType.FuncAuctionReQuery-offSet]=createFuncAuctionReQueryResponse;
+		list[GameResponseType.FuncAuctionRefreshSaleItem-offSet]=createFuncAuctionRefreshSaleItemResponse;
+		list[GameResponseType.FuncAuctionRemoveSaleItem-offSet]=createFuncAuctionRemoveSaleItemResponse;
 		list[GameResponseType.FuncCancelMatch-offSet]=createFuncCancelMatchResponse;
+		list[GameResponseType.FuncClose-offSet]=createFuncCloseResponse;
 		list[GameResponseType.FuncMatchOver-offSet]=createFuncMatchOverResponse;
 		list[GameResponseType.FuncMatchSuccess-offSet]=createFuncMatchSuccessResponse;
 		list[GameResponseType.FuncMatchTimeOut-offSet]=createFuncMatchTimeOutResponse;
+		list[GameResponseType.FuncOpen-offSet]=createFuncOpenResponse;
+		list[GameResponseType.FuncPlayerRoleGroupS-offSet]=createFuncPlayerRoleGroupSResponse;
 		list[GameResponseType.FuncReAddMatch-offSet]=createFuncReAddMatchResponse;
+		list[GameResponseType.FuncReGetAuctionItemSuggestPrice-offSet]=createFuncReGetAuctionItemSuggestPriceResponse;
+		list[GameResponseType.FuncReGetPageShowList-offSet]=createFuncReGetPageShowListResponse;
 		list[GameResponseType.FuncReGetPageShow-offSet]=createFuncReGetPageShowResponse;
+		list[GameResponseType.FuncReGetRoleGroupData-offSet]=createFuncReGetRoleGroupDataResponse;
 		list[GameResponseType.FuncReGetSelfPageShow-offSet]=createFuncReGetSelfPageShowResponse;
+		list[GameResponseType.FuncReGetSubsectionPageShowList-offSet]=createFuncReGetSubsectionPageShowListResponse;
+		list[GameResponseType.FuncRefeshTitleRoleGroup-offSet]=createFuncRefeshTitleRoleGroupResponse;
+		list[GameResponseType.FuncRefreshItemGridNum-offSet]=createFuncRefreshItemGridNumResponse;
 		list[GameResponseType.FuncRefreshRank-offSet]=createFuncRefreshRankResponse;
+		list[GameResponseType.FuncRefreshRoleGroupRank-offSet]=createFuncRefreshRoleGroupRankResponse;
+		list[GameResponseType.FuncRefreshSubsectionRank-offSet]=createFuncRefreshSubsectionRankResponse;
 		list[GameResponseType.FuncRemoveItem-offSet]=createFuncRemoveItemResponse;
 		list[GameResponseType.FuncRemoveOneItem-offSet]=createFuncRemoveOneItemResponse;
 		list[GameResponseType.FuncResetRank-offSet]=createFuncResetRankResponse;
+		list[GameResponseType.FuncResetRoleGroupRank-offSet]=createFuncResetRoleGroupRankResponse;
 		list[GameResponseType.FuncS-offSet]=createFuncSResponse;
 		list[GameResponseType.FuncSendAcceptMatch-offSet]=createFuncSendAcceptMatchResponse;
+		list[GameResponseType.FuncSendAddApplyRoleGroup-offSet]=createFuncSendAddApplyRoleGroupResponse;
+		list[GameResponseType.FuncSendAddApplyRoleGroupSelf-offSet]=createFuncSendAddApplyRoleGroupSelfResponse;
+		list[GameResponseType.FuncSendChangeCanInviteInAbsRoleGroup-offSet]=createFuncSendChangeCanInviteInAbsRoleGroupResponse;
+		list[GameResponseType.FuncSendChangeLeaderRoleGroup-offSet]=createFuncSendChangeLeaderRoleGroupResponse;
 		list[GameResponseType.FuncSendCleanUpItem-offSet]=createFuncSendCleanUpItemResponse;
+		list[GameResponseType.FuncSendHandleApplyResultRoleGroup-offSet]=createFuncSendHandleApplyResultRoleGroupResponse;
+		list[GameResponseType.FuncSendHandleApplyResultToMember-offSet]=createFuncSendHandleApplyResultToMemberResponse;
+		list[GameResponseType.FuncSendHandleInviteResultRoleGroup-offSet]=createFuncSendHandleInviteResultRoleGroupResponse;
+		list[GameResponseType.FuncSendInviteRoleGroup-offSet]=createFuncSendInviteRoleGroupResponse;
 		list[GameResponseType.FuncSendMoveEquip-offSet]=createFuncSendMoveEquipResponse;
+		list[GameResponseType.FuncSendMoveItem-offSet]=createFuncSendMoveItemResponse;
+		list[GameResponseType.FuncSendPlayerJoinRoleGroup-offSet]=createFuncSendPlayerJoinRoleGroupResponse;
+		list[GameResponseType.FuncSendPlayerLeaveRoleGroup-offSet]=createFuncSendPlayerLeaveRoleGroupResponse;
 		list[GameResponseType.FuncSendPutOffEquip-offSet]=createFuncSendPutOffEquipResponse;
 		list[GameResponseType.FuncSendPutOnEquip-offSet]=createFuncSendPutOnEquipResponse;
+		list[GameResponseType.FuncSendRoleGroupAddMember-offSet]=createFuncSendRoleGroupAddMemberResponse;
+		list[GameResponseType.FuncSendRoleGroupChange-offSet]=createFuncSendRoleGroupChangeResponse;
+		list[GameResponseType.FuncSendRoleGroupInfoLog-offSet]=createFuncSendRoleGroupInfoLogResponse;
+		list[GameResponseType.FuncSendRoleGroupMemberChange-offSet]=createFuncSendRoleGroupMemberChangeResponse;
+		list[GameResponseType.FuncSendRoleGroupMemberRoleShowChange-offSet]=createFuncSendRoleGroupMemberRoleShowChangeResponse;
+		list[GameResponseType.FuncSendRoleGroupRemoveMember-offSet]=createFuncSendRoleGroupRemoveMemberResponse;
 		list[GameResponseType.FuncStartMatch-offSet]=createFuncStartMatchResponse;
 		list[GameResponseType.FuncUseItemResult-offSet]=createFuncUseItemResultResponse;
+		list[GameResponseType.GameTransGameToClient-offSet]=createGameTransGameToClientResponse;
 		list[GameResponseType.InitClient-offSet]=createInitClientResponse;
 		list[GameResponseType.LeaveScene-offSet]=createLeaveSceneResponse;
 		list[GameResponseType.LevelUp-offSet]=createLevelUpResponse;
@@ -75,12 +99,10 @@ public class GameResponseMaker:DataMaker
 		list[GameResponseType.MUnitRemoveBuff-offSet]=createMUnitRemoveBuffResponse;
 		list[GameResponseType.MUnitRemoveGroupCD-offSet]=createMUnitRemoveGroupCDResponse;
 		list[GameResponseType.MUnitRemoveSkill-offSet]=createMUnitRemoveSkillResponse;
+		list[GameResponseType.MUnitS-offSet]=createMUnitSResponse;
 		list[GameResponseType.MUnitStartCDs-offSet]=createMUnitStartCDsResponse;
 		list[GameResponseType.PreEnterScene-offSet]=createPreEnterSceneResponse;
 		list[GameResponseType.PreEnterSceneNext-offSet]=createPreEnterSceneNextResponse;
-		list[GameResponseType.ReCUnitPullBack-offSet]=createReCUnitPullBackResponse;
-		list[GameResponseType.ReCUnitSkillFailedEx-offSet]=createReCUnitSkillFailedExResponse;
-		list[GameResponseType.ReCUnitSkillFailed-offSet]=createReCUnitSkillFailedResponse;
 		list[GameResponseType.ReGetAllMail-offSet]=createReGetAllMailResponse;
 		list[GameResponseType.RePlayerList-offSet]=createRePlayerListResponse;
 		list[GameResponseType.ReQueryPlayer-offSet]=createReQueryPlayerResponse;
@@ -93,24 +115,16 @@ public class GameResponseMaker:DataMaker
 		list[GameResponseType.RefreshExp-offSet]=createRefreshExpResponse;
 		list[GameResponseType.RefreshFightForce-offSet]=createRefreshFightForceResponse;
 		list[GameResponseType.RefreshMainGuideStep-offSet]=createRefreshMainGuideStepResponse;
-		list[GameResponseType.RefreshOperationState-offSet]=createRefreshOperationStateResponse;
+		list[GameResponseType.RefreshPetIsWorking-offSet]=createRefreshPetIsWorkingResponse;
 		list[GameResponseType.RefreshServerTime-offSet]=createRefreshServerTimeResponse;
 		list[GameResponseType.RefreshTask-offSet]=createRefreshTaskResponse;
-		list[GameResponseType.RefreshUnitAttributes-offSet]=createRefreshUnitAttributesResponse;
-		list[GameResponseType.RefreshUnitAvatar-offSet]=createRefreshUnitAvatarResponse;
-		list[GameResponseType.RefreshUnitAvatarPart-offSet]=createRefreshUnitAvatarPartResponse;
-		list[GameResponseType.RefreshUnitStatus-offSet]=createRefreshUnitStatusResponse;
-		list[GameResponseType.RemoveBullet-offSet]=createRemoveBulletResponse;
-		list[GameResponseType.RemoveUnit-offSet]=createRemoveUnitResponse;
-		list[GameResponseType.SceneRadio-offSet]=createSceneRadioResponse;
-		list[GameResponseType.SceneS-offSet]=createSceneSResponse;
+		list[GameResponseType.RemovePet-offSet]=createRemovePetResponse;
 		list[GameResponseType.SendAcceptAchievement-offSet]=createSendAcceptAchievementResponse;
 		list[GameResponseType.SendAcceptQuest-offSet]=createSendAcceptQuestResponse;
 		list[GameResponseType.SendAchievementComplete-offSet]=createSendAchievementCompleteResponse;
 		list[GameResponseType.SendAddFriendBlackList-offSet]=createSendAddFriendBlackListResponse;
 		list[GameResponseType.SendAddFriend-offSet]=createSendAddFriendResponse;
 		list[GameResponseType.SendApplyAddFriend-offSet]=createSendApplyAddFriendResponse;
-		list[GameResponseType.SendBattleState-offSet]=createSendBattleStateResponse;
 		list[GameResponseType.SendBindPlatform-offSet]=createSendBindPlatformResponse;
 		list[GameResponseType.SendClearAllQuestByGM-offSet]=createSendClearAllQuestByGMResponse;
 		list[GameResponseType.SendCommitQuest-offSet]=createSendCommitQuestResponse;
@@ -120,88 +134,17 @@ public class GameResponseMaker:DataMaker
 		list[GameResponseType.SendGiveUpQuest-offSet]=createSendGiveUpQuestResponse;
 		list[GameResponseType.SendInfoCode-offSet]=createSendInfoCodeResponse;
 		list[GameResponseType.SendInfoCodeWithArgs-offSet]=createSendInfoCodeWithArgsResponse;
+		list[GameResponseType.SendInfoLog-offSet]=createSendInfoLogResponse;
+		list[GameResponseType.SendPlayerChat-offSet]=createSendPlayerChatResponse;
 		list[GameResponseType.SendQuestFailed-offSet]=createSendQuestFailedResponse;
 		list[GameResponseType.SendRemoveAcceptQuest-offSet]=createSendRemoveAcceptQuestResponse;
 		list[GameResponseType.SendRemoveFriendBlackList-offSet]=createSendRemoveFriendBlackListResponse;
 		list[GameResponseType.SendRemoveFriend-offSet]=createSendRemoveFriendResponse;
-		list[GameResponseType.SwitchGame-offSet]=createSwitchGameResponse;
-		list[GameResponseType.TakeMailSuccess-offSet]=createTakeMailSuccessResponse;
-		list[GameResponseType.UnitAddBuff-offSet]=createUnitAddBuffResponse;
-		list[GameResponseType.UnitAddGroupTimeMaxPercent-offSet]=createUnitAddGroupTimeMaxPercentResponse;
-		list[GameResponseType.UnitAddGroupTimeMaxValue-offSet]=createUnitAddGroupTimeMaxValueResponse;
-		list[GameResponseType.UnitAddGroupTimePass-offSet]=createUnitAddGroupTimePassResponse;
-		list[GameResponseType.UnitChat-offSet]=createUnitChatResponse;
-		list[GameResponseType.UnitDead-offSet]=createUnitDeadResponse;
-		list[GameResponseType.UnitMoveDir-offSet]=createUnitMoveDirResponse;
-		list[GameResponseType.UnitMovePosList-offSet]=createUnitMovePosListResponse;
-		list[GameResponseType.UnitMovePos-offSet]=createUnitMovePosResponse;
-		list[GameResponseType.UnitPreBattleSure-offSet]=createUnitPreBattleSureResponse;
-		list[GameResponseType.UnitRefreshBuffLastNum-offSet]=createUnitRefreshBuffLastNumResponse;
-		list[GameResponseType.UnitRefreshBuff-offSet]=createUnitRefreshBuffResponse;
-		list[GameResponseType.UnitRemoveBuff-offSet]=createUnitRemoveBuffResponse;
-		list[GameResponseType.UnitRemoveGroupCD-offSet]=createUnitRemoveGroupCDResponse;
-		list[GameResponseType.UnitRevive-offSet]=createUnitReviveResponse;
-		list[GameResponseType.UnitS-offSet]=createUnitSResponse;
-		list[GameResponseType.UnitSkillOver-offSet]=createUnitSkillOverResponse;
-		list[GameResponseType.UnitSpecialMove-offSet]=createUnitSpecialMoveResponse;
-		list[GameResponseType.UnitStartCDs-offSet]=createUnitStartCDsResponse;
-		list[GameResponseType.UnitStopMove-offSet]=createUnitStopMoveResponse;
-		list[GameResponseType.UnitSyncCommand-offSet]=createUnitSyncCommandResponse;
-		list[GameResponseType.UnitUseSkill-offSet]=createUnitUseSkillResponse;
-		list[GameResponseType.FuncSendPlayerJoinRoleGroup-offSet]=createFuncSendPlayerJoinRoleGroupResponse;
-		list[GameResponseType.FuncSendPlayerLeaveRoleGroup-offSet]=createFuncSendPlayerLeaveRoleGroupResponse;
-		list[GameResponseType.FuncSendRoleGroupAddMember-offSet]=createFuncSendRoleGroupAddMemberResponse;
-		list[GameResponseType.FuncSendRoleGroupRemoveMember-offSet]=createFuncSendRoleGroupRemoveMemberResponse;
-		list[GameResponseType.FuncPlayerRoleGroupS-offSet]=createFuncPlayerRoleGroupSResponse;
-		list[GameResponseType.FuncSendAddApplyRoleGroup-offSet]=createFuncSendAddApplyRoleGroupResponse;
-		list[GameResponseType.FuncSendHandleApplyResultRoleGroup-offSet]=createFuncSendHandleApplyResultRoleGroupResponse;
-		list[GameResponseType.FuncSendHandleInviteResultRoleGroup-offSet]=createFuncSendHandleInviteResultRoleGroupResponse;
-		list[GameResponseType.FuncSendInviteRoleGroup-offSet]=createFuncSendInviteRoleGroupResponse;
-		list[GameResponseType.FuncReGetPageShowList-offSet]=createFuncReGetPageShowListResponse;
-		list[GameResponseType.FuncRefeshTitleRoleGroup-offSet]=createFuncRefeshTitleRoleGroupResponse;
-		list[GameResponseType.FuncSendChangeLeaderRoleGroup-offSet]=createFuncSendChangeLeaderRoleGroupResponse;
-		list[GameResponseType.FuncRefreshSubsectionRank-offSet]=createFuncRefreshSubsectionRankResponse;
-		list[GameResponseType.GameTransGameToClient-offSet]=createGameTransGameToClientResponse;
-		list[GameResponseType.FuncSendHandleApplyResultToMember-offSet]=createFuncSendHandleApplyResultToMemberResponse;
-		list[GameResponseType.FuncSendAddApplyRoleGroupSelf-offSet]=createFuncSendAddApplyRoleGroupSelfResponse;
-		list[GameResponseType.FuncSendRoleGroupChange-offSet]=createFuncSendRoleGroupChangeResponse;
-		list[GameResponseType.SendInfoLog-offSet]=createSendInfoLogResponse;
-		list[GameResponseType.FuncReGetSubsectionPageShowList-offSet]=createFuncReGetSubsectionPageShowListResponse;
-		list[GameResponseType.FuncSendChangeCanInviteInAbsRoleGroup-offSet]=createFuncSendChangeCanInviteInAbsRoleGroupResponse;
-		list[GameResponseType.ClientHotfixConfig-offSet]=createClientHotfixConfigResponse;
-		list[GameResponseType.FuncSendRoleGroupInfoLog-offSet]=createFuncSendRoleGroupInfoLogResponse;
-		list[GameResponseType.FuncSendRoleGroupMemberChange-offSet]=createFuncSendRoleGroupMemberChangeResponse;
-		list[GameResponseType.FuncReGetRoleGroupData-offSet]=createFuncReGetRoleGroupDataResponse;
-		list[GameResponseType.UnitSetPosDir-offSet]=createUnitSetPosDirResponse;
-		list[GameResponseType.AddFieldItemBagBind-offSet]=createAddFieldItemBagBindResponse;
-		list[GameResponseType.RemoveFieldItemBagBind-offSet]=createRemoveFieldItemBagBindResponse;
-		list[GameResponseType.RoleRefreshAttribute-offSet]=createRoleRefreshAttributeResponse;
-		list[GameResponseType.RoleS-offSet]=createRoleSResponse;
-		list[GameResponseType.SendPlayerChat-offSet]=createSendPlayerChatResponse;
-		list[GameResponseType.AddPet-offSet]=createAddPetResponse;
-		list[GameResponseType.FuncSendRoleGroupMemberRoleShowChange-offSet]=createFuncSendRoleGroupMemberRoleShowChangeResponse;
-		list[GameResponseType.AddBindVisionUnit-offSet]=createAddBindVisionUnitResponse;
-		list[GameResponseType.RemoveBindVisionUnit-offSet]=createRemoveBindVisionUnitResponse;
-		list[GameResponseType.RefreshSimpleUnitAttribute-offSet]=createRefreshSimpleUnitAttributeResponse;
-		list[GameResponseType.RefreshSimpleUnitPos-offSet]=createRefreshSimpleUnitPosResponse;
-		list[GameResponseType.FuncSendMoveItem-offSet]=createFuncSendMoveItemResponse;
-		list[GameResponseType.FuncRefreshItemGridNum-offSet]=createFuncRefreshItemGridNumResponse;
-		list[GameResponseType.FuncRefreshRoleGroupRank-offSet]=createFuncRefreshRoleGroupRankResponse;
-		list[GameResponseType.FuncResetRoleGroupRank-offSet]=createFuncResetRoleGroupRankResponse;
 		list[GameResponseType.SendWarningLog-offSet]=createSendWarningLogResponse;
-		list[GameResponseType.UnitGetOffVehicle-offSet]=createUnitGetOffVehicleResponse;
-		list[GameResponseType.UnitGetOnVehicle-offSet]=createUnitGetOnVehicleResponse;
-		list[GameResponseType.UnitDrive-offSet]=createUnitDriveResponse;
-		list[GameResponseType.FuncClose-offSet]=createFuncCloseResponse;
-		list[GameResponseType.FuncOpen-offSet]=createFuncOpenResponse;
-		list[GameResponseType.FuncAuctionAddSaleItem-offSet]=createFuncAuctionAddSaleItemResponse;
-		list[GameResponseType.FuncAuctionReQuery-offSet]=createFuncAuctionReQueryResponse;
-		list[GameResponseType.MUnitS-offSet]=createMUnitSResponse;
-		list[GameResponseType.RefreshPetIsWorking-offSet]=createRefreshPetIsWorkingResponse;
-		list[GameResponseType.FuncReGetAuctionItemSuggestPrice-offSet]=createFuncReGetAuctionItemSuggestPriceResponse;
-		list[GameResponseType.RemovePet-offSet]=createRemovePetResponse;
-		list[GameResponseType.FuncAuctionRemoveSaleItem-offSet]=createFuncAuctionRemoveSaleItemResponse;
-		list[GameResponseType.AttackDamageOne-offSet]=createAttackDamageOneResponse;
+		list[GameResponseType.SwitchGame-offSet]=createSwitchGameResponse;
+		list[GameResponseType.SwitchScene-offSet]=createSwitchSceneResponse;
+		list[GameResponseType.TakeMailSuccess-offSet]=createTakeMailSuccessResponse;
+		list[GameResponseType.FuncRefreshSubsectionIndex-offSet]=createFuncRefreshSubsectionIndexResponse;
 	}
 	
 	private BaseData createCreatePlayerSuccessResponse()
@@ -219,11 +162,6 @@ public class GameResponseMaker:DataMaker
 		return new RePlayerListResponse();
 	}
 	
-	private BaseData createAddUnitResponse()
-	{
-		return new AddUnitResponse();
-	}
-	
 	private BaseData createEnterSceneFailedResponse()
 	{
 		return new EnterSceneFailedResponse();
@@ -237,56 +175,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createPreEnterSceneResponse()
 	{
 		return new PreEnterSceneResponse();
-	}
-	
-	private BaseData createRemoveUnitResponse()
-	{
-		return new RemoveUnitResponse();
-	}
-	
-	private BaseData createSceneRadioResponse()
-	{
-		return new SceneRadioResponse();
-	}
-	
-	private BaseData createAttackDamageResponse()
-	{
-		return new AttackDamageResponse();
-	}
-	
-	private BaseData createRefreshUnitAttributesResponse()
-	{
-		return new RefreshUnitAttributesResponse();
-	}
-	
-	private BaseData createRefreshUnitStatusResponse()
-	{
-		return new RefreshUnitStatusResponse();
-	}
-	
-	private BaseData createUnitDeadResponse()
-	{
-		return new UnitDeadResponse();
-	}
-	
-	private BaseData createUnitReviveResponse()
-	{
-		return new UnitReviveResponse();
-	}
-	
-	private BaseData createUnitUseSkillResponse()
-	{
-		return new UnitUseSkillResponse();
-	}
-	
-	private BaseData createUnitSpecialMoveResponse()
-	{
-		return new UnitSpecialMoveResponse();
-	}
-	
-	private BaseData createAddBulletResponse()
-	{
-		return new AddBulletResponse();
 	}
 	
 	private BaseData createMUnitAddBuffResponse()
@@ -329,31 +217,6 @@ public class GameResponseMaker:DataMaker
 		return new MUnitStartCDsResponse();
 	}
 	
-	private BaseData createRemoveBulletResponse()
-	{
-		return new RemoveBulletResponse();
-	}
-	
-	private BaseData createUnitAddBuffResponse()
-	{
-		return new UnitAddBuffResponse();
-	}
-	
-	private BaseData createUnitRefreshBuffResponse()
-	{
-		return new UnitRefreshBuffResponse();
-	}
-	
-	private BaseData createUnitRemoveBuffResponse()
-	{
-		return new UnitRemoveBuffResponse();
-	}
-	
-	private BaseData createSendBattleStateResponse()
-	{
-		return new SendBattleStateResponse();
-	}
-	
 	private BaseData createLeaveSceneResponse()
 	{
 		return new LeaveSceneResponse();
@@ -384,11 +247,6 @@ public class GameResponseMaker:DataMaker
 		return new DailyResponse();
 	}
 	
-	private BaseData createUnitChatResponse()
-	{
-		return new UnitChatResponse();
-	}
-	
 	private BaseData createMUnitAddGroupTimeMaxPercentResponse()
 	{
 		return new MUnitAddGroupTimeMaxPercentResponse();
@@ -402,16 +260,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createMUnitRefreshAvatarResponse()
 	{
 		return new MUnitRefreshAvatarResponse();
-	}
-	
-	private BaseData createRefreshUnitAvatarResponse()
-	{
-		return new RefreshUnitAvatarResponse();
-	}
-	
-	private BaseData createRefreshUnitAvatarPartResponse()
-	{
-		return new RefreshUnitAvatarPartResponse();
 	}
 	
 	private BaseData createMUnitRefreshAvatarPartResponse()
@@ -469,96 +317,6 @@ public class GameResponseMaker:DataMaker
 		return new MUnitRefreshBuffLastNumResponse();
 	}
 	
-	private BaseData createUnitRefreshBuffLastNumResponse()
-	{
-		return new UnitRefreshBuffLastNumResponse();
-	}
-	
-	private BaseData createReCUnitSkillFailedResponse()
-	{
-		return new ReCUnitSkillFailedResponse();
-	}
-	
-	private BaseData createUnitSyncCommandResponse()
-	{
-		return new UnitSyncCommandResponse();
-	}
-	
-	private BaseData createUnitPreBattleSureResponse()
-	{
-		return new UnitPreBattleSureResponse();
-	}
-	
-	private BaseData createFrameSyncStartResponse()
-	{
-		return new FrameSyncStartResponse();
-	}
-	
-	private BaseData createFrameSyncFrameResponse()
-	{
-		return new FrameSyncFrameResponse();
-	}
-	
-	private BaseData createReCUnitSkillFailedExResponse()
-	{
-		return new ReCUnitSkillFailedExResponse();
-	}
-	
-	private BaseData createUnitAddGroupTimeMaxPercentResponse()
-	{
-		return new UnitAddGroupTimeMaxPercentResponse();
-	}
-	
-	private BaseData createUnitAddGroupTimeMaxValueResponse()
-	{
-		return new UnitAddGroupTimeMaxValueResponse();
-	}
-	
-	private BaseData createUnitAddGroupTimePassResponse()
-	{
-		return new UnitAddGroupTimePassResponse();
-	}
-	
-	private BaseData createUnitRemoveGroupCDResponse()
-	{
-		return new UnitRemoveGroupCDResponse();
-	}
-	
-	private BaseData createUnitStartCDsResponse()
-	{
-		return new UnitStartCDsResponse();
-	}
-	
-	private BaseData createUnitStopMoveResponse()
-	{
-		return new UnitStopMoveResponse();
-	}
-	
-	private BaseData createUnitMoveDirResponse()
-	{
-		return new UnitMoveDirResponse();
-	}
-	
-	private BaseData createUnitMovePosListResponse()
-	{
-		return new UnitMovePosListResponse();
-	}
-	
-	private BaseData createUnitMovePosResponse()
-	{
-		return new UnitMovePosResponse();
-	}
-	
-	private BaseData createReCUnitPullBackResponse()
-	{
-		return new ReCUnitPullBackResponse();
-	}
-	
-	private BaseData createUnitSkillOverResponse()
-	{
-		return new UnitSkillOverResponse();
-	}
-	
 	private BaseData createEnterNoneSceneResponse()
 	{
 		return new EnterNoneSceneResponse();
@@ -572,11 +330,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createSwitchGameResponse()
 	{
 		return new SwitchGameResponse();
-	}
-	
-	private BaseData createCharacterRefreshPartRoleShowDataResponse()
-	{
-		return new CharacterRefreshPartRoleShowDataResponse();
 	}
 	
 	private BaseData createPreEnterSceneNextResponse()
@@ -769,11 +522,6 @@ public class GameResponseMaker:DataMaker
 		return new AddRewardResponse();
 	}
 	
-	private BaseData createSceneSResponse()
-	{
-		return new SceneSResponse();
-	}
-	
 	private BaseData createClientHotfixResponse()
 	{
 		return new ClientHotfixResponse();
@@ -807,11 +555,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createReQueryPlayerResponse()
 	{
 		return new ReQueryPlayerResponse();
-	}
-	
-	private BaseData createAOITowerRefreshResponse()
-	{
-		return new AOITowerRefreshResponse();
 	}
 	
 	private BaseData createSendAcceptAchievementResponse()
@@ -849,31 +592,6 @@ public class GameResponseMaker:DataMaker
 		return new SendRemoveAcceptQuestResponse();
 	}
 	
-	private BaseData createBuildingBuildCompleteResponse()
-	{
-		return new BuildingBuildCompleteResponse();
-	}
-	
-	private BaseData createBuildingCancelLevelUpResponse()
-	{
-		return new BuildingCancelLevelUpResponse();
-	}
-	
-	private BaseData createBuildingLevelUpingCompleteResponse()
-	{
-		return new BuildingLevelUpingCompleteResponse();
-	}
-	
-	private BaseData createBuildingStartLevelUpResponse()
-	{
-		return new BuildingStartLevelUpResponse();
-	}
-	
-	private BaseData createUnitSResponse()
-	{
-		return new UnitSResponse();
-	}
-	
 	private BaseData createMUnitAddSkillResponse()
 	{
 		return new MUnitAddSkillResponse();
@@ -882,11 +600,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createMUnitRemoveSkillResponse()
 	{
 		return new MUnitRemoveSkillResponse();
-	}
-	
-	private BaseData createRefreshOperationStateResponse()
-	{
-		return new RefreshOperationStateResponse();
 	}
 	
 	private BaseData createFuncSendPlayerJoinRoleGroupResponse()
@@ -994,31 +707,6 @@ public class GameResponseMaker:DataMaker
 		return new FuncReGetRoleGroupDataResponse();
 	}
 	
-	private BaseData createUnitSetPosDirResponse()
-	{
-		return new UnitSetPosDirResponse();
-	}
-	
-	private BaseData createAddFieldItemBagBindResponse()
-	{
-		return new AddFieldItemBagBindResponse();
-	}
-	
-	private BaseData createRemoveFieldItemBagBindResponse()
-	{
-		return new RemoveFieldItemBagBindResponse();
-	}
-	
-	private BaseData createRoleRefreshAttributeResponse()
-	{
-		return new RoleRefreshAttributeResponse();
-	}
-	
-	private BaseData createRoleSResponse()
-	{
-		return new RoleSResponse();
-	}
-	
 	private BaseData createSendPlayerChatResponse()
 	{
 		return new SendPlayerChatResponse();
@@ -1027,26 +715,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createFuncSendRoleGroupMemberRoleShowChangeResponse()
 	{
 		return new FuncSendRoleGroupMemberRoleShowChangeResponse();
-	}
-	
-	private BaseData createAddBindVisionUnitResponse()
-	{
-		return new AddBindVisionUnitResponse();
-	}
-	
-	private BaseData createRemoveBindVisionUnitResponse()
-	{
-		return new RemoveBindVisionUnitResponse();
-	}
-	
-	private BaseData createRefreshSimpleUnitAttributeResponse()
-	{
-		return new RefreshSimpleUnitAttributeResponse();
-	}
-	
-	private BaseData createRefreshSimpleUnitPosResponse()
-	{
-		return new RefreshSimpleUnitPosResponse();
 	}
 	
 	private BaseData createFuncSendMoveItemResponse()
@@ -1072,21 +740,6 @@ public class GameResponseMaker:DataMaker
 	private BaseData createSendWarningLogResponse()
 	{
 		return new SendWarningLogResponse();
-	}
-	
-	private BaseData createUnitGetOffVehicleResponse()
-	{
-		return new UnitGetOffVehicleResponse();
-	}
-	
-	private BaseData createUnitGetOnVehicleResponse()
-	{
-		return new UnitGetOnVehicleResponse();
-	}
-	
-	private BaseData createUnitDriveResponse()
-	{
-		return new UnitDriveResponse();
 	}
 	
 	private BaseData createFuncCloseResponse()
@@ -1159,9 +812,14 @@ public class GameResponseMaker:DataMaker
 		return new RemovePetResponse();
 	}
 	
-	private BaseData createAttackDamageOneResponse()
+	private BaseData createSwitchSceneResponse()
 	{
-		return new AttackDamageOneResponse();
+		return new SwitchSceneResponse();
+	}
+	
+	private BaseData createFuncRefreshSubsectionIndexResponse()
+	{
+		return new FuncRefreshSubsectionIndexResponse();
 	}
 	
 }

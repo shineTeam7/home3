@@ -89,6 +89,8 @@ public class CommonSetting
 	public static int sceneDriveType=SceneDriveType.ServerDriveMost;
 	/** 是否由客户端驱动简版子弹在服务器启动的模式下(开此策略客户端可能会有急速子弹的挂,但是影响可忽略) */
 	public static bool isClientDriveSimpleBulletForServerDriveMost=false;
+	/** 是否使用独立场景服务器 */
+	public static bool useSceneServer=false;
 	/** 是否有主城概念(离开当前场景是否一定回主城场景) */
 	public static bool hasTown=true;
 	/** buff数据缓存数目 */

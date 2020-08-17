@@ -37,7 +37,7 @@ public class UIModelApp
 	
 	//temp
 	
-	private SSet<String> _tempFileNameSet=new SSet<>();
+	private SMap<String,File> _tempFileNameDic=new SMap<>();
 	
 	public void execute()
 	{
@@ -65,60 +65,57 @@ public class UIModelApp
 			_models.put(data.name,data);
 		}
 		
-		String path;
+		String gPath=ShineToolGlobal.clientMainSrcPath + "/game/view/uiGenerate/";
+		String hPath=ShineToolGlobal.clientHotfixSrcPath + "/hotfix/view/uiGenerate/";
 		
-		if(ShineToolSetting.needHotfix)
-		{
-			path=ShineToolGlobal.clientHotfixSrcPath + "/hotfix/view/uiGenerate/";
-		}
-		else
-		{
-			path=ShineToolGlobal.clientMainSrcPath + "/game/view/uiGenerate/";
-		}
+		doOnePath(gPath + "elements",hPath+"elements",_elements);
+		doOnePath(gPath + "models",hPath+"models",_models);
 		
-		doOnePath(path + "elements",_elements);
-		
-		doOnePath(path + "models",_models);
-		
-		//doOnePath(ShineToolGlobal.clientMainSrcPath + "/game/view/uiGenerate/elements",_elements);
-		//doOnePath(ShineToolGlobal.clientMainSrcPath + "/game/view/uiGenerate/models",_models);
-
 		Ctrl.print("OK!");
 	}
 	
 	/** 执行一个路径 */
-	private void doOnePath(String rootPath,SMap<String,UIObjectData> dic)
+	private void doOnePath(String gPath,String hPath,SMap<String,UIObjectData> dic)
 	{
-		List<File> deepFileList=FileUtils.getDeepFileList(rootPath);
-		
+		List<File> deepFileList=FileUtils.getDeepFileList(gPath);
 		for(File f:deepFileList)
 		{
-			_tempFileNameSet.add(f.getName());
+			_tempFileNameDic.put(f.getName(),f);
+		}
+		
+		deepFileList=FileUtils.getDeepFileList(hPath);
+		for(File f:deepFileList)
+		{
+			_tempFileNameDic.put(f.getName(),f);
 		}
 		
 		for(UIObjectData data : dic)
 		{
-			makeOne(rootPath,data);
+			String p;
+			//g层内容
+			if(!ShineToolSetting.needHotfix || data.style.equals("G"))
+			{
+				p=gPath;
+			}
+			else
+			{
+				p=hPath;
+			}
+			
+			makeOne(p,data,"");
 		}
 		
 		//不为空
-		if(!_tempFileNameSet.isEmpty())
+		if(!_tempFileNameDic.isEmpty())
 		{
-			_tempFileNameSet.forEach(k->
+			_tempFileNameDic.forEachValue(v->
 			{
-				//删除
-				new File(rootPath+"/"+k).delete();
-				
-				Ctrl.print("删除一个",k);
+				v.delete();
+				Ctrl.print("删除一个",v.getName());
 			});
 			
-			_tempFileNameSet.clear();
+			_tempFileNameDic.clear();
 		}
-	}
-	
-	private void makeOne(String rootPath,UIObjectData data)
-	{
-		makeOne(rootPath,data,"");
 	}
 	
 	private void makeOne(String rootPath,UIObjectData data,String superName)
@@ -143,8 +140,8 @@ public class UIModelApp
 		
 		String path=rootPath + "/" + fileName;
 		
-		_tempFileNameSet.remove(fileName);
-		_tempFileNameSet.remove(fileName+".meta");//包括.meta
+		_tempFileNameDic.remove(fileName);
+		_tempFileNameDic.remove(fileName+".meta");//包括.meta
 		
 		ClassInfo cls=ClassInfo.getVoidClassInfoFromPath(path);
 		cls.addShineThings();
@@ -319,9 +316,9 @@ public class UIModelApp
 				re="UISScrollView";
 			}
 			break;
-			case UIElementType.SCustomScrollView:
+			case UIElementType.SScrollViewFake3D:
 			{
-				re="UISCustomScrollView";
+				re="UISScrollViewFake3D";
 			}
 			break;
 			case UIElementType.SPageView:

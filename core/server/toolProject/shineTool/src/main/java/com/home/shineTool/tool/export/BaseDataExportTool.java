@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.SMap;
 import com.home.shine.support.collection.SSet;
-import com.home.shine.support.collection.StringIntMap;
 import com.home.shine.support.func.ObjectCall;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.constlist.CodeType;
 import com.home.shineTool.constlist.DataGroupType;
+import com.home.shineTool.constlist.DataSectionType;
 import com.home.shineTool.constlist.MakeMethodType;
 import com.home.shineTool.constlist.ProjectType;
 import com.home.shineTool.constlist.VisitType;
@@ -43,6 +43,13 @@ public abstract class BaseDataExportTool
 	
 	protected String _serverExName;
 	protected String _clientExName;
+	
+	//indexStarts
+	protected static boolean[] _usedDataSection=new boolean[20000];
+	
+	protected DataSection[] _dataSections=new DataSection[DataSectionType.count];
+	
+	private int _lastDataSectionEnd=-1;
 	
 	/** 是否公共 */
 	protected boolean _isCommon=false;
@@ -87,6 +94,49 @@ public abstract class BaseDataExportTool
 		_clientExName=CodeType.getExName(_clientCodeType);
 		
 		initNext();
+	}
+	
+	/** 添加阶段定义 */
+	protected void addSection(int type,int from,int len)
+	{
+		if(_usedDataSection[from] || _usedDataSection[from+len-1])
+		{
+			Ctrl.throwError("数据空间被占用",type,from,len);
+			return;
+		}
+		
+		for(int i=from,end=from+len;i<end;++i)
+		{
+			_usedDataSection[i]=true;
+		}
+		
+		DataSection dData=_dataSections[type]=new DataSection();
+		
+		dData.from=from;
+		dData.len=len;
+		dData.end=from+len;
+		
+		_lastDataSectionEnd=dData.end;
+		
+		if(ShineToolSetting.needTrace)
+		{
+			Ctrl.print("section",type,_isCommon,from,len,from+len);
+		}
+	}
+	
+	protected void addNextSection(int type,int len)
+	{
+		addSection(type,_lastDataSectionEnd,len);
+	}
+	
+	public int getLastDataSectionEnd()
+	{
+		return _lastDataSectionEnd;
+	}
+	
+	public DataSection getSection(int type)
+	{
+		return _dataSections[type];
 	}
 	
 	public void execute()
@@ -414,7 +464,6 @@ public abstract class BaseDataExportTool
 		if(group==DataGroupType.Server2)
 		{
 			re.defineIndex=DataGroupType.Server;
-			//re.makeIndex=DataGroupType.Server;
 		}
 		
 		re.nameTail=middle + "Response";
@@ -912,8 +961,12 @@ public abstract class BaseDataExportTool
 	}
 	
 	/** 构造一个data(不包含execute) */
-	protected DataExportTool makeOneData(String key,String front,boolean isH,String inputPath,String serverPath,String clientPath,String robotPath,int start,int len,boolean needAdapter,BaseExportTool.InputFilter filter,DataExportTool parent)
+	protected DataExportTool makeOneData(String key,String front,boolean isH,String inputPath,String serverPath,String clientPath,String robotPath,int secType,BaseExportTool.InputFilter filter,DataExportTool parent)
 	{
+		DataSection section=getSection(secType);
+		int start=section.from;
+		int len=section.len;
+		
 		DataDefineTool define0=new DataDefineTool(serverPath + "/constlist/generate/" + front + "DataType." + _serverExName,start,len,true);
 		DataDefineTool define1=new DataDefineTool(clientPath + "/constlist/generate/" + front + "DataType." + _clientExName,start,len,false);
 		
@@ -976,14 +1029,19 @@ public abstract class BaseDataExportTool
 		return export;
 	}
 	
-	protected DataExportTool makeOneRequest(String keyFront,String front,boolean isH,String inputPath,String serverPath,String clientPath,String robotPath,int start,int len,boolean needAdapter,DataExportTool parent)
+	protected DataExportTool makeOneRequest(String keyFront,String front,boolean isH,String inputPath,String serverPath,String clientPath,String robotPath,int secType,DataExportTool parent)
 	{
+		DataSection section=getSection(secType);
+		int start=section.from;
+		int len=section.len;
+		
 		boolean hasClient=clientPath!=null;
 		boolean hasRobot=robotPath!=null;
 		
 		DataDefineTool define0=new DataDefineTool(serverPath + "/constlist/generate/" + front + "RequestType." + _serverExName,start,len,true);
 		DataDefineTool define1=hasClient ? new DataDefineTool(clientPath + "/constlist/generate/" + front + "ResponseType." + _clientExName,start,len,false) : null;
 		DataDefineTool define2=hasRobot ? new DataDefineTool(robotPath + "/constlist/generate/" + front + "ResponseType." + _serverExName,start,len,false) : null;
+		
 		DataMakerTool maker0=new DataMakerTool(serverPath + "/tool/generate/" + front + "RequestMaker." + _serverExName,define0);
 		DataMakerTool maker1=hasClient ? new DataMakerTool(clientPath + "/tool/generate/" + front + "ResponseMaker." + _clientExName,define1) : null;
 		DataMakerTool maker2=hasRobot ? new DataMakerTool(robotPath + "/tool/generate/" + front + "ResponseMaker." + _serverExName,define2) : null;
@@ -1018,7 +1076,6 @@ public abstract class BaseDataExportTool
 		export.addParentTool(parent);
 		
 		export.setInput(inputPath,"MO",this::messageFilter);
-		//export.setHotfix(needAdapter,_adapterPath,_IlRuntimeWriter);
 		
 		createForRequest(export,serverPath + "/net/"+serverFront,DataGroupType.Server,"",serverPath + "/net/base/"+ front + "Request."+_serverExName,true);
 		if(hasClient)
@@ -1039,14 +1096,19 @@ public abstract class BaseDataExportTool
 		return export;
 	}
 	
-	protected DataExportTool makeOneResponse(String keyFront,String front,boolean isH,String inputPath,String serverPath,String clientPath,String robotPath,int start,int len,DataExportTool requestTool,DataExportTool parent)
+	protected DataExportTool makeOneResponse(String keyFront,String front,boolean isH,String inputPath,String serverPath,String clientPath,String robotPath,int secType,DataExportTool requestTool,DataExportTool parent)
 	{
+		DataSection section=getSection(secType);
+		int start=section.from;
+		int len=section.len;
+		
 		boolean hasClient=clientPath!=null;
 		boolean hasRobot=robotPath!=null;
 		
 		DataDefineTool define0=new DataDefineTool(serverPath + "/constlist/generate/" + front + "ResponseType." + _serverExName,start,len,true);
 		DataDefineTool define1=hasClient ? new DataDefineTool(clientPath + "/constlist/generate/" + front + "RequestType." + _clientExName,start,len,false) : null;
 		DataDefineTool define2=hasRobot ? new DataDefineTool(robotPath + "/constlist/generate/" + front + "RequestType." + _serverExName,start,len,false) : null;
+		
 		DataMakerTool maker0=new DataMakerTool(serverPath + "/tool/generate/" + front + "ResponseMaker." + _serverExName,define0);
 		DataMakerTool maker1=hasClient ? new DataMakerTool(clientPath + "/tool/generate/" + front + "RequestMaker." + _clientExName,define1) : null;
 		DataMakerTool maker2=hasRobot ? new DataMakerTool(robotPath + "/tool/generate/" + front + "RequestMaker." + _serverExName,define2) : null;
@@ -1065,7 +1127,6 @@ public abstract class BaseDataExportTool
 			export.addDefine(DataGroupType.Robot,define2);
 		
 		export.addMaker(DataGroupType.Server,maker0);
-		
 		if(hasClient)
 			export.addMaker(DataGroupType.Client,maker1);
 		if(hasRobot)
@@ -1092,7 +1153,6 @@ public abstract class BaseDataExportTool
 		export.addParentTool(parent);
 		
 		export.setInput(inputPath,"MO",this::messageFilter);
-		//export.setHotfix(isClientMain,_adapterPath,_IlRuntimeWriter);
 		
 		createForResponse(export,serverPath + "/net/"+serverFront,DataGroupType.Server,"",serverPath + "/net/base/" + front + "Response."+_serverExName,true);
 		if(hasClient)
@@ -1113,8 +1173,12 @@ public abstract class BaseDataExportTool
 		return export;
 	}
 	
-	protected HttpResponseResultExportTool makeOneHttpResponseResult(String keyFront,String front,String inputPath,String serverPath,String clientPath,String robotPath,int start,int len,boolean isClient)
+	protected HttpResponseResultExportTool makeOneHttpResponseResult(String keyFront,String front,String inputPath,String serverPath,String clientPath,String robotPath,int secType,boolean isClient)
 	{
+		DataSection section=getSection(secType);
+		int start=section.from;
+		int len=section.len;
+		
 		boolean hasClient=clientPath!=null;
 		boolean hasRobot=robotPath!=null;
 		
@@ -1162,8 +1226,12 @@ public abstract class BaseDataExportTool
 		return export;
 	}
 	
-	protected void makeOneHttpResponse(String keyFront,String front,String inputPath,String serverPath,String clientPath,String robotPath,int start,int len,boolean isClient,HttpResponseResultExportTool resultTool)
+	protected void makeOneHttpResponse(String keyFront,String front,String inputPath,String serverPath,String clientPath,String robotPath,int secType,boolean isClient,HttpResponseResultExportTool resultTool)
 	{
+		DataSection section=getSection(secType);
+		int start=section.from;
+		int len=section.len;
+		
 		boolean hasClient=clientPath!=null;
 		boolean hasRobot=robotPath!=null;
 		
@@ -1359,5 +1427,14 @@ public abstract class BaseDataExportTool
 	protected void countOneMessage(String qName)
 	{
 		//需要复写
+	}
+	
+	public class DataSection
+	{
+		public int from;
+		
+		public int len;
+		
+		public int end;
 	}
 }

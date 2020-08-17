@@ -9,6 +9,10 @@ import com.home.commonClient.tool.generate.CenterRequestMaker;
 import com.home.commonClient.tool.generate.CenterResponseMaker;
 import com.home.commonClient.tool.generate.GameRequestMaker;
 import com.home.commonClient.tool.generate.GameResponseMaker;
+import com.home.commonClient.tool.generate.SceneBaseRequestMaker;
+import com.home.commonClient.tool.generate.SceneBaseResponseMaker;
+import com.home.commonClient.tool.generate.SceneRequestMaker;
+import com.home.commonClient.tool.generate.SceneResponseMaker;
 import com.home.shine.control.BytesControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
@@ -33,7 +37,10 @@ public class ClientMainControl
 	private int _playerNum=0;
 	
 	/** 客户端协议构造器(唯一) */
-	protected DataMaker _clientResponseMaker=new DataMaker();
+	protected DataMaker _gameResponseMaker=new DataMaker();
+	
+	/** 客户端协议构造器(唯一) */
+	protected DataMaker _sceneResponseMaker=new DataMaker();
 	
 	/** 执行器组(分线程) */
 	private LogicExecutor[] _executors;
@@ -49,10 +56,10 @@ public class ClientMainControl
 		
 		}
 		
-		makeResponse();
+		initMessage();
 		
 		//注册消息
-		BytesControl.addDataMaker(_clientResponseMaker);
+		BytesControl.addDataMaker(_gameResponseMaker);
 		
 		_executors=new LogicExecutor[ShineSetting.poolThreadNum];
 		
@@ -68,14 +75,23 @@ public class ClientMainControl
 		}
 	}
 	
-	protected void makeResponse()
+	protected void initMessage()
 	{
 		BytesControl.addRequestMaker(new ShineRequestMaker());
-		_clientResponseMaker.addDic(new ShineResponseMaker());
+		_gameResponseMaker.addDic(new ShineResponseMaker());
+		_sceneResponseMaker.addDic(new ShineResponseMaker());
+		
+		BytesControl.addRequestMaker(new SceneBaseRequestMaker());
+		_gameResponseMaker.addDic(new SceneBaseResponseMaker());
+		_sceneResponseMaker.addDic(new SceneBaseResponseMaker());
+		
 		BytesControl.addRequestMaker(new GameRequestMaker());
-		_clientResponseMaker.addDic(new GameResponseMaker());
+		_gameResponseMaker.addDic(new GameResponseMaker());
 		BytesControl.addRequestMaker(new CenterRequestMaker());
-		_clientResponseMaker.addDic(new CenterResponseMaker());
+		_gameResponseMaker.addDic(new CenterResponseMaker());
+		
+		BytesControl.addRequestMaker(new SceneRequestMaker());
+		_sceneResponseMaker.addDic(new SceneResponseMaker());
 	}
 
 	public void dispose()
@@ -84,9 +100,15 @@ public class ClientMainControl
 	}
 	
 	/** 获取客户端协议构造器 */
-	public DataMaker getClientResponseMaker()
+	public DataMaker getGameResponseMaker()
 	{
-		return _clientResponseMaker;
+		return _gameResponseMaker;
+	}
+	
+	/** 获取客户端协议构造器 */
+	public DataMaker getSceneResponseMaker()
+	{
+		return _gameResponseMaker;
 	}
 	
 	/** 创建执行器 */

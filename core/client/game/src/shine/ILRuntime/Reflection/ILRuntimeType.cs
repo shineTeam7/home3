@@ -473,6 +473,17 @@ namespace ILRuntime.Reflection
                 return null;
         }
 
+        public override Type[] GetGenericArguments()
+        {
+            var args = type.GenericArguments;
+            Type[] res = new Type[args.Length];
+            for(int i = 0; i < res.Length; i++)
+            {
+                res[i] = args[i].Value.ReflectionType;
+            }
+            return res;
+        }
+
         protected override MethodInfo GetMethodImpl(string name, BindingFlags bindingAttr, Binder binder, CallingConventions callConvention, Type[] types, ParameterModifier[] modifiers)
         {
             IMethod res;
@@ -566,6 +577,13 @@ namespace ILRuntime.Reflection
             {
                 return type.HasGenericParameter || type.GenericArguments != null;
             }
+        }
+
+        public override Type GetGenericTypeDefinition()
+        {
+            var def = type.GetGenericDefinition();
+
+            return def != null ? def.ReflectionType : null;
         }
 
         public override bool IsGenericTypeDefinition

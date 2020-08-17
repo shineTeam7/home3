@@ -247,15 +247,13 @@ public class FuncAddItemResponse extends FuncSResponse
 			if(!this.autoUseItems.isEmpty())
 			{
 				int autoUseItemsKFreeValue=this.autoUseItems.getFreeValue();
-				long[] autoUseItemsKTable=this.autoUseItems.getTable();
-				long autoUseItemsKEntry;
-				for(int autoUseItemsKI=autoUseItemsKTable.length-1;autoUseItemsKI>=0;--autoUseItemsKI)
+				int[] autoUseItemsKTable=this.autoUseItems.getTable();
+				for(int autoUseItemsKI=autoUseItemsKTable.length-2;autoUseItemsKI>=0;autoUseItemsKI-=2)
 				{
-					autoUseItemsKEntry=autoUseItemsKTable[autoUseItemsKI];
-					int autoUseItemsK=(int)autoUseItemsKEntry;
-					if(autoUseItemsK!=autoUseItemsKFreeValue)
+					if(autoUseItemsKTable[autoUseItemsKI]!=autoUseItemsKFreeValue)
 					{
-						int autoUseItemsV=(int)(autoUseItemsKEntry>>>32);
+						int autoUseItemsK=autoUseItemsKTable[autoUseItemsKI];
+						int autoUseItemsV=autoUseItemsKTable[autoUseItemsKI+1];
 						writer.writeTabs();
 						writer.sb.append(autoUseItemsK);
 						

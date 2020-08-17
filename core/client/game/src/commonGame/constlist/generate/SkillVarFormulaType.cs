@@ -31,8 +31,23 @@ public class SkillVarFormulaType
 	public const int TwoPlus=5;
 	
 	/// <summary>
+	/// 三项和 arg1+arg2+arg3
+	/// </summary>
+	public const int ThreePlus=6;
+	
+	/// <summary>
+	/// 四项和 arg1+arg2+arg3+arg4
+	/// </summary>
+	public const int FourPlus=7;
+	
+	/// <summary>
+	/// 五项和 arg1+arg2+arg3+arg4+arg5
+	/// </summary>
+	public const int FivePlus=8;
+	
+	/// <summary>
 	/// 长度
 	/// </summary>
-	public static int size=6;
+	public static int size=9;
 	
 }

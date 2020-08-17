@@ -51,6 +51,17 @@ public class PropertyInfo
 		annotationList.add(info);
 	}
 	
+	public AnnotationInfo getAnnotation(String name)
+	{
+		for(AnnotationInfo aInfo : annotationList)
+		{
+			if(aInfo.name.equals(name))
+				return aInfo;
+		}
+		
+		return null;
+	}
+	
 	/** 写入访问文字 */
 	public void writeVisitStr(StringBuilder sb)
 	{

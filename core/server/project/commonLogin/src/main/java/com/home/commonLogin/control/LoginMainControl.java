@@ -1,7 +1,6 @@
 package com.home.commonLogin.control;
 
 import com.home.commonBase.constlist.generate.ClientLoginHttpResultType;
-import com.home.commonBase.constlist.generate.ClientPlatformType;
 import com.home.commonBase.constlist.generate.FlowStepType;
 import com.home.commonBase.constlist.generate.InfoCodeType;
 import com.home.commonBase.constlist.generate.PlatformType;
@@ -12,6 +11,7 @@ import com.home.commonBase.data.login.ClientLoginExData;
 import com.home.commonBase.data.login.ClientLoginResultData;
 import com.home.commonBase.data.login.ClientLoginServerInfoData;
 import com.home.commonBase.data.login.ClientVersionData;
+import com.home.commonBase.data.login.LoginInitServerData;
 import com.home.commonBase.data.system.AreaClientData;
 import com.home.commonBase.data.system.AreaServerData;
 import com.home.commonBase.data.system.GameServerClientSimpleData;
@@ -82,6 +82,7 @@ public class LoginMainControl
 	/** 国家信息组 */
 	private IntObjectMap<CountryInfo> _countryInfos=new IntObjectMap<>(CountryInfo[]::new);
 	
+	private IntObjectMap<GameServerData> _gameDic=new IntObjectMap<>(GameServerData[]::new);
 	
 	//login
 	
@@ -108,6 +109,14 @@ public class LoginMainControl
 	//user操作
 	/** user表操作队列 */
 	private TableOperateTool<Long,UserTable> _userTableTool;
+	
+	/** 游戏服 */
+	private class GameServerData
+	{
+		public int id;
+		
+		public boolean isLoginLimit;
+	}
 	
 	public void init()
 	{
@@ -184,16 +193,37 @@ public class LoginMainControl
 		});
 	}
 	
+	public GameServerData getGameData(int id)
+	{
+		GameServerData data=_gameDic.get(id);
+		
+		if(data==null)
+		{
+			_gameDic.put(id,data=new GameServerData());
+			data.id=id;
+		}
+		
+		return data;
+	}
+	
 	/** 设置是否开放 */
 	public void setIsOpen(boolean value)
 	{
 		_isOpen=value;
 	}
 	
-	/** 设置信息组 */
-	public void setInfos(IntObjectMap<GameServerClientSimpleData> games)
+	public void setInitData(LoginInitServerData initData)
 	{
-		_gameInfos=games;
+		_gameInfos=initData.games;
+		setClientInfo(initData.clientVersion,initData.redirectURLDic);
+		setIsOpen(initData.isOpen);
+		LoginC.server.setInfos(initData);
+	}
+	
+	/** 热更服务器配置后 */
+	public void onReloadServerConfig()
+	{
+		LoginC.server.connectOthers();
 	}
 	
 	/** 设置客户端版本 */
@@ -204,7 +234,7 @@ public class LoginMainControl
 	}
 	
 	/** 添加区服组数据 */
-	public void addAreaServerDic(IntObjectMap<AreaServerData> dic,int gameID)
+	public void addAreaServerDic(IntObjectMap<AreaServerData> dic,int gameID,boolean isGameFull)
 	{
 		Ctrl.log("添加game",gameID,"服信息到login",LoginC.app.id);
 		
@@ -220,8 +250,10 @@ public class LoginMainControl
 			}
 		});
 		
+		GameServerData gameData=getGameData(gameID);
+		gameData.isLoginLimit=isGameFull;
+		
 		_areaList=_areaServerDic.getSortedKeyList().toArray();
-		findNextRegistArea();
 		
 		GameServerSimpleInfoData gameSimpleInfo=LoginC.server.getGameSimpleInfo(gameID);
 		
@@ -230,6 +262,8 @@ public class LoginMainControl
 			//添加到国家信息组
 			_countryInfos.computeIfAbsent(gameSimpleInfo.countryID,k->new CountryInfo(k)).addAreaServerDic(dic);
 		}
+		
+		refreshCanRegist(gameID);
 	}
 	
 	/** 获取可用区服 */
@@ -237,23 +271,23 @@ public class LoginMainControl
 	{
 		_canRegistArea=-1;
 		
-		int lastArea=-1;
-		
 		for(int v:_areaList)
 		{
-			lastArea=v;
+			AreaServerData areaServerData=_areaServerDic.get(v);
 			
-			if(!_areaServerDic.get(v).isLimitRegist)
-			{
-				_canRegistArea=v;
-				break;
-			}
+			//area限制
+			if(areaServerData.isLimitRegist)
+				continue;
+			
+			//game限制
+			if(isGameLoginLimit(areaServerData.gameID))
+				continue;
+			
+			_canRegistArea=v;
 		}
 		
-		if(_canRegistArea==-1 && lastArea!=-1)
+		if(_canRegistArea==-1)
 		{
-			_canRegistArea=lastArea;
-			
 			Ctrl.errorLog("严重警告，所有服务器已经达到额定注册上限。");
 		}
 		
@@ -317,23 +351,46 @@ public class LoginMainControl
 		});
 	}
 	
-	/** 限制某区服注册 */
-	public void limitArea(int areaID,boolean isLimitRegist)
+	private void refreshCanRegist(int gameID)
 	{
-		AreaServerData areaServerData=_areaServerDic.get(areaID);
-		
-		//限制注册
-		areaServerData.isLimitRegist=isLimitRegist;
-		
 		findNextRegistArea();
 		
-		GameServerSimpleInfoData gameSimpleInfo=LoginC.server.getGameSimpleInfo(areaServerData.gameID);
+		GameServerSimpleInfoData gameSimpleInfo=LoginC.server.getGameSimpleInfo(gameID);
 		
 		if(CommonSetting.useCountryArea && gameSimpleInfo.countryID>0)
 		{
 			CountryInfo countryInfo=_countryInfos.get(gameSimpleInfo.countryID);
 			countryInfo.findCountryNextRegistArea();
 		}
+	}
+	
+	/** 限制某区服注册 */
+	public void limitArea(int areaID,boolean isLimitRegist)
+	{
+		if(CommonSetting.areaDivideType==GameAreaDivideType.AutoEnterGame)
+			return;
+		
+		AreaServerData areaServerData=_areaServerDic.get(areaID);
+		
+		//限制注册
+		areaServerData.isLimitRegist=isLimitRegist;
+		
+		refreshCanRegist(areaServerData.gameID);
+	}
+	
+	/** 刷新逻辑服限制登录 */
+	public void onRefreshGameLoginLimit(int gameID,boolean isLoginLimit)
+	{
+		GameServerData gameData=getGameData(gameID);
+		gameData.isLoginLimit=isLoginLimit;
+		
+		refreshCanRegist(gameID);
+	}
+	
+	/** 某game是否限制登录 */
+	public boolean isGameLoginLimit(int gameID)
+	{
+		return getGameData(gameID).isLoginLimit;
 	}
 	
 	//--login--//
@@ -374,7 +431,7 @@ public class LoginMainControl
 	{
 		if(data==null)
 			return;
-
+		
 		addFlowLog(data.uid,FlowStepType.ClientLoginHttp);
 		
 		Ctrl.log("login 用户登录:",data.uid,"httpID:",httpID,"平台类型:",data.clientPlatformType,"设备类型：",data.deviceType,"设备唯一标识:",data.deviceUniqueIdentifier,"ip:",ip);
@@ -569,25 +626,25 @@ public class LoginMainControl
 		UserTable ut=BaseC.factory.createUserTable();
 		ut.puid=puid;
 		
-		Runnable userTableNext=()->
+		ObjectCall<UserTable> userTableNext=ut2->
 		{
 			boolean isAdult=eData.isAdult;
 			
 			//有变化
-			if(isAdult!=ut.isAdult)
+			if(isAdult!=ut2.isAdult)
 			{
 				//保存一下(不等返回)
-				_userTableTool.load(ut.userID,tt->
+				_userTableTool.load(ut2.userID,tt->
 				{
 					tt.isAdult=isAdult;
 				});
 			}
 			
 			//userID
-			eData.userID=ut.userID;
-			tData.table=ut;
+			eData.userID=ut2.userID;
+			tData.table=ut2;
 			//加入到userID组
-			_userLoginDicByUserID.put(ut.userID,tData);
+			_userLoginDicByUserID.put(ut2.userID,tData);
 			
 			reServerList(tData);
 		};
@@ -608,26 +665,33 @@ public class LoginMainControl
 			{
 				Ctrl.log("login 用户登录指向源User,uid:",uid,"userID:",ut.sourceUserID);
 				
-				ut.userID=ut.sourceUserID;
-				ut.puid="";
-				ut.load(LoginC.db.getConnect(),b->
+				_userTableTool.load(ut.sourceUserID,v->
 				{
-					if(b)
+					if(v!=null)
 					{
-						userTableNext.run();
+						userTableNext.apply(v);
 					}
 					else
 					{
 						Ctrl.errorLog("未找到User表的源表:",ut.userID);
 						reErrorCode(tData,ClientLoginHttpResultType.CenterLoginFaied);
-						
 						return;
 					}
 				});
 			}
 			else
 			{
-				userTableNext.run();
+				if(_userTableTool.isDoing(ut.userID))
+				{
+					_userTableTool.load(ut.userID,v->
+					{
+						userTableNext.apply(v);
+					});
+				}
+				else
+				{
+					userTableNext.apply(ut);
+				}
 			}
 		};
 		
@@ -702,7 +766,6 @@ public class LoginMainControl
 				{
 					userTableNotExistFunc.run();
 				}
-				
 			}
 		});
 	}
@@ -776,25 +839,25 @@ public class LoginMainControl
 				
 				reClientLogin(tData.sourceLoginID,tData.httpID,rData);
 			}
-				break;
+			break;
 			case GameAreaDivideType.AutoBindGame:
 			{
 				tData.eData.areaID=lastAreaID;
 				userLoginNext(tData);
 			}
-				break;
+			break;
 			case GameAreaDivideType.AutoEnterGame:
 			{
 				tData.eData.areaID=-1;
 				userLoginNext(tData);
 			}
-				break;
+			break;
 		}
 	}
 	
 	private ClientLoginServerInfoData createSelfServerInfo()
 	{
-		ServerInfoData info=LoginC.server.getInfo();
+		ServerInfoData info=LoginC.server.getSelfInfo();
 		ClientLoginServerInfoData re=new ClientLoginServerInfoData();
 		re.host=info.clientHost;
 		re.port=info.clientHttpPort;
@@ -994,6 +1057,15 @@ public class LoginMainControl
 	/** 获取一个当前可用区服ID */
 	protected int getNowRegistArea()
 	{
+		//没有了
+		if(_canRegistArea==-1)
+		{
+			if(_areaList.length==0)
+				return -1;
+			
+			return MathUtils.randomFromIntArr(_areaList);
+		}
+		
 		return _canRegistArea;
 	}
 	
@@ -1004,6 +1076,15 @@ public class LoginMainControl
 		
 		if(info==null)
 			return -1;
+		
+		//没有了
+		if(info.useAreaID==-1)
+		{
+			if(info.areaList.length==0)
+				return -1;
+			
+			return MathUtils.randomFromIntArr(info.areaList);
+		}
 		
 		return info.useAreaID;
 	}
@@ -1312,11 +1393,21 @@ public class LoginMainControl
 			
 			for(int v:areaList)
 			{
-				if(!areaServerDic.get(v).isLimitRegist)
-				{
-					useAreaID=v;
-					break;
-				}
+				AreaServerData areaServerData=areaServerDic.get(v);
+				//area限制
+				if(areaServerData.isLimitRegist)
+					continue;
+				
+				//game限制
+				if(isGameLoginLimit(areaServerData.gameID))
+					continue;
+				
+				useAreaID=v;
+			}
+			
+			if(useAreaID==-1)
+			{
+				Ctrl.errorLog("严重警告，country: "+countryID+"服务器已经达到额定注册上限。");
 			}
 		}
 	}

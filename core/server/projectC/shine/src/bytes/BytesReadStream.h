@@ -6,6 +6,7 @@
 #include "../utils/BytesUtils.h"
 #include "../global/ShineSetting.h"
 #include "../support/SMath.h"
+#include "../support/collection/SList.h"
 
 /** 字节读流 */
 class BytesReadStream
@@ -26,6 +27,12 @@ private:
 	/** 读锁,只为加速运算 */
 	bool _readLock = false;
 
+	SList<int> _readStack;
+
+	/** 当前位数 */
+	int _booleanBitIndex = -1;
+	/** 字节值 */
+	int _booleanBitValue = 0;
 
 public:
 	BytesReadStream();
@@ -184,10 +191,10 @@ public:
 	int readLen();
 
 	/** 开始读对象 */
-	int startReadObj();
+	void startReadObj();
 
 	/** 结束读对象 */
-	void endReadObj(int len);
+	void endReadObj();
 
 	/** 设置读取长度限制 */
 	void setReadLenLimit(int value)
@@ -197,6 +204,8 @@ public:
 
 	/** 读取一定长度内存到指定指针 */
 	void readMem(void* ptr, int len);
+
+	void clearBooleanPos();
 
 	//--data--//
 

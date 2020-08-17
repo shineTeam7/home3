@@ -1,5 +1,6 @@
 package com.home.commonBase.app;
 
+
 public class BaseGameApp extends App
 {
 	public BaseGameApp(String name,int id)

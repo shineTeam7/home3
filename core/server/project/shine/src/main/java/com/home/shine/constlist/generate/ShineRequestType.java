@@ -7,7 +7,7 @@ public class ShineRequestType
 	public static final int off=40;
 	
 	/** 计数 */
-	public static final int count=47;
+	public static final int count=48;
 	
 	/** ping包第一步 */
 	public static final int Ping=40;
@@ -29,5 +29,8 @@ public class ShineRequestType
 	
 	/** socket重连失败消息 */
 	public static final int SocketReconnectFailed=46;
+	
+	/** 连接主动关闭(阻止重连) */
+	public static final int SocketClose=47;
 	
 }

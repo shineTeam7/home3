@@ -18,6 +18,7 @@ string ShineToolGlobal::getCwdPath()
 #ifdef _isMac
 	const int MAXPATH = 256;
 	char buffer[MAXPATH];
+//	__getcwd(buffer, MAXPATH);
 	getcwd(buffer, MAXPATH);
 
 	re = string(buffer);
@@ -26,7 +27,7 @@ string ShineToolGlobal::getCwdPath()
 #ifdef _isWindows
 	const int MAXPATH = 256;
 	char buffer[MAXPATH];
-	getcwd(buffer, MAXPATH);
+	_getcwd(buffer, MAXPATH);
 
 	re = string(buffer);
 #endif
@@ -58,13 +59,15 @@ void ShineToolGlobal::init()
 
 	cwdPath = FileUtils::fixPath(cwdPath);
 
-#ifdef _isMac
-	codePath = FileUtils::getParentPath(FileUtils::getParentPath(FileUtils::getParentPath(FileUtils::getParentPath(cwdPath))));
-#endif
+//#ifdef _isMac
+//	codePath = FileUtils::getParentPath(FileUtils::getParentPath(FileUtils::getParentPath(cwdPath)));
+//#endif
+//
+//#ifdef _isWindows
+//	codePath = FileUtils::getParentPath(FileUtils::getParentPath(FileUtils::getParentPath(cwdPath)));
+//#endif
 
-#ifdef _isWindows
 	codePath = FileUtils::getParentPath(FileUtils::getParentPath(FileUtils::getParentPath(cwdPath)));
-#endif
 
 	setPathByCode();
 }

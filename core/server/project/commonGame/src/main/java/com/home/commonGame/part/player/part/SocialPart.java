@@ -368,10 +368,10 @@ public class SocialPart extends PlayerBasePart
 			me.addPlayerListOnlineWork(sendDic,wData);
 		}
 		
-		//角色主线程(只在线有效)
+		//角色主线程(离线状态会直调)
 		me.addMainFunc(()->
 		{
-			GameC.global.social.refreshRoleSocialDataOnline(playerID,data);
+			GameC.global.social.refreshRoleSocialData(playerID,data);
 		});
 		
 		//本服
@@ -869,7 +869,7 @@ public class SocialPart extends PlayerBasePart
 			
 			cData.queue.offer(chatData);
 			
-			if(config.keepNum>0 && cData.queue.size()>config.keepNum)
+			while(config.keepNum>0 && cData.queue.size()>config.keepNum)
 			{
 				cData.queue.poll();
 			}

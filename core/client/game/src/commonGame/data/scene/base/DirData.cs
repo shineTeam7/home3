@@ -1,4 +1,5 @@
 using ShineEngine;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -135,8 +136,8 @@ public class DirData:BaseData
 		base.beforeWrite();
 
 		float scale;
-		idirection=(int)(direction*(scale=Global.directionSendScale));
-		idirectionX=(int)(directionX* scale);
+		idirection=Mathf.RoundToInt(direction*(scale=Global.directionSendScale));
+		idirectionX=Mathf.RoundToInt(directionX* scale);
 	}
 	
 	protected override void afterRead()

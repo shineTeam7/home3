@@ -93,8 +93,8 @@ public abstract class ThreadWatchTool
 		ThreadWatchOneData data=createWatchData(type,index);
 		data.type=type;
 		data.index=index;
-		data.maxFuncNum=thread.getMaxFuncNum();
-		data.fps=thread.getCountFPS();
+		data.percent=thread.getUsePercent();
+		data.funcNum=thread.getFuncNum();
 		
 		thread.clearCount();
 		

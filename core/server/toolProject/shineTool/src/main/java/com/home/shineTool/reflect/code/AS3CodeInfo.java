@@ -24,6 +24,7 @@ public class AS3CodeInfo extends CodeInfo
 		this.Float="Number";
 		this.Double="Number";
 		this.String="String";
+		this.Char="char";
 		
 		this.List="Vector";
 		this.Set="Keys";
@@ -46,6 +47,7 @@ public class AS3CodeInfo extends CodeInfo
 		this.FloatG="Number";
 		this.DoubleG="Number";
 		this.StringG="String";
+		this.CharG="char";
 	}
 	
 	@Override

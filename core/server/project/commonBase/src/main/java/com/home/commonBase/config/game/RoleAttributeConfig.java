@@ -29,6 +29,9 @@ public class RoleAttributeConfig extends BaseConfig
 	/** 当前属性的上限值ID */
 	public int currentMaxID;
 	
+	/** 当前属性是否可超过上限值 */
+	public boolean canOverMax;
+	
 	/** 当前属性默认空满 */
 	public boolean isCurrentDefaultFull;
 	
@@ -89,6 +92,8 @@ public class RoleAttributeConfig extends BaseConfig
 		
 		this.isCurrentDefaultFull=stream.readBoolean();
 		
+		this.canOverMax=stream.readBoolean();
+		
 		this.sendSelfType=stream.readInt();
 		
 		this.needSendOther=stream.readBoolean();
@@ -129,6 +134,8 @@ public class RoleAttributeConfig extends BaseConfig
 		
 		stream.writeBoolean(this.isCurrentDefaultFull);
 		
+		stream.writeBoolean(this.canOverMax);
+		
 		stream.writeInt(this.sendSelfType);
 		
 		stream.writeBoolean(this.needSendOther);
@@ -160,6 +167,7 @@ public class RoleAttributeConfig extends BaseConfig
 		re.increaseID=increaseID;
 		re.currentMaxID=currentMaxID;
 		re.isCurrentDefaultFull=isCurrentDefaultFull;
+		re.isCurrentCanOverMax=canOverMax;
 		re.needDispatchChange=needDispatchChange;
 		re.sendSelfType=sendSelfType;
 		re.needSendOther=needSendOther;

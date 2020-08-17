@@ -20,13 +20,14 @@ option(RECASTNAVIGATION_STATIC "Build static libraries" ON)
 if(WIN32)
     
 elseif(APPLE)
-    set(RECASTNAVIGATION_DEMO OFF)
-    set(RECASTNAVIGATION_TESTS OFF)
-    set(RECASTNAVIGATION_EXAMPLES OFF)
+#    set(RECASTNAVIGATION_DEMO OFF)
+#    set(RECASTNAVIGATION_TESTS OFF)
+#    set(RECASTNAVIGATION_EXAMPLES OFF)
 
     add_definitions(-fdeclspec)
     add_definitions(-fPIC)
-    SET(CMAKE_BUILD_TYPE "Release")
+
+    SET(CMAKE_BUILD_TYPE "Debug")
 else()
     set(RECASTNAVIGATION_DEMO OFF)
     set(RECASTNAVIGATION_TESTS OFF)

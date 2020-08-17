@@ -166,7 +166,17 @@ public class ActivityPart extends PlayerBasePart
 			
 			if(checkEnable(aData.config))
 			{
-				runOnTime(aData,false);
+				if(!checkInvalid(aData.config))
+				{
+					runOnTime(aData,false);
+				}
+				else
+				{
+					if(aData.isRunning)
+					{
+						doActivityClose(aData,aData.config.endTimeT.getPrevTime(me),aData.config.startTimeT.getNextTime(me),false);
+					}
+				}
 			}
 		});
 	}
@@ -351,8 +361,8 @@ public class ActivityPart extends PlayerBasePart
 	/** 活动开启 */
 	private void doActivityOpen(ActivityData data,long lastTurnTime,long nextTurnTime,boolean atTime)
 	{
-		//不启用的
-		if(!checkEnable(data.config))
+		//不启用的或者失效的
+		if(!checkEnable(data.config) || checkInvalid(data.config))
 			return;
 		
 		data.isRunning=true;
@@ -475,12 +485,30 @@ public class ActivityPart extends PlayerBasePart
 	/** 检查是否可参加活动 */
 	public boolean checkEnable(ActivityConfig config)
 	{
+		if(config.enableConditions.length==0)
+			return true;
+
 		for(int[] arr:config.enableConditions)
 		{
 			if(!checkOneEnable(arr))
 				return false;
 		}
 		
+		return true;
+	}
+	
+	/** 检查活动是否失效 */
+	public boolean checkInvalid(ActivityConfig config)
+	{
+		if(config.invalidConditions.length==0)
+			return false;
+
+		for(int[] arr:config.invalidConditions)
+		{
+			if(!checkOneEnable(arr))
+				return false;
+		}
+
 		return true;
 	}
 	

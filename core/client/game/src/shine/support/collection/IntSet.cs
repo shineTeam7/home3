@@ -15,20 +15,12 @@ namespace ShineEngine
 
 		public IntSet()
 		{
-
+			init(_minSize);
 		}
 
 		public IntSet(int capacity)
 		{
 			init(countCapacity(capacity));
-		}
-
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
 		}
 
 		public int getFreeValue()
@@ -38,13 +30,12 @@ namespace ShineEngine
 
 		public int[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new int[capacity<<1];
 
@@ -172,8 +163,6 @@ namespace ShineEngine
 
 		public bool add(int key)
 		{
-			checkInit();
-
 			int free;
 			if(key==(free=_freeValue))
 			{
@@ -325,22 +314,17 @@ namespace ShineEngine
 			ObjectUtils.arrayFill(_set,_freeValue);
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
+		public IntSet clone()
 		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
+			if(_size==0)
+				return new IntSet();
 
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
+			IntSet re=new IntSet(this.capacity());
+			Array.Copy(_set,0,re._set,0,_set.Length);
+			re.copyBase(this);
+			re._freeValue=_freeValue;
+
+			return re;
 		}
 
 		/** 转换数组(带排序) */
@@ -369,6 +353,35 @@ namespace ShineEngine
 			Array.Sort(re);
 
 			return re;
+		}
+
+		/** 转化为原生集合 */
+		public HashSet<int> toNatureList()
+		{
+			HashSet<int> re=new HashSet<int>();
+
+			int free=_freeValue;
+			int[] keys=_set;
+			for(int i=(keys.Length) - 1;i>=0;--i)
+			{
+				int key;
+				if((key=keys[i])!=free)
+				{
+					re.Add(key);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(HashSet<int> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(int v in map)
+			{
+				this.add(v);
+			}
 		}
 
 		/** 遍历 */

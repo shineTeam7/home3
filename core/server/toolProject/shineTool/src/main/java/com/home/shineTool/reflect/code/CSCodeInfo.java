@@ -24,6 +24,7 @@ public class CSCodeInfo extends CodeInfo
 		this.Float="float";
 		this.Double="double";
 		this.String="string";
+		this.Char="char";
 		this.List="List";
 		this.Set="HashSet";
 		this.Map="Dictionary";
@@ -45,6 +46,7 @@ public class CSCodeInfo extends CodeInfo
 		this.FloatG="float";
 		this.DoubleG="double";
 		this.StringG="string";
+		this.CharG="char";
 		
 		this.Super="base";
 	}

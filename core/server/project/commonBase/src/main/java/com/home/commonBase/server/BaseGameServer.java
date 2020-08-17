@@ -1,10 +1,13 @@
 package com.home.commonBase.server;
 
+import com.home.commonBase.constlist.generate.ServerMessageType;
 import com.home.commonBase.data.system.ServerInfoData;
 import com.home.commonBase.data.system.ServerSimpleInfoData;
+import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.serverConfig.ServerNodeConfig;
 import com.home.shine.ShineSetup;
 import com.home.shine.constlist.SocketType;
+import com.home.shine.control.BytesControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.net.base.BaseRequest;
@@ -12,7 +15,6 @@ import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.net.socket.SendSocket;
 import com.home.shine.server.BaseServer;
 import com.home.shine.serverConfig.BaseServerConfig;
-import com.home.shine.serverConfig.ServerConfig;
 import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.IntSet;
@@ -20,12 +22,21 @@ import com.home.shine.support.collection.IntSet;
 /** 服务器基础server */
 public class BaseGameServer extends BaseServer
 {
-	protected SocketInfoDic[] _infoDic=new SocketInfoDic[SocketType.size];
+	protected final SocketInfoDic[] _infoDic=new SocketInfoDic[SocketType.size];
 	
-	protected SocketSendInfoDic[] _sendInfoDic=new SocketSendInfoDic[SocketType.size];
+	protected final SocketSendInfoDic[] _sendInfoDic=new SocketSendInfoDic[SocketType.size];
 	
 	/** 自身信息数据 */
 	protected ServerInfoData _selfInfo;
+	
+	@Override
+	protected void initMessage()
+	{
+		super.initMessage();
+		
+		BytesControl.addMessageConst(ServerMessageType.class,true,true);
+		BytesControl.addMessageConst(ServerMessageType.class,false,true);
+	}
 	
 	public SocketInfoDic getSocketInfo(int type)
 	{
@@ -33,7 +44,13 @@ public class BaseGameServer extends BaseServer
 		
 		if((re=_infoDic[type])==null)
 		{
-			re=_infoDic[type]=new SocketInfoDic(type);
+			synchronized(_infoDic)
+			{
+				if((re=_infoDic[type])==null)
+				{
+					re=_infoDic[type]=new SocketInfoDic(type);
+				}
+			}
 		}
 		
 		return re;
@@ -45,7 +62,13 @@ public class BaseGameServer extends BaseServer
 		
 		if((re=_sendInfoDic[type])==null)
 		{
-			re=_sendInfoDic[type]=new SocketSendInfoDic(type);
+			synchronized(_sendInfoDic)
+			{
+				if((re=_sendInfoDic[type])==null)
+				{
+					re=_sendInfoDic[type]=new SocketSendInfoDic(type);
+				}
+			}
 		}
 		
 		return re;
@@ -74,14 +97,19 @@ public class BaseGameServer extends BaseServer
 	public void setSelfInfo(ServerInfoData selfInfo)
 	{
 		_selfInfo=selfInfo;
-		
-		onConnectManagerOver();
 	}
 	
 	/** 连接manager服部分结束 */
-	protected void onConnectManagerOver()
+	public void onConnectManagerOver()
 	{
 	
+	}
+	
+	/** 开启客户端端口 */
+	public void openClient()
+	{
+		startClientSocket(_selfInfo.clientPort,CommonSetting.clientSocketUseWebSocket);
+		setClientReady(true);
 	}
 	
 	@Override
@@ -171,9 +199,18 @@ public class BaseGameServer extends BaseServer
 	/** 连接服务器节点 */
 	public void connectServer(ServerSimpleInfoData config,int type,boolean isOnly)
 	{
+		SocketSendInfoDic socketSendInfo=getSocketSendInfo(type);
+		
 		int id=isOnly ? 1 : config.id;
+		
+		//已存在
+		if(socketSendInfo.has(id))
+		{
+			return;
+		}
+		
 		SendSocket socket=createSendSocket(id,type,false);
-		getSocketSendInfo(type).add(id,socket);
+		socketSendInfo.add(id,socket);
 		socket.tryConnect(config.serverHost,config.serverPort);
 	}
 	
@@ -227,6 +264,23 @@ public class BaseGameServer extends BaseServer
 		BaseSocket v;
 		
 		for(int i=(values=getSocketInfo(SocketType.Login).socketDic.getValues()).length-1;i>=0;--i)
+		{
+			if((v=values[i])!=null)
+			{
+				v.send(request);
+			}
+		}
+	}
+	
+	/** 广播所有场景服 */
+	public void radioScenes(BaseRequest request)
+	{
+		request.write();
+		
+		BaseSocket[] values;
+		BaseSocket v;
+		
+		for(int i=(values=getSocketInfo(SocketType.Scene).socketDic.getValues()).length-1;i>=0;--i)
 		{
 			if((v=values[i])!=null)
 			{
@@ -322,6 +376,11 @@ public class BaseGameServer extends BaseServer
 		{
 			sendDic.put(id,socket);
 			waitReSet.add(id);
+		}
+		
+		public boolean has(int id)
+		{
+			return sendDic.contains(id);
 		}
 	}
 	

@@ -12,20 +12,12 @@ namespace ShineEngine
 
 		public CharSet()
 		{
-
+			init(_minSize);
 		}
 
 		public CharSet(int capacity)
 		{
 			init(countCapacity(capacity));
-		}
-
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
 		}
 
 		public char getFreeValue()
@@ -35,13 +27,12 @@ namespace ShineEngine
 
 		public char[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new char[capacity<<1];
 
@@ -170,8 +161,6 @@ namespace ShineEngine
 
 		public bool add(char key)
 		{
-			checkInit();
-
 			char free;
 			if(key==(free=_freeValue))
 			{
@@ -297,24 +286,6 @@ namespace ShineEngine
 			base.clear();
 
 			ObjectUtils.arrayFill(_set,_freeValue);
-		}
-
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
 		}
 
 		/** 转换数组(带排序) */

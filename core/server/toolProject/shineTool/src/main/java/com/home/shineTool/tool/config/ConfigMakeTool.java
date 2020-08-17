@@ -2830,6 +2830,23 @@ public abstract class ConfigMakeTool
 					
 					parentField=parentData!=null ? parentData.fieldTotalDic.get(fieldName) : null;
 					
+					if(parentField!=null)
+					{
+						if(!parentField.cskr.equals(field.cskr))
+						{
+							Ctrl.throwError("表中字段CSKR与parent表不一致:",fName,"字段名:",fieldName);
+							Ctrl.exit();
+							return;
+						}
+						
+						if(!parentField.type.equals(field.type))
+						{
+							Ctrl.throwError("表中字段类型与parent表不一致:",fName,"字段名:",fieldName);
+							Ctrl.exit();
+							return;
+						}
+					}
+					
 					if(field.hasClient)
 					{
 						data.hasClient=true;
@@ -3721,10 +3738,7 @@ public abstract class ConfigMakeTool
 		
 		//删掉所有的const,final和size
 		
-		List<String> fields=new ArrayList<>();
-		fields.addAll(_constCls.getFieldNameList());
-		
-		for(String v : fields)
+		for(String v : _constCls.getFieldNameList().clone())
 		{
 			FieldInfo field=_constCls.getField(v);
 			

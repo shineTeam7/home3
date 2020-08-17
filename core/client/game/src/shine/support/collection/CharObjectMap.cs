@@ -16,20 +16,12 @@ namespace ShineEngine
 
 		public CharObjectMap()
 		{
-
+			init(_minSize);
 		}
 
 		public CharObjectMap(int capacity)
 		{
 			init(countCapacity(capacity));
-		}
-
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
 		}
 
 		public char getFreeValue()
@@ -39,19 +31,17 @@ namespace ShineEngine
 
 		public char[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
 		public V[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new char[capacity<<1];
 
@@ -224,8 +214,6 @@ namespace ShineEngine
 
 		public void put(char key,V value)
 		{
-			checkInit();
-
 			int index=insert(key,value);
 
 			if(index<0)
@@ -385,27 +373,8 @@ namespace ShineEngine
 			}
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
-
 		public V putIfAbsent(char key,V value)
 		{
-			checkInit();
 			int index=insert(key,value);
 
 			if(index<0)
@@ -420,7 +389,6 @@ namespace ShineEngine
 
 		public V computeIfAbsent(char key,Func<int,V> mappingFunction)
 		{
-			checkInit();
 			int free;
 			if(key==(free=_freeValue))
 			{

@@ -11,12 +11,10 @@ public class TestCount
 {
 	public static int _num=0;
 	
-	private int _aa;
 	@Benchmark
 	public void testCount()
 	{
 		++_num;
-		TestControl.aa=_num;
 		
 		//try
 		//{

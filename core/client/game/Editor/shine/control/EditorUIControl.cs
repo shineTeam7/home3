@@ -88,16 +88,18 @@ namespace ShineEditor
 			EditorGUIUtility.PingObject(Selection.activeObject);
 		}
 
-		public static void CreateSCustomScrollViewGameObject()
+		public static void CreateSScrollViewFake3DGameObject()
 		{
 			GameObject parentGameObject=Selection.activeObject as GameObject;
 			Transform parentTransform=parentGameObject==null ? null : parentGameObject.transform;
 
-			GameObject gameObject=new GameObject("sCustomScrollView",typeof(SCustomScrollView));
+			GameObject gameObject=new GameObject("sScrollViewFake3D",typeof(SScrollViewFake3D));
 			gameObject.transform.SetParent(parentTransform,false);
-			Mask mask=gameObject.GetComponent<Mask>();
-			if(mask)
-				mask.showMaskGraphic=false;
+
+			//默认mask方式遮罩
+			gameObject.AddComponent<Image>();
+			gameObject.AddComponent<Mask>().showMaskGraphic=false;
+
 			EditorUtility.FocusProjectWindow();
 			Selection.activeObject=gameObject;
 			EditorGUIUtility.PingObject(Selection.activeObject);

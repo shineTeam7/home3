@@ -61,1114 +61,1119 @@ public class InfoCodeType
 	public const int LoginGameFailed_resourceVersionLow=12;
 	
 	/// <summary>
+	/// 登录游戏失败,服务器爆满
+	/// </summary>
+	public const int LoginGameFailed_gameIsFull=13;
+	
+	/// <summary>
 	/// 创建角色失败,正在创建中
 	/// </summary>
-	public const int CreatePlayerFailed_isCreating=13;
+	public const int CreatePlayerFailed_isCreating=14;
 	
 	/// <summary>
 	/// 创建角色失败,达到角色数目上限
 	/// </summary>
-	public const int CreatePlayerFailed_ownPlayerNumMax=14;
+	public const int CreatePlayerFailed_ownPlayerNumMax=15;
 	
 	/// <summary>
 	/// 创建角色失败,名字过长
 	/// </summary>
-	public const int CreatePlayerFailed_nameTooLong=15;
+	public const int CreatePlayerFailed_nameTooLong=16;
 	
 	/// <summary>
 	/// 创建角色失败,含有非法字符
 	/// </summary>
-	public const int CreatePlayerFailed_nameNotAllowed=16;
+	public const int CreatePlayerFailed_nameNotAllowed=17;
 	
 	/// <summary>
 	/// 创建角色失败,名字重复
 	/// </summary>
-	public const int CreatePlayerFailed_nameIsRepeat=17;
+	public const int CreatePlayerFailed_nameIsRepeat=18;
 	
 	/// <summary>
 	/// 创建角色失败,名字敏感
 	/// </summary>
-	public const int CreatePlayerFailed_nameIsSensitive=18;
+	public const int CreatePlayerFailed_nameIsSensitive=19;
 	
 	/// <summary>
 	/// 创建角色失败,区服已满
 	/// </summary>
-	public const int CreatePlayerFailed_areaIsFull=19;
+	public const int CreatePlayerFailed_areaIsFull=20;
 	
 	/// <summary>
 	/// 角色重连游戏失败,令牌不匹配
 	/// </summary>
-	public const int PlayerReconnectLoginFailed_tokenNotMatch=20;
+	public const int PlayerReconnectLoginFailed_tokenNotMatch=21;
 	
 	/// <summary>
 	/// 玩家下线,主动下线
 	/// </summary>
-	public const int PlayerExit_initiative=21;
+	public const int PlayerExit_initiative=22;
 	
 	/// <summary>
 	/// 玩家下线,连接断开
 	/// </summary>
-	public const int PlayerExit_socketClose=22;
+	public const int PlayerExit_socketClose=23;
 	
 	/// <summary>
 	/// 玩家下线,被挤下线
 	/// </summary>
-	public const int PlayerExit_crowedDown=23;
+	public const int PlayerExit_crowedDown=24;
 	
 	/// <summary>
 	/// 玩家下线,被踢下线
 	/// </summary>
-	public const int PlayerExit_beKicked=24;
+	public const int PlayerExit_beKicked=25;
 	
 	/// <summary>
 	/// 玩家下线,服务器关闭
 	/// </summary>
-	public const int PlayerExit_serverClose=25;
+	public const int PlayerExit_serverClose=26;
 	
 	/// <summary>
 	/// 玩家下线,被强制下线(跨服回)
 	/// </summary>
-	public const int PlayerExit_callSwitchBack=26;
+	public const int PlayerExit_callSwitchBack=27;
 	
 	/// <summary>
 	/// 玩家下线,账号删除
 	/// </summary>
-	public const int PlayerExit_delete=27;
+	public const int PlayerExit_delete=28;
 	
 	/// <summary>
 	/// 客户端删除角色,角色不存在
 	/// </summary>
-	public const int DeletePlayer_notExit=28;
+	public const int DeletePlayer_notExit=29;
 	
 	/// <summary>
 	/// 切换游戏服失败,没有切换数据(token不正确)
 	/// </summary>
-	public const int SwitchGameFailed_noSwitchData=29;
+	public const int SwitchGameFailed_noSwitchData=30;
 	
 	/// <summary>
 	/// 切换游戏服失败,状态不正确
 	/// </summary>
-	public const int SwitchGameFailed_notRightState=30;
+	public const int SwitchGameFailed_notRightState=31;
 	
 	/// <summary>
 	/// 客户端GM指令失败
 	/// </summary>
-	public const int ClientGMFailed=31;
+	public const int ClientGMFailed=32;
 	
 	/// <summary>
 	/// 客户端GM指令成功
 	/// </summary>
-	public const int ClientGMSuccess=32;
+	public const int ClientGMSuccess=33;
 	
 	/// <summary>
 	/// 客户端GM指令帮助
 	/// </summary>
-	public const int ClientGMHelp=33;
+	public const int ClientGMHelp=34;
 	
 	/// <summary>
 	/// 绑定平台失败,目标账号已存在
 	/// </summary>
-	public const int BindPlatformFailed_targetUIDExist=34;
+	public const int BindPlatformFailed_targetUIDExist=35;
 	
 	/// <summary>
 	/// 客户端离线事务执行出错
 	/// </summary>
-	public const int OfflineWorkFailed=35;
+	public const int OfflineWorkFailed=36;
 	
 	/// <summary>
 	/// 事务内部错误(未注册/已传输过)
 	/// </summary>
-	public const int WorkError=36;
+	public const int WorkError=37;
 	
 	/// <summary>
 	/// 执行事务时角色不存在
 	/// </summary>
-	public const int Work_playerNotExit=37;
+	public const int Work_playerNotExit=38;
 	
 	/// <summary>
 	/// 拉回by距离超限
 	/// </summary>
-	public const int PullBack_distance=41;
+	public const int PullBack_distance=42;
 	
 	/// <summary>
 	/// 拉回by当前状态不可移动
 	/// </summary>
-	public const int PullBack_cantMove=42;
+	public const int PullBack_cantMove=43;
 	
 	/// <summary>
 	/// 拾取失败,背包空间不足
 	/// </summary>
-	public const int PickUpFailed_bagNotEnough=43;
+	public const int PickUpFailed_bagNotEnough=44;
 	
 	/// <summary>
 	/// 拾取失败,单位丢失
 	/// </summary>
-	public const int PickUpFailed_unitMiss=44;
+	public const int PickUpFailed_unitMiss=45;
 	
 	/// <summary>
 	/// 拾取失败,距离过远
 	/// </summary>
-	public const int PickUpFailed_tooFar=45;
+	public const int PickUpFailed_tooFar=46;
 	
 	/// <summary>
 	/// 操作失败,单位丢失
 	/// </summary>
-	public const int OperateFailed_unitMiss=46;
+	public const int OperateFailed_unitMiss=47;
 	
 	/// <summary>
 	/// 操作失败,距离过远
 	/// </summary>
-	public const int OperateFailed_tooFar=47;
+	public const int OperateFailed_tooFar=48;
 	
 	/// <summary>
 	/// 操作失败,不在空闲中
 	/// </summary>
-	public const int OperateFailed_notReady=48;
+	public const int OperateFailed_notReady=49;
 	
 	/// <summary>
 	/// 需要在$1状态中
 	/// </summary>
-	public const int Condition_needOnStatus=52;
+	public const int Condition_needOnStatus=53;
 	
 	/// <summary>
 	/// 不可处于$1状态
 	/// </summary>
-	public const int Condition_needOffStatus=53;
+	public const int Condition_needOffStatus=54;
 	
 	/// <summary>
 	/// 使用物品时等级不足
 	/// </summary>
-	public const int Condition_needLevel=54;
+	public const int Condition_needLevel=55;
 	
 	/// <summary>
 	/// 需要工会
 	/// </summary>
-	public const int Condition_needUnion=55;
+	public const int Condition_needUnion=56;
 	
 	/// <summary>
 	/// 功能$1未开启
 	/// </summary>
-	public const int Condition_functionNotOpen=56;
+	public const int Condition_functionNotOpen=57;
 	
 	/// <summary>
 	/// 任务$1未完成
 	/// </summary>
-	public const int Condition_needCompleteQuest=57;
+	public const int Condition_needCompleteQuest=58;
 	
 	/// <summary>
 	/// 改名时,不在源游戏服
 	/// </summary>
-	public const int Role_changeName_notSource=58;
+	public const int Role_changeName_notSource=59;
 	
 	/// <summary>
 	/// 申请绑定平台时，不是游客
 	/// </summary>
-	public const int Role_bindPlatform_notTourist=59;
+	public const int Role_bindPlatform_notTourist=60;
 	
 	/// <summary>
 	/// 背包空间不足
 	/// </summary>
-	public const int BagNotEnough=64;
+	public const int BagNotEnough=65;
 	
 	/// <summary>
 	/// 移除物品红点时，物品不存在
 	/// </summary>
-	public const int RemoveItemRedPoint_itemNotExist=65;
+	public const int RemoveItemRedPoint_itemNotExist=66;
 	
 	/// <summary>
 	/// 移动装备时，物品为空
 	/// </summary>
-	public const int MoveEquip_equipNotExist=66;
+	public const int MoveEquip_equipNotExist=67;
 	
 	/// <summary>
 	/// 移动装备时，目标槽位不可用
 	/// </summary>
-	public const int MoveEquip_targetSlotDisabled=67;
+	public const int MoveEquip_targetSlotDisabled=68;
 	
 	/// <summary>
 	/// 移动装备时，装备类型不匹配
 	/// </summary>
-	public const int MoveEquip_equipTypeNotMatch=68;
+	public const int MoveEquip_equipTypeNotMatch=69;
 	
 	/// <summary>
 	/// 移动物品时，找不到from物品
 	/// </summary>
-	public const int MoveItem_FromItemNotExist=69;
+	public const int MoveItem_FromItemNotExist=70;
 	
 	/// <summary>
 	/// 移动物品时，toIndex不可用
 	/// </summary>
-	public const int MoveItem_toIndexDisabled=70;
+	public const int MoveItem_toIndexDisabled=71;
 	
 	/// <summary>
 	/// 移动物品时，序号相等
 	/// </summary>
-	public const int MoveItem_IndexEqual=71;
+	public const int MoveItem_IndexEqual=72;
 	
 	/// <summary>
 	/// 拆分物品时，找不到from物品
 	/// </summary>
-	public const int SplitItem_FromItemNotExist=72;
+	public const int SplitItem_FromItemNotExist=73;
 	
 	/// <summary>
 	/// 拆分物品时，数目非法
 	/// </summary>
-	public const int SplitItem_CountNotAllowed=73;
+	public const int SplitItem_CountNotAllowed=74;
 	
 	/// <summary>
 	/// 拆分物品时，没有空余格子
 	/// </summary>
-	public const int SplitItem_GridFull=74;
+	public const int SplitItem_GridFull=75;
 	
 	/// <summary>
 	/// 穿戴装备时，装备位置未开放
 	/// </summary>
-	public const int Equip_slotNotOpen=79;
+	public const int Equip_slotNotOpen=80;
 	
 	/// <summary>
 	/// 穿戴装备时，不是装备
 	/// </summary>
-	public const int Equip_notEquip=80;
+	public const int Equip_notEquip=81;
 	
 	/// <summary>
 	/// 穿戴装备时，装备位置已存在
 	/// </summary>
-	public const int Equip_slotAlreadyExist=81;
+	public const int Equip_slotAlreadyExist=82;
 	
 	/// <summary>
 	/// 穿戴装备时，已存在唯一装备
 	/// </summary>
-	public const int Equip_equipAlreadyExist=82;
+	public const int Equip_equipAlreadyExist=83;
 	
 	/// <summary>
 	/// 穿戴装备时，装备类型不匹配
 	/// </summary>
-	public const int Equip_wrongType=83;
+	public const int Equip_wrongType=84;
 	
 	/// <summary>
 	/// 穿戴装备时,物品为空
 	/// </summary>
-	public const int Equip_itemNotExist=84;
+	public const int Equip_itemNotExist=85;
 	
 	/// <summary>
 	/// 卸下装备时,装备为空
 	/// </summary>
-	public const int Equip_equipNotExist=85;
+	public const int Equip_equipNotExist=86;
 	
 	/// <summary>
 	/// 卸下装备时,目标格子不为空
 	/// </summary>
-	public const int Equip_slotNotEmpty=86;
+	public const int Equip_slotNotEmpty=87;
 	
 	/// <summary>
 	/// 卸下装备时,没有空余格子
 	/// </summary>
-	public const int Equip_slotNotEnough=87;
+	public const int Equip_slotNotEnough=88;
 	
 	/// <summary>
 	/// 出售物品时，客户端次数非法
 	/// </summary>
-	public const int Bag_sellItem_wrongNum=92;
+	public const int Bag_sellItem_wrongNum=93;
 	
 	/// <summary>
 	/// 出售物品时，出售物品不存在
 	/// </summary>
-	public const int Bag_sellItem_itemNotExist=93;
+	public const int Bag_sellItem_itemNotExist=94;
 	
 	/// <summary>
 	/// 出售物品时，出售物品id不匹配
 	/// </summary>
-	public const int Bag_sellItem_wrongID=94;
+	public const int Bag_sellItem_wrongID=95;
 	
 	/// <summary>
 	/// 出售物品时，出售物品移除失败
 	/// </summary>
-	public const int Bag_sellItem_removeItemFailed=95;
+	public const int Bag_sellItem_removeItemFailed=96;
 	
 	/// <summary>
 	/// 接取任务
 	/// </summary>
-	public const int AcceptQuest=99;
+	public const int AcceptQuest=100;
 	
 	/// <summary>
 	/// 提交任务成功
 	/// </summary>
-	public const int CommitQuestSuccess=100;
+	public const int CommitQuestSuccess=101;
 	
 	/// <summary>
 	/// 接任务时,任务已接
 	/// </summary>
-	public const int Quest_accept_accepted=101;
+	public const int Quest_accept_accepted=102;
 	
 	/// <summary>
 	/// 接任务时,任务已完成
 	/// </summary>
-	public const int Quest_accept_completed=102;
+	public const int Quest_accept_completed=103;
 	
 	/// <summary>
 	/// 接任务时,不可接取已失败的任务
 	/// </summary>
-	public const int Quest_accept_failed=103;
+	public const int Quest_accept_failed=104;
 	
 	/// <summary>
 	/// 接任务时,前置任务未完成
 	/// </summary>
-	public const int Quest_accept_preQuestNotFinish=104;
+	public const int Quest_accept_preQuestNotFinish=105;
 	
 	/// <summary>
 	/// 接任务时,条件不满足
 	/// </summary>
-	public const int Quest_accept_conditionNotMet=105;
+	public const int Quest_accept_conditionNotMet=106;
 	
 	/// <summary>
 	/// 接任务时,背包没有足够的位置放任务道具
 	/// </summary>
-	public const int Quest_accept_bagNotEnough=106;
+	public const int Quest_accept_bagNotEnough=107;
 	
 	/// <summary>
 	/// 放弃任务时,任务不存在
 	/// </summary>
-	public const int Quest_giveUp_questNotExist=107;
+	public const int Quest_giveUp_questNotExist=108;
 	
 	/// <summary>
 	/// 放弃任务时,任务未失败并且不可放弃
 	/// </summary>
-	public const int Quest_giveUp_questCanNotGiveUp=108;
+	public const int Quest_giveUp_questCanNotGiveUp=109;
 	
 	/// <summary>
 	/// 提交任务时,任务不存在
 	/// </summary>
-	public const int Quest_commit_questNotExist=109;
+	public const int Quest_commit_questNotExist=110;
 	
 	/// <summary>
 	/// 提交任务时,任务已失败
 	/// </summary>
-	public const int Quest_commit_failed=110;
+	public const int Quest_commit_failed=111;
 	
 	/// <summary>
 	/// 提交任务时,任务未完成
 	/// </summary>
-	public const int Quest_commit_questNotComplete=111;
+	public const int Quest_commit_questNotComplete=112;
 	
 	/// <summary>
 	/// clientTaskEvent时,找不到目标配置
 	/// </summary>
-	public const int Quest_clientTaskEvent_canNotFindConfig=112;
+	public const int Quest_clientTaskEvent_canNotFindConfig=113;
 	
 	/// <summary>
 	/// clientTaskEvent时,不可客户端驱动
 	/// </summary>
-	public const int Quest_clientTaskEvent_clientNotAllowed=113;
+	public const int Quest_clientTaskEvent_clientNotAllowed=114;
 	
 	/// <summary>
 	/// 对方好友列表已满
 	/// </summary>
-	public const int Friend_targetFriendListIsFull=118;
+	public const int Friend_targetFriendListIsFull=119;
 	
 	/// <summary>
 	/// 自身好友列表已满
 	/// </summary>
-	public const int Friend_friendListIsFull=119;
+	public const int Friend_friendListIsFull=120;
 	
 	/// <summary>
 	/// 目标已经是好友了
 	/// </summary>
-	public const int Friend_targetIsAlreadyFriend=120;
+	public const int Friend_targetIsAlreadyFriend=121;
 	
 	/// <summary>
 	/// 添加好友时，不能添加自己
 	/// </summary>
-	public const int Friend_add_canNotAddSelf=121;
+	public const int Friend_add_canNotAddSelf=122;
 	
 	/// <summary>
 	/// 添加好友时，重复添加
 	/// </summary>
-	public const int Friend_add_repeatAdd=122;
+	public const int Friend_add_repeatAdd=123;
 	
 	/// <summary>
 	/// 添加好友时，在黑名单中
 	/// </summary>
-	public const int Friend_add_inBlack=123;
+	public const int Friend_add_inBlack=124;
 	
 	/// <summary>
 	/// 添加好友时,好友数目已达上限
 	/// </summary>
-	public const int Friend_add_numFull=124;
+	public const int Friend_add_numFull=125;
 	
 	/// <summary>
 	/// 同意添加好友时，不能添加自己
 	/// </summary>
-	public const int Friend_agree_canNotAddSelf=125;
+	public const int Friend_agree_canNotAddSelf=126;
 	
 	/// <summary>
 	/// 同意添加好友时，重复添加
 	/// </summary>
-	public const int Friend_agree_repeatAdd=126;
+	public const int Friend_agree_repeatAdd=127;
 	
 	/// <summary>
 	/// 同意添加好友时，在黑名单中
 	/// </summary>
-	public const int Friend_agree_inBlack=127;
+	public const int Friend_agree_inBlack=128;
 	
 	/// <summary>
 	/// 同意添加好友时,好友数目已达上限
 	/// </summary>
-	public const int Friend_agree_numFull=128;
+	public const int Friend_agree_numFull=129;
 	
 	/// <summary>
 	/// 同意添加好友时,找不到申请数据
 	/// </summary>
-	public const int Friend_agree_canNotFindData=129;
+	public const int Friend_agree_canNotFindData=130;
 	
 	/// <summary>
 	/// 删除好友时,不是好友
 	/// </summary>
-	public const int Friend_remove_notFriend=130;
+	public const int Friend_remove_notFriend=131;
 	
 	/// <summary>
 	/// 添加黑名单时，不能添加自己
 	/// </summary>
-	public const int Friend_addBlack_canNotAddSelf=131;
+	public const int Friend_addBlack_canNotAddSelf=132;
 	
 	/// <summary>
 	/// 添加黑名单时，重复添加
 	/// </summary>
-	public const int Friend_addBlack_repeatAdd=132;
+	public const int Friend_addBlack_repeatAdd=133;
 	
 	/// <summary>
 	/// 添加黑名单时,黑名单数目已达上限
 	/// </summary>
-	public const int Friend_addBlack_numFull=133;
+	public const int Friend_addBlack_numFull=134;
 	
 	/// <summary>
 	/// 移除黑名单时,不存在
 	/// </summary>
-	public const int Friend_removeBlack_memberNotExist=134;
+	public const int Friend_removeBlack_memberNotExist=135;
 	
 	/// <summary>
 	/// 拒绝好友申请时,不存在
 	/// </summary>
-	public const int Friend_refuse_memberNotExist=135;
+	public const int Friend_refuse_memberNotExist=136;
 	
 	/// <summary>
 	/// 创建玩家群失败，名字敏感
 	/// </summary>
-	public const int CreateRoleGroupFailed_nameIsSensitive=140;
+	public const int CreateRoleGroupFailed_nameIsSensitive=141;
 	
 	/// <summary>
 	/// 创建玩家群失败，公告敏感
 	/// </summary>
-	public const int CreateRoleGroupFailed_noticeIsSensitive=141;
+	public const int CreateRoleGroupFailed_noticeIsSensitive=142;
 	
 	/// <summary>
 	/// 创建玩家群失败，名字重复
 	/// </summary>
-	public const int CreateRoleGroupFailed_nameIsRepeat=142;
+	public const int CreateRoleGroupFailed_nameIsRepeat=143;
 	
 	/// <summary>
 	/// 邀请玩家入群失败，玩家群已满
 	/// </summary>
-	public const int InviteRoleGroupFailed_targetRoleGroupFull=143;
+	public const int InviteRoleGroupFailed_targetRoleGroupFull=144;
 	
 	/// <summary>
 	/// 邀请玩家入群失败，已在群中
 	/// </summary>
-	public const int InviteRoleGroupFailed_targetInRoleGroup=144;
+	public const int InviteRoleGroupFailed_targetInRoleGroup=145;
 	
 	/// <summary>
 	/// 邀请玩家入群失败，目标条件不满足
 	/// </summary>
-	public const int InviteRoleGroupFailed_targetConditionNotMatch=145;
+	public const int InviteRoleGroupFailed_targetConditionNotMatch=146;
 	
 	/// <summary>
 	/// 找不到玩家群
 	/// </summary>
-	public const int RoleGroupMiss=146;
+	public const int RoleGroupMiss=147;
 	
 	/// <summary>
 	/// 解散玩家群时，不可解散
 	/// </summary>
-	public const int PlayerGroup_player_disband_canNotDisband=147;
+	public const int PlayerGroup_player_disband_canNotDisband=148;
 	
 	/// <summary>
 	/// 解散玩家群时，不是群主
 	/// </summary>
-	public const int PlayerGroup_player_disband_isNotLeader=148;
+	public const int PlayerGroup_player_disband_isNotLeader=149;
 	
 	/// <summary>
 	/// 解散玩家群时，此时不可操作
 	/// </summary>
-	public const int PlayerGroup_player_disband_canNotHandle=149;
+	public const int PlayerGroup_player_disband_canNotHandle=150;
 	
 	/// <summary>
 	/// 主动退出玩家群时，不可退出
 	/// </summary>
-	public const int PlayerGroup_player_leave_canNotLeave=150;
+	public const int PlayerGroup_player_leave_canNotLeave=151;
 	
 	/// <summary>
 	/// 主动退出玩家群时，此时不可操作
 	/// </summary>
-	public const int PlayerGroup_player_leave_canNotHandle=151;
+	public const int PlayerGroup_player_leave_canNotHandle=152;
 	
 	/// <summary>
 	/// 改变群主时，找不到目标
 	/// </summary>
-	public const int PlayerGroup_player_changeLeader_canNotFindTarget=152;
+	public const int PlayerGroup_player_changeLeader_canNotFindTarget=153;
 	
 	/// <summary>
 	/// 改变群主时，目标是自己
 	/// </summary>
-	public const int PlayerGroup_player_changeLeader_targetIsSelf=153;
+	public const int PlayerGroup_player_changeLeader_targetIsSelf=154;
 	
 	/// <summary>
 	/// 设置职位时，没有权限
 	/// </summary>
-	public const int PlayerGroup_player_setTitle_notAllowed=154;
+	public const int PlayerGroup_player_setTitle_notAllowed=155;
 	
 	/// <summary>
 	/// 设置职位时，找不到目标成员
 	/// </summary>
-	public const int PlayerGroup_player_setTitle_canNotFindTarget=155;
+	public const int PlayerGroup_player_setTitle_canNotFindTarget=156;
 	
 	/// <summary>
 	/// 设置职位时，不能设置队长
 	/// </summary>
-	public const int PlayerGroup_player_setTitle_canNotSetLeader=156;
+	public const int PlayerGroup_player_setTitle_canNotSetLeader=157;
 	
 	/// <summary>
 	/// 设置职位时，目标职位已超过自身能给与上限
 	/// </summary>
-	public const int PlayerGroup_player_setTitle_targetLevelHigher=157;
+	public const int PlayerGroup_player_setTitle_targetLevelHigher=158;
 	
 	/// <summary>
 	/// 设置职位时，当前已是该职位
 	/// </summary>
-	public const int PlayerGroup_player_setTitle_titleIsSame=158;
+	public const int PlayerGroup_player_setTitle_titleIsSame=159;
 	
 	/// <summary>
 	/// 设置职位时，超过容纳数目
 	/// </summary>
-	public const int PlayerGroup_player_setTitle_titleNumFull=159;
+	public const int PlayerGroup_player_setTitle_titleNumFull=160;
 	
 	/// <summary>
 	/// 踢出成员时，成员不存在
 	/// </summary>
-	public const int PlayerGroup_player_kickMember_memberNotExist=160;
+	public const int PlayerGroup_player_kickMember_memberNotExist=161;
 	
 	/// <summary>
 	/// 踢出成员时，不可踢出自己
 	/// </summary>
-	public const int PlayerGroup_player_kickMember_canNotKickSelf=161;
+	public const int PlayerGroup_player_kickMember_canNotKickSelf=162;
 	
 	/// <summary>
 	/// 踢出成员时，权限不足
 	/// </summary>
-	public const int PlayerGroup_player_kickMember_notAllowed=162;
+	public const int PlayerGroup_player_kickMember_notAllowed=163;
 	
 	/// <summary>
 	/// 踢出成员时，不可提出队长
 	/// </summary>
-	public const int PlayerGroup_player_kickMember_canNotKickLeader=163;
+	public const int PlayerGroup_player_kickMember_canNotKickLeader=164;
 	
 	/// <summary>
 	/// 处理申请时，人数已满
 	/// </summary>
-	public const int PlayerGroup_player_handleApply_playerNumFull=164;
+	public const int PlayerGroup_player_handleApply_playerNumFull=165;
 	
 	/// <summary>
 	/// 处理申请时，成员已存在
 	/// </summary>
-	public const int PlayerGroup_player_handleApply_memberExist=165;
+	public const int PlayerGroup_player_handleApply_memberExist=166;
 	
 	/// <summary>
 	/// 处理申请时，不可处理申请
 	/// </summary>
-	public const int PlayerGroup_player_handleApply_canNotHandle=166;
+	public const int PlayerGroup_player_handleApply_canNotHandle=167;
 	
 	/// <summary>
 	/// 修改群名时，权限不够
 	/// </summary>
-	public const int PlayerGroup_player_changeName_notAllowed=167;
+	public const int PlayerGroup_player_changeName_notAllowed=168;
 	
 	/// <summary>
 	/// 修改群名时，名字过长
 	/// </summary>
-	public const int PlayerGroup_player_changeName_nameTooLong=168;
+	public const int PlayerGroup_player_changeName_nameTooLong=169;
 	
 	/// <summary>
 	/// 修改群名时，名字敏感
 	/// </summary>
-	public const int PlayerGroup_player_changeName_nameSensitive=169;
+	public const int PlayerGroup_player_changeName_nameSensitive=170;
 	
 	/// <summary>
 	/// 修改群名时，名字重复
 	/// </summary>
-	public const int PlayerGroup_player_changeName_nameIsRepeat=170;
+	public const int PlayerGroup_player_changeName_nameIsRepeat=171;
 	
 	/// <summary>
 	/// 修改群公告时，权限不够
 	/// </summary>
-	public const int PlayerGroup_player_changeNotice_notAllowed=171;
+	public const int PlayerGroup_player_changeNotice_notAllowed=172;
 	
 	/// <summary>
 	/// 修改群公告时，名字过长
 	/// </summary>
-	public const int PlayerGroup_player_changeNotice_nameTooLong=172;
+	public const int PlayerGroup_player_changeNotice_nameTooLong=173;
 	
 	/// <summary>
 	/// 修改群公告时，名字敏感
 	/// </summary>
-	public const int PlayerGroup_player_changeNotice_nameSensitive=173;
+	public const int PlayerGroup_player_changeNotice_nameSensitive=174;
 	
 	/// <summary>
 	/// 修改“自动批准申请”开关时，权限不够
 	/// </summary>
-	public const int PlayerGroup_player_changeAutoApply_notAllowed=174;
+	public const int PlayerGroup_player_changeAutoApply_notAllowed=175;
 	
 	/// <summary>
 	/// 创建玩家群时,名字过长
 	/// </summary>
-	public const int PlayerGroup_create_nameTooLong=175;
+	public const int PlayerGroup_create_nameTooLong=176;
 	
 	/// <summary>
 	/// 创建玩家群时,公告过长
 	/// </summary>
-	public const int PlayerGroup_create_noticeTooLong=176;
+	public const int PlayerGroup_create_noticeTooLong=177;
 	
 	/// <summary>
 	/// 邀请入群时,condition不满足
 	/// </summary>
-	public const int PlayerGroup_invite_conditionNotMet=177;
+	public const int PlayerGroup_invite_conditionNotMet=178;
 	
 	/// <summary>
 	/// 本服玩家群不可与其他服玩家交互
 	/// </summary>
-	public const int PlayerGroup_wrongServer=178;
+	public const int PlayerGroup_wrongServer=179;
 	
 	/// <summary>
 	/// 邀请入群时,找不到群
 	/// </summary>
-	public const int PlayerGroup_invite_canNotFindGroup=179;
+	public const int PlayerGroup_invite_canNotFindGroup=180;
 	
 	/// <summary>
 	/// 邀请入群时,人数已满
 	/// </summary>
-	public const int PlayerGroup_invite_memberFull=180;
+	public const int PlayerGroup_invite_memberFull=181;
 	
 	/// <summary>
 	/// 邀请入群时,邀请者没有权限
 	/// </summary>
-	public const int PlayerGroup_invite_notAllowed=181;
+	public const int PlayerGroup_invite_notAllowed=182;
 	
 	/// <summary>
 	/// 邀请入群时,已在群中
 	/// </summary>
-	public const int PlayerGroup_invite_alreadyInGroup=182;
+	public const int PlayerGroup_invite_alreadyInGroup=183;
 	
 	/// <summary>
 	/// 邀请入群直接创建时,不支持直接邀请创建
 	/// </summary>
-	public const int PlayerGroup_inviteAndCreate_canNotCreate=183;
+	public const int PlayerGroup_inviteAndCreate_canNotCreate=184;
 	
 	/// <summary>
 	/// 邀请入群直接创建时,必须为单一群
 	/// </summary>
-	public const int PlayerGroup_inviteAndCreate_mustOnly=184;
+	public const int PlayerGroup_inviteAndCreate_mustOnly=185;
 	
 	/// <summary>
 	/// 邀请入群直接创建时,已达到数目限制
 	/// </summary>
-	public const int PlayerGroup_inviteAndCreate_numLimit=185;
+	public const int PlayerGroup_inviteAndCreate_numLimit=186;
 	
 	/// <summary>
 	/// 处理邀请时,已失效
 	/// </summary>
-	public const int PlayerGroup_handleInvite_invalid=186;
+	public const int PlayerGroup_handleInvite_invalid=187;
 	
 	/// <summary>
 	/// 同意邀请入群时,自身群数已满
 	/// </summary>
-	public const int PlayerGroup_acceptInvite_groupNumFull=187;
+	public const int PlayerGroup_acceptInvite_groupNumFull=188;
 	
 	/// <summary>
 	/// 同意邀请入群时,自身条件不满足
 	/// </summary>
-	public const int PlayerGroup_acceptInvite_conditionNotMet=188;
+	public const int PlayerGroup_acceptInvite_conditionNotMet=189;
 	
 	/// <summary>
 	/// 不可申请非本服玩家群
 	/// </summary>
-	public const int PlayerGroup_canNotApplyOtherServer=189;
+	public const int PlayerGroup_canNotApplyOtherServer=190;
 	
 	/// <summary>
 	/// 申请加入玩家群时,配置不可申请
 	/// </summary>
-	public const int PlayerGroup_apply_configCanNotApply=190;
+	public const int PlayerGroup_apply_configCanNotApply=191;
 	
 	/// <summary>
 	/// 申请加入玩家群时,群数已满
 	/// </summary>
-	public const int PlayerGroup_apply_groupNumFull=191;
+	public const int PlayerGroup_apply_groupNumFull=192;
 	
 	/// <summary>
 	/// 申请加入玩家群时,已在该群
 	/// </summary>
-	public const int PlayerGroup_apply_alreadyInGroup=192;
+	public const int PlayerGroup_apply_alreadyInGroup=193;
 	
 	/// <summary>
 	/// 申请加入玩家群时,自身条件不满足
 	/// </summary>
-	public const int PlayerGroup_apply_conditionNotMet=193;
+	public const int PlayerGroup_apply_conditionNotMet=194;
 	
 	/// <summary>
 	/// 申请加入玩家群时,已申请过
 	/// </summary>
-	public const int PlayerGroup_apply_alreadyApply=194;
+	public const int PlayerGroup_apply_alreadyApply=195;
 	
 	/// <summary>
 	/// 申请加入玩家群时,已达到申请上限
 	/// </summary>
-	public const int PlayerGroup_apply_applyLimit=195;
+	public const int PlayerGroup_apply_applyLimit=196;
 	
 	/// <summary>
 	/// 使用激活码失败,码不存在
 	/// </summary>
-	public const int UseActivationCodeFailed_notExist=200;
+	public const int UseActivationCodeFailed_notExist=201;
 	
 	/// <summary>
 	/// 使用激活码失败,已使用过
 	/// </summary>
-	public const int UseActivationCodeFailed_hasUsed=201;
+	public const int UseActivationCodeFailed_hasUsed=202;
 	
 	/// <summary>
 	/// 使用激活码失败,已达到次数上限
 	/// </summary>
-	public const int UseActivationCodeFailed_numIsMax=202;
+	public const int UseActivationCodeFailed_numIsMax=203;
 	
 	/// <summary>
 	/// 使用激活码失败,已达到时间限制
 	/// </summary>
-	public const int UseActivationCodeFailed_timeOut=203;
+	public const int UseActivationCodeFailed_timeOut=204;
 	
 	/// <summary>
 	/// 使用激活码成功
 	/// </summary>
-	public const int UseActivationCodeSuccess=204;
+	public const int UseActivationCodeSuccess=205;
 	
 	/// <summary>
 	/// 拍卖行上架物品时，达到物品上限
 	/// </summary>
-	public const int Auction_sellItem_isMaxSaleNum=208;
+	public const int Auction_sellItem_isMaxSaleNum=209;
 	
 	/// <summary>
 	/// 拍卖行上架物品时，找不到指定物品
 	/// </summary>
-	public const int Auction_sellItem_cantFindItem=209;
+	public const int Auction_sellItem_cantFindItem=210;
 	
 	/// <summary>
 	/// 拍卖行上架物品时，物品id没对上
 	/// </summary>
-	public const int Auction_sellItem_wrongItemID=210;
+	public const int Auction_sellItem_wrongItemID=211;
 	
 	/// <summary>
 	/// 拍卖行上架物品时，数目非法
 	/// </summary>
-	public const int Auction_sellItem_wrongNum=211;
+	public const int Auction_sellItem_wrongNum=212;
 	
 	/// <summary>
 	/// 拍卖行上架物品时，价格非法
 	/// </summary>
-	public const int Auction_sellItem_wrongPrice=212;
+	public const int Auction_sellItem_wrongPrice=213;
 	
 	/// <summary>
 	/// 拍卖行下架物品时，还在上架过程中
 	/// </summary>
-	public const int Auction_cancelSellItem_stillSaleOn=213;
+	public const int Auction_cancelSellItem_stillSaleOn=214;
 	
 	/// <summary>
 	/// 拍卖行下架物品时，找不到上架物品
 	/// </summary>
-	public const int Auction_cancelSellItem_notExist=214;
+	public const int Auction_cancelSellItem_notExist=215;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，物品id错误
 	/// </summary>
-	public const int Auction_buyItem_wrongItemID=215;
+	public const int Auction_buyItem_wrongItemID=216;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，价格非法
 	/// </summary>
-	public const int Auction_buyItem_wrongPrice=216;
+	public const int Auction_buyItem_wrongPrice=217;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，数目非法
 	/// </summary>
-	public const int Auction_buyItem_wrongNum=217;
+	public const int Auction_buyItem_wrongNum=218;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，货币不足
 	/// </summary>
-	public const int Auction_buyItem_coinNotEnough=218;
+	public const int Auction_buyItem_coinNotEnough=219;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，找不到上架物品
 	/// </summary>
-	public const int Auction_buyItem_notExist=219;
+	public const int Auction_buyItem_notExist=220;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，物品数目余量不足
 	/// </summary>
-	public const int Auction_buyItem_numNotEnough=220;
+	public const int Auction_buyItem_numNotEnough=221;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，不可购买自己的商品
 	/// </summary>
-	public const int Auction_buyItem_cantBuySelf=221;
+	public const int Auction_buyItem_cantBuySelf=222;
 	
 	/// <summary>
 	/// 拍卖行购买物品时，正在购买该物品中
 	/// </summary>
-	public const int Auction_buyItem_isBuying=222;
+	public const int Auction_buyItem_isBuying=223;
 	
 	/// <summary>
 	/// 拍卖行查询物品时，条件不能为空
 	/// </summary>
-	public const int Auction_query_conditionIsEmpty=223;
+	public const int Auction_query_conditionIsEmpty=224;
 	
 	/// <summary>
 	/// 拍卖行移除上架物品原因，主动取消
 	/// </summary>
-	public const int Auction_removeSellReason_cancelInitiative=224;
+	public const int Auction_removeSellReason_cancelInitiative=225;
 	
 	/// <summary>
 	/// 拍卖行移除上架物品原因，售罄
 	/// </summary>
-	public const int Auction_removeSellReason_soldOut=225;
+	public const int Auction_removeSellReason_soldOut=226;
 	
 	/// <summary>
 	/// 拍卖行移除上架物品原因，到下架时间
 	/// </summary>
-	public const int Auction_removeSellReason_timeOut=226;
+	public const int Auction_removeSellReason_timeOut=227;
 	
 	/// <summary>
 	/// 拍卖行查询sql后，player不存在
 	/// </summary>
-	public const int Auction_query_playerNotExist=227;
+	public const int Auction_query_playerNotExist=228;
 	
 	/// <summary>
 	/// 申请匹配时，玩家正匹配中
 	/// </summary>
-	public const int ApplyMatch_playerInMatching=232;
+	public const int ApplyMatch_playerInMatching=233;
 	
 	/// <summary>
 	/// 申请匹配时，玩家正切换场景中
 	/// </summary>
-	public const int ApplyMatch_playerIsChangingScene=233;
+	public const int ApplyMatch_playerIsChangingScene=234;
 	
 	/// <summary>
 	/// 申请匹配时，不可匹配
 	/// </summary>
-	public const int ApplyMatch_playerCanNotMatch=234;
+	public const int ApplyMatch_playerCanNotMatch=235;
 	
 	/// <summary>
 	/// 取消匹配时，玩家不在匹配中
 	/// </summary>
-	public const int CancelMatch_playerNotInMatching=235;
+	public const int CancelMatch_playerNotInMatching=236;
 	
 	/// <summary>
 	/// 取消匹配时，玩家匹配的不是该功能
 	/// </summary>
-	public const int CancelMatch_playerMatchFuncError=236;
+	public const int CancelMatch_playerMatchFuncError=237;
 	
 	/// <summary>
 	/// 取消匹配时，找不到对应的匹配功能
 	/// </summary>
-	public const int CancelMatch_playerMatchFuncNotExist=237;
+	public const int CancelMatch_playerMatchFuncNotExist=238;
 	
 	/// <summary>
 	/// 接受匹配时，玩家不在匹配中
 	/// </summary>
-	public const int AcceptMatch_playerNotInMatching=238;
+	public const int AcceptMatch_playerNotInMatching=239;
 	
 	/// <summary>
 	/// 接受匹配时，玩家匹配的不是该功能
 	/// </summary>
-	public const int AcceptMatch_playerMatchFuncError=239;
+	public const int AcceptMatch_playerMatchFuncError=240;
 	
 	/// <summary>
 	/// 接受匹配时，找不到对应的匹配功能
 	/// </summary>
-	public const int AcceptMatch_playerMatchFuncNotExist=240;
+	public const int AcceptMatch_playerMatchFuncNotExist=241;
 	
 	/// <summary>
 	/// 领取成就奖励时，找不到成就
 	/// </summary>
-	public const int Achievement_achievementNotExist=245;
+	public const int Achievement_achievementNotExist=246;
 	
 	/// <summary>
 	/// 领取成就奖励时，已领取过
 	/// </summary>
-	public const int Achievement_alreadyGet=246;
+	public const int Achievement_alreadyGet=247;
 	
 	/// <summary>
 	/// 领取成就奖励时，背包空间不足
 	/// </summary>
-	public const int Achievement_bagNotEnough=247;
+	public const int Achievement_bagNotEnough=248;
 	
 	/// <summary>
 	/// 读取邮件时，索引错误
 	/// </summary>
-	public const int Mail_read_wrongIndex=252;
+	public const int Mail_read_wrongIndex=253;
 	
 	/// <summary>
 	/// 邮件标记已读时,找不到邮件
 	/// </summary>
-	public const int Mail_markReaded_canNotFindMail=253;
+	public const int Mail_markReaded_canNotFindMail=254;
 	
 	/// <summary>
 	/// 邮件标记已读时,邮件实例ID不匹配
 	/// </summary>
-	public const int Mail_markReaded_wrongID=254;
+	public const int Mail_markReaded_wrongID=255;
 	
 	/// <summary>
 	/// 邮件标记已读时,已经是已读
 	/// </summary>
-	public const int Mail_markReaded_alreadyReaded=255;
+	public const int Mail_markReaded_alreadyReaded=256;
 	
 	/// <summary>
 	/// 邮件移除小红点时，索引错误
 	/// </summary>
-	public const int Mail_removeRedPoint_wrongIndex=256;
+	public const int Mail_removeRedPoint_wrongIndex=257;
 	
 	/// <summary>
 	/// 邮件移除小红点时,找不到邮件
 	/// </summary>
-	public const int Mail_removeRedPoint_canNotFindMail=257;
+	public const int Mail_removeRedPoint_canNotFindMail=258;
 	
 	/// <summary>
 	/// 邮件移除小红点时,没有红点
 	/// </summary>
-	public const int Mail_removeRedPoint_redPointNotExist=258;
+	public const int Mail_removeRedPoint_redPointNotExist=259;
 	
 	/// <summary>
 	/// 领取邮件时，索引错误
 	/// </summary>
-	public const int Mail_take_wrongIndex=259;
+	public const int Mail_take_wrongIndex=260;
 	
 	/// <summary>
 	/// 领取邮件内容时,找不到邮件
 	/// </summary>
-	public const int Mail_take_canNotFindMail=260;
+	public const int Mail_take_canNotFindMail=261;
 	
 	/// <summary>
 	/// 领取邮件内容时,邮件实例ID不匹配
 	/// </summary>
-	public const int Mail_take_wrongID=261;
+	public const int Mail_take_wrongID=262;
 	
 	/// <summary>
 	/// 领取邮件内容时,已经领取过
 	/// </summary>
-	public const int Mail_take_alreadyTake=262;
+	public const int Mail_take_alreadyTake=263;
 	
 	/// <summary>
 	/// 领取邮件内容时,物品列表为空
 	/// </summary>
-	public const int Mail_take_itemListEmpty=263;
+	public const int Mail_take_itemListEmpty=264;
 	
 	/// <summary>
 	/// 领取邮件内容时,背包空间不足
 	/// </summary>
-	public const int Mail_take_bagNotEnough=264;
+	public const int Mail_take_bagNotEnough=265;
 	
 	/// <summary>
 	/// 删除邮件时，索引错误
 	/// </summary>
-	public const int Mail_remove_wrongIndex=265;
+	public const int Mail_remove_wrongIndex=266;
 	
 	/// <summary>
 	/// 删除邮件时,找不到邮件
 	/// </summary>
-	public const int Mail_remove_canNotFindMail=266;
+	public const int Mail_remove_canNotFindMail=267;
 	
 	/// <summary>
 	/// 删除邮件时,邮件实例ID不匹配
 	/// </summary>
-	public const int Mail_remove_wrongID=267;
+	public const int Mail_remove_wrongID=268;
 	
 	/// <summary>
 	/// 客户端发送邮件时,给自己
 	/// </summary>
-	public const int Mail_clientSend_canNotSendToSelf=268;
+	public const int Mail_clientSend_canNotSendToSelf=269;
 	
 	/// <summary>
 	/// 聊天时，聊天条件不满足
 	/// </summary>
-	public const int Chat_conditionNotMet=273;
+	public const int Chat_conditionNotMet=274;
 	
 	/// <summary>
 	/// 聊天时，聊天cd中
 	/// </summary>
-	public const int Chat_inCD=274;
+	public const int Chat_inCD=275;
 	
 	/// <summary>
 	/// 聊天时，聊天cost不足
 	/// </summary>
-	public const int Chat_costNotEnough=275;
+	public const int Chat_costNotEnough=276;
 	
 	/// <summary>
 	/// 聊天时，聊天有屏蔽字内容
 	/// </summary>
-	public const int Chat_sensitive=276;
+	public const int Chat_sensitive=277;
 	
 	/// <summary>
 	/// 附近聊天时,找不到单位
 	/// </summary>
-	public const int NearChat_canNotFindUnit=277;
+	public const int NearChat_canNotFindUnit=278;
 	
 	/// <summary>
 	/// 队伍聊天时,没有队伍
 	/// </summary>
-	public const int TeamChat_noTeam=278;
+	public const int TeamChat_noTeam=279;
 	
 	/// <summary>
 	/// 公会聊天时,没有公会
 	/// </summary>
-	public const int UnionChat_noUnion=279;
+	public const int UnionChat_noUnion=280;
 	
 	/// <summary>
 	/// 删除宠物时，宠物不存在
 	/// </summary>
-	public const int RemovePet_notExist=283;
+	public const int RemovePet_notExist=284;
 	
 	/// <summary>
 	/// 宠物出战时，宠物不存在
 	/// </summary>
-	public const int PetWork_notExist=284;
+	public const int PetWork_notExist=285;
 	
 	/// <summary>
 	/// 宠物出战时，已在出战状态
 	/// </summary>
-	public const int PetWork_isWorkingNow=285;
+	public const int PetWork_isWorkingNow=286;
 	
 	/// <summary>
 	/// 宠物出战时，当前不可出战
 	/// </summary>
-	public const int PetWork_cantWork=286;
+	public const int PetWork_cantWork=287;
 	
 	/// <summary>
 	/// 宠物出战时，当前场景不存在
 	/// </summary>
-	public const int PetWork_sceneNotExist=287;
+	public const int PetWork_sceneNotExist=288;
 	
 	/// <summary>
 	/// 宠物休息时，宠物不存在
 	/// </summary>
-	public const int PetReset_notExist=288;
+	public const int PetReset_notExist=289;
 	
 	/// <summary>
 	/// 宠物休息时，已在休息状态
 	/// </summary>
-	public const int PetReset_isNotWorkingNow=289;
+	public const int PetReset_isNotWorkingNow=290;
 	
 	/// <summary>
 	/// 长度

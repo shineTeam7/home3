@@ -81,11 +81,26 @@ public class ExternMethod
 				{
 					PosData pos=new PosData();
 					pos.readExternBuf(buf);
+					//区域
+					int area=buf.readInt();
+					
+					//TODO:对于area的使用
+					
 					list.add(pos);
 				}
 			}
 		}
 		
 		return re;
+	}
+	
+	public static long addCylinderObstacle(long scenePtr,ExternBuf buf,PosData pos,float radius,float height)
+	{
+		buf.clear();
+		pos.writeExternBuf(buf);
+		buf.writeFloat(radius);
+		buf.writeFloat(height);
+		
+		return ExternMethodNative.addCylinderObstacle(scenePtr,buf.fArr);
 	}
 }

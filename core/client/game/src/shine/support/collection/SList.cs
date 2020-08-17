@@ -15,7 +15,7 @@ namespace ShineEngine
 
 		public SList()
 		{
-
+			init(_minSize);
 		}
 
 		public SList(int capacity)
@@ -23,23 +23,8 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		private void checkInit()
-		{
-			if(_values!=null)
-				return;
-
-			init(_minSize);
-		}
-
-		public int capacity()
-		{
-			checkInit();
-			return _values.Length;
-		}
-
 		public V[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
@@ -51,27 +36,30 @@ namespace ShineEngine
 			return re;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_values=new V[capacity];
+			if(capacity<_minSize)
+				capacity=_minSize;
 
-			_size=0;
+			_capacity=capacity;
+
+			_values=new V[capacity];
 		}
 
-		private void remake(int capacity)
+		protected override void remake(int capacity)
 		{
-			V[] n=new V[capacity];
+			V[] oldArr=_values;
+			init(capacity);
+
 			if(_size>0)
-				Array.Copy(_values,0,n,0,_size);
-			_values=n;
+				Array.Copy(oldArr,0,_values,0,_size);
 		}
 
 		/** 添加 */
 		public void add(V value)
 		{
-			checkInit();
-			if(_size==_values.Length)
-				remake(_values.Length << 1);
+			if(_size==_capacity)
+				remake(_capacity << 1);
 
 			_values[_size++]=value;
 		}
@@ -79,7 +67,6 @@ namespace ShineEngine
 		/** 添加一组 */
 		public void addArr(V[] arr)
 		{
-			checkInit();
 			int d=_size + arr.Length;
 
 			if(d>_values.Length)
@@ -94,10 +81,8 @@ namespace ShineEngine
 		/** 添加元素到头 */
 		public void unshift(V value)
 		{
-			if(_size + 1>_values.Length)
-			{
-				remake(_values.Length << 1);
-			}
+			if(_size==_capacity)
+				remake(_capacity << 1);
 		
 			Array.Copy(_values,0,_values,1,_size);
 		
@@ -324,6 +309,7 @@ namespace ShineEngine
 
 				n[offset]=value;
 				_values=n;
+				_capacity=n.Length;
 			}
 			else
 			{
@@ -341,7 +327,7 @@ namespace ShineEngine
 			set {this.set(index,value);}
 		}
 
-		public void clear()
+		public override void clear()
 		{
 			if(_size==0)
 			{
@@ -356,19 +342,6 @@ namespace ShineEngine
 			}
 
 			_size=0;
-		}
-
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(_values==null)
-			{
-				init(countCapacity(capacity));
-			}
-			else if(capacity>_values.Length)
-			{
-				remake(countCapacity(capacity));
-			}
 		}
 
 		/** 尺寸扩容 */
@@ -507,6 +480,31 @@ namespace ShineEngine
 			}
 
 			_size=length;
+		}
+
+		/** 转化为原生集合 */
+		public List<V> toNatureList()
+		{
+			List<V> re=new List<V>(size());
+
+			V[] values=_values;
+
+			for(int i=0,len=_size;i<len;++i)
+			{
+				re.Add(values[i]);
+			}
+
+			return re;
+		}
+
+		public void addAll(List<V> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(V v in map)
+			{
+				this.add(v);
+			}
 		}
 
 		public ForEachIterator GetEnumerator()

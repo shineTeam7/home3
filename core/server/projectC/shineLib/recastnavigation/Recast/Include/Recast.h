@@ -275,10 +275,8 @@ static const int RC_SPANS_PER_POOL = 2048;
 /// @see rcHeightfield
 struct rcSpan
 {
-	unsigned int smin : RC_SPAN_HEIGHT_BITS; ///< The lower limit of the span. [Limit: < #smax]
-	unsigned int smax : RC_SPAN_HEIGHT_BITS; ///< The upper limit of the span. [Limit: <= #RC_SPAN_MAX_HEIGHT]
-	//FIXME:Modified
-	//unsigned int area : 6;                   ///< The area id assigned to the span.
+	unsigned short smin; ///< The lower limit of the span. [Limit: < #smax]
+	unsigned short smax; ///< The upper limit of the span. [Limit: <= #RC_SPAN_MAX_HEIGHT]
 	unsigned char area;                   ///< The area id assigned to the span.
 	rcSpan* next;                            ///< The next span higher up in column.
 };
@@ -424,7 +422,7 @@ struct rcPolyMesh
 	unsigned short* verts;	///< The mesh vertices. [Form: (x, y, z) * #nverts]
 	unsigned short* polys;	///< Polygon and neighbor data. [Length: #maxpolys * 2 * #nvp]
 	unsigned short* regs;	///< The region id assigned to each polygon. [Length: #maxpolys]
-	unsigned short* flags;	///< The user defined flags for each polygon. [Length: #maxpolys]
+	unsigned int* flags;	///< The user defined flags for each polygon. [Length: #maxpolys]
 	unsigned char* areas;	///< The area id assigned to each polygon. [Length: #maxpolys]
 	int nverts;				///< The number of vertices.
 	int npolys;				///< The number of polygons.
@@ -441,6 +439,8 @@ struct rcPolyMesh
 /// Contains triangle meshes that represent detailed height data associated 
 /// with the polygons in its associated polygon mesh object.
 /// @ingroup recast
+typedef unsigned char rcPolyMeshDetailIndex;
+
 struct rcPolyMeshDetail
 {
 	unsigned int* meshes;	///< The sub-mesh data. [Size: 4*#nmeshes] 
@@ -589,6 +589,10 @@ static const unsigned char RC_NULL_AREA = 0;
 /// This is also the maximum allowed area id, and the only non-null area id 
 /// recognized by some steps in the build process. 
 static const unsigned char RC_WALKABLE_AREA = 63;
+
+// Area ID that is considered unwalkable and will override any walkable surfaces.
+// Must call rcFilterForceUnwalkableArea to clear all walkable surfaces afterwards.
+static const unsigned char RC_FORCE_UNWALKABLE_AREA = 0xff;
 
 /// The value returned by #rcGetCon if the specified direction is not connected
 /// to another span. (Has no neighbor.)

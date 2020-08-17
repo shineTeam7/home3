@@ -4,7 +4,11 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.IIntConsumer;
 import com.home.shine.utils.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IntList extends BaseList
 {
@@ -12,7 +16,7 @@ public class IntList extends BaseList
 	
 	public IntList()
 	{
-		_values=ObjectUtils.EmptyIntArr;
+		init(0);
 	}
 	
 	public IntList(int capacity)
@@ -20,29 +24,30 @@ public class IntList extends BaseList
 		init(countCapacity(capacity));
 	}
 	
-	public int capacity()
-	{
-		return _values.length;
-	}
-	
 	public final int[] getValues()
 	{
 		return _values;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_values=new int[capacity];
-
-		_size=0;
+		_capacity=capacity;
+		
+		if(capacity==0)
+			_values=ObjectUtils.EmptyIntArr;
+		else
+			_values=new int[capacity];
 	}
 	
-	private void remake(int capacity)
+	@Override
+	protected void remake(int capacity)
 	{
-		int[] n=new int[capacity];
-		if(_values.length>0)
-			System.arraycopy(_values,0,n,0,_size);
-		_values=n;
+		int[] oldValues=_values;
+		init(capacity);
+		
+		if(oldValues.length>0 && _size>0)
+			System.arraycopy(oldValues,0,_values,0,_size);
 	}
 
 	/** 直接设置 */
@@ -58,10 +63,7 @@ public class IntList extends BaseList
 	/** 添加 */
 	public void add(int value)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		_values[_size++]=value;
 	}
@@ -69,10 +71,7 @@ public class IntList extends BaseList
 	/** 添加2个 */
 	public void add2(int v1,int v2)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size + 2>(_values.length))
-			remake(_values.length<<1);
+		addCapacity(2);
 		
 		_values[_size++]=v1;
 		_values[_size++]=v2;
@@ -81,10 +80,7 @@ public class IntList extends BaseList
 	/** 添加3个 */
 	public void add3(int v1,int v2,int v3)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size + 3>(_values.length))
-			remake(_values.length<<1);
+		addCapacity(3);
 		
 		_values[_size++]=v1;
 		_values[_size++]=v2;
@@ -108,10 +104,7 @@ public class IntList extends BaseList
 	/** 添加元素到头 */
 	public void unshift(int value)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		if(_size>0)
 			System.arraycopy(_values,0,_values,1,_size);
@@ -232,6 +225,7 @@ public class IntList extends BaseList
 			
 			n[offset]=value;
 			_values=n;
+			_capacity=n.length;
 		}
 		else
 		{
@@ -274,19 +268,7 @@ public class IntList extends BaseList
 		_size+=2;
 	}
 	
-	public void clear()
-	{
-		_size=0;
-	}
 	
-	/** 扩容 */
-	public void ensureCapacity(int capacity)
-	{
-		if(capacity>_values.length)
-		{
-			remake(countCapacity(capacity));
-		}
-	}
 	
 	/** 设置长度 */
 	public void setLength(int length)
@@ -362,6 +344,25 @@ public class IntList extends BaseList
 			values[max-i]=temp;
 		}
 	}
-
-
+	
+	/** 转化为原生集合 */
+	public ArrayList<Integer> toNatureList()
+	{
+		ArrayList<Integer> re=new ArrayList<>(size());
+		
+		int[] values=_values;
+		
+		for(int i=0, len=_size;i<len;++i)
+		{
+			re.add(values[i]);
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Collection<Integer> collection)
+	{
+		ensureCapacity(collection.size());
+		collection.forEach(this::add);
+	}
 }

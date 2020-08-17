@@ -8,11 +8,14 @@ import com.home.commonBase.constlist.generate.BuffKeepType;
 import com.home.commonBase.constlist.generate.RoleShowDataPartType;
 import com.home.commonBase.constlist.generate.SceneInstanceType;
 import com.home.commonBase.constlist.generate.TriggerEventType;
-import com.home.commonBase.data.role.MUnitCacheData;
+import com.home.commonBase.data.login.PlayerSwitchGameData;
 import com.home.commonBase.data.scene.base.PosDirData;
+import com.home.commonBase.data.scene.match.MatchSceneData;
 import com.home.commonBase.data.scene.scene.SceneEnterArgData;
 import com.home.commonBase.data.scene.scene.SceneLocationData;
 import com.home.commonBase.data.scene.scene.SceneLocationRoleShowChangeData;
+import com.home.commonBase.data.scene.scene.SceneServerEnterData;
+import com.home.commonBase.data.scene.scene.SceneServerExitData;
 import com.home.commonBase.data.social.roleGroup.PlayerRoleGroupMemberData;
 import com.home.commonBase.global.BaseC;
 import com.home.commonBase.global.CommonSetting;
@@ -23,17 +26,18 @@ import com.home.commonBase.scene.base.Role;
 import com.home.commonBase.scene.base.Unit;
 import com.home.commonGame.global.GameC;
 import com.home.commonGame.logic.team.PlayerTeam;
-import com.home.commonGame.logic.unit.MUnitFightDataLogic;
-import com.home.commonGame.net.request.scene.base.RefreshCurrentLineRequest;
-import com.home.commonGame.net.request.scene.scene.EnterNoneSceneRequest;
+import com.home.commonGame.logic.unit.CharacterUseLogic;
+import com.home.commonGame.net.request.func.match.FuncMatchOverRequest;
+import com.home.commonGame.net.request.scene.EnterNoneSceneRequest;
+import com.home.commonGame.net.request.scene.RefreshCurrentLineRequest;
+import com.home.commonGame.net.serverRequest.scene.login.PlayerLeaveSceneToSceneServerRequest;
 import com.home.commonGame.part.player.base.PlayerBasePart;
 import com.home.commonGame.scene.base.GameScene;
-import com.home.commonGame.scene.unit.CharacterIdentityLogic;
+import com.home.commonGame.scene.unit.GameCharacterIdentityLogic;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.BaseData;
 import com.home.shine.dataEx.AffairTimeLock;
 import com.home.shine.dataEx.AffairTimeOut;
-import com.home.shine.global.ShineSetting;
 import com.home.shine.support.collection.LongObjectMap;
 import com.home.shine.utils.MathUtils;
 
@@ -50,7 +54,10 @@ public class ScenePart extends PlayerBasePart
 	private int _matchingFuncID=-1;
 	
 	/** 下个要进入的场景信息 */
-	private SceneEnterArgData _nextEnterSceneLocation;
+	private SceneEnterArgData _nextEnterSceneData;
+	
+	/** 离开场景回调(serverScene用) */
+	private Runnable _leaveSceneCall;
 	
 	private GameScene _preScene;
 	
@@ -59,6 +66,9 @@ public class ScenePart extends PlayerBasePart
 	
 	/** 是否需要补发预备进入场景 */
 	private boolean _needSupplyPreEnterScene;
+	
+	/** 当前所在场景位置 */
+	private SceneLocationData _sceneLocation;
 	
 	/** 当前场景对象 */
 	private GameScene _scene;
@@ -208,8 +218,11 @@ public class ScenePart extends PlayerBasePart
 		clearPreEnterScene();
 		
 		_scene=null;
+		_sceneLocation=null;
 		_unit=null;
 		_hasNextScene=false;
+		
+		_leaveSceneCall=null;
 	}
 	
 	/** 功能开启(id:功能ID) */
@@ -236,18 +249,36 @@ public class ScenePart extends PlayerBasePart
 	/** 获取场景 */
 	public GameScene getScene()
 	{
+		if(CommonSetting.useSceneServer)
+		{
+			Ctrl.throwError("使用独立场景服，不允许访问getScene");
+			return null;
+		}
+		
 		return _scene;
 	}
 	
 	/** 获取场景角色 */
 	public Role getRole()
 	{
+		if(CommonSetting.useSceneServer)
+		{
+			Ctrl.throwError("使用独立场景服，不允许访问getRole");
+			return null;
+		}
+		
 		return _role;
 	}
 	
 	/** 获取当前的主角(池线程) */
 	public Unit getUnit()
 	{
+		if(CommonSetting.useSceneServer)
+		{
+			Ctrl.throwError("使用独立场景服，不允许访问getUnit");
+			return null;
+		}
+		
 		return _unit;
 	}
 	
@@ -291,6 +322,12 @@ public class ScenePart extends PlayerBasePart
 	public void setCurrentEnterArg(SceneEnterArgData data)
 	{
 		_d.currentSceneEnterArg=data;
+		
+		//进入到了对应的匹配场景
+		if(_d.matchSceneData!=null && _d.matchSceneData.location.equalsThree(data.location))
+		{
+			_d.matchSceneData=null;
+		}
 	}
 	
 	/** 获取当前场景进入参数数据 */
@@ -389,6 +426,9 @@ public class ScenePart extends PlayerBasePart
 	public int getExecutorIndexByData()
 	{
 		//TODO:区分gameID
+		//启用场景服
+		if(CommonSetting.useSceneServer)
+			return GameC.main.getLeastExecutor();
 		
 		//有当前在的场景,并且是当前服务器run
 		if(me.system.isCurrentServerRunIndex() && _d.currentSceneEnterArg!=null)
@@ -410,11 +450,10 @@ public class ScenePart extends PlayerBasePart
 			return location.executorIndex;
 		}
 		
-		//TODO:回头改成负载
+		return GameC.main.getLeastExecutor();
 		
 		//找不到就随机线
-		
-		return MathUtils.randomInt(ShineSetting.poolThreadNum);
+		//return MathUtils.randomInt(ShineSetting.poolThreadNum);
 	}
 	
 	/** 构造进入场景数据的执行器线号(主线程) */
@@ -446,7 +485,7 @@ public class ScenePart extends PlayerBasePart
 		{
 			Unit unit=_scene.getCharacterByPlayerID(me.role.playerID);
 			//连接重置
-			((CharacterIdentityLogic)unit.identity).onSocketReplace();
+			((GameCharacterIdentityLogic)unit.identity).onSocketReplace();
 		}
 	}
 	
@@ -461,34 +500,43 @@ public class ScenePart extends PlayerBasePart
 		else
 		{
 			//有当前在的场景
-			if(me.system.isCurrentServerRunIndex() && _d.currentSceneEnterArg!=null)
+			if(me.system.isCurrentServerRunIndex())
 			{
-				SceneConfig config=SceneConfig.get(_d.currentSceneEnterArg.location.sceneID);
-				
-				if(config.isLoginEnter)
+				if(_d.matchSceneData!=null)
 				{
-					boolean canEnterLastScene=true;
+					//直接赋值当前
+					_d.currentSceneEnterArg=makeSceneEnterArgByLocation(_d.matchSceneData.location);
+				}
+				
+				if(_d.currentSceneEnterArg!=null)
+				{
+					SceneConfig config=SceneConfig.get(_d.currentSceneEnterArg.location.sceneID);
 					
-					//是绑定副本的
-					if(config.battleID>0)
+					if(config.isLoginEnter)
 					{
-						BattleConfig bConfig=BattleConfig.get(config.battleID);
+						boolean canEnterLastScene=true;
 						
-						//超时了
-						if(bConfig.maxKeepTime>0 && (me.system.getLastOfflineDelay()/1000)>bConfig.maxKeepTime)
+						//是绑定副本的
+						if(config.battleID>0)
 						{
-							canEnterLastScene=false;
+							BattleConfig bConfig=BattleConfig.get(config.battleID);
+							
+							//超时了
+							if(bConfig.maxKeepTime>0 && (me.system.getLastOfflineDelay()/1000)>bConfig.maxKeepTime)
+							{
+								canEnterLastScene=false;
+							}
 						}
-					}
-					
-					//还可进
-					if(canEnterLastScene)
-					{
-						//用缓存数据进
-						_d.currentSceneEnterArg.useCache=true;
-						//进入目标场景
-						me.getExecutor().playerEnterSignedScene(me,_d.currentSceneEnterArg);
-						return;
+						
+						//还可进
+						if(canEnterLastScene)
+						{
+							//用缓存数据进
+							_d.currentSceneEnterArg.useCache=true;
+							//进入目标场景
+							me.getExecutor().playerEnterSignedScene(me,_d.currentSceneEnterArg);
+							return;
+						}
 					}
 				}
 			}
@@ -548,6 +596,7 @@ public class ScenePart extends PlayerBasePart
 		}
 		
 		_scene=scene;
+		_sceneLocation=scene.createLocationData();
 		
 		//自动分线场景
 		if(scene.getConfig().instanceType==SceneInstanceType.AutoLinedScene)
@@ -619,25 +668,30 @@ public class ScenePart extends PlayerBasePart
 			}
 		}
 		
-		if(_scene!=null)
+		if(!CommonSetting.useSceneServer)
 		{
-			//自动分线场景
-			if(_scene.getConfig().instanceType==SceneInstanceType.AutoLinedScene)
+			if(_scene!=null)
 			{
-				long playerID=me.role.playerID;
-				int sceneID=_scene.getSceneID();
-				int lineID=_scene.getLineID();
-				
-				me.addMainFunc(()->
+				//自动分线场景
+				if(_scene.getConfig().instanceType==SceneInstanceType.AutoLinedScene)
 				{
-					GameC.scene.removeAutoLinedSceneOne(playerID,sceneID,lineID);
-				});
+					long playerID=me.role.playerID;
+					int sceneID=_scene.getSceneID();
+					int lineID=_scene.getLineID();
+					
+					me.addMainFunc(()->
+					{
+						GameC.scene.removeAutoLinedSceneOne(playerID,sceneID,lineID);
+					});
+				}
 			}
+			
+			_scene=null;
+			_sceneLocation=null;
+			_role=null;
+			_unit=null;
 		}
 		
-		_scene=null;
-		_role=null;
-		_unit=null;
 		_hasNextScene=hasNext;
 		_hasReconnectEnter=false;
 	}
@@ -645,13 +699,13 @@ public class ScenePart extends PlayerBasePart
 	/** 是否在场景中 */
 	public boolean isInScene()
 	{
-		return _scene!=null;
+		return _sceneLocation!=null;
 	}
 	
 	/** 是否当前不在场景中,并且没有下个场景 */
 	public boolean isNoneScene()
 	{
-		return _scene==null && !_hasNextScene;
+		return _sceneLocation==null && !_hasNextScene;
 	}
 	
 	/** 是否场景socket可就绪 */
@@ -668,7 +722,7 @@ public class ScenePart extends PlayerBasePart
 		sceneReady();
 	}
 	
-	/** 客户端场景ready */
+	/** 客户端场景ready(非ServerScene用) */
 	public void sceneReady()
 	{
 		//不在切换中
@@ -709,7 +763,6 @@ public class ScenePart extends PlayerBasePart
 		}
 		else
 		{
-			
 			clearPreEnterScene();
 			setSwitching(false);
 			
@@ -741,7 +794,7 @@ public class ScenePart extends PlayerBasePart
 		{
 			if(_scene!=null)
 			{
-				_scene.gameInOut.playerLeave(me,false);
+				_scene.gameInOut.playerLeave(me,CommonSetting.hasTown);
 			}
 			else
 			{
@@ -788,26 +841,76 @@ public class ScenePart extends PlayerBasePart
 	/** 离开当前场景并回主城(逻辑线程) */
 	public void leaveNowScene()
 	{
-		if(_scene!=null)
+		doLeaveNowScene(CommonSetting.hasTown,null);
+	}
+	
+	/** 执行离开当前场景(主线程/逻辑线程),回调在逻辑线程 */
+	public void doLeaveNowScene(boolean hasNext,Runnable overCall)
+	{
+		if(CommonSetting.useSceneServer)
 		{
-			_scene.gameInOut.playerLeave(me,CommonSetting.hasTown);
-			
-			if(CommonSetting.hasTown)
+			//切换中
+			if(isSwitching())
 			{
-				toBackToTown();
+				_leaveSceneCall=overCall;
+				SceneEnterArgData leaveSceneEnterArgData=GameC.scene.getLeaveSceneEnterArgData();
+				setNextSceneLocation(leaveSceneEnterArgData);
+				return;
 			}
+			else
+			{
+				doLeaveNowSceneAbs(overCall);
+			}
+		}
+		else
+		{
+			if(_scene!=null)
+			{
+				_scene.gameInOut.playerLeave(me,hasNext);
+			}
+			
+			if(overCall!=null)
+				overCall.run();;
+		}
+	}
+	
+	/** 执行离开当前场景(主线程/逻辑线程),回调在逻辑线程 */
+	public void doLeaveNowSceneAbs(Runnable overCall)
+	{
+		if(isInScene())
+		{
+			_leaveSceneCall=overCall;
+			PlayerLeaveSceneToSceneServerRequest.create(me.role.playerID).send(_sceneLocation.serverID);
+		}
+		else
+		{
+			if(overCall!=null)
+				overCall.run();
 		}
 	}
 	
 	/** 申请离开当前场景消息 */
 	public void applyLeaveScene()
 	{
-		//TODO:检查是否可离开
-		if(_scene!=null)
+		//当前没有场景
+		if(_sceneLocation==null)
+			return;
+		
+		if(checkCanLeaveNowScene())
 		{
-			if(_scene.gameInOut.checkCanLeave(me))
+			if(CommonSetting.useSceneServer)
 			{
 				leaveNowScene();
+			}
+			else
+			{
+				if(_scene!=null)
+				{
+					if(_scene.gameInOut.checkCanLeave(me))
+					{
+						leaveNowScene();
+					}
+				}
 			}
 		}
 	}
@@ -815,13 +918,13 @@ public class ScenePart extends PlayerBasePart
 	/** 设置下个要进入的场景信息(只在当前服务器有效,不做跨服保留) */
 	public void setNextSceneLocation(SceneEnterArgData data)
 	{
-		_nextEnterSceneLocation=data;
+		_nextEnterSceneData=data;
 	}
 	
 	/** 获取下个要进入的数据 */
 	public SceneEnterArgData getNextEnterSceneLocation()
 	{
-		return _nextEnterSceneLocation;
+		return _nextEnterSceneData;
 	}
 	
 	/** 申请进入场景(快捷方式)(等同客户端发起进入) */
@@ -896,7 +999,7 @@ public class ScenePart extends PlayerBasePart
 	/** 进入指定场景，并检查 */
 	public void playerEnterSignedSceneAndCheck(SceneLocationData data)
 	{
-		me.getExecutor().playerEnterSignedSceneAndCheck(me,makeSceneEnterArgByLocation(data));
+		me.getExecutor().playerEnterSignedSceneAndCheck(me,makeSceneEnterArgByLocation(data),false);
 	}
 	
 	/** 进入指定场景，不检查 */
@@ -974,6 +1077,86 @@ public class ScenePart extends PlayerBasePart
 			
 			scene.trigger.triggerEvent(TriggerEventType.OnTriggerGMCommand,objs);
 		}
+	}
+	
+	@Override
+	public void writeSwitchData(PlayerSwitchGameData data)
+	{
+		data.nextEnterSceneData=_nextEnterSceneData;
+	}
+	
+	@Override
+	public void readSwitchData(PlayerSwitchGameData data)
+	{
+		_nextEnterSceneData=data.nextEnterSceneData;
+	}
+	
+	public void setSceneLocation(SceneLocationData data)
+	{
+		_sceneLocation=data;
+	}
+	
+	/** 当前所在场景服id */
+	public SceneLocationData getSceneLocation()
+	{
+		return _sceneLocation;
+	}
+	
+	/** 创建场景服进入数据 */
+	public SceneServerEnterData createEnterServerSceneData()
+	{
+		SceneServerEnterData data=BaseC.factory.createSceneServerEnterData();
+		makeSceneServerEnterData(data);
+		return data;
+	}
+	
+	/** 构造场景服进入数据 */
+	protected void makeSceneServerEnterData(SceneServerEnterData data)
+	{
+		//data.enterArg=_d.currentSceneEnterArg;
+		
+		CharacterUseLogic logic=me.character.getCurrentCharacterUseLogic();
+		if(logic!=null)
+			data.hero=logic.getCharacterUseData();
+	}
+	
+	/** 匹配成功 */
+	public void onMatchSuccess(MatchSceneData data)
+	{
+		//赋值
+		_d.matchSceneData=data;
+		//推送
+		me.send(FuncMatchOverRequest.create(data.funcID));
+		//匹配完成
+		setMatchingFuncID(-1);
+		//在线
+		if(me.system.isStateOnline())
+		{
+			playerEnterSignedScene(data.location);
+		}
+	}
+	
+	/** 离开场景结束(逻辑线程) */
+	public void onLeaveSceneOver(SceneServerExitData data)
+	{
+		//标记离开
+		setSceneLocation(null);
+		
+		if(_leaveSceneCall!=null)
+		{
+			Runnable func=_leaveSceneCall;
+			_leaveSceneCall=null;
+			func.run();
+		}
+	}
+	
+	/** 检查是否可离开当前场景 */
+	protected boolean checkCanLeaveNowScene()
+	{
+		if(_sceneLocation==null)
+			return true;
+		
+		return true;
 	}
 	
 }

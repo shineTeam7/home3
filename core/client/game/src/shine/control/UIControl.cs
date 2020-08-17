@@ -26,6 +26,8 @@ namespace ShineEngine
 		private static LayerMask _uiLayer;
 		
 		private static GameObject _uiMask = null;
+		
+		private static GameObject _uiTouchMask = null;
 
 		/** 忽略触摸 */
 		private static bool _touchEnabled=true;
@@ -41,6 +43,8 @@ namespace ShineEngine
 			_uiSceneEffectLayer=GameObject.Find(ShineSetting.uiSceneEffectLayer);
 			_uiLayer=LayerMask.NameToLayer("UI");
 
+			_screenRect=_uiCameraCom.rect;
+			
 			Transform maskImageTrans = _uiRoot.transform.Find(ShineSetting.uiMaskName);
 
 			if (maskImageTrans != null)
@@ -48,7 +52,12 @@ namespace ShineEngine
 				_uiMask=maskImageTrans.gameObject;
 			}
 
-			_screenRect=_uiCameraCom.rect;
+			Transform touchMaskImageTrans = _uiRoot.transform.Find(ShineSetting.uiTouchMaskName);
+
+			if (touchMaskImageTrans != null)
+			{
+				_uiTouchMask=touchMaskImageTrans.gameObject;
+			}
 		}
 
 		/** ui根 */
@@ -93,6 +102,12 @@ namespace ShineEngine
 			return _uiMask;
 		}
 		
+		/** uiMask */
+		public static GameObject getUITouchMask()
+		{
+			return _uiTouchMask;
+		}
+		
 		/** 设置UI是否响应 */
 		public static void setTouchEnabled(bool value)
 		{
@@ -101,17 +116,10 @@ namespace ShineEngine
 
 			_touchEnabled=value;
 
-			if(value)
-			{
-				UITouchIgnoreCom cp=_uiRoot.GetComponent<UITouchIgnoreCom>();
-
-				if(cp!=null)
-					GameObject.DestroyImmediate(cp);
-			}
-			else
-			{
-				_uiRoot.AddComponent<UITouchIgnoreCom>();
-			}
+			if(_uiTouchMask==null)
+				return;
+			
+			_uiTouchMask.SetActive(!value);
 		}
 
 		//--以下是Editor支持部分--//

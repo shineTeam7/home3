@@ -30,6 +30,7 @@ import com.home.commonBase.scene.base.UnitLogicBase;
 import com.home.commonBase.scene.path.GridSceneMap;
 import com.home.commonBase.scene.scene.ScenePosLogic;
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.global.ShineSetting;
 import com.home.shine.support.collection.SList;
 import com.home.shine.utils.MathUtils;
 
@@ -43,19 +44,18 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 朝向数据 */
 	protected DirData _dir;
 	
+	/** 每秒移动值 */
+	protected float _useMoveSpeedPerSecond;
 	/** 基元使用移速(每毫秒移动值) */
 	protected float _useMoveSpeedM;
-	/** 基元使用移速(每毫秒移动值)(加上动作因素,走跑) */
+	/** 基元使用移速(每毫秒移动值)(加上动作因素,走跑才用) */
 	protected float _useMoveSpeedMForMove;
 	
 	protected ScenePosLogic _scenePosLogic;
-	
 	/** 地图移动方式 */
 	protected int _moveType=MapMoveType.Land;
 	
 	protected float _walkSpeedRatio=1f;
-	
-	
 	
 	//baseMove
 	
@@ -65,6 +65,8 @@ public class UnitMoveLogic extends UnitLogicBase
 	protected PosData _baseMovePos=new PosData();
 	/** 基元移动方向分量(每毫秒) */
 	protected PosData _baseMoveSpeedVector=new PosData();
+	/** 移动到点帧计数(防止出现精度问题) */
+	private int _calculateMoveSpeedVectorFrameCount=0;
 	/** 当前移动是否本端主动发起 */
 	protected boolean _currentMoveIsInitiative=false;
 	/** 移动剩余毫秒数 */
@@ -99,6 +101,11 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 移动单位 */
 	private UnitReference _moveTargetUnit=new UnitReference();
 	
+	/** 是否需要格子标记 */
+	private boolean _needCrowedGrid=false;
+	/** 是否需要重置到可用格子点 */
+	private boolean _needResetBlockGrid=false;
+	
 	//vehicle
 	/** 当前骑乘载具 */
 	private Unit _vehicle;
@@ -106,20 +113,8 @@ public class UnitMoveLogic extends UnitLogicBase
 	private int _vehicleIndex;
 	
 	//drive
-	/** 驾驶状态当前移速(每毫秒移动值) */
-	protected float _driveCurrentMoveSpeedM;
-	/** 是否需要以驾驶方式移动 */
-	protected boolean _needDrive;
-	
-	protected float _driveTurnRadius;
-	/** 加速加速度(每毫秒使用速度)(正值) */
-	protected float _driveAccelerateSpeedM;
-	/** 驾驶地面减速度 */
-	protected float _driveGroundFrictionM;
-	/** 是否需要格子标记 */
-	private boolean _needCrowedGrid=false;
-	/** 是否需要重置到可用格子点 */
-	private boolean _needResetBlockGrid=false;
+	/** 驾驶部分 */
+	protected DriveLogic _drive;
 	
 	private GridSceneMap _gMap;
 	
@@ -144,27 +139,45 @@ public class UnitMoveLogic extends UnitLogicBase
 			FightUnitConfig fightUnitConfig=_data.getFightIdentity().getFightUnitConfig();
 			
 			_moveType=fightUnitConfig.mapMoveType;
-			_walkSpeedRatio=fightUnitConfig.walkSpeedRatio/1000f;
-			_needDrive=fightUnitConfig.needDrive;
-			_driveTurnRadius=fightUnitConfig.driveTurnRadius;
+			_walkSpeedRatio=fightUnitConfig.walkSpeedRatio;
 			
-			if(fightUnitConfig.driveAccelerateSpeed==0)
+			if(fightUnitConfig.needDrive)
 			{
-				_driveAccelerateSpeedM=0f;
-				_driveGroundFrictionM=0f;
+				if(_drive==null)
+					_drive=new DriveLogic();
+				
+				DriveLogic drive=_drive;
+				drive.needDrive=true;
+				
+				drive.needDrive=fightUnitConfig.needDrive;
+				drive.canDriveTurnAtPivot=fightUnitConfig.canDriveTurnAtPivot;
+				drive.driveDirectionSpeed=fightUnitConfig.driveDirectionSpeedT;
+				drive.driveTurnRadius=fightUnitConfig.driveTurnRadius;
+				
+				if(fightUnitConfig.driveAccelerateSpeed==0)
+				{
+					drive.driveAccelerateSpeedM=0f;
+					drive.driveGroundFrictionM=0f;
+				}
+				else
+				{
+					drive.driveAccelerateSpeedM=fightUnitConfig.driveAccelerateSpeed*Global.useMoveSpeedRatio/1000000f;
+					//先暂时取陆地的
+					drive.driveGroundFrictionM=MapBlockTypeConfig.get(MapBlockType.Land).groundFriction*Global.useMoveSpeedRatio/1000000f;
+				}
 			}
 			else
 			{
-				_driveAccelerateSpeedM=fightUnitConfig.driveAccelerateSpeed*Global.useMoveSpeedRatio/1000000f;
-				//先暂时取陆地的
-				_driveGroundFrictionM=MapBlockTypeConfig.get(MapBlockType.Land).groundFriction*Global.useMoveSpeedRatio/1000000f;
+				if(_drive!=null)
+					_drive.needDrive=false;
 			}
 			
 			calculateUseMoveSpeed();
 		}
 		else
 		{
-			_walkSpeedRatio=1f;
+			if(_drive!=null)
+				_drive.needDrive=false;
 		}
 		
 		//TODO:补充移动逻辑中的位置校验
@@ -213,7 +226,9 @@ public class UnitMoveLogic extends UnitLogicBase
 		
 		_specialMoveConfig=null;
 		_moveType=MapMoveType.Land;
-		_needDrive=false;
+		
+		if(_drive!=null)
+			_drive.dispose();
 		
 		_moveTargetPos.clear();
 		_walkSpeedRatio=1f;
@@ -292,7 +307,8 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 计算使用移速 */
 	private void calculateUseMoveSpeed()
 	{
-		_useMoveSpeedM=_data.fightDataLogic.attribute.getRealMoveSpeed() * Global.useMoveSpeedRatio / 1000f;
+		_useMoveSpeedPerSecond=_data.fightDataLogic.attribute.getRealMoveSpeed() * Global.useMoveSpeedRatio;
+		_useMoveSpeedM=_useMoveSpeedPerSecond / 1000f;
 	}
 	
 	/** 计算移速分量 */
@@ -308,6 +324,7 @@ public class UnitMoveLogic extends UnitLogicBase
 		}
 		
 		_scenePosLogic.calculateVectorByDir(_baseMoveSpeedVector,_baseMoveDir,_realMoveSpeedRatio>=0f ? _useMoveSpeedMForMove*_realMoveSpeedRatio : _useMoveSpeedMForMove);
+		_calculateMoveSpeedVectorFrameCount=0;
 	}
 	
 	/** 当前状态是否可移动 */
@@ -385,6 +402,12 @@ public class UnitMoveLogic extends UnitLogicBase
 				}
 				else
 				{
+					//1s一次
+					if((++_calculateMoveSpeedVectorFrameCount)==ShineSetting.systemFPS)
+					{
+						calculateMoveSpeedVector();
+					}
+					
 					_scenePosLogic.addPosByVector(_pos,_baseMoveSpeedVector,delay);
 					_unit.pos.onSetPos();
 				}
@@ -465,17 +488,22 @@ public class UnitMoveLogic extends UnitLogicBase
 				break;
 			case UnitBaseMoveState.Drive:
 			{
-				if(_driveAccelerateSpeedM!=0)
+				DriveLogic drive;
+				if((drive=_drive)!=null && drive.needDrive)
 				{
-					int speed=(int)(_driveCurrentMoveSpeedM*1000f/Global.useMoveSpeedRatio);
-					
-					if(speed>Global.moveSpeedMax)
+					if(drive.driveAccelerateSpeedM!=0)
 					{
-						speed=Global.moveSpeedMax;
+						int speed=(int)(drive.driveCurrentMoveSpeedM*1000f/Global.useMoveSpeedRatio);
+						
+						if(speed>Global.moveSpeedMax)
+						{
+							speed=Global.moveSpeedMax;
+						}
+						
+						_d.driveData.currentSpeed=speed;
 					}
-					
-					_d.driveData.currentSpeed=speed;
 				}
+				
 			}
 				break;
 		}
@@ -503,6 +531,7 @@ public class UnitMoveLogic extends UnitLogicBase
 			{
 				_d.baseMovePos=null;
 				_moveLastTimeMillis=0f;
+				_calculateMoveSpeedVectorFrameCount=0;
 			}
 				break;
 			case UnitBaseMoveState.SpecialMove:
@@ -517,6 +546,7 @@ public class UnitMoveLogic extends UnitLogicBase
 				_d.specialMoveLastTime=0;
 				_specialMoveConfig=null;
 				_specialMoveType=-1;
+				_calculateMoveSpeedVectorFrameCount=0;
 			}
 				break;
 			case UnitBaseMoveState.Drive:
@@ -1028,6 +1058,12 @@ public class UnitMoveLogic extends UnitLogicBase
 			}
 			else
 			{
+				//1s一次
+				if((++_calculateMoveSpeedVectorFrameCount)==ShineSetting.systemFPS)
+				{
+					calculateMoveSpeedVector();
+				}
+				
 				_scenePosLogic.addPosByVector(_pos,_baseMoveSpeedVector,delay);
 				_unit.pos.onSetPos();
 			}
@@ -1073,7 +1109,9 @@ public class UnitMoveLogic extends UnitLogicBase
 			}
 		}
 		
-		if(_scenePosLogic.calculatePosSum(_pos,pos) >= Global.unitMovePosMaxDeviation)
+		float allow=Math.max(_useMoveSpeedPerSecond*1.5f,Global.unitMovePosMaxDeviation);
+		
+		if(_scenePosLogic.calculatePosSum(_pos,pos) >= allow)
 		{
 			Ctrl.warnLog("拉回by距离",_unit.identity.playerID);
 			pullBack(InfoCodeType.PullBack_distance);
@@ -1170,7 +1208,7 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 客户端移动朝向 */
 	public void onClientMoveDir(PosData nowPos,int type,DirData dir,DirData realDir,int realMoveSpeedRatio)
 	{
-		if(_needDrive)
+		if(_drive!=null && _drive.needDrive)
 		{
 			_unit.warnLog("驾驶类型不可移动");
 			return;
@@ -1196,7 +1234,7 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 客户端移动点 */
 	public void onClientMovePos(PosData nowPos,int type,PosData targetPos)
 	{
-		if(_needDrive)
+		if(_drive!=null && _drive.needDrive)
 		{
 			_unit.warnLog("驾驶类型不可移动");
 			return;
@@ -1226,7 +1264,7 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 客户端移动点组 */
 	public void onClientMovePosList(PosData nowPos,int type,SList<PosData> targets)
 	{
-		if(_needDrive)
+		if(_drive!=null && _drive.needDrive)
 		{
 			_unit.warnLog("驾驶类型不可移动");
 			return;
@@ -1258,7 +1296,6 @@ public class UnitMoveLogic extends UnitLogicBase
 				return;
 			}
 		}
-		
 		
 		_moveList.clear();
 		_moveList.addAll(targets);
@@ -1488,7 +1525,7 @@ public class UnitMoveLogic extends UnitLogicBase
 		//可控的话，赋值控制
 		if(logic.canDriveIndex(index))
 		{
-			logic.getData().controlPlayerID=unit.identity.controlPlayerID;
+			logic.setControlPlayerID(unit.identity.controlPlayerID);
 		}
 		
 		//设置位置朝向
@@ -1571,7 +1608,7 @@ public class UnitMoveLogic extends UnitLogicBase
 	/** 客户端发起驾驶 */
 	public void onClientDrive(PosDirData nowPos,DriveData data)
 	{
-		if(!_needDrive)
+		if(_drive==null || !_drive.needDrive)
 		{
 			_unit.warnLog("非驾驶类型不可驾驶");
 			return;
@@ -1594,7 +1631,7 @@ public class UnitMoveLogic extends UnitLogicBase
 			
 			_d.baseMoveState=UnitBaseMoveState.Drive;
 			_d.moveType=UnitMoveType.Drive;
-			_driveCurrentMoveSpeedM=0;
+			_drive.driveCurrentMoveSpeedM=0;
 		}
 		
 		_currentMoveIsInitiative=false;
@@ -1606,22 +1643,29 @@ public class UnitMoveLogic extends UnitLogicBase
 	
 	protected void driveMoveFrame(float delay)
 	{
+		DriveLogic drive=_drive;
+		
 		_tempPos.clear();
 		
 		DriveData dData=_d.driveData;
 		
-		float speedAbs=Math.abs(_driveCurrentMoveSpeedM);
+		float speedAbs=Math.abs(drive.driveCurrentMoveSpeedM);
 		
 		if(speedAbs==0 && dData.forward==0)
-			return;
+		{
+			if(dData.turn==0 || !drive.canDriveTurnAtPivot)
+			{
+				return;
+			}
+		}
 		
 		//本次移动距离
 		float dis;
 		
 		//不启用加速度
-		if(_driveAccelerateSpeedM==0)
+		if(drive.driveAccelerateSpeedM==0)
 		{
-			dis=_useMoveSpeedMForMove*delay*dData.forward;
+			dis=_useMoveSpeedM*delay*dData.forward;
 		}
 		else
 		{
@@ -1629,61 +1673,59 @@ public class UnitMoveLogic extends UnitLogicBase
 			if(dData.forward==0)
 			{
 				//需要的减速时间
-				float nTime=speedAbs / _driveGroundFrictionM;
-				float useA=_driveCurrentMoveSpeedM>0 ? -_driveGroundFrictionM : _driveGroundFrictionM;
+				float nTime=speedAbs / drive.driveGroundFrictionM;
+				float useA=drive.driveCurrentMoveSpeedM>0 ? -drive.driveGroundFrictionM : drive.driveGroundFrictionM;
 				
 				if(delay<=nTime)
 				{
 					float d=useA*delay;
-					dis=_driveCurrentMoveSpeedM*delay+ d*delay/2;
-					_driveCurrentMoveSpeedM+=d;
+					dis=drive.driveCurrentMoveSpeedM*delay+ d*delay/2;
+					drive.driveCurrentMoveSpeedM+=d;
 				}
 				//减到0
 				else
 				{
-					dis=_driveCurrentMoveSpeedM*nTime/2;//vt/2
-					_driveCurrentMoveSpeedM=0;
+					dis=drive.driveCurrentMoveSpeedM*nTime/2;//vt/2
+					drive.driveCurrentMoveSpeedM=0;
 				}
 			}
 			else
 			{
-				float useA=_driveAccelerateSpeedM*dData.forward;
-				boolean sameSymbol=MathUtils.sameSymbol(useA,_driveCurrentMoveSpeedM);
+				float useA=drive.driveAccelerateSpeedM*dData.forward;
+				boolean sameSymbol=MathUtils.sameSymbol(useA,drive.driveCurrentMoveSpeedM);
 				
 				//符号相同，并且已经是最高速度
-				if(sameSymbol && speedAbs>=_useMoveSpeedMForMove)
+				if(sameSymbol && speedAbs>=_useMoveSpeedM)
 				{
-					dis=_driveCurrentMoveSpeedM*delay;
+					dis=drive.driveCurrentMoveSpeedM*delay;
 				}
 				else
 				{
 					//需要加速的时间
-					float nTime=(_useMoveSpeedMForMove - (sameSymbol ? speedAbs : -speedAbs)) / _driveAccelerateSpeedM;
+					float nTime=(_useMoveSpeedM - (sameSymbol ? speedAbs : -speedAbs)) / drive.driveAccelerateSpeedM;
 					
 					//匀加速
 					if(delay<=nTime)
 					{
 						float d=useA*delay;
-						dis=_driveCurrentMoveSpeedM*delay+ d*delay/2;
-						_driveCurrentMoveSpeedM+=d;
+						dis=drive.driveCurrentMoveSpeedM*delay+ d*delay/2;
+						drive.driveCurrentMoveSpeedM+=d;
 					}
 					//到max
 					else
 					{
-						dis=_driveCurrentMoveSpeedM*nTime+ useA*nTime*nTime/2;
+						dis=drive.driveCurrentMoveSpeedM*nTime+ useA*nTime*nTime/2;
 						
 						//到达最大速度
-						_driveCurrentMoveSpeedM=useA>0 ? _useMoveSpeedMForMove : -_useMoveSpeedMForMove;
+						drive.driveCurrentMoveSpeedM=useA>0 ? _useMoveSpeedM : -_useMoveSpeedM;
 						//剩余时间用新速度
-						dis+=(_driveCurrentMoveSpeedM*(delay-nTime));
+						dis+=(drive.driveCurrentMoveSpeedM*(delay-nTime));
 					}
 				}
 			}
 		}
 		
-		
-		
-		
+		boolean hasPos=false;
 		boolean hasDir=false;
 		
 		if(dData.turn==0)
@@ -1692,6 +1734,7 @@ public class UnitMoveLogic extends UnitLogicBase
 			{
 				_scenePosLogic.calculateVectorByDir(_tempPos,_dir,dis);
 				_scenePosLogic.addPos(_tempPos,_pos);
+				hasPos=true;
 			}
 			else
 			{
@@ -1702,11 +1745,24 @@ public class UnitMoveLogic extends UnitLogicBase
 		{
 			if(dis!=0)
 			{
-				float angle=dis / _driveTurnRadius;
+				float angle;
+				float radius;
+				
+				if(drive.canDriveTurnAtPivot)
+				{
+					angle=drive.driveDirectionSpeed*delay;
+					radius=dis/angle;
+				}
+				else
+				{
+					radius=drive.driveTurnRadius;
+					angle=dis / radius;
+				}
+				
 				//正方向
-				float forward=(float)(_driveTurnRadius*Math.sin(angle));
+				float forward=(float)(radius*Math.sin(angle));
 				//两侧
-				float side=(float)(_driveTurnRadius*(1-Math.cos(angle)));
+				float side=(float)(radius*(1-Math.cos(angle)));
 				
 				_tempPos.x=forward;
 				_tempPos.z=dData.turn*side;
@@ -1719,10 +1775,20 @@ public class UnitMoveLogic extends UnitLogicBase
 				//朝向修改
 				_dir.direction=MathUtils.directionCut(_dir.direction - (angle * dData.turn));
 				hasDir=true;
+				hasPos=true;
 			}
 			else
 			{
-				return;
+				if(drive.canDriveTurnAtPivot)
+				{
+					float angle=drive.driveDirectionSpeed*delay;
+					_dir.direction=MathUtils.directionCut(_dir.direction - (angle * dData.turn));
+					hasDir=true;
+				}
+				else
+				{
+					return;
+				}
 			}
 		}
 		
@@ -1731,20 +1797,51 @@ public class UnitMoveLogic extends UnitLogicBase
 			_unit.pos.onSetDir();
 		}
 		
-		if(_scenePosLogic.isPosEnabled(_moveType,_tempPos,false))
+		if(hasPos)
 		{
-			_pos.copyPos(_tempPos);
-			_unit.pos.onSetPos();
-		}
-		else
-		{
-			//撞墙
-			//Ctrl.print("撞墙",_tempPos.toDataString());
+			if(_scenePosLogic.isPosEnabled(_moveType,_tempPos,false))
+			{
+				_pos.copyPos(_tempPos);
+				_unit.pos.onSetPos();
+			}
+			else
+			{
+				//撞墙
+				//Ctrl.print("撞墙",_tempPos.toDataString());
+			}
 		}
 		
-		if(_driveAccelerateSpeedM!=0 && _driveCurrentMoveSpeedM==0f && dData.forward==0 && _currentMoveIsInitiative)
+		if(drive.driveAccelerateSpeedM!=0 && drive.driveCurrentMoveSpeedM==0f && dData.forward==0 && _currentMoveIsInitiative)
 		{
-			stopMove();
+			if(!drive.canDriveTurnAtPivot || dData.turn==0)
+			{
+				stopMove();
+			}
+		}
+	}
+	
+	protected class DriveLogic
+	{
+		/** 驾驶状态当前移速(每毫秒移动值) */
+		public float driveCurrentMoveSpeedM;
+		/** 是否需要以驾驶方式移动 */
+		public boolean needDrive=false;
+		/** 驾驶方式是否可原地转向 */
+		public boolean canDriveTurnAtPivot=false;
+		/** 驾驶转向角速度 */
+		public float driveDirectionSpeed;
+		/** 驾驶转向半径 */
+		public float driveTurnRadius;
+		
+		/** 加速加速度(每毫秒使用速度)(正值) */
+		public float driveAccelerateSpeedM;
+		/** 驾驶地面减速度 */
+		public float driveGroundFrictionM;
+		
+		public void dispose()
+		{
+			needDrive=false;
+			canDriveTurnAtPivot=false;
 		}
 	}
 }

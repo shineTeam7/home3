@@ -4,6 +4,9 @@ using System;
 [Hotfix]
 public class ConfigControl
 {
+	/** 拆分的配置部分 版本号 */
+	public int splitConfigVersion=1;
+
 	/** 是否初始化中 */
 	private bool _initing=false;
 
@@ -166,7 +169,7 @@ public class ConfigControl
 				return;
 			}
 
-			if(!checkStream(stream))
+			if(!checkSplitStream(stream))
 			{
 				return;
 			}
@@ -199,7 +202,7 @@ public class ConfigControl
 			return null;
 		}
 
-		if(!checkStream(stream))
+		if(!checkSplitStream(stream))
 		{
 			return null;
 		}
@@ -291,7 +294,18 @@ public class ConfigControl
 
 		return true;
 	}
-	
+
+	private bool checkSplitStream(BytesReadStream stream)
+	{
+		if(splitConfigVersion!=stream.readInt())
+		{
+			Ctrl.throwError("split版本与配置文件版本不一致,需要执行SceneEditor重新导入");
+			return false;
+		}
+
+		return true;
+	}
+
 	private void afterReadConfig(ConfigReadData data)
 	{
 		_initing=true;
@@ -305,8 +319,6 @@ public class ConfigControl
 
 		data.afterReadConfigAll();
 		_initing=false;
-
-		_readData=null;
 	}
 
 	private void afterReadConfigForHotfix(ConfigReadData data)
@@ -332,7 +344,6 @@ public class ConfigControl
 		refreshConfig();
 		
 		_readData.afterReadConfigAll();
-		_readData=null;
 	}
 
 	public void writeConfigVersion(BytesWriteStream stream)
@@ -345,5 +356,11 @@ public class ConfigControl
 		{
 			stream.writeInt(getHotfixConfigVersion());
 		}
+	}
+
+	public void writeSplitConfigVersion(BytesWriteStream stream)
+	{
+		stream.writeVersion(ShineGlobal.configVersion);
+		stream.writeInt(splitConfigVersion);
 	}
 }

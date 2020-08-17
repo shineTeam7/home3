@@ -16,7 +16,7 @@ public class BaseDataMaker:DataMaker
 		list[BaseDataType.Activity-offSet]=createActivityData;
 		list[BaseDataType.ApplyAddFriend-offSet]=createApplyAddFriendData;
 		list[BaseDataType.AreaClient-offSet]=createAreaClientData;
-		list[BaseDataType.BattleSceneEnter-offSet]=createBattleSceneEnterData;
+		list[BaseDataType.SceneServerEnter-offSet]=createSceneServerEnterData;
 		list[BaseDataType.Buff-offSet]=createBuffData;
 		list[BaseDataType.Bullet-offSet]=createBulletData;
 		list[BaseDataType.CD-offSet]=createCDData;
@@ -128,11 +128,14 @@ public class BaseDataMaker:DataMaker
 		list[BaseDataType.PetIdentity-offSet]=createPetIdentityData;
 		list[BaseDataType.PlayerWorkComplete-offSet]=createPlayerWorkCompleteData;
 		list[BaseDataType.WorkComplete-offSet]=createWorkCompleteData;
+		list[BaseDataType.BattleScene-offSet]=createBattleSceneData;
 		list[BaseDataType.AreaGlobalWorkComplete-offSet]=createAreaGlobalWorkCompleteData;
 		list[BaseDataType.CreateRoleGroup-offSet]=createCreateRoleGroupData;
 		list[BaseDataType.PlayerRoleGroupSave-offSet]=createPlayerRoleGroupSaveData;
+		list[BaseDataType.SceneServerExit-offSet]=createSceneServerExitData;
 		list[BaseDataType.PlayerRoleGroup-offSet]=createPlayerRoleGroupData;
 		list[BaseDataType.PlayerApplyRoleGroup-offSet]=createPlayerApplyRoleGroupData;
+		list[BaseDataType.MatchScene-offSet]=createMatchSceneData;
 		list[BaseDataType.RoleGroupSimple-offSet]=createRoleGroupSimpleData;
 		list[BaseDataType.PlayerApplyRoleGroupSelf-offSet]=createPlayerApplyRoleGroupSelfData;
 		list[BaseDataType.RoleGroupChange-offSet]=createRoleGroupChangeData;
@@ -336,11 +339,6 @@ public class BaseDataMaker:DataMaker
 	private BaseData createUnitAIData()
 	{
 		return new UnitAIData();
-	}
-	
-	private BaseData createBattleSceneEnterData()
-	{
-		return new BattleSceneEnterData();
 	}
 	
 	private BaseData createSceneEnterArgData()
@@ -1036,6 +1034,26 @@ public class BaseDataMaker:DataMaker
 	private BaseData createMUnitIdentityData()
 	{
 		return new MUnitIdentityData();
+	}
+	
+	private BaseData createBattleSceneData()
+	{
+		return new BattleSceneData();
+	}
+	
+	private BaseData createSceneServerEnterData()
+	{
+		return new SceneServerEnterData();
+	}
+	
+	private BaseData createSceneServerExitData()
+	{
+		return new SceneServerExitData();
+	}
+	
+	private BaseData createMatchSceneData()
+	{
+		return new MatchSceneData();
 	}
 	
 }

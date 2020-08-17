@@ -3,10 +3,12 @@ package com.home.commonGame.control;
 import com.home.commonBase.constlist.generate.AttributeType;
 import com.home.commonBase.constlist.generate.CallWayType;
 import com.home.commonBase.constlist.generate.InfoCodeType;
+import com.home.commonBase.data.scene.scene.SceneLocationData;
 import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.logic.unit.AttributeDataLogic;
 import com.home.commonGame.global.GameC;
 import com.home.commonGame.net.serverRequest.center.system.ClientGMToCenterServerRequest;
+import com.home.commonGame.net.serverRequest.scene.system.ClientGMToSceneServerRequest;
 import com.home.commonGame.part.player.Player;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
@@ -25,12 +27,10 @@ public class ClientGMControl
 	private SMap<String,Obj> _cmdDic=new SMap<>();
 	private SList<DescribeObj> _describeList=new SList<>();
 	
-	/** 中心服指令组 */
-	private SSet<String> _centerCmdSet;
-	
 	public void init()
 	{
 		registOne(this::help,"帮助","help");
+		
 		registOne(this::addCurrency,"添加货币 [type] [value]","addCurrency","addC","ac");
 		registOne(this::costCurrency,"消耗货币 [type] [value]","costCurrency","costC","cc");
 		registOne(this::addRoleExp,"添加经验 [value]","addExp","addE","ae");
@@ -76,23 +76,6 @@ public class ClientGMControl
 		
 		//引导
 		registOne(this::setGuideStep,"修改引导步 [step]","setGuideStep","sgs");
-	}
-	
-	/** 设置中心服指令组 */
-	public void setCenterCmdSet(SSet<String> value)
-	{
-		_centerCmdSet=value;
-		
-		value.forEach(k->
-		{
-			if(_cmdSet.contains(k))
-			{
-				Ctrl.throwError("重复的gm指令(center部分):",k);
-				return;
-			}
-			
-			_cmdSet.add(k);
-		});
 	}
 	
 	private void addCmdObj(String cmd,Obj obj)
@@ -157,14 +140,25 @@ public class ClientGMControl
 		
 		player.log("clientGM指令",cmd);
 		
-		String[] args=cmd.split(" ");
-		
-		//中心服的
-		if(_centerCmdSet.contains(args[0]))
+		if(cmd.startsWith("c "))
 		{
-			ClientGMToCenterServerRequest.create(player.role.playerID,cmd).send();
+			ClientGMToCenterServerRequest.create(player.role.playerID,cmd.substring(2)).send();
 			return;
 		}
+		
+		if(cmd.startsWith("s "))
+		{
+			SceneLocationData sceneLocation=player.scene.getSceneLocation();
+			
+			if(sceneLocation!=null)
+			{
+				ClientGMToSceneServerRequest.create(player.role.playerID,cmd.substring(2)).send(sceneLocation.serverID);
+			}
+			
+			return;
+		}
+		
+		String[] args=cmd.split(" ");
 		
 		Obj obj=_cmdDic.get(args[0]);
 		
@@ -344,7 +338,6 @@ public class ClientGMControl
 		me.character.getCurrentAttributeDataLogic().addOneAttribute(ints[0],ints[1]);
 		
 		AttributeDataLogic currentAttributeDataLogic=me.character.getCurrentAttributeDataLogic();
-		Ctrl.print("A1",currentAttributeDataLogic.getHp(),currentAttributeDataLogic.getHpMax());
 	}
 	
 	/** 添加主角状态 */

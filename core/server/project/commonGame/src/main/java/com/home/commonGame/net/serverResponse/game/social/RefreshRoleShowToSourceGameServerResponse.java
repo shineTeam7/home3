@@ -40,7 +40,7 @@ public class RefreshRoleShowToSourceGameServerResponse extends GameToGameServerR
 	@Override
 	protected void execute()
 	{
-		GameC.global.social.refreshRoleSocialDataOnline(playerID,data);
+		GameC.global.social.refreshRoleSocialData(playerID,data);
 	}
 	
 	/** 获取数据类名 */

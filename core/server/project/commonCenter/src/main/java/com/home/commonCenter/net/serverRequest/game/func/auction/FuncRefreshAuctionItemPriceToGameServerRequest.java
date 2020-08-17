@@ -33,15 +33,13 @@ public class FuncRefreshAuctionItemPriceToGameServerRequest extends FuncCenterTo
 			if(!itemPriceDicTemp.isEmpty())
 			{
 				int itemPriceDicKFreeValue=itemPriceDicTemp.getFreeValue();
-				long[] itemPriceDicKTable=itemPriceDicTemp.getTable();
-				long itemPriceDicKEntry;
-				for(int itemPriceDicKI=itemPriceDicKTable.length-1;itemPriceDicKI>=0;--itemPriceDicKI)
+				int[] itemPriceDicKTable=itemPriceDicTemp.getTable();
+				for(int itemPriceDicKI=itemPriceDicKTable.length-2;itemPriceDicKI>=0;itemPriceDicKI-=2)
 				{
-					itemPriceDicKEntry=itemPriceDicKTable[itemPriceDicKI];
-					int itemPriceDicK=(int)itemPriceDicKEntry;
-					if(itemPriceDicK!=itemPriceDicKFreeValue)
+					if(itemPriceDicKTable[itemPriceDicKI]!=itemPriceDicKFreeValue)
 					{
-						int itemPriceDicV=(int)(itemPriceDicKEntry>>>32);
+						int itemPriceDicK=itemPriceDicKTable[itemPriceDicKI];
+						int itemPriceDicV=itemPriceDicKTable[itemPriceDicKI+1];
 						int itemPriceDicW;
 						int itemPriceDicU;
 						itemPriceDicW=itemPriceDicK;
@@ -80,15 +78,13 @@ public class FuncRefreshAuctionItemPriceToGameServerRequest extends FuncCenterTo
 			if(!this.itemPriceDic.isEmpty())
 			{
 				int itemPriceDicKFreeValue=this.itemPriceDic.getFreeValue();
-				long[] itemPriceDicKTable=this.itemPriceDic.getTable();
-				long itemPriceDicKEntry;
-				for(int itemPriceDicKI=itemPriceDicKTable.length-1;itemPriceDicKI>=0;--itemPriceDicKI)
+				int[] itemPriceDicKTable=this.itemPriceDic.getTable();
+				for(int itemPriceDicKI=itemPriceDicKTable.length-2;itemPriceDicKI>=0;itemPriceDicKI-=2)
 				{
-					itemPriceDicKEntry=itemPriceDicKTable[itemPriceDicKI];
-					int itemPriceDicK=(int)itemPriceDicKEntry;
-					if(itemPriceDicK!=itemPriceDicKFreeValue)
+					if(itemPriceDicKTable[itemPriceDicKI]!=itemPriceDicKFreeValue)
 					{
-						int itemPriceDicV=(int)(itemPriceDicKEntry>>>32);
+						int itemPriceDicK=itemPriceDicKTable[itemPriceDicKI];
+						int itemPriceDicV=itemPriceDicKTable[itemPriceDicKI+1];
 						stream.writeInt(itemPriceDicK);
 						
 						stream.writeInt(itemPriceDicV);
@@ -124,15 +120,13 @@ public class FuncRefreshAuctionItemPriceToGameServerRequest extends FuncCenterTo
 			if(!this.itemPriceDic.isEmpty())
 			{
 				int itemPriceDicKFreeValue=this.itemPriceDic.getFreeValue();
-				long[] itemPriceDicKTable=this.itemPriceDic.getTable();
-				long itemPriceDicKEntry;
-				for(int itemPriceDicKI=itemPriceDicKTable.length-1;itemPriceDicKI>=0;--itemPriceDicKI)
+				int[] itemPriceDicKTable=this.itemPriceDic.getTable();
+				for(int itemPriceDicKI=itemPriceDicKTable.length-2;itemPriceDicKI>=0;itemPriceDicKI-=2)
 				{
-					itemPriceDicKEntry=itemPriceDicKTable[itemPriceDicKI];
-					int itemPriceDicK=(int)itemPriceDicKEntry;
-					if(itemPriceDicK!=itemPriceDicKFreeValue)
+					if(itemPriceDicKTable[itemPriceDicKI]!=itemPriceDicKFreeValue)
 					{
-						int itemPriceDicV=(int)(itemPriceDicKEntry>>>32);
+						int itemPriceDicK=itemPriceDicKTable[itemPriceDicKI];
+						int itemPriceDicV=itemPriceDicKTable[itemPriceDicKI+1];
 						writer.writeTabs();
 						writer.sb.append(itemPriceDicK);
 						

@@ -48,18 +48,19 @@ public class ManagerSettingControl
 		if((tt=xml.getChildrenByNameOne("isOpenOnStart"))!=null)
 			isOpenOnStart=tt.getPropertyBoolean("value");
 		
-		redirectURLDic=new IntObjectMap<>();
+		IntObjectMap<IntObjectMap<String>> redirectURLDicT=new IntObjectMap<>();
 		
 		for(XML xl : xml.getChildrenByName("redirectURL"))
 		{
-			redirectURLDic.computeIfAbsent(BaseC.constlist.clientPlatform_getTypeByName(xl.getProperty("type")),k->new IntObjectMap<>())
+			redirectURLDicT.computeIfAbsent(BaseC.constlist.clientPlatform_getTypeByName(xl.getProperty("type")),k->new IntObjectMap<>())
 					.put(xl.getPropertyInt("resourceVersion"),xl.getProperty("url"));
 		}
+		redirectURLDic=redirectURLDicT;
 		
 		//clientVersion
 		xml=FileUtils.readFileForXML(ShineGlobal.clientVersionPath);
 		
-		clientVersionDic=new IntObjectMap<>(ClientVersionData[]::new);
+		IntObjectMap<ClientVersionData> clientVersionDicT=new IntObjectMap<>(ClientVersionData[]::new);
 		
 		if(xml!=null)
 		{
@@ -73,8 +74,10 @@ public class ManagerSettingControl
 				data.version=v.getProperty("version");
 				data.type=BaseC.constlist.clientPlatform_getTypeByName(v.getProperty("type"));
 				
-				clientVersionDic.put(data.type,data);
+				clientVersionDicT.put(data.type,data);
 			});
 		}
+		
+		clientVersionDic=clientVersionDicT;
 	}
 }

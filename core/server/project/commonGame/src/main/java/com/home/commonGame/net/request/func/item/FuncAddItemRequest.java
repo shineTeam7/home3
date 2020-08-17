@@ -41,15 +41,13 @@ public class FuncAddItemRequest extends FuncSRequest
 			if(!autoUseItemsTemp.isEmpty())
 			{
 				int autoUseItemsKFreeValue=autoUseItemsTemp.getFreeValue();
-				long[] autoUseItemsKTable=autoUseItemsTemp.getTable();
-				long autoUseItemsKEntry;
-				for(int autoUseItemsKI=autoUseItemsKTable.length-1;autoUseItemsKI>=0;--autoUseItemsKI)
+				int[] autoUseItemsKTable=autoUseItemsTemp.getTable();
+				for(int autoUseItemsKI=autoUseItemsKTable.length-2;autoUseItemsKI>=0;autoUseItemsKI-=2)
 				{
-					autoUseItemsKEntry=autoUseItemsKTable[autoUseItemsKI];
-					int autoUseItemsK=(int)autoUseItemsKEntry;
-					if(autoUseItemsK!=autoUseItemsKFreeValue)
+					if(autoUseItemsKTable[autoUseItemsKI]!=autoUseItemsKFreeValue)
 					{
-						int autoUseItemsV=(int)(autoUseItemsKEntry>>>32);
+						int autoUseItemsK=autoUseItemsKTable[autoUseItemsKI];
+						int autoUseItemsV=autoUseItemsKTable[autoUseItemsKI+1];
 						int autoUseItemsW;
 						int autoUseItemsU;
 						autoUseItemsW=autoUseItemsK;
@@ -140,15 +138,13 @@ public class FuncAddItemRequest extends FuncSRequest
 			if(!this.autoUseItems.isEmpty())
 			{
 				int autoUseItemsKFreeValue=this.autoUseItems.getFreeValue();
-				long[] autoUseItemsKTable=this.autoUseItems.getTable();
-				long autoUseItemsKEntry;
-				for(int autoUseItemsKI=autoUseItemsKTable.length-1;autoUseItemsKI>=0;--autoUseItemsKI)
+				int[] autoUseItemsKTable=this.autoUseItems.getTable();
+				for(int autoUseItemsKI=autoUseItemsKTable.length-2;autoUseItemsKI>=0;autoUseItemsKI-=2)
 				{
-					autoUseItemsKEntry=autoUseItemsKTable[autoUseItemsKI];
-					int autoUseItemsK=(int)autoUseItemsKEntry;
-					if(autoUseItemsK!=autoUseItemsKFreeValue)
+					if(autoUseItemsKTable[autoUseItemsKI]!=autoUseItemsKFreeValue)
 					{
-						int autoUseItemsV=(int)(autoUseItemsKEntry>>>32);
+						int autoUseItemsK=autoUseItemsKTable[autoUseItemsKI];
+						int autoUseItemsV=autoUseItemsKTable[autoUseItemsKI+1];
 						writer.writeTabs();
 						writer.sb.append(autoUseItemsK);
 						
@@ -233,15 +229,13 @@ public class FuncAddItemRequest extends FuncSRequest
 			if(!this.autoUseItems.isEmpty())
 			{
 				int autoUseItemsKFreeValue=this.autoUseItems.getFreeValue();
-				long[] autoUseItemsKTable=this.autoUseItems.getTable();
-				long autoUseItemsKEntry;
-				for(int autoUseItemsKI=autoUseItemsKTable.length-1;autoUseItemsKI>=0;--autoUseItemsKI)
+				int[] autoUseItemsKTable=this.autoUseItems.getTable();
+				for(int autoUseItemsKI=autoUseItemsKTable.length-2;autoUseItemsKI>=0;autoUseItemsKI-=2)
 				{
-					autoUseItemsKEntry=autoUseItemsKTable[autoUseItemsKI];
-					int autoUseItemsK=(int)autoUseItemsKEntry;
-					if(autoUseItemsK!=autoUseItemsKFreeValue)
+					if(autoUseItemsKTable[autoUseItemsKI]!=autoUseItemsKFreeValue)
 					{
-						int autoUseItemsV=(int)(autoUseItemsKEntry>>>32);
+						int autoUseItemsK=autoUseItemsKTable[autoUseItemsKI];
+						int autoUseItemsV=autoUseItemsKTable[autoUseItemsKI+1];
 						stream.writeInt(autoUseItemsK);
 						
 						stream.writeInt(autoUseItemsV);
@@ -309,15 +303,13 @@ public class FuncAddItemRequest extends FuncSRequest
 			if(!this.autoUseItems.isEmpty())
 			{
 				int autoUseItemsKFreeValue=this.autoUseItems.getFreeValue();
-				long[] autoUseItemsKTable=this.autoUseItems.getTable();
-				long autoUseItemsKEntry;
-				for(int autoUseItemsKI=autoUseItemsKTable.length-1;autoUseItemsKI>=0;--autoUseItemsKI)
+				int[] autoUseItemsKTable=this.autoUseItems.getTable();
+				for(int autoUseItemsKI=autoUseItemsKTable.length-2;autoUseItemsKI>=0;autoUseItemsKI-=2)
 				{
-					autoUseItemsKEntry=autoUseItemsKTable[autoUseItemsKI];
-					int autoUseItemsK=(int)autoUseItemsKEntry;
-					if(autoUseItemsK!=autoUseItemsKFreeValue)
+					if(autoUseItemsKTable[autoUseItemsKI]!=autoUseItemsKFreeValue)
 					{
-						int autoUseItemsV=(int)(autoUseItemsKEntry>>>32);
+						int autoUseItemsK=autoUseItemsKTable[autoUseItemsKI];
+						int autoUseItemsV=autoUseItemsKTable[autoUseItemsKI+1];
 						stream.writeInt(autoUseItemsK);
 						
 						stream.writeInt(autoUseItemsV);

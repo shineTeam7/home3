@@ -30,7 +30,8 @@ public class MethodInfo extends PropertyInfo
 	public int sgType=SGType.None;
 	/** 是否可被继承(C#用) */
 	public boolean isVirtual=false;
-	
+	/** 是否为final(java内联) */
+	public boolean isFinal=false;
 	/** 泛型方法字符串(java用) */
 	public String genericTypeStr="";
 	
@@ -57,6 +58,7 @@ public class MethodInfo extends PropertyInfo
 		isAbstract=tt.isAbstract;
 		sgType=tt.sgType;
 		isVirtual=tt.isVirtual;
+		isFinal=tt.isFinal;
 		genericTypeStr=tt.genericTypeStr;
 	}
 	
@@ -87,6 +89,15 @@ public class MethodInfo extends PropertyInfo
 		}
 	}
 	
+	/** 写final文字(写的时候只有java会用到) */
+	public void writeFinalStr(StringBuilder sb)
+	{
+		if(isFinal)
+		{
+			sb.append("final ");
+		}
+	}
+	
 	/** 获取方法key */
 	public String getKey()
 	{
@@ -103,6 +114,9 @@ public class MethodInfo extends PropertyInfo
 			sb.append(",");
 			sb.append(v.type);
 		}
+		
+		sb.append(",");
+		sb.append(returnType);
 		
 		return sb.toString();
 	}
@@ -202,5 +216,13 @@ public class MethodInfo extends PropertyInfo
 		MethodInfo re=new MethodInfo();
 		re.copy(this);
 		return re;
+	}
+	
+	public String getShowName()
+	{
+		if(!describe.isEmpty())
+			return describe;
+		
+		return name;
 	}
 }

@@ -88,7 +88,8 @@ public class UnitShowLogic3DOne:UnitShowLogic
 
 			try
 			{
-				_animationState=_animation.CrossFadeQueued(useName);
+				_animation.CrossFade(useName);
+				_animationState=_animation[useName];
 				_animationState.speed=speed;
 			}
 			catch(Exception e)

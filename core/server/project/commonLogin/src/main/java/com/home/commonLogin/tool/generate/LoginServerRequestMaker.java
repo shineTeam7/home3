@@ -22,17 +22,17 @@ public class LoginServerRequestMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
+		list[ServerMessageType.BeLoginToManager-offSet]=this::createBeLoginToManagerServerRequest;
 		list[ServerMessageType.BeLoginToGame-offSet]=this::createBeLoginToGameServerRequest;
+		list[ServerMessageType.PlayerBindPlatformToGame-offSet]=this::createPlayerBindPlatformToGameServerRequest;
+		list[ServerMessageType.ReceiptUserWorkToGame-offSet]=this::createReceiptUserWorkToGameServerRequest;
+		list[ServerMessageType.SendInfoCodeFromLogin-offSet]=this::createSendInfoCodeFromLoginServerRequest;
+		list[ServerMessageType.UserLoginToGame-offSet]=this::createUserLoginToGameServerRequest;
 		list[ServerMessageType.BeLoginToLogin-offSet]=this::createBeLoginToLoginServerRequest;
 		list[ServerMessageType.ClientLoginTransfer-offSet]=this::createClientLoginTransferServerRequest;
 		list[ServerMessageType.ReBeLoginToLogin-offSet]=this::createReBeLoginToLoginServerRequest;
 		list[ServerMessageType.ReClientLoginError-offSet]=this::createReClientLoginErrorServerRequest;
 		list[ServerMessageType.ReClientLoginTransfer-offSet]=this::createReClientLoginTransferServerRequest;
-		list[ServerMessageType.ReceiptUserWorkToGame-offSet]=this::createReceiptUserWorkToGameServerRequest;
-		list[ServerMessageType.SendInfoCodeFromLogin-offSet]=this::createSendInfoCodeFromLoginServerRequest;
-		list[ServerMessageType.BeLoginToManager-offSet]=this::createBeLoginToManagerServerRequest;
-		list[ServerMessageType.PlayerBindPlatformToGame-offSet]=this::createPlayerBindPlatformToGameServerRequest;
-		list[ServerMessageType.UserLoginToGame-offSet]=this::createUserLoginToGameServerRequest;
 	}
 	
 	private BaseData createBeLoginToGameServerRequest()

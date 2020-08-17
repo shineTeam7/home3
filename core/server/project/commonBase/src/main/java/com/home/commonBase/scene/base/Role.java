@@ -6,6 +6,7 @@ import com.home.commonBase.scene.role.RoleBuildLogic;
 import com.home.commonBase.scene.role.RoleForceLogic;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.net.base.BaseRequest;
+import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.support.pool.StringBuilderPool;
 import com.home.shine.utils.StringUtils;
 
@@ -92,10 +93,17 @@ public class Role extends SceneObject
 		sb.append(playerID);
 	}
 	
+	public BaseSocket getSocket()
+	{
+		return null;
+	}
+	
 	/** 发送消息 */
 	public void send(BaseRequest request)
 	{
-	
+		BaseSocket socket=getSocket();
+		if(socket!=null)
+			socket.send(request);
 	}
 	
 	/** 广播消息 */

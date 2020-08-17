@@ -7,8 +7,8 @@ public class SceneLocationDO
 	int sceneID;
 	/** 线ID */
 	int lineID=-1;
-	/** 所在游戏服ID */
-	int gameID=-1;
+	/** 所在服(游戏服或场景服)ID */
+	int serverID=-1;
 	/** 执行器号 */
 	int executorIndex=-1;
 	/** 实例ID */

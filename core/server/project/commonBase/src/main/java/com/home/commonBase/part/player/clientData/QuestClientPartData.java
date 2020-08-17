@@ -175,15 +175,13 @@ public class QuestClientPartData extends BaseClientPartData
 			if(!this.completeLines.isEmpty())
 			{
 				int completeLinesKFreeValue=this.completeLines.getFreeValue();
-				long[] completeLinesKTable=this.completeLines.getTable();
-				long completeLinesKEntry;
-				for(int completeLinesKI=completeLinesKTable.length-1;completeLinesKI>=0;--completeLinesKI)
+				int[] completeLinesKTable=this.completeLines.getTable();
+				for(int completeLinesKI=completeLinesKTable.length-2;completeLinesKI>=0;completeLinesKI-=2)
 				{
-					completeLinesKEntry=completeLinesKTable[completeLinesKI];
-					int completeLinesK=(int)completeLinesKEntry;
-					if(completeLinesK!=completeLinesKFreeValue)
+					if(completeLinesKTable[completeLinesKI]!=completeLinesKFreeValue)
 					{
-						int completeLinesV=(int)(completeLinesKEntry>>>32);
+						int completeLinesK=completeLinesKTable[completeLinesKI];
+						int completeLinesV=completeLinesKTable[completeLinesKI+1];
 						stream.writeInt(completeLinesK);
 						
 						stream.writeInt(completeLinesV);
@@ -341,15 +339,13 @@ public class QuestClientPartData extends BaseClientPartData
 			if(!mData.completeLines.isEmpty())
 			{
 				int completeLinesKFreeValue=mData.completeLines.getFreeValue();
-				long[] completeLinesKTable=mData.completeLines.getTable();
-				long completeLinesKEntry;
-				for(int completeLinesKI=completeLinesKTable.length-1;completeLinesKI>=0;--completeLinesKI)
+				int[] completeLinesKTable=mData.completeLines.getTable();
+				for(int completeLinesKI=completeLinesKTable.length-2;completeLinesKI>=0;completeLinesKI-=2)
 				{
-					completeLinesKEntry=completeLinesKTable[completeLinesKI];
-					int completeLinesK=(int)completeLinesKEntry;
-					if(completeLinesK!=completeLinesKFreeValue)
+					if(completeLinesKTable[completeLinesKI]!=completeLinesKFreeValue)
 					{
-						int completeLinesV=(int)(completeLinesKEntry>>>32);
+						int completeLinesK=completeLinesKTable[completeLinesKI];
+						int completeLinesV=completeLinesKTable[completeLinesKI+1];
 						int completeLinesW;
 						int completeLinesU;
 						completeLinesW=completeLinesK;
@@ -658,15 +654,13 @@ public class QuestClientPartData extends BaseClientPartData
 			if(!this.completeLines.isEmpty())
 			{
 				int completeLinesKFreeValue=this.completeLines.getFreeValue();
-				long[] completeLinesKTable=this.completeLines.getTable();
-				long completeLinesKEntry;
-				for(int completeLinesKI=completeLinesKTable.length-1;completeLinesKI>=0;--completeLinesKI)
+				int[] completeLinesKTable=this.completeLines.getTable();
+				for(int completeLinesKI=completeLinesKTable.length-2;completeLinesKI>=0;completeLinesKI-=2)
 				{
-					completeLinesKEntry=completeLinesKTable[completeLinesKI];
-					int completeLinesK=(int)completeLinesKEntry;
-					if(completeLinesK!=completeLinesKFreeValue)
+					if(completeLinesKTable[completeLinesKI]!=completeLinesKFreeValue)
 					{
-						int completeLinesV=(int)(completeLinesKEntry>>>32);
+						int completeLinesK=completeLinesKTable[completeLinesKI];
+						int completeLinesV=completeLinesKTable[completeLinesKI+1];
 						stream.writeInt(completeLinesK);
 						
 						stream.writeInt(completeLinesV);
@@ -798,15 +792,13 @@ public class QuestClientPartData extends BaseClientPartData
 			if(!this.completeLines.isEmpty())
 			{
 				int completeLinesKFreeValue=this.completeLines.getFreeValue();
-				long[] completeLinesKTable=this.completeLines.getTable();
-				long completeLinesKEntry;
-				for(int completeLinesKI=completeLinesKTable.length-1;completeLinesKI>=0;--completeLinesKI)
+				int[] completeLinesKTable=this.completeLines.getTable();
+				for(int completeLinesKI=completeLinesKTable.length-2;completeLinesKI>=0;completeLinesKI-=2)
 				{
-					completeLinesKEntry=completeLinesKTable[completeLinesKI];
-					int completeLinesK=(int)completeLinesKEntry;
-					if(completeLinesK!=completeLinesKFreeValue)
+					if(completeLinesKTable[completeLinesKI]!=completeLinesKFreeValue)
 					{
-						int completeLinesV=(int)(completeLinesKEntry>>>32);
+						int completeLinesK=completeLinesKTable[completeLinesKI];
+						int completeLinesV=completeLinesKTable[completeLinesKI+1];
 						int completeLinesU=completeLinesR.get(completeLinesK);
 						if(completeLinesV!=completeLinesU)
 							return false;
@@ -967,15 +959,13 @@ public class QuestClientPartData extends BaseClientPartData
 			if(!this.completeLines.isEmpty())
 			{
 				int completeLinesKFreeValue=this.completeLines.getFreeValue();
-				long[] completeLinesKTable=this.completeLines.getTable();
-				long completeLinesKEntry;
-				for(int completeLinesKI=completeLinesKTable.length-1;completeLinesKI>=0;--completeLinesKI)
+				int[] completeLinesKTable=this.completeLines.getTable();
+				for(int completeLinesKI=completeLinesKTable.length-2;completeLinesKI>=0;completeLinesKI-=2)
 				{
-					completeLinesKEntry=completeLinesKTable[completeLinesKI];
-					int completeLinesK=(int)completeLinesKEntry;
-					if(completeLinesK!=completeLinesKFreeValue)
+					if(completeLinesKTable[completeLinesKI]!=completeLinesKFreeValue)
 					{
-						int completeLinesV=(int)(completeLinesKEntry>>>32);
+						int completeLinesK=completeLinesKTable[completeLinesKI];
+						int completeLinesV=completeLinesKTable[completeLinesKI+1];
 						writer.writeTabs();
 						writer.sb.append(completeLinesK);
 						

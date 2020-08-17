@@ -74,6 +74,18 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 		return _gridNum>0 && getGridUseNum()>=_gridNum;
 	}
 
+	/** 检查物品数目 */
+	protected bool ensureNum(int num)
+	{
+		if(num<=0)
+		{
+			warnLog("检查物品数目出错",num);
+			return false;
+		}
+
+		return true;
+	}
+
 	/** 获取空闲格子数目(无限返回-1) */
 	public int getFreeGridNum()
 	{
@@ -481,12 +493,18 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 是否有物品位置 */
 	public bool hasItemPlace(ItemData data)
 	{
+		if(!ensureNum(data.num))
+			return false;
+
 		return doHasItemPlaceC(data.id,data.num,data);
 	}
 	
 	/** 是否有物品位置 */
 	public bool hasItemPlace(int id,int num)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		return doHasItemPlaceC(id,num,null);
 	}
 	
@@ -506,7 +524,13 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 		for(int i=0,len=list.size();i<len;++i)
 		{
 			data=values[i];
-			
+
+			if(!ensureNum(data.num))
+			{
+				_tempDic.clear();
+				return false;
+			}
+
 			//有必要
 			if(ItemConfig.get(data.id).totalPlusMax>0)
 			{
@@ -550,6 +574,12 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 		{
 			data=dataArr[i];
 
+			if(!ensureNum(data.value))
+			{
+				_tempDic.clear();
+				return false;
+			}
+
 			//有必要
 			if(ItemConfig.get(data.key).totalPlusMax>0)
 			{
@@ -582,6 +612,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 添加物品数据 */
 	public bool addItem(ItemData data,int way)
 	{
+		if(!ensureNum(data.num))
+			return false;
+
 		if(!doAddItemC(data.id,data.num,data))
 		{
 			rollBackAdd();
@@ -600,6 +633,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 添加指定id和数目的道具 */
 	public bool addItem(int id,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		if(!doAddItemC(id,num,null))
 		{
 			rollBackAdd();
@@ -619,6 +655,12 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 		for(int i=0,len=list.size();i<len;i++)
 		{
 			data=values[i];
+
+			if(!ensureNum(data.num))
+			{
+				rollBackAdd();
+				return false;
+			}
 			
 			if(!doAddItemC(data.id,data.num,data))
 			{
@@ -634,12 +676,21 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 添加一组物品 */
 	public bool addItems(DIntData[] list,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		DIntData data;
 		
 		for(int i=0,len=list.Length;i<len;i++)
 		{
 			data=list[i];
-			
+
+			if(!ensureNum(data.value))
+			{
+				rollBackAdd();
+				return false;
+			}
+
 			if(!doAddItemC(data.key,data.value*num,null))
 			{
 				rollBackAdd();
@@ -662,6 +713,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 是否有指定id数目的物品 */
 	public bool containsItem(int id,int num)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		return getItemNum(id)>=num;
 	}
 	
@@ -676,6 +730,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 移除道具(会回收) */
 	public bool removeItem(int id,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		if(!doRemoveItemC(id,num))
 		{
 			rollBackRemove();
@@ -689,8 +746,17 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 移除物品组 */
 	public bool removeItems(DIntData[] items,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		foreach(DIntData v in items)
 		{
+			if(!ensureNum(v.value))
+			{
+				rollBackRemove();
+				return false;
+			}
+
 			if(!doRemoveItemC(v.key,v.value*num))
 			{
 				rollBackRemove();
@@ -719,6 +785,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 移除指定序号的物品(部分数目)(不回收) */
 	public bool removeItemByIndex(int index,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		ItemData data=getItem(index);
 		
 		if(data==null)
@@ -736,6 +805,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 添加一个新物品到格子 */
 	public bool addNewItemToIndex(int index,ItemData data,int way)
 	{
+		if(!ensureNum(data.num))
+			return false;
+
 		if(getItem(index)!=null)
 			return false;
 
@@ -751,6 +823,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 给某格子物品添加一定数目 */
 	public bool addItemPartialToIndex(int index,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		ItemData item=getItem(index);
 
 		if(item==null)
@@ -778,6 +853,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 使用物品 */
 	public bool useItemByIndex(int index,int num,UseItemArgData arg)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		ItemData data;
 		
 		if((data=getItem(index))==null)
@@ -789,6 +867,9 @@ public abstract class BaseItemContainerTool:PlayerFuncTool
 	/** 客户端使用物品 */
 	public bool clientUseItemByIndex(int index,int num,int itemID,UseItemArgData arg)
 	{
+		if(!ensureNum(num))
+			return false;
+
 		ItemData data;
 		
 		if((data=getItem(index))==null)

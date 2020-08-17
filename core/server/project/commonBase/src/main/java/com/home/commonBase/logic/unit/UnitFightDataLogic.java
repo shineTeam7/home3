@@ -72,12 +72,11 @@ public class UnitFightDataLogic
 	{
 		_isDriveAll=!CommonSetting.isClient || !CommonSetting.isSceneServerDrive;
 		
-		status=BaseC.factory.createStatusDataLogic();
-		status.setParent(this);
-		attribute=new AttributeDataLogic(this);
+		(status=BaseC.factory.createStatusDataLogic()).setParent(this);
+		(attribute=new AttributeDataLogic()).setParent(this);
 		(cd=BaseC.factory.createCDDataLogic()).setParent(this);
 		(buff=BaseC.factory.createBuffDataLogic()).setParent(this);
-		avatar=new AvatarDataLogic(this);
+		(avatar=new AvatarDataLogic()).setParent(this);
 	}
 	
 	/** 是否客户端驱动全部战斗 */
@@ -474,13 +473,13 @@ public class UnitFightDataLogic
 	}
 	
 	/** 排放属性 */
-	public void dispatchAttribute(int[] changeList,int num,boolean[] changeSet,int[] lastAttributes)
+	public void dispatchAttribute(int[] changeList,int num,boolean[] changeSet)
 	{
 		Unit unit;
 		
 		if((unit=_unit)!=null)
 		{
-			unit.fight.onAttributeChange(changeList,num,changeSet,lastAttributes);
+			unit.fight.onAttributeChange(changeList,num,changeSet);
 		}
 	}
 	

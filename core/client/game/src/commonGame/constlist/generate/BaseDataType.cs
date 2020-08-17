@@ -76,9 +76,9 @@ public class BaseDataType
 	public const int AreaClient=211;
 	
 	/// <summary>
-	/// 副本类场景进入数据
+	/// 场景服进入数据
 	/// </summary>
-	public const int BattleSceneEnter=212;
+	public const int SceneServerEnter=212;
 	
 	/// <summary>
 	/// buff数据
@@ -745,10 +745,22 @@ public class BaseDataType
 	/// </summary>
 	public const int WorkComplete=348;
 	
+	public const int SceneInitServer=351;
+	
+	/// <summary>
+	/// 中心服初始化服务器数据
+	/// </summary>
+	public const int CenterInitServer=349;
+	
 	/// <summary>
 	/// 区服全局数据
 	/// </summary>
 	public const int AreaGlobalWork=350;
+	
+	/// <summary>
+	/// 副本类场景进入数据
+	/// </summary>
+	public const int BattleScene=352;
 	
 	/// <summary>
 	/// 区服完成事务
@@ -766,6 +778,11 @@ public class BaseDataType
 	public const int PlayerRoleGroupSave=355;
 	
 	/// <summary>
+	/// 场景服离开数据
+	/// </summary>
+	public const int SceneServerExit=356;
+	
+	/// <summary>
 	/// 角色玩家群数据(推送客户端的)
 	/// </summary>
 	public const int PlayerRoleGroup=357;
@@ -774,6 +791,11 @@ public class BaseDataType
 	/// 玩家申请进入玩家群数据(如需可补申请语)
 	/// </summary>
 	public const int PlayerApplyRoleGroup=358;
+	
+	/// <summary>
+	/// 匹配后的场景信息
+	/// </summary>
+	public const int MatchScene=359;
 	
 	/// <summary>
 	/// 玩家群简版数据
@@ -881,6 +903,11 @@ public class BaseDataType
 	public const int CreateTeam=380;
 	
 	public const int PlayerTeam=381;
+	
+	/// <summary>
+	/// 玩家匹配成功事务
+	/// </summary>
+	public const int PlayerMatchSuccessW=382;
 	
 	/// <summary>
 	/// 队伍成员数据

@@ -18,9 +18,6 @@ public class GameServerRunData extends BaseData
 	/** gameID */
 	public int id;
 	
-	/** 是否本次更改过 */
-	public boolean modified;
-	
 	public GameServerRunData()
 	{
 		_dataID=BaseDataType.GameServerRun;

@@ -4,7 +4,7 @@ import com.home.commonBase.data.login.LoginInitServerData;
 import com.home.commonBase.data.system.ServerInfoData;
 import com.home.commonBase.global.BaseC;
 import com.home.commonManager.global.ManagerC;
-import com.home.commonManager.net.serverRequest.login.system.ReBeLoginToManagerServerRequest;
+import com.home.commonManager.net.serverRequest.login.ReBeLoginToManagerServerRequest;
 import com.home.commonManager.net.serverResponse.login.base.LoginToManagerServerResponse;
 import com.home.shine.bytes.BytesReadStream;
 import com.home.shine.constlist.SocketType;
@@ -71,9 +71,7 @@ public class BeLoginToManagerServerResponse extends LoginToManagerServerResponse
 	@Override
 	protected void execute()
 	{
-		ServerInfoData loginInfo=ManagerC.main.getLoginInfo(id);
-		
-		if(loginInfo==null)
+		if(!ManagerC.main.hasLoginServer(id))
 		{
 			Ctrl.throwError("找不到登录服配置",id);
 			return;
@@ -81,20 +79,7 @@ public class BeLoginToManagerServerResponse extends LoginToManagerServerResponse
 		
 		ManagerC.server.getSocketInfo(SocketType.Login).registerSocket(id,socket);
 		
-		LoginInitServerData initData=null;
-		
-		if(isFirst)
-		{
-			initData=new LoginInitServerData();
-			initData.info=loginInfo;
-			initData.loginServerDic=ManagerC.main.getLoginSimpleInfoDic();
-			initData.gameServerDic=ManagerC.main.getGameSimpleInfoDic();
-			initData.games=ManagerC.main.getGameServerClientDic();
-			initData.clientVersion=ManagerC.setting.clientVersionDic;
-			initData.redirectURLDic=ManagerC.setting.redirectURLDic;
-			initData.isOpen=ManagerC.main.isOpen();
-		}
-		
+		LoginInitServerData initData=isFirst ? ManagerC.main.createLoginInitData(id) : null;
 		
 		socket.send(ReBeLoginToManagerServerRequest.create(initData));
 	}

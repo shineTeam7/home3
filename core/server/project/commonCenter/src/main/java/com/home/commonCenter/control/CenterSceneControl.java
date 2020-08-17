@@ -3,6 +3,8 @@ package com.home.commonCenter.control;
 import com.home.commonBase.config.game.SceneConfig;
 import com.home.commonBase.constlist.generate.SceneInstanceType;
 import com.home.commonBase.data.role.RoleShowData;
+import com.home.commonBase.data.scene.match.MatchSceneData;
+import com.home.commonBase.data.scene.match.PlayerMatchSuccessWData;
 import com.home.commonBase.data.scene.scene.CreateSceneData;
 import com.home.commonBase.data.scene.scene.SceneEnterArgData;
 import com.home.commonBase.data.scene.match.PlayerMatchData;
@@ -13,6 +15,7 @@ import com.home.commonCenter.global.CenterC;
 import com.home.commonCenter.net.serverRequest.game.scene.CreateSignedSceneToGameServerRequest;
 import com.home.commonCenter.net.serverRequest.game.scene.EnterSignedSceneToGameServerRequest;
 import com.home.commonCenter.tool.func.CenterMatchTool;
+import com.home.shine.control.DateControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
@@ -96,17 +99,19 @@ public class CenterSceneControl
 		//创建场景
 		createSignedScene(gameID,createData,signedPlayers,eData->
 		{
+			MatchSceneData data=BaseC.factory.createMatchSceneData();
+			data.funcID=tool.getFuncID();
+			data.matchTime=DateControl.getTimeMillis();
+			data.location=eData;
+			
 			for(RoleShowData v:signedPlayers)
 			{
-				playerEnterSignedScene(v.playerID,eData);
+				PlayerMatchSuccessWData wData=new PlayerMatchSuccessWData();
+				wData.data=data;
+				
+				CenterC.main.addPlayerOfflineWork(v.playerID,wData);
 			}
 		});
-	}
-	
-	/** 玩家进入指定场景 */
-	public void playerEnterSignedScene(long playerID,SceneLocationData data)
-	{
-		EnterSignedSceneToGameServerRequest.create(data).sendToPlayer(playerID);
 	}
 	
 	/** 获取最多的gameID(主线程)(场景用) */

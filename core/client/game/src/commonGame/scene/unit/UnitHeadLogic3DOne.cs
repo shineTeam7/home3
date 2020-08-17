@@ -37,10 +37,17 @@ public class UnitHeadLogic3DOne:UnitHeadLogic
 		if(_model==null)
 			_model=toCreateModel();
 
-		_model.init(_gameObject);
+		if(_model!=null)
+		{
+			_model.init(_gameObject);
+		}
+
 		(_transform=_gameObject.transform).SetParent(_scene.show.getUnitHeadRoot(),false);
 
-		initModel();
+		if(_model!=null)
+		{
+			initModel();
+		}
 
 		initShow();
 
@@ -51,7 +58,9 @@ public class UnitHeadLogic3DOne:UnitHeadLogic
 	{
 		base.dispose();
 
-		_model.doDispose();
+		if(_model!=null)
+			_model.doDispose();
+
 		AssetPoolControl.unloadOne(AssetPoolType.UnitHead,_resourceID,_gameObject);
 		_gameObject=null;
 		_resourceID=-1;

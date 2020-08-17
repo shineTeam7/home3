@@ -165,6 +165,8 @@ public class ShineToolSetting
 	/** 字节数组名 */
 	public static String byteArrName="byte[]";
 	
+	public static String CtrlQName=globalPackage+"shine.ctrl.Ctrl";
+	
 	///** 字符串构建类名 */
 	//public static String stringBuilderMame="StringBuilder";
 	///** 字符串的命名空间 */
@@ -179,9 +181,9 @@ public class ShineToolSetting
 	
 	//net
 	/** BaseRequest(完全限定名) */
-	public static String baseRequestQName=globalPackage + "shine.net.request.base.BaseRequest";
+	public static String baseRequestQName=globalPackage + "shine.net.base.BaseRequest";
 	/** BaseResponse(完全限定名) */
-	public static String baseResponseQName=globalPackage + "shine.net.response.base.BaseResponse";
+	public static String baseResponseQName=globalPackage + "shine.net.base.BaseResponse";
 	
 	/** BaseRequest(完全限定名) */
 	public static String baseHttpRequestQName=globalPackage + "shine.net.httpRequest.BytesHttpRequest";
@@ -222,6 +224,15 @@ public class ShineToolSetting
 	/** 角色对玩家群TCC事务基类QName */
 	public static String playerToRoleGroupTCCWorkDOQName=ShineToolSetting.globalPackage + "commonData.data.social.roleGroup.work.PlayerToRoleGroupTCCWDO";
 	
+	//trigger
+	public static String triggerFuncEntryQName=ShineToolSetting.globalPackage + "commonBase.support.func.TriggerFuncEntry";
+	public static String triggerExecutorQName=ShineToolSetting.globalPackage + "commonBase.trigger.TriggerExecutor";
+	public static String triggerFuncDataQName=ShineToolSetting.globalPackage + "shine.data.trigger.TriggerFuncData";
+	public static String triggerArgQName=ShineToolSetting.globalPackage + "commonBase.trigger.TriggerArg";
+	
+	/** 数据构造接口名称(完全限定名) */
+	public static String TriggerFuncMakerQName=globalPackage + "commonBase.tool.TriggerFuncMaker";
+	
 	//settings
 	
 	/** 是否启用国际化 */
@@ -234,6 +245,8 @@ public class ShineToolSetting
 	public static boolean needHotfix=true;
 	/** 是否需要客户端部分 */
 	public static boolean needClient=true;
+	/** 是否需要场景服部分 */
+	public static boolean needScene=true;
 	/** 客户端类型 */
 	public static int clientType=ToolClientType.Unity;
 	/** ts语言，是否全使用Shine命名空间 */
@@ -244,8 +257,8 @@ public class ShineToolSetting
 	public static SSet<String> ignoreCustomConfigs=new SSet<>();
 	/** 占用的输入field名 */
 	public static SSet<String> usedInputFieldName=new SSet<>();
-	///** 是否使用合并的game服 */
-	//public static boolean useCombineGameDB=false;
+	/** 是否使用旧版HData代码段 */
+	public static boolean useOldHDataSection=false;
 	
 	/** 初始化设置部分 */
 	public static synchronized void init()
@@ -277,6 +290,12 @@ public class ShineToolSetting
 			
 			if((child=xml.getChildrenByNameOne("needClient"))!=null)
 				needClient=StringUtils.strToBoolean(child.getProperty("value"));
+			
+			if((child=xml.getChildrenByNameOne("needScene"))!=null)
+				needScene=StringUtils.strToBoolean(child.getProperty("value"));
+			
+			if((child=xml.getChildrenByNameOne("useOldHDataSection"))!=null)
+				useOldHDataSection=StringUtils.strToBoolean(child.getProperty("value"));
 			
 			if((child=xml.getChildrenByNameOne("clientType"))!=null)
 				clientType=Integer.parseInt(child.getProperty("value"));

@@ -17,11 +17,11 @@ public class STriggerObjectType
 	
 	public static final int String=7;
 	
-	public static final int List=8;
-	
-	public static final int Map=9;
-	
-	public static final int Set=10;
+	//public static final int List=8;
+	//
+	//public static final int Map=9;
+	//
+	//public static final int Set=10;
 	
 	public static final int Runnable=11;
 }

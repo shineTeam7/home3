@@ -133,7 +133,7 @@ public class GridMapInfoConfig extends BaseConfig
 		
 		if(CommonSetting.usePathAreaDic && !dic.isEmpty())
 		{
-			Ctrl.log("计算连通区时间:",MapControl.loadTime);
+			Ctrl.debugLog("计算连通区时间:",MapControl.loadTime);
 		}
 	}
 	

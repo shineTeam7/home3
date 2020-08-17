@@ -78,7 +78,7 @@ namespace ShineEngine
 		int ChangeAlphaLen=20;
 		
 		/** 滚动位置 */
-		private float _scrollPos;
+		protected float _scrollPos;
 
 		/**
 		 * 上一次触碰的位置
@@ -169,7 +169,7 @@ namespace ShineEngine
 		/**
 		 * 缓动索引
 		 */
-		private int _tweenIndex=-1;
+		protected int _tweenIndex=-1;
 
 		/**
 		 * 新页回调
@@ -327,6 +327,12 @@ namespace ShineEngine
 					stopSpeed();
 			}
 		}
+
+        public bool IsLoop
+        {
+            get { return _loop; }
+            set { _loop = value; }
+        }
 
 		/// <summary>
 		/// 设置进度改变回调函数
@@ -727,7 +733,7 @@ namespace ShineEngine
 		/**
 		 * 检测当前位置并执行回位操作
 		 */
-		private void checkAndBack()
+		 private void checkAndBack()
 		{
 			if(_loop)
 			{

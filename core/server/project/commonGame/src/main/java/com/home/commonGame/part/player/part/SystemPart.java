@@ -27,12 +27,15 @@ import com.home.commonGame.part.player.base.PlayerBasePart;
 import com.home.commonGame.server.GameReceiveSocket;
 import com.home.commonGame.utils.GameUtils;
 import com.home.shine.constlist.SLogType;
+import com.home.shine.constlist.ThreadType;
 import com.home.shine.control.DateControl;
 import com.home.shine.control.LogControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.BaseData;
 import com.home.shine.dataEx.LogInfo;
+import com.home.shine.global.ShineSetting;
+import com.home.shine.net.base.BaseResponse;
 import com.home.shine.support.collection.IntList;
 import com.home.shine.support.collection.SList;
 import com.home.shine.support.collection.SQueue;
@@ -52,11 +55,11 @@ public class SystemPart extends PlayerBasePart
 	/** 连接(不用volatile) */
 	public GameReceiveSocket socket;
 	
-	/** 离线保留时间(s)(主线程) */
-	public int offlineKeepTime=0;
+	/** 离线保留时间(ms)(主线程) */
+	public long offlineKeepTime=0L;
 	
-	/** 退出状态等待(s) */
-	public int exitWaitTime=0;
+	/** 退出状态等待(ms) */
+	public long exitWaitTime=0;
 	
 	/** 登陆临时数据 */
 	public PlayerLoginEachGameTempData loginEachTempData;
@@ -83,6 +86,9 @@ public class SystemPart extends PlayerBasePart
 	private volatile int _loginState=PlayerLoginStateType.Offline;
 	
 	public int loginPhase=PlayerLoginPhaseType.None;
+	
+	/** 登录过期时间 */
+	public long loginingTime=0;
 	
 	/** 过程中离线事务组 */
 	private SList<PlayerWorkData> _processOfflineWorkList=new SList<>(PlayerWorkData[]::new);
@@ -196,7 +202,7 @@ public class SystemPart extends PlayerBasePart
 		_socketReady=false;
 		_exitOverCalls.clear();
 		_loginState=PlayerLoginStateType.Offline;
-		offlineKeepTime=0;
+		offlineKeepTime=0L;
 		
 		_lastOfflineDelay=0;
 		_lastKeepOnlineDelay=0;
@@ -205,6 +211,7 @@ public class SystemPart extends PlayerBasePart
 		_isSwitchLogin=false;
 		
 		_loginToken=-1;
+		loginingTime=0;
 	}
 	
 	/** 从库中读完数据后(做数据的补充解析)(onNewCreate后也会调用一次)(主线程) */
@@ -511,6 +518,8 @@ public class SystemPart extends PlayerBasePart
 		}
 		
 		_funcQueue.addFunc(func);
+		
+		notifyExecutor();
 	}
 	
 	/** 添加自身待办事务(主线程) */
@@ -527,6 +536,22 @@ public class SystemPart extends PlayerBasePart
 		{
 			func.apply(me);
 		});
+		
+		notifyExecutor();
+	}
+	
+	private void notifyExecutor()
+	{
+		LogicExecutor executor;
+		if((executor=_executor)!=null)
+		{
+			int index=executor.getIndex();
+			
+			executor.addFunc(()->
+			{
+				callFuncs(index);
+			});
+		}
 	}
 	
 	/** 调用剩余方法(逻辑线程) */
@@ -585,6 +610,14 @@ public class SystemPart extends PlayerBasePart
 	/** 登录状态(主线程写) */
 	public void setLoginState(int value)
 	{
+		if(ShineSetting.openCheck)
+		{
+			ThreadControl.checkCurrentIsMainThread();
+		}
+		
+		if(_loginState==value)
+			return;
+		
 		_loginState=value;
 		
 		if(value!=PlayerLoginStateType.Logining && loginPhase!=PlayerLoginPhaseType.None)
@@ -634,12 +667,6 @@ public class SystemPart extends PlayerBasePart
 	{
 		int temp;
 		return (temp=_loginState)==PlayerLoginStateType.Online || temp==PlayerLoginStateType.Logining;
-	}
-	
-	/** 刷离线保留时间 */
-	public void refreshOfflineKeepTime()
-	{
-		offlineKeepTime=CommonSetting.playerOfflineKeepTime;
 	}
 	
 	/** 登录令牌(主线程) */

@@ -1,5 +1,7 @@
 package com.home.shine.support;
 
+import com.home.shine.support.collection.StringIntMap;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -195,8 +197,8 @@ public final class CronExpression implements Serializable, Cloneable
 	protected static final Integer ALL_SPEC=ALL_SPEC_INT;
 	protected static final Integer NO_SPEC=NO_SPEC_INT;
 	
-	protected static final Map<String,Integer> monthMap=new HashMap<String,Integer>(20);
-	protected static final Map<String,Integer> dayMap=new HashMap<String,Integer>(60);
+	protected static final StringIntMap monthMap=new StringIntMap(20);
+	protected static final StringIntMap dayMap=new StringIntMap(60);
 
 	static
 	{
@@ -1318,26 +1320,12 @@ public final class CronExpression implements Serializable, Cloneable
 	
 	protected int getMonthNumber(String s)
 	{
-		Integer integer=monthMap.get(s);
-		
-		if(integer==null)
-		{
-			return -1;
-		}
-		
-		return integer;
+		return monthMap.getOrDefault(s,-1);
 	}
 	
 	protected int getDayOfWeekNumber(String s)
 	{
-		Integer integer=dayMap.get(s);
-		
-		if(integer==null)
-		{
-			return -1;
-		}
-		
-		return integer;
+		return dayMap.getOrDefault(s,-1);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////

@@ -72,15 +72,13 @@ public class UnitAvatarData extends BaseData
 			if(!this.parts.isEmpty())
 			{
 				int partsKFreeValue=this.parts.getFreeValue();
-				long[] partsKTable=this.parts.getTable();
-				long partsKEntry;
-				for(int partsKI=partsKTable.length-1;partsKI>=0;--partsKI)
+				int[] partsKTable=this.parts.getTable();
+				for(int partsKI=partsKTable.length-2;partsKI>=0;partsKI-=2)
 				{
-					partsKEntry=partsKTable[partsKI];
-					int partsK=(int)partsKEntry;
-					if(partsK!=partsKFreeValue)
+					if(partsKTable[partsKI]!=partsKFreeValue)
 					{
-						int partsV=(int)(partsKEntry>>>32);
+						int partsK=partsKTable[partsKI];
+						int partsV=partsKTable[partsKI+1];
 						stream.writeInt(partsK);
 						
 						stream.writeInt(partsV);
@@ -140,15 +138,13 @@ public class UnitAvatarData extends BaseData
 			if(!this.parts.isEmpty())
 			{
 				int partsKFreeValue=this.parts.getFreeValue();
-				long[] partsKTable=this.parts.getTable();
-				long partsKEntry;
-				for(int partsKI=partsKTable.length-1;partsKI>=0;--partsKI)
+				int[] partsKTable=this.parts.getTable();
+				for(int partsKI=partsKTable.length-2;partsKI>=0;partsKI-=2)
 				{
-					partsKEntry=partsKTable[partsKI];
-					int partsK=(int)partsKEntry;
-					if(partsK!=partsKFreeValue)
+					if(partsKTable[partsKI]!=partsKFreeValue)
 					{
-						int partsV=(int)(partsKEntry>>>32);
+						int partsK=partsKTable[partsKI];
+						int partsV=partsKTable[partsKI+1];
 						stream.writeInt(partsK);
 						
 						stream.writeInt(partsV);
@@ -204,15 +200,13 @@ public class UnitAvatarData extends BaseData
 			if(!mData.parts.isEmpty())
 			{
 				int partsKFreeValue=mData.parts.getFreeValue();
-				long[] partsKTable=mData.parts.getTable();
-				long partsKEntry;
-				for(int partsKI=partsKTable.length-1;partsKI>=0;--partsKI)
+				int[] partsKTable=mData.parts.getTable();
+				for(int partsKI=partsKTable.length-2;partsKI>=0;partsKI-=2)
 				{
-					partsKEntry=partsKTable[partsKI];
-					int partsK=(int)partsKEntry;
-					if(partsK!=partsKFreeValue)
+					if(partsKTable[partsKI]!=partsKFreeValue)
 					{
-						int partsV=(int)(partsKEntry>>>32);
+						int partsK=partsKTable[partsKI];
+						int partsV=partsKTable[partsKI+1];
 						int partsW;
 						int partsU;
 						partsW=partsK;
@@ -250,15 +244,13 @@ public class UnitAvatarData extends BaseData
 			if(!this.parts.isEmpty())
 			{
 				int partsKFreeValue=this.parts.getFreeValue();
-				long[] partsKTable=this.parts.getTable();
-				long partsKEntry;
-				for(int partsKI=partsKTable.length-1;partsKI>=0;--partsKI)
+				int[] partsKTable=this.parts.getTable();
+				for(int partsKI=partsKTable.length-2;partsKI>=0;partsKI-=2)
 				{
-					partsKEntry=partsKTable[partsKI];
-					int partsK=(int)partsKEntry;
-					if(partsK!=partsKFreeValue)
+					if(partsKTable[partsKI]!=partsKFreeValue)
 					{
-						int partsV=(int)(partsKEntry>>>32);
+						int partsK=partsKTable[partsKI];
+						int partsV=partsKTable[partsKI+1];
 						int partsU=partsR.get(partsK);
 						if(partsV!=partsU)
 							return false;
@@ -307,15 +299,13 @@ public class UnitAvatarData extends BaseData
 			if(!this.parts.isEmpty())
 			{
 				int partsKFreeValue=this.parts.getFreeValue();
-				long[] partsKTable=this.parts.getTable();
-				long partsKEntry;
-				for(int partsKI=partsKTable.length-1;partsKI>=0;--partsKI)
+				int[] partsKTable=this.parts.getTable();
+				for(int partsKI=partsKTable.length-2;partsKI>=0;partsKI-=2)
 				{
-					partsKEntry=partsKTable[partsKI];
-					int partsK=(int)partsKEntry;
-					if(partsK!=partsKFreeValue)
+					if(partsKTable[partsKI]!=partsKFreeValue)
 					{
-						int partsV=(int)(partsKEntry>>>32);
+						int partsK=partsKTable[partsKI];
+						int partsV=partsKTable[partsKI+1];
 						writer.writeTabs();
 						writer.sb.append(partsK);
 						

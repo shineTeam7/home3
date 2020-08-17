@@ -12,6 +12,7 @@ import com.home.commonBase.data.login.ClientLoginData;
 import com.home.commonBase.data.login.ClientLoginExData;
 import com.home.commonBase.data.login.ClientVersionData;
 import com.home.commonBase.data.login.CreatePlayerData;
+import com.home.commonBase.data.login.GameInitServerData;
 import com.home.commonBase.data.login.PlayerBindPlatformAWData;
 import com.home.commonBase.data.login.PlayerCreatedWData;
 import com.home.commonBase.data.login.PlayerDeletedToCenterWData;
@@ -79,8 +80,10 @@ import com.home.commonGame.net.serverRequest.game.system.SendAreaWorkToGameServe
 import com.home.commonGame.net.serverRequest.game.system.SendPlayerWorkCompleteToGameServerRequest;
 import com.home.commonGame.net.serverRequest.game.system.SendPlayerWorkToGameServerRequest;
 import com.home.commonGame.net.serverRequest.login.login.ReUserLoginToLoginServerRequest;
+import com.home.commonGame.net.serverRequest.login.login.RefreshGameLoginLimitToLoginServerRequest;
 import com.home.commonGame.net.serverRequest.login.system.LimitAreaToLoginServerRequest;
 import com.home.commonGame.net.serverRequest.login.system.SendUserWorkToLoginServerRequest;
+import com.home.commonGame.net.serverRequest.scene.login.PlayerLeaveSceneToSceneServerRequest;
 import com.home.commonGame.part.player.Player;
 import com.home.commonGame.part.player.part.SystemPart;
 import com.home.commonGame.server.GameReceiveSocket;
@@ -102,6 +105,7 @@ import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.support.collection.IntList;
 import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.IntSet;
+import com.home.shine.support.collection.LongLinkedObjectMap;
 import com.home.shine.support.collection.LongObjectMap;
 import com.home.shine.support.collection.LongSet;
 import com.home.shine.support.collection.SList;
@@ -109,7 +113,6 @@ import com.home.shine.support.collection.SMap;
 import com.home.shine.support.collection.SSet;
 import com.home.shine.support.func.ObjectCall;
 import com.home.shine.support.pool.ObjectPool;
-import com.home.shine.table.DBConnect;
 import com.home.shine.thread.PoolThread;
 import com.home.shine.utils.MathUtils;
 import com.home.shine.utils.StringUtils;
@@ -127,7 +130,7 @@ public class GameMainControl
 	//pool
 	/** player对象池 */
 	private ObjectPool<Player> _playerPool;
-
+	
 	/** 客户端版本 */
 	private IntObjectMap<ClientVersionData> _clientVersion;
 	
@@ -143,8 +146,11 @@ public class GameMainControl
 	private IntObjectMap<UserLoginRecordData> _userLoginDicByToken=new IntObjectMap<>(UserLoginRecordData[]::new);
 	/** 登录中字典(socketID为key) */
 	private IntObjectMap<UserLoginRecordData> _userLoginDicBySocketID=new IntObjectMap<>(UserLoginRecordData[]::new);
+	/** 用户登录等待字典(key:userID) */
+	private LongLinkedObjectMap<UserLoginRecordData> _userLoginWaitDic=new LongLinkedObjectMap<>();
 	
-
+	///** 令牌字典(key:userID) */
+	//private LongObjectMap<UserLoginRecordData> _userLoginDic=new LongObjectMap<>(UserLoginRecordData[]::new);
 	
 	//--exist--//
 	/** 存在角色字典(playerID为key) */
@@ -163,6 +169,11 @@ public class GameMainControl
 	//private SMap<String,Player> _playersByName=new SMap<>();
 	/** 在线角色IP字典 */
 	private SMap<String,SSet<Player>> _playersByIP=new SMap<>();
+	
+	/** 各线程人数变化 */
+	private boolean _playerOnlineNumForExecutorDirty=true;
+	/** 上次最少人的线程 */
+	private int _lastLeastExecutor=0;
 	/** 在线角色数 */
 	private int _playerOnlineNum=0;
 	/** 上次统计在线时间 */
@@ -172,6 +183,11 @@ public class GameMainControl
 	/** 登录限制组 */
 	private IntSet _loginLimitDic=new IntSet();
 	
+	/** 场景服字典(key:serverID,value:人数) */
+	private IntIntMap _sceneServerPlayerNumDic=new IntIntMap();
+	/** 人最少的场景服id */
+	private int _leastSceneServerID=-1;
+	
 	/** 辅助服列表 */
 	private IntList _assistGameList;
 	/** 当前可用辅助服 */
@@ -179,9 +195,7 @@ public class GameMainControl
 	
 	//--offline--//
 	/** 离线角色字典(key:playerID) */
-	private LongObjectMap<Player> _offlinePlayers=new LongObjectMap<>(Player[]::new);
-	
-	
+	private LongLinkedObjectMap<Player> _offlinePlayers=new LongLinkedObjectMap<>();
 	
 	//--gatAbs--//
 	/** 获取角色人物字典(key:playerID) */
@@ -203,7 +217,13 @@ public class GameMainControl
 	/** 流程日志 */
 	private LogInfo _flowLog=new LogInfo();
 	
-	
+	//foreach
+	/** 玩家退出等待时间组 */
+	private LongLinkedObjectMap<Player> _playerExitWaitTimeDic=new LongLinkedObjectMap<>();
+	/** 玩家loginEach等待时间组 */
+	private LongLinkedObjectMap<Player> _playerLoginEachTempDataDic=new LongLinkedObjectMap<>();
+	/** 玩家logining等待时间组 */
+	private LongLinkedObjectMap<Player> _playerLoginingDic=new LongLinkedObjectMap<>();
 	
 	//temp
 	/** 是否在清理中 */
@@ -253,31 +273,36 @@ public class GameMainControl
 	{
 		_areaDatas=new IntObjectMap<>(AreaServerData[]::new);
 		
-		GameC.server.getInfo().areaIDList.forEach(v->
+		if(!_isAssist)
 		{
-			AreaServerData sData=new AreaServerData();
-			sData.areaID=v;
-			sData.name=AreaInfoConfig.getAreaName(v);
+			GameC.server.getInfo().areaIDList.forEach(v->
+			{
+				AreaServerData sData=new AreaServerData();
+				sData.areaID=v;
+				sData.name=AreaInfoConfig.getAreaName(v);
+				
+				countRegistLimit(sData);
+				_areaDatas.put(sData.areaID,sData);
+			});
 			
-			countRegistLimit(sData);
-			_areaDatas.put(sData.areaID,sData);
-		});
-		
-		//加上当前区服
-		if(!_areaDatas.contains(GameC.app.id))
-		{
-			AreaServerData sData=new AreaServerData();
-			sData.areaID=GameC.app.id;
-			countRegistLimit(sData);
-			_areaDatas.put(sData.areaID,sData);
+			//加上当前区服
+			if(!_areaDatas.contains(GameC.app.id))
+			{
+				AreaServerData sData=new AreaServerData();
+				sData.areaID=GameC.app.id;
+				countRegistLimit(sData);
+				_areaDatas.put(sData.areaID,sData);
+			}
 		}
-		
 		
 		//TODO:后续需要做更新
 		GameC.server.getGameSimpleInfoDic().forEach((k,v)->
 		{
-			//先放自己
-			_areaDic.put(k,k);
+			if(!_isAssist)
+			{
+				//先放自己
+				_areaDic.put(k,k);
+			}
 			
 			IntList areaIDList=v.areaIDList;
 			
@@ -295,7 +320,7 @@ public class GameMainControl
 	{
 		ThreadControl.getMainTimeDriver().setInterval(this::onSecond,1000);
 		ThreadControl.getMainTimeDriver().setInterval(this::onPlayerOfflineCheck,CommonSetting.playerOfflineCheckDelay * 1000);
-		ThreadControl.getMainTimeDriver().setInterval(this::onlinePlayerNumCheck,10000);
+		ThreadControl.getMainTimeDriver().setInterval(this::onlinePlayerNumCheck,5000);
 	}
 	
 	/** 析构 */
@@ -327,6 +352,7 @@ public class GameMainControl
 		
 		GameC.global.onSecond(delay);
 		
+		refreshLeastSceneServerID();
 		onlinePlayerSecond();
 		userLoginSecond();
 	}
@@ -348,70 +374,187 @@ public class GameMainControl
 	/** 在线角色每秒 */
 	private void onlinePlayerSecond()
 	{
-		Player[] values;
-		Player v;
-		
-		for(int i=(values=_players.getValues()).length-1;i>=0;--i)
+		if(!_playerExitWaitTimeDic.isEmpty())
 		{
-			if((v=values[i])!=null)
+			LongLinkedObjectMap.Node<Player> node=_playerExitWaitTimeDic.getHead();
+			LongLinkedObjectMap.Node<Player> next;
+			long now=Ctrl.getFixedSecondTimer();
+			
+			while(node!=null)
 			{
-				try
+				next=node.next;
+				
+				Player v=node.value;
+				
+				if(v.system.exitWaitTime<now)
 				{
-					if(v.system.exitWaitTime>0)
-					{
-						if((--v.system.exitWaitTime)==0)
-						{
-							if(v.system.isStateExiting())
-							{
-								if(ShineSetting.needDebugLog)
-									v.debugLog("退出阶段超时 by exitWaitTime");
-								
-								playerExitNext(v);
-							}
-							else
-							{
-								v.warnLog("exitWaitTime超时时,状态不对",v.system.getLoginState());
-							}
-						}
-					}
+					_playerExitWaitTimeDic.remove(node.key);
 					
-					PlayerLoginEachGameTempData tData;
-					if((tData=v.system.loginEachTempData)!=null)
+					if(v.system.isStateExiting())
 					{
-						if((--tData.waitTime)==0)
+						if(ShineSetting.needDebugLog)
+							v.debugLog("退出阶段超时 by exitWaitTime");
+						
+						try
 						{
-							if(v.system.isStateLogining())
+							playerExitThird(v);
+						}
+						catch(Exception e)
+						{
+							Ctrl.errorLog(e);
+						}
+					}
+					else
+					{
+						v.warnLog("exitWaitTime超时时,状态不对",v.system.getLoginState());
+					}
+				}
+				else
+				{
+					break;
+				}
+				
+				node=next;
+			}
+		}
+		
+		if(!_playerLoginEachTempDataDic.isEmpty())
+		{
+			LongLinkedObjectMap.Node<Player> node=_playerLoginEachTempDataDic.getHead();
+			LongLinkedObjectMap.Node<Player> next;
+			long now=Ctrl.getFixedSecondTimer();
+			
+			PlayerLoginEachGameTempData tData;
+			
+			while(node!=null)
+			{
+				next=node.next;
+				
+				Player v=node.value;
+				long exitWaitTime=v.system.exitWaitTime;
+				
+				if((tData=v.system.loginEachTempData)!=null)
+				{
+					if(tData.waitTime<now)
+					{
+						if(v.system.isStateLogining())
+						{
+							onRePlayerLoginEachGameTimeOut(v);
+						}
+						else
+						{
+							v.system.loginEachTempData=null;
+							_playerLoginEachTempDataDic.remove(node.key);
+							
+							v.warnLog("loginGameWaitTime超时时,状态不对",v.system.getLoginState());
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				else
+				{
+					v.warnLog("loginGameWaitTime时,loginEachTempData不存在");
+				}
+				
+				if(exitWaitTime>0)
+				{
+					if(exitWaitTime<=now)
+					{
+						_playerExitWaitTimeDic.remove(node.key);
+						
+						if(v.system.isStateExiting())
+						{
+							if(ShineSetting.needDebugLog)
+								v.debugLog("退出阶段超时 by exitWaitTime");
+							
+							try
 							{
-								onRePlayerLoginEachGameTimeOut(v);
+								playerExitThird(v);
 							}
-							else
+							catch(Exception e)
 							{
-								v.warnLog("loginGameWaitTime超时时,状态不对",v.system.getLoginState());
-								v.system.loginEachTempData=null;
+								Ctrl.errorLog(e);
 							}
+						}
+						else
+						{
+							v.warnLog("exitWaitTime超时时,状态不对",v.system.getLoginState());
 						}
 					}
 				}
-				catch(Exception e)
+				else
 				{
-					v.errorLog(e);
+					v.warnLog("exitWaitTime组中有time为0的");
 				}
+				
+				node=next;
+			}
+		}
+		
+		if(!_playerLoginingDic.isEmpty())
+		{
+			LongLinkedObjectMap.Node<Player> node=_playerLoginingDic.getHead();
+			LongLinkedObjectMap.Node<Player> next;
+			long now=Ctrl.getFixedSecondTimer();
+			
+			while(node!=null)
+			{
+				next=node.next;
+				
+				Player v=node.value;
+				
+				if(v.system.loginingTime<now)
+				{
+					_playerLoginingDic.remove(node.key);
+					
+					Player player=node.value;
+					
+					player.warnLog("出现一次严重的登录超时");
+					
+					//先归到在线状态,然后直接退出
+					player.system.setLoginState(PlayerLoginStateType.Online);
+					playerExit(player,player.system.getNextExitCode());
+				}
+				else
+				{
+					break;
+				}
+				
+				node=next;
 			}
 		}
 	}
 	
 	private void userLoginSecond()
 	{
-		_userLoginDic.forEachValueS(v->
+		if(!_userLoginWaitDic.isEmpty())
 		{
-			if(v.loginTime>0)
+			LongLinkedObjectMap.Node<UserLoginRecordData> node=_userLoginWaitDic.getHead();
+			LongLinkedObjectMap.Node<UserLoginRecordData> next;
+			long now=Ctrl.getFixedSecondTimer();
+			
+			while(node!=null)
 			{
-				if((--v.loginTime)<=0)
+				next=node.next;
+				UserLoginRecordData v=node.value;
+				
+				if(v.loginTime<now)
 				{
+					_userLoginWaitDic.remove(node.key);
+					//移除
 					removeUserLoginData(v);
 				}
+				else
+				{
+					break;
+				}
+				
+				node=next;
 			}
-		});
+		}
 	}
 	
 	
@@ -467,7 +610,7 @@ public class GameMainControl
 	
 	private void countRegistLimit(AreaServerData data)
 	{
-		data.isLimitRegist=Global.areaDesignRegistNum>0 && GameC.global.system.getAreaRegistNum(data.areaID)>=Global.areaDesignRegistNum;
+		data.isLimitRegist=GameC.global.system.getAreaRegistNum(data.areaID)>=Global.areaDesignRegistNum;
 		
 		if(!data.isLimitRegist)
 		{
@@ -487,7 +630,7 @@ public class GameMainControl
 	public void reloadConfig()
 	{
 		Ctrl.log("reloadGameConfig");
-
+		
 		BaseC.config.reload(this::onReloadConfig,()->
 		{
 			Ctrl.log("reloadGameConfigComplete");
@@ -522,24 +665,28 @@ public class GameMainControl
 	/** 角色离线检查 */
 	private void onPlayerOfflineCheck(int delay)
 	{
-		Player[] values;
-		Player v;
-		
-		for(int i=(values=_offlinePlayers.getValues()).length-1;i>=0;--i)
+		if(!_offlinePlayers.isEmpty())
 		{
-			if((v=values[i])!=null)
+			LongLinkedObjectMap.Node<Player> node=_offlinePlayers.getHead();
+			LongLinkedObjectMap.Node<Player> next;
+			long now=Ctrl.getFixedSecondTimer();
+			
+			while(node!=null)
 			{
-				if(v.system.offlineKeepTime>0)
+				next=node.next;
+				
+				Player v=node.value;
+				
+				if(v.system.offlineKeepTime<now)
 				{
-					if((v.system.offlineKeepTime-=CommonSetting.playerOfflineCheckDelay)<=0)
-					{
-						v.system.offlineKeepTime=0;
-						
-						removeOfflinePlayer(v);
-						
-						++i;
-					}
+					removeOfflinePlayer(v);
 				}
+				else
+				{
+					break;
+				}
+				
+				node=next;
 			}
 		}
 	}
@@ -553,20 +700,104 @@ public class GameMainControl
 			
 			SendPlayerOnlineNumToCenterServerRequest.create(_playerOnlineNum).send();
 			
-			//看看是否变化
-			boolean isLimit=_lastPlayerOnlineNum>=Global.gameMaxBearNum;
+			////看看是否变化
+			//boolean isLimit=_lastPlayerOnlineNum>=Global.gameMaxBearNum;
+			//
+			//if(isLimit!=_lastMaxBearLimit)
+			//{
+			//	_lastMaxBearLimit=isLimit;
+			//
+			//	_canRegisterAreaSet.forEachA(v -> {
+			//		GameC.server.radioLogins(LimitAreaToLoginServerRequest.create(v,_lastMaxBearLimit));
+			//	});
+			//}
 			
-			if(isLimit!=_lastMaxBearLimit)
+			//超过设计人数
+			boolean bb=isCurrentGameFull();
+			
+			if(bb!=_isLoginLimit)
 			{
-				_lastMaxBearLimit=isLimit;
+				_isLoginLimit=bb;
 				
-				_canRegisterAreaSet.forEachA(v -> {
-					GameC.server.radioLogins(LimitAreaToLoginServerRequest.create(v,_lastMaxBearLimit));
-				});
+				GameC.server.radioLogins(RefreshGameLoginLimitToLoginServerRequest.create(bb));
+				
+				if(_isAssist)
+				{
+					GameC.server.radioGames(RefreshGameLoginLimitToGameServerRequest.create(bb));
+				}
 			}
 		}
 	}
 	
+	/** 设置线程在线人数 */
+	public void setExecutorPlayerOnlineNumDirty()
+	{
+		_playerOnlineNumForExecutorDirty=true;
+	}
+	
+	/** 获取人数最少的执行器号(主线程) */
+	public int getLeastExecutor()
+	{
+		if(_playerOnlineNumForExecutorDirty)
+		{
+			_playerOnlineNumForExecutorDirty=false;
+			
+			int n=-1;
+			int index=-1;
+			
+			for(int i=0,len=_executors.length;i<len;i++)
+			{
+				int playerNum=_executors[i].getPlayerNum();
+				
+				if(index==-1 || playerNum<n)
+				{
+					index=i;
+					n=playerNum;
+				}
+			}
+			
+			_lastLeastExecutor=index;
+		}
+		
+		return _lastLeastExecutor;
+	}
+	
+	/** 设置场景服人数(主线程) */
+	public void setSceneServerPlayerNum(int id,int playerNum)
+	{
+		if(playerNum<0)
+			_sceneServerPlayerNumDic.remove(id);
+		else
+			_sceneServerPlayerNumDic.put(id,playerNum);
+		
+		_leastSceneServerID=-1;
+	}
+	
+	/** 刷新人数最少的场景服(主线程) */
+	private void refreshLeastSceneServerID()
+	{
+		if(_leastSceneServerID==-1 && !_sceneServerPlayerNumDic.isEmpty())
+		{
+			int n=0;
+			int rID=-1;
+			
+			for(IntIntMap.Entry entry : _sceneServerPlayerNumDic.entrySet())
+			{
+				if(rID==-1 || n<entry.value)
+				{
+					rID=entry.key;
+					n=entry.value;
+				}
+			}
+			
+			_leastSceneServerID=rID;
+		}
+	}
+	/** 获取人最少的场景服ID(任意逻辑线程) */
+	public int getLeastSceneServerID()
+	{
+		return _leastSceneServerID;
+	}
 	
 	//player字典
 	
@@ -642,18 +873,7 @@ public class GameMainControl
 	
 	protected void onlineNumChanged()
 	{
-		boolean bb=_playerOnlineNum>=Global.gameDesignBearNum;
-		
-		if(bb!=_isLoginLimit)
-		{
-			_isLoginLimit=bb;
-			
-			//辅助服
-			if(_isAssist)
-			{
-				GameC.server.radioGames(RefreshGameLoginLimitToGameServerRequest.create(bb));
-			}
-		}
+		//
 	}
 	
 	/** 是否登录限制 */
@@ -703,7 +923,21 @@ public class GameMainControl
 	/** 当前游戏服是否承载已满 */
 	public boolean isCurrentGameFull()
 	{
+		if(CommonSetting.isTestPlayerFullTransToOtherGame)
+		{
+			if(!_isAssist)
+			{
+				return true;
+			}
+		}
+		
 		return _playerOnlineNum>=Global.gameDesignBearNum;
+	}
+	
+	/** 当前游戏服是否承载已达上限 */
+	public boolean isCurrentGameMax()
+	{
+		return _playerOnlineNum>=Global.gameMaxBearNum;
 	}
 	
 	/** 添加到离线角色 */
@@ -717,7 +951,7 @@ public class GameMainControl
 			}
 		}
 		
-		player.system.refreshOfflineKeepTime();
+		player.system.offlineKeepTime=Ctrl.getFixedSecondTimer()+CommonSetting.playerOfflineKeepTime;
 		
 		_existPlayers.put(player.role.playerID,player);
 		_offlinePlayers.put(player.role.playerID,player);
@@ -739,7 +973,6 @@ public class GameMainControl
 		}
 		
 		player.system.offlineKeepTime=0;
-		
 		//移除
 		_offlinePlayers.remove(player.role.playerID);
 		
@@ -815,11 +1048,11 @@ public class GameMainControl
 	{
 		ThreadControl.checkCurrentIsMainThread();
 		
-		Player player=_offlinePlayers.get(playerID);
+		Player player=_offlinePlayers.getAndMoveToTail(playerID);
 		
 		if(player!=null)
 		{
-			player.system.refreshOfflineKeepTime();
+			player.system.offlineKeepTime=Ctrl.getFixedSecondTimer()+CommonSetting.playerOfflineKeepTime;
 		}
 		
 		return player;
@@ -855,6 +1088,21 @@ public class GameMainControl
 	public boolean isAreaAvailable(int areaID)
 	{
 		return _areaDic.get(areaID)>0;
+	}
+	
+	/** 获取自身对应的场景服ID(-1为无绑定) */
+	public int getSelfSceneServerID()
+	{
+		if(!CommonSetting.useSceneServer)
+			return -1;
+		
+		if(CommonSetting.isAreaSplit())
+		{
+			//分服模式，采用相同sceneID
+			return GameC.app.id;
+		}
+		
+		return -1;
 	}
 	
 	/** 通过逻辑ID获取当前所在源区服 */
@@ -1048,18 +1296,6 @@ public class GameMainControl
 	
 	//login
 	
-	/** 添加用户登录数据 */
-	private void addUserLoginData(UserLoginRecordData data)
-	{
-		_userLoginDic.put(data.exData.userID,data);
-		_userLoginDicByToken.put(data.token,data);
-		
-		if(data.socket!=null)
-		{
-			_userLoginDicBySocketID.put(data.socket.id,data);
-		}
-	}
-	
 	/** 用户预备登录areaID:原区ID(主线程) */
 	public void preUserLogin(ClientLoginExData eData,int loginID)
 	{
@@ -1096,7 +1332,7 @@ public class GameMainControl
 			data.data=eData.data;
 		}
 		
-		data.refreshLoginTime();
+		userLoginStartWait(data);
 		
 		ClientLoginData lData=data.data;
 		
@@ -1107,6 +1343,32 @@ public class GameMainControl
 		
 		//回登录
 		ReUserLoginToLoginServerRequest.create(eData.userID,data.token).send(loginID);
+	}
+	
+	/** 用户登录数据开启倒计时移除 */
+	private void userLoginStartWait(UserLoginRecordData data)
+	{
+		data.loginTime=Ctrl.getFixedSecondTimer()+CommonSetting.playerLoginTimeMax;
+		_userLoginWaitDic.putOrMoveToTail(data.exData.userID,data);
+	}
+	
+	/** 用户登录数据停止倒计时移除 */
+	private void userLoginStopWait(UserLoginRecordData data)
+	{
+		data.loginOver();
+		_userLoginWaitDic.remove(data.exData.userID);
+	}
+	
+	/** 添加用户登录数据 */
+	private void addUserLoginData(UserLoginRecordData data)
+	{
+		_userLoginDic.put(data.exData.userID,data);
+		_userLoginDicByToken.put(data.token,data);
+		
+		if(data.socket!=null)
+		{
+			_userLoginDicBySocketID.put(data.socket.id,data);
+		}
 	}
 	
 	/** 移除用户登录数据 */
@@ -1134,7 +1396,7 @@ public class GameMainControl
 		}
 		
 		Ctrl.debugLog("game 客户端登陆",token);
-
+		
 		if(CommonSetting.needClientMessageVersionCheck)
 		{
 			//校验c数据版本
@@ -1202,7 +1464,7 @@ public class GameMainControl
 		//添加
 		_userLoginDicBySocketID.put(socket.id,data);
 		
-		data.refreshLoginTime();
+		userLoginStartWait(data);
 		
 		Ctrl.log("用户登录:",data.data.uid,"原区:",data.exData.areaID);
 		
@@ -1650,7 +1912,7 @@ public class GameMainControl
 		//loginData
 		table.loginDataT=player.role.createLoginData();
 		table.saveDate=DateData.getNow();
-
+		
 		if(CommonSetting.offlineWorkUseTable)
 		{
 			table.offlineWorkDataListT=new SList<>(PlayerWorkData[]::new);
@@ -1683,7 +1945,7 @@ public class GameMainControl
 		addUserWork(wData);
 		
 		//超过承载数
-		if(Global.areaDesignRegistNum>0 && GameC.global.system.getAreaRegistNum(createAreaID)>=Global.areaDesignRegistNum)
+		if(GameC.global.system.getAreaRegistNum(createAreaID)>=Global.areaDesignRegistNum)
 		{
 			AreaServerData areaServerData;
 			if(!(areaServerData=_areaDatas.get(createAreaID)).isLimitRegist)
@@ -1733,6 +1995,14 @@ public class GameMainControl
 		if(isAssist())
 		{
 			Ctrl.errorLog("辅助服不可登录");
+			return;
+		}
+		
+		//上限
+		if(isCurrentGameMax())
+		{
+			Ctrl.warnLog("服务器人数已经达到上限");
+			socket.sendInfoCode(InfoCodeType.LoginGameFailed_gameIsFull);
 			return;
 		}
 		
@@ -1888,6 +2158,8 @@ public class GameMainControl
 			sPart.setLoginState(PlayerLoginStateType.Logining);
 			sPart.setLoginToken(token);
 			
+			addPlayerToLoginingDic(player);
+			
 			//暂时先关
 			sPart.setSocketReady(false);
 			sPart.socket=socket;
@@ -1900,6 +2172,13 @@ public class GameMainControl
 			
 			playerLoginEachGame(player);
 		}
+	}
+	
+	public void addPlayerToLoginingDic(Player player)
+	{
+		//30s
+		player.system.loginingTime=Ctrl.getFixedSecondTimer()+ShineSetting.affairDefaultExecuteTime*3;
+		_playerLoginingDic.putOrMoveToTail(player.role.playerID,player);
 	}
 	
 	/** 角色登陆中，从各个逻辑服拿数据阶段 */
@@ -1919,7 +2198,7 @@ public class GameMainControl
 		}
 		
 		PlayerLoginEachGameTempData tData=new PlayerLoginEachGameTempData();
-		tData.waitTime=ShineSetting.affairDefaultExecuteTime;
+		tData.waitTime=Ctrl.getFixedSecondTimer()+ShineSetting.affairDefaultExecuteTime;
 		tData.result=BaseC.factory.createRePlayerLoginFromEachGameData();
 		tData.result.initDefault();
 		
@@ -1928,6 +2207,7 @@ public class GameMainControl
 		long playerID=player.role.playerID;
 		
 		player.system.loginEachTempData=tData;
+		_playerLoginEachTempDataDic.putOrMoveToTail(playerID,player);
 		
 		//有需要
 		if(!tData.dic.isEmpty())
@@ -2098,6 +2378,7 @@ public class GameMainControl
 		{
 			//清空
 			player.system.loginEachTempData=null;
+			_playerLoginEachTempDataDic.remove(playerID);
 			//结束
 			onRePlayerLoginEachGame(player,tData.result);
 		}
@@ -2112,6 +2393,8 @@ public class GameMainControl
 		//直接下一步
 		PlayerLoginEachGameTempData tData=player.system.loginEachTempData;
 		player.system.loginEachTempData=null;
+		_playerLoginEachTempDataDic.remove(player.role.playerID);
+		
 		tData.result.timeOutGames=tData.dic.getKeySet();
 		onRePlayerLoginEachGame(player,tData.result);
 	}
@@ -2129,18 +2412,14 @@ public class GameMainControl
 		data=(RePlayerLoginFromEachGameData)data.clone();
 		
 		player.system.loginEachTempData=null;
+		_playerLoginEachTempDataDic.remove(player.role.playerID);
 		
 		//登录数据
 		UserLoginRecordData loginData=_userLoginDic.get(player.role.userID);
 		
 		if(loginData!=null)
 		{
-			//登录完毕
-			loginData.loginOver();
-		}
-		else
-		{
-			//Ctrl.warnLog("收到中心服返回角色登录时,找不到登录数据");
+			userLoginStopWait(loginData);
 		}
 		
 		//需要退出了
@@ -2183,9 +2462,17 @@ public class GameMainControl
 		
 		int targetGameID=GameC.app.id;
 		
-		if(CommonSetting.needPlayerFullTransToOtherGame && isCurrentGameFull())
+		if(CommonSetting.areaDivideType!=GameAreaDivideType.AutoEnterGame && CommonSetting.needPlayerFullTransToOtherGame && isCurrentGameFull())
 		{
-			targetGameID=_nowAssistGame!=-1 ? _nowAssistGame : GameC.app.id;
+			if(_nowAssistGame!=-1)
+			{
+				targetGameID=_nowAssistGame;
+			}
+			else
+			{
+				targetGameID=GameC.app.id;
+				Ctrl.warnLog("game服人满时，找不到可用assist服 gameID:",GameC.app.id);
+			}
 		}
 		
 		//本服的
@@ -2241,6 +2528,9 @@ public class GameMainControl
 			//socket绑定
 			sPart.socket.setPlayer(player);
 			player.system.setSwitchLogin(true);
+			
+			player.system.loginingTime=0;
+			_playerLoginingDic.remove(player.role.playerID);
 			
 			//切换到目标游戏服
 			GameC.gameSwitch.playerSwitchToGame(player,targetGameID);
@@ -2307,7 +2597,7 @@ public class GameMainControl
 		if(loginData!=null)
 		{
 			//登录完毕
-			loginData.loginOver();
+			userLoginStopWait(loginData);
 		}
 		else
 		{
@@ -2355,14 +2645,17 @@ public class GameMainControl
 		//登陆过程直接跨服
 		if(player.system.isStateSwitching())
 			return false;
-
+		
 		//不是登录中
 		if(!player.system.isStateLogining())
 		{
 			Ctrl.warnLog("标记在线时，不是登录状态",player.system.getLoginState());
 			return false;
 		}
-
+		
+		player.system.loginingTime=0;
+		_playerLoginingDic.remove(player.role.playerID);
+		
 		//在线
 		player.system.setLoginState(PlayerLoginStateType.Online);
 		return true;
@@ -2390,7 +2683,7 @@ public class GameMainControl
 			player.system.socket.unbindPlayer();
 			player.system.setSocketReady(false);
 			
-			playerExitThird(player);
+			playerExitLast(player);
 			return true;
 		}
 		
@@ -2411,7 +2704,7 @@ public class GameMainControl
 			playerExit(player,player.system.getNextExitCode());
 			return true;
 		}
-
+		
 		return false;
 	}
 	
@@ -2467,7 +2760,7 @@ public class GameMainControl
 					data.errorLog("不该找不到在线角色");
 				}
 			}
-				break;
+			break;
 			case PlayerSwitchStateType.SwitchCurrent:
 			{
 				Player lastPlayer;
@@ -2482,7 +2775,7 @@ public class GameMainControl
 					data.errorLog("不该找不到在线角色");
 				}
 			}
-				break;
+			break;
 			case PlayerSwitchStateType.SendToTarget:
 			case PlayerSwitchStateType.WaitClient:
 			{
@@ -2512,7 +2805,7 @@ public class GameMainControl
 					PlayerCallSwitchBackToGameServerRequest.create(data.keyData.playerID).send(data.targetGameID);
 				}
 			}
-				break;
+			break;
 			case PlayerSwitchStateType.SourceWait:
 			case PlayerSwitchStateType.SourceReady:
 			{
@@ -2542,7 +2835,7 @@ public class GameMainControl
 					PlayerCallSwitchBackToGameServerRequest.create(data.keyData.playerID).send(data.nowGameID);
 				}
 			}
-				break;
+			break;
 		}
 	}
 	
@@ -2572,6 +2865,7 @@ public class GameMainControl
 		
 		//倒计时清0
 		player.system.exitWaitTime=0;
+		_playerExitWaitTimeDic.remove(playerID);
 		
 		if(ShineSetting.needDebugLog)
 			player.debugLog("onRePlayerPreExit收到预备退出调用Next");
@@ -2661,7 +2955,8 @@ public class GameMainControl
 		}
 		else
 		{
-			player.system.exitWaitTime=ShineSetting.affairDefaultExecuteTime;
+			player.system.exitWaitTime=Ctrl.getFixedSecondTimer()+ShineSetting.affairDefaultExecuteTime;
+			_playerExitWaitTimeDic.putOrMoveToTail(player.role.playerID,player);
 			
 			PlayerPreExitToGameServerRequest.create(player.role.playerID).send(player.role.sourceGameID);
 		}
@@ -2718,8 +3013,27 @@ public class GameMainControl
 		//不做处理
 	}
 	
-	/** 角色退出第二部(主线程) */
+	/** 角色退出第二步(主线程) */
 	private void playerExitNext(Player player)
+	{
+		if(CommonSetting.useSceneServer && player.scene.isInScene())
+		{
+			player.scene.doLeaveNowScene(true,()->
+			{
+				player.addMainFunc(()->
+				{
+					playerExitThird(player);
+				});
+			});
+		}
+		else
+		{
+			playerExitThird(player);
+		}
+	}
+	
+	/** 角色退出第3步(主线程) */
+	public void playerExitThird(Player player)
 	{
 		SystemPart sPart=player.system;
 		
@@ -2761,13 +3075,13 @@ public class GameMainControl
 			
 			player.addMainFunc(()->
 			{
-				playerExitThird(player);
+				playerExitLast(player);
 			});
 		});
 	}
 	
-	/** 角色退出第三步(主线程) */
-	private void playerExitThird(Player player)
+	/** 角色退出最后一步(第4步)(主线程) */
+	private void playerExitLast(Player player)
 	{
 		if(ShineSetting.needDebugLog)
 			player.debugLog("playerExitThird_1");
@@ -2791,6 +3105,14 @@ public class GameMainControl
 		}
 		
 		GameC.gameSwitch.removePlayerSwitchToByPlayerID(player.role.playerID);
+		
+		//登录数据
+		UserLoginRecordData loginData=_userLoginDic.get(player.role.userID);
+		
+		if(loginData!=null)
+		{
+			userLoginStartWait(loginData);
+		}
 		
 		//先标记退出
 		player.system.setLoginState(PlayerLoginStateType.Offline);
@@ -2832,7 +3154,7 @@ public class GameMainControl
 	public void clientSocketClosed(BaseSocket socket)
 	{
 		Ctrl.log("客户端连接断开",socket.id);
-
+		
 		UserLoginRecordData data=_userLoginDicBySocketID.get(socket.id);
 		
 		if(data!=null)
@@ -3153,7 +3475,7 @@ public class GameMainControl
 			
 			wData2.workData=wData;
 			wData2.result=result;
-
+			
 			addPlayerOfflineWork(wData.sendPlayerID,wData2);
 			return;
 		}
@@ -3322,7 +3644,7 @@ public class GameMainControl
 					//}
 					//else
 					//{
-						sData.addWorkComplete(data);
+					sData.addWorkComplete(data);
 					//}
 				}
 				else
@@ -3829,24 +4151,29 @@ public class GameMainControl
 			}
 		}
 	}
-
+	
 	/** 客户端版本数据(验证用) */
 	public ClientVersionData getClientVersion(int type)
 	{
 		return _clientVersion.get(type);
 	}
-
+	
 	public void setClientVersion(IntObjectMap<ClientVersionData> versionDic)
 	{
 		_clientVersion = versionDic;
 	}
 	
-	/** 设置信息后 */
-	public void afterSetInfos()
+	/** 取到初始化数据 */
+	public void setInitData(GameInitServerData initData)
 	{
+		CommonSetting.isOfficial=initData.isOfficial;
+		
+		setClientVersion(initData.clientVersion);
+		GameC.server.setInfos(initData);
+		
 		_isAssist=GameC.server.getInfo().isAssist;
 		
-		_assistGameList=new IntList();
+		IntList assistGameList=new IntList();
 		
 		IntObjectMap<GameServerSimpleInfoData> dic=GameC.server.getGameSimpleInfoDic();
 		
@@ -3854,13 +4181,21 @@ public class GameMainControl
 		{
 			if(dic.get(k).isAssist)
 			{
-				_assistGameList.add(k);
+				assistGameList.add(k);
 			}
 		}
 		
+		_assistGameList=assistGameList;
+		
 		findAvailableAssistGame();
 	}
-
+	
+	/** 热更服务器配置后 */
+	public void onReloadServerConfig()
+	{
+		GameC.server.connectOthers();
+	}
+	
 	/** 角色绑定到平台 */
 	public void onPlayerBindPlatform(long playerID,String uid,String platform)
 	{

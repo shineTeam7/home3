@@ -19,31 +19,8 @@ public class GameRequestMaker:DataMaker
 		list[GameRequestType.ApplyChangeRoleName-offSet]=createApplyChangeRoleNameRequest;
 		list[GameRequestType.ApplyEnterScene-offSet]=createApplyEnterSceneRequest;
 		list[GameRequestType.ApplyLeaveScene-offSet]=createApplyLeaveSceneRequest;
-		list[GameRequestType.CBuildingCancelLevelUp-offSet]=createCBuildingCancelLevelUpRequest;
-		list[GameRequestType.CBuildingLevelUp-offSet]=createCBuildingLevelUpRequest;
-		list[GameRequestType.CUnitAddBullet-offSet]=createCUnitAddBulletRequest;
-		list[GameRequestType.CUnitAttack-offSet]=createCUnitAttackRequest;
-		list[GameRequestType.CUnitBulletHit-offSet]=createCUnitBulletHitRequest;
-		list[GameRequestType.CUnitChat-offSet]=createCUnitChatRequest;
-		list[GameRequestType.CUnitKillSelf-offSet]=createCUnitKillSelfRequest;
-		list[GameRequestType.CUnitMoveDir-offSet]=createCUnitMoveDirRequest;
-		list[GameRequestType.CUnitMovePosList-offSet]=createCUnitMovePosListRequest;
-		list[GameRequestType.CUnitMovePos-offSet]=createCUnitMovePosRequest;
-		list[GameRequestType.CUnitOperate-offSet]=createCUnitOperateRequest;
-		list[GameRequestType.CUnitPickUpItem-offSet]=createCUnitPickUpItemRequest;
-		list[GameRequestType.CUnitPreBattleSure-offSet]=createCUnitPreBattleSureRequest;
-		list[GameRequestType.CUnitR-offSet]=createCUnitRRequest;
-		list[GameRequestType.CUnitRemoveBullet-offSet]=createCUnitRemoveBulletRequest;
-		list[GameRequestType.CUnitSkillOver-offSet]=createCUnitSkillOverRequest;
-		list[GameRequestType.CUnitSkillStep-offSet]=createCUnitSkillStepRequest;
-		list[GameRequestType.CUnitSpecialMove-offSet]=createCUnitSpecialMoveRequest;
-		list[GameRequestType.CUnitStopMove-offSet]=createCUnitStopMoveRequest;
-		list[GameRequestType.CUnitSyncCommand-offSet]=createCUnitSyncCommandRequest;
-		list[GameRequestType.CUnitUseSkillEx-offSet]=createCUnitUseSkillExRequest;
-		list[GameRequestType.CUnitUseSkill-offSet]=createCUnitUseSkillRequest;
 		list[GameRequestType.CenterTransClientToGame-offSet]=createCenterTransClientToGameRequest;
 		list[GameRequestType.ClientGM-offSet]=createClientGMRequest;
-		list[GameRequestType.ClientSceneRadio-offSet]=createClientSceneRadioRequest;
 		list[GameRequestType.ClientSendMail-offSet]=createClientSendMailRequest;
 		list[GameRequestType.ClientTaskEvent-offSet]=createClientTaskEventRequest;
 		list[GameRequestType.CommitQuest-offSet]=createCommitQuestRequest;
@@ -51,20 +28,40 @@ public class GameRequestMaker:DataMaker
 		list[GameRequestType.DeleteMail-offSet]=createDeleteMailRequest;
 		list[GameRequestType.DeletePlayer-offSet]=createDeletePlayerRequest;
 		list[GameRequestType.Exchange-offSet]=createExchangeRequest;
-		list[GameRequestType.FrameSyncOne-offSet]=createFrameSyncOneRequest;
 		list[GameRequestType.FuncAcceptMatch-offSet]=createFuncAcceptMatchRequest;
 		list[GameRequestType.FuncApplyCancelMatch-offSet]=createFuncApplyCancelMatchRequest;
 		list[GameRequestType.FuncApplyMatch-offSet]=createFuncApplyMatchRequest;
+		list[GameRequestType.FuncApplyRoleGroup-offSet]=createFuncApplyRoleGroupRequest;
+		list[GameRequestType.FuncAuctionBuyItem-offSet]=createFuncAuctionBuyItemRequest;
+		list[GameRequestType.FuncAuctionCancelSellItem-offSet]=createFuncAuctionCancelSellItemRequest;
+		list[GameRequestType.FuncAuctionQuery-offSet]=createFuncAuctionQueryRequest;
+		list[GameRequestType.FuncAuctionSellItem-offSet]=createFuncAuctionSellItemRequest;
+		list[GameRequestType.FuncChangeLeaderRoleGroup-offSet]=createFuncChangeLeaderRoleGroupRequest;
+		list[GameRequestType.FuncChangeRoleGroupCanApplyInAbs-offSet]=createFuncChangeRoleGroupCanApplyInAbsRequest;
+		list[GameRequestType.FuncChangeRoleGroupCanInviteInAbs-offSet]=createFuncChangeRoleGroupCanInviteInAbsRequest;
+		list[GameRequestType.FuncChangeRoleGroupName-offSet]=createFuncChangeRoleGroupNameRequest;
+		list[GameRequestType.FuncChangeRoleGroupNotice-offSet]=createFuncChangeRoleGroupNoticeRequest;
 		list[GameRequestType.FuncCleanUpItem-offSet]=createFuncCleanUpItemRequest;
 		list[GameRequestType.FuncCreateRoleGroup-offSet]=createFuncCreateRoleGroupRequest;
+		list[GameRequestType.FuncDisbandRoleGroup-offSet]=createFuncDisbandRoleGroupRequest;
+		list[GameRequestType.FuncGetAuctionItemSuggestPrice-offSet]=createFuncGetAuctionItemSuggestPriceRequest;
 		list[GameRequestType.FuncGetPageShow-offSet]=createFuncGetPageShowRequest;
+		list[GameRequestType.FuncGetRoleGroupData-offSet]=createFuncGetRoleGroupDataRequest;
 		list[GameRequestType.FuncGetSubsectionPageShow-offSet]=createFuncGetSubsectionPageShowRequest;
+		list[GameRequestType.FuncHandleApplyRoleGroup-offSet]=createFuncHandleApplyRoleGroupRequest;
+		list[GameRequestType.FuncHandleInviteRoleGroup-offSet]=createFuncHandleInviteRoleGroupRequest;
+		list[GameRequestType.FuncInviteRoleGroup-offSet]=createFuncInviteRoleGroupRequest;
 		list[GameRequestType.FuncItemRemoveRedPoint-offSet]=createFuncItemRemoveRedPointRequest;
+		list[GameRequestType.FuncKickMemberRoleGroup-offSet]=createFuncKickMemberRoleGroupRequest;
+		list[GameRequestType.FuncLeaveRoleGroup-offSet]=createFuncLeaveRoleGroupRequest;
 		list[GameRequestType.FuncMoveEquip-offSet]=createFuncMoveEquipRequest;
 		list[GameRequestType.FuncMoveItem-offSet]=createFuncMoveItemRequest;
+		list[GameRequestType.FuncPlayerRoleGroupR-offSet]=createFuncPlayerRoleGroupRRequest;
 		list[GameRequestType.FuncPutOffEquip-offSet]=createFuncPutOffEquipRequest;
 		list[GameRequestType.FuncPutOnEquip-offSet]=createFuncPutOnEquipRequest;
 		list[GameRequestType.FuncR-offSet]=createFuncRRequest;
+		list[GameRequestType.FuncRoleGroupEnterOwnScene-offSet]=createFuncRoleGroupEnterOwnSceneRequest;
+		list[GameRequestType.FuncSetTitleRoleGroup-offSet]=createFuncSetTitleRoleGroupRequest;
 		list[GameRequestType.FuncSplitItem-offSet]=createFuncSplitItemRequest;
 		list[GameRequestType.FuncUseItem-offSet]=createFuncUseItemRequest;
 		list[GameRequestType.GetAchievementReward-offSet]=createGetAchievementRewardRequest;
@@ -73,11 +70,17 @@ public class GameRequestMaker:DataMaker
 		list[GameRequestType.LoginGame-offSet]=createLoginGameRequest;
 		list[GameRequestType.Login-offSet]=createLoginRequest;
 		list[GameRequestType.MUnitAttributeSwitchNormalSend-offSet]=createMUnitAttributeSwitchNormalSendRequest;
+		list[GameRequestType.MUnitR-offSet]=createMUnitRRequest;
 		list[GameRequestType.MailReaded-offSet]=createMailReadedRequest;
 		list[GameRequestType.MailRemoveRedPoint-offSet]=createMailRemoveRedPointRequest;
+		list[GameRequestType.PetRest-offSet]=createPetRestRequest;
+		list[GameRequestType.PetWork-offSet]=createPetWorkRequest;
+		list[GameRequestType.PlayerChat-offSet]=createPlayerChatRequest;
 		list[GameRequestType.PlayerExit-offSet]=createPlayerExitRequest;
 		list[GameRequestType.PlayerLoginForOffline-offSet]=createPlayerLoginForOfflineRequest;
 		list[GameRequestType.PlayerLogin-offSet]=createPlayerLoginRequest;
+		list[GameRequestType.PlayerReceiveChatIndex-offSet]=createPlayerReceiveChatIndexRequest;
+		list[GameRequestType.PlayerReconnectLogin-offSet]=createPlayerReconnectLoginRequest;
 		list[GameRequestType.PlayerSwitchGame-offSet]=createPlayerSwitchGameRequest;
 		list[GameRequestType.PreEnterSceneReady-offSet]=createPreEnterSceneReadyRequest;
 		list[GameRequestType.QueryPlayer-offSet]=createQueryPlayerRequest;
@@ -88,7 +91,6 @@ public class GameRequestMaker:DataMaker
 		list[GameRequestType.SaveInt-offSet]=createSaveIntRequest;
 		list[GameRequestType.SaveLong-offSet]=createSaveLongRequest;
 		list[GameRequestType.SaveString-offSet]=createSaveStringRequest;
-		list[GameRequestType.SceneR-offSet]=createSceneRRequest;
 		list[GameRequestType.SearchPlayer-offSet]=createSearchPlayerRequest;
 		list[GameRequestType.SellItem-offSet]=createSellItemRequest;
 		list[GameRequestType.SendClientLog-offSet]=createSendClientLogRequest;
@@ -96,39 +98,7 @@ public class GameRequestMaker:DataMaker
 		list[GameRequestType.SetMainGuideStep-offSet]=createSetMainGuideStepRequest;
 		list[GameRequestType.TakeMail-offSet]=createTakeMailRequest;
 		list[GameRequestType.UpdateRoleSocialData-offSet]=createUpdateRoleSocialDataRequest;
-		list[GameRequestType.FuncApplyRoleGroup-offSet]=createFuncApplyRoleGroupRequest;
-		list[GameRequestType.FuncDisbandRoleGroup-offSet]=createFuncDisbandRoleGroupRequest;
-		list[GameRequestType.FuncInviteRoleGroup-offSet]=createFuncInviteRoleGroupRequest;
-		list[GameRequestType.FuncLeaveRoleGroup-offSet]=createFuncLeaveRoleGroupRequest;
-		list[GameRequestType.FuncPlayerRoleGroupR-offSet]=createFuncPlayerRoleGroupRRequest;
-		list[GameRequestType.FuncHandleApplyRoleGroup-offSet]=createFuncHandleApplyRoleGroupRequest;
-		list[GameRequestType.FuncHandleInviteRoleGroup-offSet]=createFuncHandleInviteRoleGroupRequest;
-		list[GameRequestType.FuncChangeLeaderRoleGroup-offSet]=createFuncChangeLeaderRoleGroupRequest;
-		list[GameRequestType.FuncKickMemberRoleGroup-offSet]=createFuncKickMemberRoleGroupRequest;
-		list[GameRequestType.FuncSetTitleRoleGroup-offSet]=createFuncSetTitleRoleGroupRequest;
-		list[GameRequestType.FuncChangeRoleGroupName-offSet]=createFuncChangeRoleGroupNameRequest;
-		list[GameRequestType.FuncChangeRoleGroupNotice-offSet]=createFuncChangeRoleGroupNoticeRequest;
 		list[GameRequestType.UseActivationCode-offSet]=createUseActivationCodeRequest;
-		list[GameRequestType.MUnitR-offSet]=createMUnitRRequest;
-		list[GameRequestType.FuncChangeRoleGroupCanInviteInAbs-offSet]=createFuncChangeRoleGroupCanInviteInAbsRequest;
-		list[GameRequestType.FuncChangeRoleGroupCanApplyInAbs-offSet]=createFuncChangeRoleGroupCanApplyInAbsRequest;
-		list[GameRequestType.FuncGetRoleGroupData-offSet]=createFuncGetRoleGroupDataRequest;
-		list[GameRequestType.CUnitPickUpItemBagAll-offSet]=createCUnitPickUpItemBagAllRequest;
-		list[GameRequestType.CRoleR-offSet]=createCRoleRRequest;
-		list[GameRequestType.PlayerChat-offSet]=createPlayerChatRequest;
-		list[GameRequestType.PlayerReceiveChatIndex-offSet]=createPlayerReceiveChatIndexRequest;
-		list[GameRequestType.CUnitGetOffVehicle-offSet]=createCUnitGetOffVehicleRequest;
-		list[GameRequestType.CUnitGetOnVehicle-offSet]=createCUnitGetOnVehicleRequest;
-		list[GameRequestType.CUnitDrive-offSet]=createCUnitDriveRequest;
-		list[GameRequestType.PlayerReconnectLogin-offSet]=createPlayerReconnectLoginRequest;
-		list[GameRequestType.FuncAuctionBuyItem-offSet]=createFuncAuctionBuyItemRequest;
-		list[GameRequestType.PetRest-offSet]=createPetRestRequest;
-		list[GameRequestType.PetWork-offSet]=createPetWorkRequest;
-		list[GameRequestType.FuncAuctionSellItem-offSet]=createFuncAuctionSellItemRequest;
-		list[GameRequestType.FuncGetAuctionItemSuggestPrice-offSet]=createFuncGetAuctionItemSuggestPriceRequest;
-		list[GameRequestType.FuncAuctionCancelSellItem-offSet]=createFuncAuctionCancelSellItemRequest;
-		list[GameRequestType.FuncAuctionQuery-offSet]=createFuncAuctionQueryRequest;
-		list[GameRequestType.FuncRoleGroupEnterOwnScene-offSet]=createFuncRoleGroupEnterOwnSceneRequest;
 	}
 	
 	private BaseData createAcceptQuestRequest()
@@ -176,116 +146,6 @@ public class GameRequestMaker:DataMaker
 		return new ApplyLeaveSceneRequest();
 	}
 	
-	private BaseData createCBuildingCancelLevelUpRequest()
-	{
-		return new CBuildingCancelLevelUpRequest();
-	}
-	
-	private BaseData createCBuildingLevelUpRequest()
-	{
-		return new CBuildingLevelUpRequest();
-	}
-	
-	private BaseData createCUnitAddBulletRequest()
-	{
-		return new CUnitAddBulletRequest();
-	}
-	
-	private BaseData createCUnitAttackRequest()
-	{
-		return new CUnitAttackRequest();
-	}
-	
-	private BaseData createCUnitBulletHitRequest()
-	{
-		return new CUnitBulletHitRequest();
-	}
-	
-	private BaseData createCUnitChatRequest()
-	{
-		return new CUnitChatRequest();
-	}
-	
-	private BaseData createCUnitKillSelfRequest()
-	{
-		return new CUnitKillSelfRequest();
-	}
-	
-	private BaseData createCUnitMoveDirRequest()
-	{
-		return new CUnitMoveDirRequest();
-	}
-	
-	private BaseData createCUnitMovePosListRequest()
-	{
-		return new CUnitMovePosListRequest();
-	}
-	
-	private BaseData createCUnitMovePosRequest()
-	{
-		return new CUnitMovePosRequest();
-	}
-	
-	private BaseData createCUnitOperateRequest()
-	{
-		return new CUnitOperateRequest();
-	}
-	
-	private BaseData createCUnitPickUpItemRequest()
-	{
-		return new CUnitPickUpItemRequest();
-	}
-	
-	private BaseData createCUnitPreBattleSureRequest()
-	{
-		return new CUnitPreBattleSureRequest();
-	}
-	
-	private BaseData createCUnitRRequest()
-	{
-		return new CUnitRRequest();
-	}
-	
-	private BaseData createCUnitRemoveBulletRequest()
-	{
-		return new CUnitRemoveBulletRequest();
-	}
-	
-	private BaseData createCUnitSkillOverRequest()
-	{
-		return new CUnitSkillOverRequest();
-	}
-	
-	private BaseData createCUnitSkillStepRequest()
-	{
-		return new CUnitSkillStepRequest();
-	}
-	
-	private BaseData createCUnitSpecialMoveRequest()
-	{
-		return new CUnitSpecialMoveRequest();
-	}
-	
-	private BaseData createCUnitStopMoveRequest()
-	{
-		return new CUnitStopMoveRequest();
-	}
-	
-	private BaseData createCUnitSyncCommandRequest()
-	{
-		return new CUnitSyncCommandRequest();
-	}
-	
-	private BaseData createCUnitUseSkillExRequest()
-	{
-		return new CUnitUseSkillExRequest();
-	}
-	
-	private BaseData createCUnitUseSkillRequest()
-	{
-		return new CUnitUseSkillRequest();
-	}
-	
 	private BaseData createCenterTransClientToGameRequest()
 	{
 		return new CenterTransClientToGameRequest();
@@ -294,11 +154,6 @@ public class GameRequestMaker:DataMaker
 	private BaseData createClientGMRequest()
 	{
 		return new ClientGMRequest();
-	}
-	
-	private BaseData createClientSceneRadioRequest()
-	{
-		return new ClientSceneRadioRequest();
 	}
 	
 	private BaseData createClientSendMailRequest()
@@ -334,11 +189,6 @@ public class GameRequestMaker:DataMaker
 	private BaseData createExchangeRequest()
 	{
 		return new ExchangeRequest();
-	}
-	
-	private BaseData createFrameSyncOneRequest()
-	{
-		return new FrameSyncOneRequest();
 	}
 	
 	private BaseData createFuncAcceptMatchRequest()
@@ -521,11 +371,6 @@ public class GameRequestMaker:DataMaker
 		return new SaveStringRequest();
 	}
 	
-	private BaseData createSceneRRequest()
-	{
-		return new SceneRRequest();
-	}
-	
 	private BaseData createSearchPlayerRequest()
 	{
 		return new SearchPlayerRequest();
@@ -646,16 +491,6 @@ public class GameRequestMaker:DataMaker
 		return new FuncGetRoleGroupDataRequest();
 	}
 	
-	private BaseData createCUnitPickUpItemBagAllRequest()
-	{
-		return new CUnitPickUpItemBagAllRequest();
-	}
-	
-	private BaseData createCRoleRRequest()
-	{
-		return new CRoleRRequest();
-	}
-	
 	private BaseData createPlayerChatRequest()
 	{
 		return new PlayerChatRequest();
@@ -664,21 +499,6 @@ public class GameRequestMaker:DataMaker
 	private BaseData createPlayerReceiveChatIndexRequest()
 	{
 		return new PlayerReceiveChatIndexRequest();
-	}
-	
-	private BaseData createCUnitGetOffVehicleRequest()
-	{
-		return new CUnitGetOffVehicleRequest();
-	}
-	
-	private BaseData createCUnitGetOnVehicleRequest()
-	{
-		return new CUnitGetOnVehicleRequest();
-	}
-	
-	private BaseData createCUnitDriveRequest()
-	{
-		return new CUnitDriveRequest();
 	}
 	
 	private BaseData createPlayerReconnectLoginRequest()

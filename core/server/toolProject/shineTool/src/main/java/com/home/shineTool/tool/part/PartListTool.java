@@ -296,10 +296,7 @@ public class PartListTool extends DataExportTool
 			
 			//下面是处理g的问题
 			
-			List<String> list=new ArrayList<>();
-			list.addAll(_inputCls.getFieldNameList());
-			
-			for(String k : list)
+			for(String k : _inputCls.getFieldNameList().clone())
 			{
 				FieldInfo field=_inputCls.getField(k);
 				
@@ -415,12 +412,9 @@ public class PartListTool extends DataExportTool
 			
 			//下面是处理g的问题
 			
-			List<String> list=new ArrayList<>();
-			list.addAll(_inputCls.getFieldNameList());
-			
 			String mark=_front.toLowerCase();
 			
-			for(String k : list)
+			for(String k : _inputCls.getFieldNameList().clone())
 			{
 				FieldInfo field=_inputCls.getField(k);
 				

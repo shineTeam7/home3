@@ -497,6 +497,21 @@ public class GameRoleGroupTool extends FuncTool
 		}
 	}
 	
+	/** 添加角色abs类事务 */
+	public void addPlayerAbsWork(long playerID,PlayerFuncWorkData data)
+	{
+		data.funcID=_funcID;
+		
+		if(_config.needSave)
+		{
+			GameC.main.addPlayerAbsWork(playerID,data);
+		}
+		else
+		{
+			GameC.main.addPlayerOnlineWork(playerID,data);
+		}
+	}
+	
 	/** 检查名字是否可用(不重复)(主线程)(回调也在主线程) */
 	public void checkNameAvailable(String name,ObjectCall<Boolean> func)
 	{
@@ -524,7 +539,7 @@ public class GameRoleGroupTool extends FuncTool
 		{
 			CreateRoleGroupResultOWData wData=new CreateRoleGroupResultOWData();
 			wData.success=false;
-			addPlayerWork(data.showData.playerID,wData);
+			addPlayerAbsWork(data.showData.playerID,wData);
 			return;
 		}
 		
@@ -555,7 +570,7 @@ public class GameRoleGroupTool extends FuncTool
 				}
 			}
 			
-			addPlayerWork(data.showData.playerID,wData);
+			addPlayerAbsWork(data.showData.playerID,wData);
 		});
 	}
 	

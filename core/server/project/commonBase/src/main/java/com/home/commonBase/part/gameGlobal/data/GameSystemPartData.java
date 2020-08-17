@@ -202,15 +202,13 @@ public class GameSystemPartData extends BaseData
 			if(!this.playerIndexDic.isEmpty())
 			{
 				int playerIndexDicKFreeValue=this.playerIndexDic.getFreeValue();
-				long[] playerIndexDicKTable=this.playerIndexDic.getTable();
-				long playerIndexDicKEntry;
-				for(int playerIndexDicKI=playerIndexDicKTable.length-1;playerIndexDicKI>=0;--playerIndexDicKI)
+				int[] playerIndexDicKTable=this.playerIndexDic.getTable();
+				for(int playerIndexDicKI=playerIndexDicKTable.length-2;playerIndexDicKI>=0;playerIndexDicKI-=2)
 				{
-					playerIndexDicKEntry=playerIndexDicKTable[playerIndexDicKI];
-					int playerIndexDicK=(int)playerIndexDicKEntry;
-					if(playerIndexDicK!=playerIndexDicKFreeValue)
+					if(playerIndexDicKTable[playerIndexDicKI]!=playerIndexDicKFreeValue)
 					{
-						int playerIndexDicV=(int)(playerIndexDicKEntry>>>32);
+						int playerIndexDicK=playerIndexDicKTable[playerIndexDicKI];
+						int playerIndexDicV=playerIndexDicKTable[playerIndexDicKI+1];
 						stream.writeInt(playerIndexDicK);
 						
 						stream.writeInt(playerIndexDicV);
@@ -409,15 +407,13 @@ public class GameSystemPartData extends BaseData
 			if(!this.playerIndexDic.isEmpty())
 			{
 				int playerIndexDicKFreeValue=this.playerIndexDic.getFreeValue();
-				long[] playerIndexDicKTable=this.playerIndexDic.getTable();
-				long playerIndexDicKEntry;
-				for(int playerIndexDicKI=playerIndexDicKTable.length-1;playerIndexDicKI>=0;--playerIndexDicKI)
+				int[] playerIndexDicKTable=this.playerIndexDic.getTable();
+				for(int playerIndexDicKI=playerIndexDicKTable.length-2;playerIndexDicKI>=0;playerIndexDicKI-=2)
 				{
-					playerIndexDicKEntry=playerIndexDicKTable[playerIndexDicKI];
-					int playerIndexDicK=(int)playerIndexDicKEntry;
-					if(playerIndexDicK!=playerIndexDicKFreeValue)
+					if(playerIndexDicKTable[playerIndexDicKI]!=playerIndexDicKFreeValue)
 					{
-						int playerIndexDicV=(int)(playerIndexDicKEntry>>>32);
+						int playerIndexDicK=playerIndexDicKTable[playerIndexDicKI];
+						int playerIndexDicV=playerIndexDicKTable[playerIndexDicKI+1];
 						stream.writeInt(playerIndexDicK);
 						
 						stream.writeInt(playerIndexDicV);
@@ -565,15 +561,13 @@ public class GameSystemPartData extends BaseData
 			if(!mData.playerIndexDic.isEmpty())
 			{
 				int playerIndexDicKFreeValue=mData.playerIndexDic.getFreeValue();
-				long[] playerIndexDicKTable=mData.playerIndexDic.getTable();
-				long playerIndexDicKEntry;
-				for(int playerIndexDicKI=playerIndexDicKTable.length-1;playerIndexDicKI>=0;--playerIndexDicKI)
+				int[] playerIndexDicKTable=mData.playerIndexDic.getTable();
+				for(int playerIndexDicKI=playerIndexDicKTable.length-2;playerIndexDicKI>=0;playerIndexDicKI-=2)
 				{
-					playerIndexDicKEntry=playerIndexDicKTable[playerIndexDicKI];
-					int playerIndexDicK=(int)playerIndexDicKEntry;
-					if(playerIndexDicK!=playerIndexDicKFreeValue)
+					if(playerIndexDicKTable[playerIndexDicKI]!=playerIndexDicKFreeValue)
 					{
-						int playerIndexDicV=(int)(playerIndexDicKEntry>>>32);
+						int playerIndexDicK=playerIndexDicKTable[playerIndexDicKI];
+						int playerIndexDicV=playerIndexDicKTable[playerIndexDicKI+1];
 						int playerIndexDicW;
 						int playerIndexDicU;
 						playerIndexDicW=playerIndexDicK;
@@ -730,15 +724,13 @@ public class GameSystemPartData extends BaseData
 			if(!this.playerIndexDic.isEmpty())
 			{
 				int playerIndexDicKFreeValue=this.playerIndexDic.getFreeValue();
-				long[] playerIndexDicKTable=this.playerIndexDic.getTable();
-				long playerIndexDicKEntry;
-				for(int playerIndexDicKI=playerIndexDicKTable.length-1;playerIndexDicKI>=0;--playerIndexDicKI)
+				int[] playerIndexDicKTable=this.playerIndexDic.getTable();
+				for(int playerIndexDicKI=playerIndexDicKTable.length-2;playerIndexDicKI>=0;playerIndexDicKI-=2)
 				{
-					playerIndexDicKEntry=playerIndexDicKTable[playerIndexDicKI];
-					int playerIndexDicK=(int)playerIndexDicKEntry;
-					if(playerIndexDicK!=playerIndexDicKFreeValue)
+					if(playerIndexDicKTable[playerIndexDicKI]!=playerIndexDicKFreeValue)
 					{
-						int playerIndexDicV=(int)(playerIndexDicKEntry>>>32);
+						int playerIndexDicK=playerIndexDicKTable[playerIndexDicKI];
+						int playerIndexDicV=playerIndexDicKTable[playerIndexDicKI+1];
 						int playerIndexDicU=playerIndexDicR.get(playerIndexDicK);
 						if(playerIndexDicV!=playerIndexDicU)
 							return false;
@@ -895,15 +887,13 @@ public class GameSystemPartData extends BaseData
 			if(!this.playerIndexDic.isEmpty())
 			{
 				int playerIndexDicKFreeValue=this.playerIndexDic.getFreeValue();
-				long[] playerIndexDicKTable=this.playerIndexDic.getTable();
-				long playerIndexDicKEntry;
-				for(int playerIndexDicKI=playerIndexDicKTable.length-1;playerIndexDicKI>=0;--playerIndexDicKI)
+				int[] playerIndexDicKTable=this.playerIndexDic.getTable();
+				for(int playerIndexDicKI=playerIndexDicKTable.length-2;playerIndexDicKI>=0;playerIndexDicKI-=2)
 				{
-					playerIndexDicKEntry=playerIndexDicKTable[playerIndexDicKI];
-					int playerIndexDicK=(int)playerIndexDicKEntry;
-					if(playerIndexDicK!=playerIndexDicKFreeValue)
+					if(playerIndexDicKTable[playerIndexDicKI]!=playerIndexDicKFreeValue)
 					{
-						int playerIndexDicV=(int)(playerIndexDicKEntry>>>32);
+						int playerIndexDicK=playerIndexDicKTable[playerIndexDicKI];
+						int playerIndexDicV=playerIndexDicKTable[playerIndexDicKI+1];
 						writer.writeTabs();
 						writer.sb.append(playerIndexDicK);
 						

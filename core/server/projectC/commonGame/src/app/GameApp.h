@@ -8,7 +8,12 @@ public:
 	/** 启动 */
 	void start();
 
+	/** editor启动 */
+	void startE();
+
 protected:
+	/** 初始化配置 */
+	virtual void initSetting();
 	virtual void preInit();
 	virtual void makeControls();
 	virtual void onStartNext();

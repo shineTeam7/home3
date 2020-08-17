@@ -3,6 +3,7 @@ package com.home.shine.agent;
 import java.io.File;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import com.home.shine.utils.FileUtils;
 public class AgentControl
 {
 	private static volatile Instrumentation _inst;
+	
+	private static boolean _isEditor=false;
 	
 	/** 初始化 */
 	public static void init(Instrumentation inst)
@@ -27,9 +30,41 @@ public class AgentControl
 		return _inst!=null;
 	}
 	
+	/** IDEA调试模式初始化 */
+	public static void initForIDEA()
+	{
+		if(inited())
+			return;
+		
+		try
+		{
+			Class<?> aClass=Class.forName("com.intellij.rt.debugger.agent.CaptureAgent");
+			
+			Field field=aClass.getDeclaredField("ourInstrumentation");
+			
+			field.setAccessible(true);
+			
+			_inst=(Instrumentation)field.get(aClass);
+			_isEditor=true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/** 获取agent */
+	public static Instrumentation getInstrumentation()
+	{
+		return _inst;
+	}
+	
 	/** 刷全部类 */
 	public static boolean agentClass()
 	{
+		if(_isEditor)
+			return false;
+		
 		if(_inst==null)
 		{
 			Ctrl.warnLog("热更code时,agent不存在");

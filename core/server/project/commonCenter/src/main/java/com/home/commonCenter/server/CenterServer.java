@@ -1,6 +1,8 @@
 package com.home.commonCenter.server;
 
 import com.home.commonBase.server.BaseGameServer;
+import com.home.commonCenter.constlist.generate.CenterRequestType;
+import com.home.commonCenter.constlist.generate.CenterResponseType;
 import com.home.commonCenter.global.CenterC;
 import com.home.commonCenter.net.base.CenterServerRequest;
 import com.home.commonCenter.net.serverRequest.game.system.GameExitServerRequest;
@@ -13,6 +15,7 @@ import com.home.commonCenter.tool.generate.CenterServerRequestMaker;
 import com.home.commonCenter.tool.generate.CenterServerResponseMaker;
 import com.home.shine.ShineSetup;
 import com.home.shine.constlist.SocketType;
+import com.home.shine.control.BytesControl;
 import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.net.socket.SendSocket;
 
@@ -28,6 +31,9 @@ public class CenterServer extends BaseGameServer
 	protected void initMessage()
 	{
 		super.initMessage();
+		
+		BytesControl.addMessageConst(CenterRequestType.class,true,false);
+		BytesControl.addMessageConst(CenterResponseType.class,false,false);
 		
 		addRequestMaker(new CenterRequestMaker());
 		addClientResponseMaker(new CenterResponseMaker());
@@ -53,10 +59,9 @@ public class CenterServer extends BaseGameServer
 	}
 	
 	@Override
-	protected void onConnectManagerOver()
+	public void onConnectManagerOver()
 	{
 		startServerSocket(_selfInfo.serverPort);
-		
 		startServerHttp(_selfInfo.serverHttpPort);
 		
 		CenterC.app.startNext();

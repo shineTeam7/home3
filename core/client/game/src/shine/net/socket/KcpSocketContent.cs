@@ -257,6 +257,11 @@ namespace ShineEngine
                     {
                         _content._sendStream.writeByteArr(arr,0,avalidLength);
                     }
+
+                    if(ShineSetting.needThreadNotify)
+                    {
+                        _content._parent.notifySendThread();
+                    }
                 }
             }
 

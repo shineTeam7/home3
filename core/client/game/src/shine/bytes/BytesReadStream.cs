@@ -9,6 +9,9 @@ namespace ShineEngine
 	/// </summary>
 	public class BytesReadStream
 	{
+		/** 是否使用bitBoolean */
+		private bool _useBitBoolean=ShineSetting.bytesUseBitBoolean;
+
 		private byte[] _buf=BytesUtils.EmptyByteArr;
 
 		private int _off=0;
@@ -58,6 +61,11 @@ namespace ShineEngine
 		public BytesReadStream(byte[] buf,int off,int length)
 		{
 			setBuf(buf,off,length);
+		}
+
+		public void setUseBitBoolean(bool value)
+		{
+			_useBitBoolean=value;
 		}
 
 		/// <summary>
@@ -182,7 +190,7 @@ namespace ShineEngine
 
 		public void clearBooleanPos()
 		{
-			if(!ShineSetting.bytesUseBitBoolean)
+			if(!_useBitBoolean)
 				return;
 
 			_booleanBitIndex=-1;
@@ -274,7 +282,7 @@ namespace ShineEngine
 		/** 读出一个布尔值 */
 		public bool readBoolean()
 		{
-			if(ShineSetting.bytesUseBitBoolean)
+			if(_useBitBoolean)
 			{
 				//新的
 				if(_booleanBitIndex==-1)
@@ -740,7 +748,7 @@ namespace ShineEngine
 			_readNum++;
 			_length=pos;
 
-			if(ShineSetting.bytesUseBitBoolean)
+			if(_useBitBoolean)
 			{
 				getReadStack().add3(re,_booleanBitIndex,_booleanBitValue);
 				clearBooleanPos();
@@ -761,7 +769,7 @@ namespace ShineEngine
 			}
 
 			//倒序
-			if(ShineSetting.bytesUseBitBoolean)
+			if(_useBitBoolean)
 			{
 				_booleanBitValue=_readStack.pop();
 				_booleanBitIndex=_readStack.pop();

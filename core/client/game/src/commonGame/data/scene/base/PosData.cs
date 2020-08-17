@@ -160,9 +160,9 @@ public class PosData:BaseData
 	protected override void beforeWrite()
 	{
 		float scale;
-		ix=(int)(x*(scale=Global.posSendScale));
-		iy=(int)(y*scale);
-		iz=(int)(z*scale);
+		ix=Mathf.RoundToInt(x*(scale=Global.posSendScale));
+		iy=Mathf.RoundToInt(y*scale);
+		iz=Mathf.RoundToInt(z*scale);
 	}
 	
 	protected override void afterRead()

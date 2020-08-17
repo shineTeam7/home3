@@ -187,6 +187,18 @@ public class FuncTool
 		_entity.warnLog(args);
 	}
 	
+	/** 错误日志 */
+	public void errorLog(String str)
+	{
+		_entity.errorLog(str);
+	}
+	
+	/** 错误日志 */
+	public void errorLog(Object...args)
+	{
+		_entity.errorLog(args);
+	}
+	
 	/** 推送信息码 */
 	public void sendInfoCode(int code)
 	{

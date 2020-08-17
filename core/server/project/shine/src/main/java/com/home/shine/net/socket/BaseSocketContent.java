@@ -132,8 +132,6 @@ public class BaseSocketContent
 			if(!checkIsCurrent())
 				return;
 			
-			Ctrl.print("preClosed",_parent.id);
-			
 			_parent.closeForIO(BaseSocket.Close_ChannelInactive);
 		});
 	}

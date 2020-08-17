@@ -8,7 +8,9 @@ import com.home.commonBase.logic.unit.UnitFightDataLogic;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
 import com.home.shine.support.ACStringFilter;
+import com.home.shine.support.collection.IntList;
 import com.home.shine.support.collection.SList;
+import com.home.shine.utils.MathUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -179,5 +181,37 @@ public class BaseGameUtils
 	public static boolean checkClientNum(int num)
 	{
 		return num>0 && num<CommonSetting.clientNumMax;
+	}
+
+	/** 从数组中随机指定数量数据 */
+	public static <T> SList<T> randomDataList(SList<T> list,int num)
+	{
+		IntList indexList=new IntList(list.size());
+
+		for(int i=0;i<list.length();++i)
+		{
+			indexList.add(i);
+		}
+
+		IntList resList=new IntList(num);
+
+		for(int i=0;i<num;i++)
+		{
+			if(indexList.length()==0)
+				break;
+
+			int index = MathUtils.randomRange(0,indexList.length());
+			resList.add(indexList.get(index));
+			indexList.remove(index);
+		}
+
+		SList<T> resultList = new SList<>(indexList.length());
+
+		for(int i=0;i<resList.length();++i)
+		{
+			resultList.add(list.get(resList.get(i)));
+		}
+
+		return resultList;
 	}
 }

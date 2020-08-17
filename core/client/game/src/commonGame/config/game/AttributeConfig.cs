@@ -44,6 +44,11 @@ public class AttributeConfig:BaseConfig
 	public string name;
 	
 	/// <summary>
+	/// 当前属性是否可超过上限值
+	/// </summary>
+	public bool canOverMax;
+	
+	/// <summary>
 	/// 推送角色自己方式
 	/// </summary>
 	public int sendSelfType;
@@ -128,6 +133,8 @@ public class AttributeConfig:BaseConfig
 		
 		this.isCurrentDefaultFull=stream.readBoolean();
 		
+		this.canOverMax=stream.readBoolean();
+		
 		this.sendSelfType=stream.readInt();
 		
 		this.isSimpleUnitNeed=stream.readBoolean();
@@ -198,6 +205,8 @@ public class AttributeConfig:BaseConfig
 		
 		stream.writeBoolean(this.isCurrentDefaultFull);
 		
+		stream.writeBoolean(this.canOverMax);
+		
 		stream.writeInt(this.sendSelfType);
 		
 		stream.writeBoolean(this.isSimpleUnitNeed);
@@ -213,6 +222,7 @@ public class AttributeConfig:BaseConfig
 		re.increaseID=increaseID;
 		re.currentMaxID=currentMaxID;
 		re.isCurrentDefaultFull=isCurrentDefaultFull;
+		re.isCurrentCanOverMax=canOverMax;
 		re.sendSelfType=sendSelfType;
 		re.isSimpleUnitNeed=isSimpleUnitNeed;
 		return re;

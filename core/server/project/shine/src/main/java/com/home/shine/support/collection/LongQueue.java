@@ -10,17 +10,12 @@ public class LongQueue extends BaseQueue
 	
 	public LongQueue()
 	{
-		_values=ObjectUtils.EmptyLongArr;
+		init(0);
 	}
 	
 	public LongQueue(int capacity)
 	{
 		init(countCapacity(capacity));
-	}
-	
-	public int capacity()
-	{
-		return _values.length;
 	}
 	
 	public final long[] getValues()
@@ -38,59 +33,49 @@ public class LongQueue extends BaseQueue
 		_defaultValue=v;
 	}
 	
-	/** 扩容 */
-	public void ensureCapacity(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		if(_values==null)
-		{
-			init(countCapacity(capacity));
-		}
-		else if(capacity>_values.length)
-		{
-			remake(countCapacity(capacity));
-		}
-	}
-	
-	private void init(int capacity)
-	{
-		_values=new long[capacity];
+		_capacity=capacity;
+		
+		if(capacity==0)
+			_values=ObjectUtils.EmptyLongArr;
+		else
+			_values=new long[capacity];
+		
 		_mark=capacity-1;
-		_size=0;
 	}
 	
-	private void remake(int capacity)
+	@Override
+	protected void remake(int capacity)
 	{
-		long[] n=new long[capacity];
-		long[] values=_values;
+		long[] oldArr=_values;
+		init(capacity);
 		
 		if(_size!=0)
 		{
+			long[] values=_values;
+			
 			if(_start<_end)
 			{
-				System.arraycopy(values,_start,n,0,_end - _start);
+				System.arraycopy(oldArr,_start,values,0,_end - _start);
 			}
 			else
 			{
-				int d=values.length - _start;
-				System.arraycopy(values,_start,n,0,d);
-				System.arraycopy(values,0,n,d,_end);
+				int d=oldArr.length - _start;
+				System.arraycopy(oldArr,_start,values,0,d);
+				System.arraycopy(oldArr,0,values,d,_end);
 			}
 		}
 		
 		_start=0;
 		_end=_size;
-		
-		_values=n;
-		_mark=capacity-1;
 	}
 	
 	/** 放入 */
 	public void offer(long v)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		_values[_end]=v;
 		

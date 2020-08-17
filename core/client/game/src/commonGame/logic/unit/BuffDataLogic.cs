@@ -6,12 +6,12 @@ using ShineEngine;
 /// </summary>
 public class BuffDataLogic
 {
-	private UnitFightDataLogic _parent;
+	protected UnitFightDataLogic _parent;
 
 	/** data的buff组 */
 	private IntObjectMap<BuffData> _buffDataDic;
 	/** buff组 */
-	private IntObjectMap<BuffData> _buffDatas=new IntObjectMap<BuffData>();
+	protected IntObjectMap<BuffData> _buffDatas=new IntObjectMap<BuffData>();
 	/** buff组(id组)(非AllExist)) */
 	private IntObjectMap<BuffData> _buffDatasByID=new IntObjectMap<BuffData>();
 	/** buff数据ID组(id->instanceID->data)(AllExist用) */
@@ -119,7 +119,7 @@ public class BuffDataLogic
 		}
 	}
 
-	public void clear()
+	public virtual void clear()
 	{
 		if(_buffDataDic!=null)
 		{
@@ -182,6 +182,24 @@ public class BuffDataLogic
 		while(_buffDatas.contains(re=_buffInstanceIDMaker.get()));
 
 		return re;
+	}
+
+	/** 写拷贝 */
+	public void writeForCopy()
+	{
+		IntObjectMap<BuffData> dic=_buffDataDic;
+		dic.clear();
+
+		BuffData[] values=_buffDatas.getValues();
+		BuffData data;
+
+		for(int i=values.Length - 1;i >= 0;--i)
+		{
+			if((data=values[i])!=null)
+			{
+				dic.put(data.instanceID,data);
+			}
+		}
 	}
 
 	/** 每秒十次 */
@@ -716,7 +734,7 @@ public class BuffDataLogic
 		return re;
 	}
 
-	private BuffData toCreateBuff(int id,int level,int adderInstanceID,BuffData eData)
+	protected virtual BuffData toCreateBuff(int id,int level,int adderInstanceID,BuffData eData)
 	{
 		BuffData buff=eData!=null ? eData : GameC.pool.buffDataPool.getOne();
 
@@ -855,7 +873,7 @@ public class BuffDataLogic
 	}
 
 	/** buff结束 */
-	private void buffOver(BuffData data)
+	protected void buffOver(BuffData data)
 	{
 		//先动作再移除
 		foreach(int[] v in data.levelConfig.overActions)
@@ -1096,7 +1114,7 @@ public class BuffDataLogic
 	//buff响应
 
 	/** 执行单个动作 */
-	private void doOneAction(BuffData data,int index,int[] args,bool isAdd,bool isFull)
+	protected virtual void doOneAction(BuffData data,int index,int[] args,bool isAdd,bool isFull)
 	{
 		bool isDriveAll=_parent.isDriveAll();
 

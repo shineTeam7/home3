@@ -2,7 +2,6 @@ file(GLOB INCLUDES ${JNI_DIR} src/*.h src/**/*.h src/**/**/*.h src/**/**/**/*.h)
 file(GLOB SOURCES src/**/**/*.c src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp)
 
 add_library(shine STATIC ${SOURCES})
-
 #add_library(projectC::shine ALIAS shine)
 
 set(Shine_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")

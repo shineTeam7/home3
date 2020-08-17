@@ -39,8 +39,7 @@ public class AvatarDataLogic
 	/** 上次派发的外显组(推送用) */
 	private int[] _lastDispatches=new int[AvatarPartType.size];
 	
-	
-	public AvatarDataLogic(UnitFightDataLogic parent)
+	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
 	}

@@ -35,7 +35,7 @@ public class AvatarDataLogic
 	private int[] _lastDispatches=new int[AvatarPartType.size];
 
 
-	public AvatarDataLogic(UnitFightDataLogic parent)
+	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
 	}

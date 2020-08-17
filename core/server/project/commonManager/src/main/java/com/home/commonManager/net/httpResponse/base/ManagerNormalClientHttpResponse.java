@@ -6,8 +6,8 @@ import com.home.commonBase.global.BaseC;
 import com.home.commonManager.global.ManagerC;
 import com.home.commonManager.net.serverRequest.center.ManagerToCenterCommandServerRequest;
 import com.home.commonManager.net.serverRequest.game.ManagerToGameCommandServerRequest;
-import com.home.commonManager.net.serverRequest.login.login.HotfixToLoginServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.ManagerToLoginCommandServerRequest;
+import com.home.commonManager.net.serverRequest.login.HotfixToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.login.ManagerToLoginCommandServerRequest;
 import com.home.shine.ShineSetup;
 import com.home.shine.agent.AgentControl;
 import com.home.shine.constlist.HttpContentType;
@@ -107,7 +107,7 @@ public class ManagerNormalClientHttpResponse extends BaseHttpResponse
 			//重新加载server配置
 			case "reloadServerConfig":
 			{
-				ServerConfig.load();
+				ManagerC.main.reloadServerConfig();
 			}
 				break;
 			//更新重定向

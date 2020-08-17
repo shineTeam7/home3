@@ -364,8 +364,21 @@ public class BaseServer
 				response2.setNeedReceipt(true);
 			}
 			
-			response2.dispatch();
+			if(isClient)
+			{
+				dispatchClientResponse(socket,response2);
+			}
+			else
+			{
+				response2.dispatch();
+			}
 		}
+	}
+	
+	/** 派发客户端消息 */
+	protected void dispatchClientResponse(BaseSocket socket,BaseResponse response)
+	{
+		response.dispatch();
 	}
 	
 	/** 客户端连接断开(io线程) */

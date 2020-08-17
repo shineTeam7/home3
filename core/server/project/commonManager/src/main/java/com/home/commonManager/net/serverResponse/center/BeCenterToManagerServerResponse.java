@@ -1,5 +1,6 @@
 package com.home.commonManager.net.serverResponse.center;
 import com.home.commonBase.constlist.generate.ServerMessageType;
+import com.home.commonBase.data.login.CenterInitServerData;
 import com.home.commonBase.data.system.ServerInfoData;
 import com.home.commonManager.global.ManagerC;
 import com.home.commonManager.net.serverRequest.center.ReBeCenterToManagerServerRequest;
@@ -61,15 +62,9 @@ public class BeCenterToManagerServerResponse extends CenterToManagerServerRespon
 	{
 		ManagerC.server.getSocketInfo(SocketType.Center).registerOnlySocket(socket);
 		
-		ServerInfoData data=null;
+		CenterInitServerData initData=isFirst ? ManagerC.main.createCenterInitData() : null;
 		
-		if(isFirst)
-		{
-			data=new ServerInfoData();
-			data.readByConfig(ServerConfig.getCenterConfig());
-		}
-		
-		socket.send(ReBeCenterToManagerServerRequest.create(data,ManagerC.main.getAreaDic()));
+		socket.send(ReBeCenterToManagerServerRequest.create(initData));
 	}
 	
 	/** 回池 */

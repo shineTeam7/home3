@@ -4,7 +4,7 @@ using ShineEngine;
 /// <summary>
 /// 
 /// </summary>
-[HotfixAdapter]
+[Hotfix(needFactory = false)]
 public class BaseConfig:BaseData
 {
 	protected override sealed void afterRead()

@@ -37,6 +37,7 @@ import com.home.commonCenter.net.serverResponse.manager.MAddPlayerWorkToCenterSe
 import com.home.commonCenter.net.serverResponse.manager.MQueryPlayerWorkToCenterServerResponse;
 import com.home.commonCenter.net.serverResponse.manager.ManagerToCenterCommandServerResponse;
 import com.home.commonCenter.net.serverResponse.manager.ReBeCenterToManagerServerResponse;
+import com.home.commonCenter.net.serverResponse.manager.ReloadServerConfigToCenterServerResponse;
 import com.home.shine.data.BaseData;
 import com.home.shine.tool.CreateDataFunc;
 import com.home.shine.tool.DataMaker;
@@ -48,43 +49,44 @@ public class CenterServerResponseMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
-		list[ServerMessageType.FuncSendAuctionSellItemToCenter-offSet]=this::createFuncSendAuctionSellItemToCenterServerResponse;
-		list[ServerMessageType.FuncSendAuctionCancelSellItemToCenter-offSet]=this::createFuncSendAuctionCancelSellItemToCenterServerResponse;
+		list[ServerMessageType.CenterExit-offSet]=this::createCenterExitServerResponse;
+		list[ServerMessageType.MAddPlayerWorkToCenter-offSet]=this::createMAddPlayerWorkToCenterServerResponse;
+		list[ServerMessageType.MQueryPlayerWorkToCenter-offSet]=this::createMQueryPlayerWorkToCenterServerResponse;
+		list[ServerMessageType.ManagerToCenterCommand-offSet]=this::createManagerToCenterCommandServerResponse;
+		list[ServerMessageType.ReBeCenterToManager-offSet]=this::createReBeCenterToManagerServerResponse;
+		list[ServerMessageType.ReloadServerConfigToCenter-offSet]=this::createReloadServerConfigToCenterServerResponse;
 		list[ServerMessageType.BeGameToCenter-offSet]=this::createBeGameToCenterServerResponse;
 		list[ServerMessageType.CenterTransGameToCenter-offSet]=this::createCenterTransGameToCenterServerResponse;
 		list[ServerMessageType.ClientGMToCenter-offSet]=this::createClientGMToCenterServerResponse;
+		list[ServerMessageType.CommitCustomRoleSocialToCenter-offSet]=this::createCommitCustomRoleSocialToCenterServerResponse;
+		list[ServerMessageType.CommitRoleGroupToCenter-offSet]=this::createCommitRoleGroupToCenterServerResponse;
 		list[ServerMessageType.CommitRoleSocialToCenter-offSet]=this::createCommitRoleSocialToCenterServerResponse;
 		list[ServerMessageType.FuncAcceptMatchToCenter-offSet]=this::createFuncAcceptMatchToCenterServerResponse;
 		list[ServerMessageType.FuncApplyCancelMatchToCenter-offSet]=this::createFuncApplyCancelMatchToCenterServerResponse;
 		list[ServerMessageType.FuncApplyMatchToCenter-offSet]=this::createFuncApplyMatchToCenterServerResponse;
 		list[ServerMessageType.FuncCommitRankValueToCenter-offSet]=this::createFuncCommitRankValueToCenterServerResponse;
+		list[ServerMessageType.FuncCommitSubsectionRankValueToCenter-offSet]=this::createFuncCommitSubsectionRankValueToCenterServerResponse;
 		list[ServerMessageType.FuncGetRandomPlayerListFromRoleSocialPoolToCenter-offSet]=this::createFuncGetRandomPlayerListFromRoleSocialPoolToCenterServerResponse;
 		list[ServerMessageType.FuncPlayerToCenter-offSet]=this::createFuncPlayerToCenterServerResponse;
 		list[ServerMessageType.FuncRemoveRankToCenter-offSet]=this::createFuncRemoveRankToCenterServerResponse;
+		list[ServerMessageType.FuncRemoveSubsectionRankToCenter-offSet]=this::createFuncRemoveSubsectionRankToCenterServerResponse;
+		list[ServerMessageType.FuncRoleGroupChangeSimpleToCenter-offSet]=this::createFuncRoleGroupChangeSimpleToCenterServerResponse;
 		list[ServerMessageType.FuncSendAuctionBuyItemToCenter-offSet]=this::createFuncSendAuctionBuyItemToCenterServerResponse;
+		list[ServerMessageType.FuncSendAuctionCancelSellItemToCenter-offSet]=this::createFuncSendAuctionCancelSellItemToCenterServerResponse;
+		list[ServerMessageType.FuncSendAuctionSellItemToCenter-offSet]=this::createFuncSendAuctionSellItemToCenterServerResponse;
+		list[ServerMessageType.FuncSendGetPageShowToCenter-offSet]=this::createFuncSendGetPageShowToCenterServerResponse;
+		list[ServerMessageType.FuncToCenter-offSet]=this::createFuncToCenterServerResponse;
+		list[ServerMessageType.GameLoginToCenter-offSet]=this::createGameLoginToCenterServerResponse;
 		list[ServerMessageType.PlayerToCenter-offSet]=this::createPlayerToCenterServerResponse;
 		list[ServerMessageType.ReCreateSignedSceneToCenter-offSet]=this::createReCreateSignedSceneToCenterServerResponse;
 		list[ServerMessageType.ReceiptWorkToCenter-offSet]=this::createReceiptWorkToCenterServerResponse;
 		list[ServerMessageType.RefreshRoleSocialToCenter-offSet]=this::createRefreshRoleSocialToCenterServerResponse;
+		list[ServerMessageType.SendCenterWorkCompleteToCenter-offSet]=this::createSendCenterWorkCompleteToCenterServerResponse;
 		list[ServerMessageType.SendCenterWorkToCenter-offSet]=this::createSendCenterWorkToCenterServerResponse;
 		list[ServerMessageType.SendMQueryPlayerWorkResultToCenter-offSet]=this::createSendMQueryPlayerWorkResultToCenterServerResponse;
-		list[ServerMessageType.SendPlayerWorkToCenter-offSet]=this::createSendPlayerWorkToCenterServerResponse;
-		list[ServerMessageType.FuncCommitSubsectionRankValueToCenter-offSet]=this::createFuncCommitSubsectionRankValueToCenterServerResponse;
-		list[ServerMessageType.FuncRemoveSubsectionRankToCenter-offSet]=this::createFuncRemoveSubsectionRankToCenterServerResponse;
-		list[ServerMessageType.MAddPlayerWorkToCenter-offSet]=this::createMAddPlayerWorkToCenterServerResponse;
-		list[ServerMessageType.MQueryPlayerWorkToCenter-offSet]=this::createMQueryPlayerWorkToCenterServerResponse;
-		list[ServerMessageType.UseActivationCodeToCenter-offSet]=this::createUseActivationCodeToCenterServerResponse;
-		list[ServerMessageType.FuncSendGetPageShowToCenter-offSet]=this::createFuncSendGetPageShowToCenterServerResponse;
-		list[ServerMessageType.GameLoginToCenter-offSet]=this::createGameLoginToCenterServerResponse;
-		list[ServerMessageType.CommitCustomRoleSocialToCenter-offSet]=this::createCommitCustomRoleSocialToCenterServerResponse;
 		list[ServerMessageType.SendPlayerOnlineNumToCenter-offSet]=this::createSendPlayerOnlineNumToCenterServerResponse;
-		list[ServerMessageType.ReBeCenterToManager-offSet]=this::createReBeCenterToManagerServerResponse;
-		list[ServerMessageType.CenterExit-offSet]=this::createCenterExitServerResponse;
-		list[ServerMessageType.ManagerToCenterCommand-offSet]=this::createManagerToCenterCommandServerResponse;
-		list[ServerMessageType.CommitRoleGroupToCenter-offSet]=this::createCommitRoleGroupToCenterServerResponse;
-		list[ServerMessageType.SendCenterWorkCompleteToCenter-offSet]=this::createSendCenterWorkCompleteToCenterServerResponse;
-		list[ServerMessageType.FuncRoleGroupChangeSimpleToCenter-offSet]=this::createFuncRoleGroupChangeSimpleToCenterServerResponse;
-		list[ServerMessageType.FuncToCenter-offSet]=this::createFuncToCenterServerResponse;
+		list[ServerMessageType.SendPlayerWorkToCenter-offSet]=this::createSendPlayerWorkToCenterServerResponse;
+		list[ServerMessageType.UseActivationCodeToCenter-offSet]=this::createUseActivationCodeToCenterServerResponse;
 	}
 	
 	private BaseData createBeGameToCenterServerResponse()
@@ -270,6 +272,11 @@ public class CenterServerResponseMaker extends DataMaker
 	private BaseData createFuncRemoveSubsectionRankToCenterServerResponse()
 	{
 		return new FuncRemoveSubsectionRankToCenterServerResponse();
+	}
+	
+	private BaseData createReloadServerConfigToCenterServerResponse()
+	{
+		return new ReloadServerConfigToCenterServerResponse();
 	}
 	
 }

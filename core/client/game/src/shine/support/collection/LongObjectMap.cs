@@ -19,20 +19,12 @@ namespace ShineEngine
 
 		public LongObjectMap()
 		{
-
+			init(_minSize);
 		}
 
 		public LongObjectMap(int capacity)
 		{
 			init(countCapacity(capacity));
-		}
-
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
 		}
 
 		public long getFreeValue()
@@ -42,19 +34,17 @@ namespace ShineEngine
 
 		public long[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
 		public V[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new long[capacity<<1];
 
@@ -226,8 +216,6 @@ namespace ShineEngine
 
 		public void put(long key,V value)
 		{
-			checkInit();
-
 			int index=insert(key,value);
 
 			if(index<0)
@@ -412,27 +400,8 @@ namespace ShineEngine
 			}
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
-
 		public V putIfAbsent(long key,V value)
 		{
-			checkInit();
 			int index=insert(key,value);
 
 			if(index<0)
@@ -447,7 +416,6 @@ namespace ShineEngine
 
 		public V computeIfAbsent(long key,Func<long,V> mappingFunction)
 		{
-			checkInit();
 			long free;
 			if(key==(free=_freeValue))
 			{
@@ -592,6 +560,36 @@ namespace ShineEngine
 			list.sort();
 
 			return list;
+		}
+
+		/** 转化为原生集合 */
+		public Dictionary<long,V> toNatureMap()
+		{
+			Dictionary<long,V> re=new Dictionary<long,V>(size());
+
+			long free=_freeValue;
+			long[] keys=_set;
+			V[] vals=_values;
+			for(int i=(keys.Length) - 1;i >= 0;--i)
+			{
+				long key;
+				if((key=keys[i])!=free)
+				{
+					re.Add(key,vals[i]);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(Dictionary<long,V> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(KeyValuePair<long,V> kv in map)
+			{
+				this.put(kv.Key,kv.Value);
+			}
 		}
 
 		/** 遍历 */

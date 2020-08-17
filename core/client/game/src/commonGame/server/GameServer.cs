@@ -5,7 +5,7 @@ using ShineEngine;
 /// 游戏服务
 /// </summary>
 [Hotfix]
-public class GameServer:BaseServer
+public class GameServer:SceneBaseServer
 {
 	/** 当前等待的mid */
 	private int _currentRequestMid=-1;
@@ -15,19 +15,6 @@ public class GameServer:BaseServer
 	private long _requestRecordTime;
 	/** 是否显示了delayUI */
 	private bool _isShowDelayUI=false;
-
-	public override void init()
-	{
-		base.init();
-
-		if(CommonSetting.clientOpenReconnect)
-		{
-			//开启重连
-			getSocket().setOpenReconnect(true);
-		}
-
-
-	}
 
 	public override void initMessage()
 	{

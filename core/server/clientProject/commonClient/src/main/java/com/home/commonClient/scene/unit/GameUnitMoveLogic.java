@@ -4,11 +4,11 @@ import com.home.commonBase.constlist.generate.UnitAICommandType;
 import com.home.commonBase.data.scene.base.DirData;
 import com.home.commonBase.scene.base.SceneObject;
 import com.home.commonBase.scene.unit.UnitMoveLogic;
-import com.home.commonClient.net.request.scene.unit.CUnitMoveDirRequest;
-import com.home.commonClient.net.request.scene.unit.CUnitMovePosListRequest;
-import com.home.commonClient.net.request.scene.unit.CUnitMovePosRequest;
-import com.home.commonClient.net.request.scene.unit.CUnitSpecialMoveRequest;
-import com.home.commonClient.net.request.scene.unit.CUnitStopMoveRequest;
+import com.home.commonClient.net.sceneBaseRequest.unit.CUnitMoveDirRequest;
+import com.home.commonClient.net.sceneBaseRequest.unit.CUnitMovePosListRequest;
+import com.home.commonClient.net.sceneBaseRequest.unit.CUnitMovePosRequest;
+import com.home.commonClient.net.sceneBaseRequest.unit.CUnitSpecialMoveRequest;
+import com.home.commonClient.net.sceneBaseRequest.unit.CUnitStopMoveRequest;
 import com.home.commonClient.scene.base.GameUnit;
 import com.home.shine.utils.MathUtils;
 

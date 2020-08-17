@@ -18,6 +18,8 @@ public class AttributeOneInfo
 	public int currentMaxID;
 	/** 当前属性默认空满 */
 	public bool isCurrentDefaultFull;
+	/** 当前属性是否可超过上限 */
+	public bool isCurrentCanOverMax;
 	/** 推送角色自己方式 */
 	public int sendSelfType;
 	/** 是否简版单位所需 */

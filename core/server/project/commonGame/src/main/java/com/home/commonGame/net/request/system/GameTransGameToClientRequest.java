@@ -10,6 +10,8 @@ public class GameTransGameToClientRequest extends GameRequest
 	/** 数据类型ID */
 	public static final int dataID=GameRequestType.GameTransGameToClient;
 	
+	private int _mid;
+	
 	private byte[] _data;
 	
 	public GameTransGameToClientRequest()
@@ -26,11 +28,13 @@ public class GameTransGameToClientRequest extends GameRequest
 	@Override
 	protected void doWriteBytesSimple(BytesWriteStream stream)
 	{
+		stream.natureWriteUnsignedShort(_mid);
 		stream.writeByteArr(_data);
 	}
 	
-	public void setData(byte[] data)
+	public void setData(int mid,byte[] data)
 	{
+		_mid=mid;
 		_data=data;
 	}
 	

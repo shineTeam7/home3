@@ -8,6 +8,7 @@ import com.home.commonBase.data.social.rank.RankData;
 import com.home.commonGame.global.GameC;
 import com.home.commonGame.net.request.func.rank.FuncRefreshRankRequest;
 import com.home.commonGame.net.request.func.rank.FuncResetRankRequest;
+import com.home.commonGame.net.request.func.rank.subsection.FuncRefreshSubsectionIndexRequest;
 import com.home.commonGame.net.request.func.rank.subsection.FuncRefreshSubsectionRankRequest;
 
 /** 角色排行插件(挂在Player上的) */
@@ -261,6 +262,8 @@ public class PlayerSubsectionRankTool extends PlayerFuncTool
 	{
 		_data.subsectionIndex=subsectionIndex;
 		_data.subsectionSubIndex=subsectionSubIndex;
+
+		me.send(FuncRefreshSubsectionIndexRequest.create(_funcID,subsectionIndex,subsectionSubIndex));
 	}
 
 	/** 绑定翻页显示插件 */

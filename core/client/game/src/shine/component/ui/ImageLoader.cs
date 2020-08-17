@@ -131,7 +131,9 @@ namespace ShineEngine
 			if(!_init)
 				return;
 
-			_loadTool.clear();
+			if(_loadTool!=null)
+				_loadTool.clear();
+
 			_init=false;
 		}
 

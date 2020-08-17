@@ -36,671 +36,674 @@ public class InfoCodeType
 	/** 登录游戏失败,版本过低 */
 	public static final int LoginGameFailed_resourceVersionLow=12;
 	
+	/** 登录游戏失败,服务器爆满 */
+	public static final int LoginGameFailed_gameIsFull=13;
+	
 	/** 创建角色失败,正在创建中 */
-	public static final int CreatePlayerFailed_isCreating=13;
+	public static final int CreatePlayerFailed_isCreating=14;
 	
 	/** 创建角色失败,达到角色数目上限 */
-	public static final int CreatePlayerFailed_ownPlayerNumMax=14;
+	public static final int CreatePlayerFailed_ownPlayerNumMax=15;
 	
 	/** 创建角色失败,名字过长 */
-	public static final int CreatePlayerFailed_nameTooLong=15;
+	public static final int CreatePlayerFailed_nameTooLong=16;
 	
 	/** 创建角色失败,含有非法字符 */
-	public static final int CreatePlayerFailed_nameNotAllowed=16;
+	public static final int CreatePlayerFailed_nameNotAllowed=17;
 	
 	/** 创建角色失败,名字重复 */
-	public static final int CreatePlayerFailed_nameIsRepeat=17;
+	public static final int CreatePlayerFailed_nameIsRepeat=18;
 	
 	/** 创建角色失败,名字敏感 */
-	public static final int CreatePlayerFailed_nameIsSensitive=18;
+	public static final int CreatePlayerFailed_nameIsSensitive=19;
 	
 	/** 创建角色失败,区服已满 */
-	public static final int CreatePlayerFailed_areaIsFull=19;
+	public static final int CreatePlayerFailed_areaIsFull=20;
 	
 	/** 角色重连游戏失败,令牌不匹配 */
-	public static final int PlayerReconnectLoginFailed_tokenNotMatch=20;
+	public static final int PlayerReconnectLoginFailed_tokenNotMatch=21;
 	
 	/** 玩家下线,主动下线 */
-	public static final int PlayerExit_initiative=21;
+	public static final int PlayerExit_initiative=22;
 	
 	/** 玩家下线,连接断开 */
-	public static final int PlayerExit_socketClose=22;
+	public static final int PlayerExit_socketClose=23;
 	
 	/** 玩家下线,被挤下线 */
-	public static final int PlayerExit_crowedDown=23;
+	public static final int PlayerExit_crowedDown=24;
 	
 	/** 玩家下线,被踢下线 */
-	public static final int PlayerExit_beKicked=24;
+	public static final int PlayerExit_beKicked=25;
 	
 	/** 玩家下线,服务器关闭 */
-	public static final int PlayerExit_serverClose=25;
+	public static final int PlayerExit_serverClose=26;
 	
 	/** 玩家下线,被强制下线(跨服回) */
-	public static final int PlayerExit_callSwitchBack=26;
+	public static final int PlayerExit_callSwitchBack=27;
 	
 	/** 玩家下线,账号删除 */
-	public static final int PlayerExit_delete=27;
+	public static final int PlayerExit_delete=28;
 	
 	/** 客户端删除角色,角色不存在 */
-	public static final int DeletePlayer_notExit=28;
+	public static final int DeletePlayer_notExit=29;
 	
 	/** 切换游戏服失败,没有切换数据(token不正确) */
-	public static final int SwitchGameFailed_noSwitchData=29;
+	public static final int SwitchGameFailed_noSwitchData=30;
 	
 	/** 切换游戏服失败,状态不正确 */
-	public static final int SwitchGameFailed_notRightState=30;
+	public static final int SwitchGameFailed_notRightState=31;
 	
 	/** 客户端GM指令失败 */
-	public static final int ClientGMFailed=31;
+	public static final int ClientGMFailed=32;
 	
 	/** 客户端GM指令成功 */
-	public static final int ClientGMSuccess=32;
+	public static final int ClientGMSuccess=33;
 	
 	/** 客户端GM指令帮助 */
-	public static final int ClientGMHelp=33;
+	public static final int ClientGMHelp=34;
 	
 	/** 绑定平台失败,目标账号已存在 */
-	public static final int BindPlatformFailed_targetUIDExist=34;
+	public static final int BindPlatformFailed_targetUIDExist=35;
 	
 	/** 客户端离线事务执行出错 */
-	public static final int OfflineWorkFailed=35;
+	public static final int OfflineWorkFailed=36;
 	
 	/** 事务内部错误(未注册/已传输过) */
-	public static final int WorkError=36;
+	public static final int WorkError=37;
 	
 	/** 执行事务时角色不存在 */
-	public static final int Work_playerNotExit=37;
+	public static final int Work_playerNotExit=38;
 	
 	/** 拉回by距离超限 */
-	public static final int PullBack_distance=41;
+	public static final int PullBack_distance=42;
 	
 	/** 拉回by当前状态不可移动 */
-	public static final int PullBack_cantMove=42;
+	public static final int PullBack_cantMove=43;
 	
 	/** 拾取失败,背包空间不足 */
-	public static final int PickUpFailed_bagNotEnough=43;
+	public static final int PickUpFailed_bagNotEnough=44;
 	
 	/** 拾取失败,单位丢失 */
-	public static final int PickUpFailed_unitMiss=44;
+	public static final int PickUpFailed_unitMiss=45;
 	
 	/** 拾取失败,距离过远 */
-	public static final int PickUpFailed_tooFar=45;
+	public static final int PickUpFailed_tooFar=46;
 	
 	/** 操作失败,单位丢失 */
-	public static final int OperateFailed_unitMiss=46;
+	public static final int OperateFailed_unitMiss=47;
 	
 	/** 操作失败,距离过远 */
-	public static final int OperateFailed_tooFar=47;
+	public static final int OperateFailed_tooFar=48;
 	
 	/** 操作失败,不在空闲中 */
-	public static final int OperateFailed_notReady=48;
+	public static final int OperateFailed_notReady=49;
 	
 	/** 需要在$1状态中 */
-	public static final int Condition_needOnStatus=52;
+	public static final int Condition_needOnStatus=53;
 	
 	/** 不可处于$1状态 */
-	public static final int Condition_needOffStatus=53;
+	public static final int Condition_needOffStatus=54;
 	
 	/** 使用物品时等级不足 */
-	public static final int Condition_needLevel=54;
+	public static final int Condition_needLevel=55;
 	
 	/** 需要工会 */
-	public static final int Condition_needUnion=55;
+	public static final int Condition_needUnion=56;
 	
 	/** 功能$1未开启 */
-	public static final int Condition_functionNotOpen=56;
+	public static final int Condition_functionNotOpen=57;
 	
 	/** 任务$1未完成 */
-	public static final int Condition_needCompleteQuest=57;
+	public static final int Condition_needCompleteQuest=58;
 	
 	/** 改名时,不在源游戏服 */
-	public static final int Role_changeName_notSource=58;
+	public static final int Role_changeName_notSource=59;
 	
 	/** 申请绑定平台时，不是游客 */
-	public static final int Role_bindPlatform_notTourist=59;
+	public static final int Role_bindPlatform_notTourist=60;
 	
 	/** 背包空间不足 */
-	public static final int BagNotEnough=64;
+	public static final int BagNotEnough=65;
 	
 	/** 移除物品红点时，物品不存在 */
-	public static final int RemoveItemRedPoint_itemNotExist=65;
+	public static final int RemoveItemRedPoint_itemNotExist=66;
 	
 	/** 移动装备时，物品为空 */
-	public static final int MoveEquip_equipNotExist=66;
+	public static final int MoveEquip_equipNotExist=67;
 	
 	/** 移动装备时，目标槽位不可用 */
-	public static final int MoveEquip_targetSlotDisabled=67;
+	public static final int MoveEquip_targetSlotDisabled=68;
 	
 	/** 移动装备时，装备类型不匹配 */
-	public static final int MoveEquip_equipTypeNotMatch=68;
+	public static final int MoveEquip_equipTypeNotMatch=69;
 	
 	/** 移动物品时，找不到from物品 */
-	public static final int MoveItem_FromItemNotExist=69;
+	public static final int MoveItem_FromItemNotExist=70;
 	
 	/** 移动物品时，toIndex不可用 */
-	public static final int MoveItem_toIndexDisabled=70;
+	public static final int MoveItem_toIndexDisabled=71;
 	
 	/** 移动物品时，序号相等 */
-	public static final int MoveItem_IndexEqual=71;
+	public static final int MoveItem_IndexEqual=72;
 	
 	/** 拆分物品时，找不到from物品 */
-	public static final int SplitItem_FromItemNotExist=72;
+	public static final int SplitItem_FromItemNotExist=73;
 	
 	/** 拆分物品时，数目非法 */
-	public static final int SplitItem_CountNotAllowed=73;
+	public static final int SplitItem_CountNotAllowed=74;
 	
 	/** 拆分物品时，没有空余格子 */
-	public static final int SplitItem_GridFull=74;
+	public static final int SplitItem_GridFull=75;
 	
 	/** 穿戴装备时，装备位置未开放 */
-	public static final int Equip_slotNotOpen=79;
+	public static final int Equip_slotNotOpen=80;
 	
 	/** 穿戴装备时，不是装备 */
-	public static final int Equip_notEquip=80;
+	public static final int Equip_notEquip=81;
 	
 	/** 穿戴装备时，装备位置已存在 */
-	public static final int Equip_slotAlreadyExist=81;
+	public static final int Equip_slotAlreadyExist=82;
 	
 	/** 穿戴装备时，已存在唯一装备 */
-	public static final int Equip_equipAlreadyExist=82;
+	public static final int Equip_equipAlreadyExist=83;
 	
 	/** 穿戴装备时，装备类型不匹配 */
-	public static final int Equip_wrongType=83;
+	public static final int Equip_wrongType=84;
 	
 	/** 穿戴装备时,物品为空 */
-	public static final int Equip_itemNotExist=84;
+	public static final int Equip_itemNotExist=85;
 	
 	/** 卸下装备时,装备为空 */
-	public static final int Equip_equipNotExist=85;
+	public static final int Equip_equipNotExist=86;
 	
 	/** 卸下装备时,目标格子不为空 */
-	public static final int Equip_slotNotEmpty=86;
+	public static final int Equip_slotNotEmpty=87;
 	
 	/** 卸下装备时,没有空余格子 */
-	public static final int Equip_slotNotEnough=87;
+	public static final int Equip_slotNotEnough=88;
 	
 	/** 出售物品时，客户端次数非法 */
-	public static final int Bag_sellItem_wrongNum=92;
+	public static final int Bag_sellItem_wrongNum=93;
 	
 	/** 出售物品时，出售物品不存在 */
-	public static final int Bag_sellItem_itemNotExist=93;
+	public static final int Bag_sellItem_itemNotExist=94;
 	
 	/** 出售物品时，出售物品id不匹配 */
-	public static final int Bag_sellItem_wrongID=94;
+	public static final int Bag_sellItem_wrongID=95;
 	
 	/** 出售物品时，出售物品移除失败 */
-	public static final int Bag_sellItem_removeItemFailed=95;
+	public static final int Bag_sellItem_removeItemFailed=96;
 	
 	/** 接取任务 */
-	public static final int AcceptQuest=99;
+	public static final int AcceptQuest=100;
 	
 	/** 提交任务成功 */
-	public static final int CommitQuestSuccess=100;
+	public static final int CommitQuestSuccess=101;
 	
 	/** 接任务时,任务已接 */
-	public static final int Quest_accept_accepted=101;
+	public static final int Quest_accept_accepted=102;
 	
 	/** 接任务时,任务已完成 */
-	public static final int Quest_accept_completed=102;
+	public static final int Quest_accept_completed=103;
 	
 	/** 接任务时,不可接取已失败的任务 */
-	public static final int Quest_accept_failed=103;
+	public static final int Quest_accept_failed=104;
 	
 	/** 接任务时,前置任务未完成 */
-	public static final int Quest_accept_preQuestNotFinish=104;
+	public static final int Quest_accept_preQuestNotFinish=105;
 	
 	/** 接任务时,条件不满足 */
-	public static final int Quest_accept_conditionNotMet=105;
+	public static final int Quest_accept_conditionNotMet=106;
 	
 	/** 接任务时,背包没有足够的位置放任务道具 */
-	public static final int Quest_accept_bagNotEnough=106;
+	public static final int Quest_accept_bagNotEnough=107;
 	
 	/** 放弃任务时,任务不存在 */
-	public static final int Quest_giveUp_questNotExist=107;
+	public static final int Quest_giveUp_questNotExist=108;
 	
 	/** 放弃任务时,任务未失败并且不可放弃 */
-	public static final int Quest_giveUp_questCanNotGiveUp=108;
+	public static final int Quest_giveUp_questCanNotGiveUp=109;
 	
 	/** 提交任务时,任务不存在 */
-	public static final int Quest_commit_questNotExist=109;
+	public static final int Quest_commit_questNotExist=110;
 	
 	/** 提交任务时,任务已失败 */
-	public static final int Quest_commit_failed=110;
+	public static final int Quest_commit_failed=111;
 	
 	/** 提交任务时,任务未完成 */
-	public static final int Quest_commit_questNotComplete=111;
+	public static final int Quest_commit_questNotComplete=112;
 	
 	/** clientTaskEvent时,找不到目标配置 */
-	public static final int Quest_clientTaskEvent_canNotFindConfig=112;
+	public static final int Quest_clientTaskEvent_canNotFindConfig=113;
 	
 	/** clientTaskEvent时,不可客户端驱动 */
-	public static final int Quest_clientTaskEvent_clientNotAllowed=113;
+	public static final int Quest_clientTaskEvent_clientNotAllowed=114;
 	
 	/** 对方好友列表已满 */
-	public static final int Friend_targetFriendListIsFull=118;
+	public static final int Friend_targetFriendListIsFull=119;
 	
 	/** 自身好友列表已满 */
-	public static final int Friend_friendListIsFull=119;
+	public static final int Friend_friendListIsFull=120;
 	
 	/** 目标已经是好友了 */
-	public static final int Friend_targetIsAlreadyFriend=120;
+	public static final int Friend_targetIsAlreadyFriend=121;
 	
 	/** 添加好友时，不能添加自己 */
-	public static final int Friend_add_canNotAddSelf=121;
+	public static final int Friend_add_canNotAddSelf=122;
 	
 	/** 添加好友时，重复添加 */
-	public static final int Friend_add_repeatAdd=122;
+	public static final int Friend_add_repeatAdd=123;
 	
 	/** 添加好友时，在黑名单中 */
-	public static final int Friend_add_inBlack=123;
+	public static final int Friend_add_inBlack=124;
 	
 	/** 添加好友时,好友数目已达上限 */
-	public static final int Friend_add_numFull=124;
+	public static final int Friend_add_numFull=125;
 	
 	/** 同意添加好友时，不能添加自己 */
-	public static final int Friend_agree_canNotAddSelf=125;
+	public static final int Friend_agree_canNotAddSelf=126;
 	
 	/** 同意添加好友时，重复添加 */
-	public static final int Friend_agree_repeatAdd=126;
+	public static final int Friend_agree_repeatAdd=127;
 	
 	/** 同意添加好友时，在黑名单中 */
-	public static final int Friend_agree_inBlack=127;
+	public static final int Friend_agree_inBlack=128;
 	
 	/** 同意添加好友时,好友数目已达上限 */
-	public static final int Friend_agree_numFull=128;
+	public static final int Friend_agree_numFull=129;
 	
 	/** 同意添加好友时,找不到申请数据 */
-	public static final int Friend_agree_canNotFindData=129;
+	public static final int Friend_agree_canNotFindData=130;
 	
 	/** 删除好友时,不是好友 */
-	public static final int Friend_remove_notFriend=130;
+	public static final int Friend_remove_notFriend=131;
 	
 	/** 添加黑名单时，不能添加自己 */
-	public static final int Friend_addBlack_canNotAddSelf=131;
+	public static final int Friend_addBlack_canNotAddSelf=132;
 	
 	/** 添加黑名单时，重复添加 */
-	public static final int Friend_addBlack_repeatAdd=132;
+	public static final int Friend_addBlack_repeatAdd=133;
 	
 	/** 添加黑名单时,黑名单数目已达上限 */
-	public static final int Friend_addBlack_numFull=133;
+	public static final int Friend_addBlack_numFull=134;
 	
 	/** 移除黑名单时,不存在 */
-	public static final int Friend_removeBlack_memberNotExist=134;
+	public static final int Friend_removeBlack_memberNotExist=135;
 	
 	/** 拒绝好友申请时,不存在 */
-	public static final int Friend_refuse_memberNotExist=135;
+	public static final int Friend_refuse_memberNotExist=136;
 	
 	/** 创建玩家群失败，名字敏感 */
-	public static final int CreateRoleGroupFailed_nameIsSensitive=140;
+	public static final int CreateRoleGroupFailed_nameIsSensitive=141;
 	
 	/** 创建玩家群失败，公告敏感 */
-	public static final int CreateRoleGroupFailed_noticeIsSensitive=141;
+	public static final int CreateRoleGroupFailed_noticeIsSensitive=142;
 	
 	/** 创建玩家群失败，名字重复 */
-	public static final int CreateRoleGroupFailed_nameIsRepeat=142;
+	public static final int CreateRoleGroupFailed_nameIsRepeat=143;
 	
 	/** 邀请玩家入群失败，玩家群已满 */
-	public static final int InviteRoleGroupFailed_targetRoleGroupFull=143;
+	public static final int InviteRoleGroupFailed_targetRoleGroupFull=144;
 	
 	/** 邀请玩家入群失败，已在群中 */
-	public static final int InviteRoleGroupFailed_targetInRoleGroup=144;
+	public static final int InviteRoleGroupFailed_targetInRoleGroup=145;
 	
 	/** 邀请玩家入群失败，目标条件不满足 */
-	public static final int InviteRoleGroupFailed_targetConditionNotMatch=145;
+	public static final int InviteRoleGroupFailed_targetConditionNotMatch=146;
 	
 	/** 找不到玩家群 */
-	public static final int RoleGroupMiss=146;
+	public static final int RoleGroupMiss=147;
 	
 	/** 解散玩家群时，不可解散 */
-	public static final int PlayerGroup_player_disband_canNotDisband=147;
+	public static final int PlayerGroup_player_disband_canNotDisband=148;
 	
 	/** 解散玩家群时，不是群主 */
-	public static final int PlayerGroup_player_disband_isNotLeader=148;
+	public static final int PlayerGroup_player_disband_isNotLeader=149;
 	
 	/** 解散玩家群时，此时不可操作 */
-	public static final int PlayerGroup_player_disband_canNotHandle=149;
+	public static final int PlayerGroup_player_disband_canNotHandle=150;
 	
 	/** 主动退出玩家群时，不可退出 */
-	public static final int PlayerGroup_player_leave_canNotLeave=150;
+	public static final int PlayerGroup_player_leave_canNotLeave=151;
 	
 	/** 主动退出玩家群时，此时不可操作 */
-	public static final int PlayerGroup_player_leave_canNotHandle=151;
+	public static final int PlayerGroup_player_leave_canNotHandle=152;
 	
 	/** 改变群主时，找不到目标 */
-	public static final int PlayerGroup_player_changeLeader_canNotFindTarget=152;
+	public static final int PlayerGroup_player_changeLeader_canNotFindTarget=153;
 	
 	/** 改变群主时，目标是自己 */
-	public static final int PlayerGroup_player_changeLeader_targetIsSelf=153;
+	public static final int PlayerGroup_player_changeLeader_targetIsSelf=154;
 	
 	/** 设置职位时，没有权限 */
-	public static final int PlayerGroup_player_setTitle_notAllowed=154;
+	public static final int PlayerGroup_player_setTitle_notAllowed=155;
 	
 	/** 设置职位时，找不到目标成员 */
-	public static final int PlayerGroup_player_setTitle_canNotFindTarget=155;
+	public static final int PlayerGroup_player_setTitle_canNotFindTarget=156;
 	
 	/** 设置职位时，不能设置队长 */
-	public static final int PlayerGroup_player_setTitle_canNotSetLeader=156;
+	public static final int PlayerGroup_player_setTitle_canNotSetLeader=157;
 	
 	/** 设置职位时，目标职位已超过自身能给与上限 */
-	public static final int PlayerGroup_player_setTitle_targetLevelHigher=157;
+	public static final int PlayerGroup_player_setTitle_targetLevelHigher=158;
 	
 	/** 设置职位时，当前已是该职位 */
-	public static final int PlayerGroup_player_setTitle_titleIsSame=158;
+	public static final int PlayerGroup_player_setTitle_titleIsSame=159;
 	
 	/** 设置职位时，超过容纳数目 */
-	public static final int PlayerGroup_player_setTitle_titleNumFull=159;
+	public static final int PlayerGroup_player_setTitle_titleNumFull=160;
 	
 	/** 踢出成员时，成员不存在 */
-	public static final int PlayerGroup_player_kickMember_memberNotExist=160;
+	public static final int PlayerGroup_player_kickMember_memberNotExist=161;
 	
 	/** 踢出成员时，不可踢出自己 */
-	public static final int PlayerGroup_player_kickMember_canNotKickSelf=161;
+	public static final int PlayerGroup_player_kickMember_canNotKickSelf=162;
 	
 	/** 踢出成员时，权限不足 */
-	public static final int PlayerGroup_player_kickMember_notAllowed=162;
+	public static final int PlayerGroup_player_kickMember_notAllowed=163;
 	
 	/** 踢出成员时，不可提出队长 */
-	public static final int PlayerGroup_player_kickMember_canNotKickLeader=163;
+	public static final int PlayerGroup_player_kickMember_canNotKickLeader=164;
 	
 	/** 处理申请时，人数已满 */
-	public static final int PlayerGroup_player_handleApply_playerNumFull=164;
+	public static final int PlayerGroup_player_handleApply_playerNumFull=165;
 	
 	/** 处理申请时，成员已存在 */
-	public static final int PlayerGroup_player_handleApply_memberExist=165;
+	public static final int PlayerGroup_player_handleApply_memberExist=166;
 	
 	/** 处理申请时，不可处理申请 */
-	public static final int PlayerGroup_player_handleApply_canNotHandle=166;
+	public static final int PlayerGroup_player_handleApply_canNotHandle=167;
 	
 	/** 修改群名时，权限不够 */
-	public static final int PlayerGroup_player_changeName_notAllowed=167;
+	public static final int PlayerGroup_player_changeName_notAllowed=168;
 	
 	/** 修改群名时，名字过长 */
-	public static final int PlayerGroup_player_changeName_nameTooLong=168;
+	public static final int PlayerGroup_player_changeName_nameTooLong=169;
 	
 	/** 修改群名时，名字敏感 */
-	public static final int PlayerGroup_player_changeName_nameSensitive=169;
+	public static final int PlayerGroup_player_changeName_nameSensitive=170;
 	
 	/** 修改群名时，名字重复 */
-	public static final int PlayerGroup_player_changeName_nameIsRepeat=170;
+	public static final int PlayerGroup_player_changeName_nameIsRepeat=171;
 	
 	/** 修改群公告时，权限不够 */
-	public static final int PlayerGroup_player_changeNotice_notAllowed=171;
+	public static final int PlayerGroup_player_changeNotice_notAllowed=172;
 	
 	/** 修改群公告时，名字过长 */
-	public static final int PlayerGroup_player_changeNotice_nameTooLong=172;
+	public static final int PlayerGroup_player_changeNotice_nameTooLong=173;
 	
 	/** 修改群公告时，名字敏感 */
-	public static final int PlayerGroup_player_changeNotice_nameSensitive=173;
+	public static final int PlayerGroup_player_changeNotice_nameSensitive=174;
 	
 	/** 修改“自动批准申请”开关时，权限不够 */
-	public static final int PlayerGroup_player_changeAutoApply_notAllowed=174;
+	public static final int PlayerGroup_player_changeAutoApply_notAllowed=175;
 	
 	/** 创建玩家群时,名字过长 */
-	public static final int PlayerGroup_create_nameTooLong=175;
+	public static final int PlayerGroup_create_nameTooLong=176;
 	
 	/** 创建玩家群时,公告过长 */
-	public static final int PlayerGroup_create_noticeTooLong=176;
+	public static final int PlayerGroup_create_noticeTooLong=177;
 	
 	/** 邀请入群时,condition不满足 */
-	public static final int PlayerGroup_invite_conditionNotMet=177;
+	public static final int PlayerGroup_invite_conditionNotMet=178;
 	
 	/** 本服玩家群不可与其他服玩家交互 */
-	public static final int PlayerGroup_wrongServer=178;
+	public static final int PlayerGroup_wrongServer=179;
 	
 	/** 邀请入群时,找不到群 */
-	public static final int PlayerGroup_invite_canNotFindGroup=179;
+	public static final int PlayerGroup_invite_canNotFindGroup=180;
 	
 	/** 邀请入群时,人数已满 */
-	public static final int PlayerGroup_invite_memberFull=180;
+	public static final int PlayerGroup_invite_memberFull=181;
 	
 	/** 邀请入群时,邀请者没有权限 */
-	public static final int PlayerGroup_invite_notAllowed=181;
+	public static final int PlayerGroup_invite_notAllowed=182;
 	
 	/** 邀请入群时,已在群中 */
-	public static final int PlayerGroup_invite_alreadyInGroup=182;
+	public static final int PlayerGroup_invite_alreadyInGroup=183;
 	
 	/** 邀请入群直接创建时,不支持直接邀请创建 */
-	public static final int PlayerGroup_inviteAndCreate_canNotCreate=183;
+	public static final int PlayerGroup_inviteAndCreate_canNotCreate=184;
 	
 	/** 邀请入群直接创建时,必须为单一群 */
-	public static final int PlayerGroup_inviteAndCreate_mustOnly=184;
+	public static final int PlayerGroup_inviteAndCreate_mustOnly=185;
 	
 	/** 邀请入群直接创建时,已达到数目限制 */
-	public static final int PlayerGroup_inviteAndCreate_numLimit=185;
+	public static final int PlayerGroup_inviteAndCreate_numLimit=186;
 	
 	/** 处理邀请时,已失效 */
-	public static final int PlayerGroup_handleInvite_invalid=186;
+	public static final int PlayerGroup_handleInvite_invalid=187;
 	
 	/** 同意邀请入群时,自身群数已满 */
-	public static final int PlayerGroup_acceptInvite_groupNumFull=187;
+	public static final int PlayerGroup_acceptInvite_groupNumFull=188;
 	
 	/** 同意邀请入群时,自身条件不满足 */
-	public static final int PlayerGroup_acceptInvite_conditionNotMet=188;
+	public static final int PlayerGroup_acceptInvite_conditionNotMet=189;
 	
 	/** 不可申请非本服玩家群 */
-	public static final int PlayerGroup_canNotApplyOtherServer=189;
+	public static final int PlayerGroup_canNotApplyOtherServer=190;
 	
 	/** 申请加入玩家群时,配置不可申请 */
-	public static final int PlayerGroup_apply_configCanNotApply=190;
+	public static final int PlayerGroup_apply_configCanNotApply=191;
 	
 	/** 申请加入玩家群时,群数已满 */
-	public static final int PlayerGroup_apply_groupNumFull=191;
+	public static final int PlayerGroup_apply_groupNumFull=192;
 	
 	/** 申请加入玩家群时,已在该群 */
-	public static final int PlayerGroup_apply_alreadyInGroup=192;
+	public static final int PlayerGroup_apply_alreadyInGroup=193;
 	
 	/** 申请加入玩家群时,自身条件不满足 */
-	public static final int PlayerGroup_apply_conditionNotMet=193;
+	public static final int PlayerGroup_apply_conditionNotMet=194;
 	
 	/** 申请加入玩家群时,已申请过 */
-	public static final int PlayerGroup_apply_alreadyApply=194;
+	public static final int PlayerGroup_apply_alreadyApply=195;
 	
 	/** 申请加入玩家群时,已达到申请上限 */
-	public static final int PlayerGroup_apply_applyLimit=195;
+	public static final int PlayerGroup_apply_applyLimit=196;
 	
 	/** 使用激活码失败,码不存在 */
-	public static final int UseActivationCodeFailed_notExist=200;
+	public static final int UseActivationCodeFailed_notExist=201;
 	
 	/** 使用激活码失败,已使用过 */
-	public static final int UseActivationCodeFailed_hasUsed=201;
+	public static final int UseActivationCodeFailed_hasUsed=202;
 	
 	/** 使用激活码失败,已达到次数上限 */
-	public static final int UseActivationCodeFailed_numIsMax=202;
+	public static final int UseActivationCodeFailed_numIsMax=203;
 	
 	/** 使用激活码失败,已达到时间限制 */
-	public static final int UseActivationCodeFailed_timeOut=203;
+	public static final int UseActivationCodeFailed_timeOut=204;
 	
 	/** 使用激活码成功 */
-	public static final int UseActivationCodeSuccess=204;
+	public static final int UseActivationCodeSuccess=205;
 	
 	/** 拍卖行上架物品时，达到物品上限 */
-	public static final int Auction_sellItem_isMaxSaleNum=208;
+	public static final int Auction_sellItem_isMaxSaleNum=209;
 	
 	/** 拍卖行上架物品时，找不到指定物品 */
-	public static final int Auction_sellItem_cantFindItem=209;
+	public static final int Auction_sellItem_cantFindItem=210;
 	
 	/** 拍卖行上架物品时，物品id没对上 */
-	public static final int Auction_sellItem_wrongItemID=210;
+	public static final int Auction_sellItem_wrongItemID=211;
 	
 	/** 拍卖行上架物品时，数目非法 */
-	public static final int Auction_sellItem_wrongNum=211;
+	public static final int Auction_sellItem_wrongNum=212;
 	
 	/** 拍卖行上架物品时，价格非法 */
-	public static final int Auction_sellItem_wrongPrice=212;
+	public static final int Auction_sellItem_wrongPrice=213;
 	
 	/** 拍卖行下架物品时，还在上架过程中 */
-	public static final int Auction_cancelSellItem_stillSaleOn=213;
+	public static final int Auction_cancelSellItem_stillSaleOn=214;
 	
 	/** 拍卖行下架物品时，找不到上架物品 */
-	public static final int Auction_cancelSellItem_notExist=214;
+	public static final int Auction_cancelSellItem_notExist=215;
 	
 	/** 拍卖行购买物品时，物品id错误 */
-	public static final int Auction_buyItem_wrongItemID=215;
+	public static final int Auction_buyItem_wrongItemID=216;
 	
 	/** 拍卖行购买物品时，价格非法 */
-	public static final int Auction_buyItem_wrongPrice=216;
+	public static final int Auction_buyItem_wrongPrice=217;
 	
 	/** 拍卖行购买物品时，数目非法 */
-	public static final int Auction_buyItem_wrongNum=217;
+	public static final int Auction_buyItem_wrongNum=218;
 	
 	/** 拍卖行购买物品时，货币不足 */
-	public static final int Auction_buyItem_coinNotEnough=218;
+	public static final int Auction_buyItem_coinNotEnough=219;
 	
 	/** 拍卖行购买物品时，找不到上架物品 */
-	public static final int Auction_buyItem_notExist=219;
+	public static final int Auction_buyItem_notExist=220;
 	
 	/** 拍卖行购买物品时，物品数目余量不足 */
-	public static final int Auction_buyItem_numNotEnough=220;
+	public static final int Auction_buyItem_numNotEnough=221;
 	
 	/** 拍卖行购买物品时，不可购买自己的商品 */
-	public static final int Auction_buyItem_cantBuySelf=221;
+	public static final int Auction_buyItem_cantBuySelf=222;
 	
 	/** 拍卖行购买物品时，正在购买该物品中 */
-	public static final int Auction_buyItem_isBuying=222;
+	public static final int Auction_buyItem_isBuying=223;
 	
 	/** 拍卖行查询物品时，条件不能为空 */
-	public static final int Auction_query_conditionIsEmpty=223;
+	public static final int Auction_query_conditionIsEmpty=224;
 	
 	/** 拍卖行移除上架物品原因，主动取消 */
-	public static final int Auction_removeSellReason_cancelInitiative=224;
+	public static final int Auction_removeSellReason_cancelInitiative=225;
 	
 	/** 拍卖行移除上架物品原因，售罄 */
-	public static final int Auction_removeSellReason_soldOut=225;
+	public static final int Auction_removeSellReason_soldOut=226;
 	
 	/** 拍卖行移除上架物品原因，到下架时间 */
-	public static final int Auction_removeSellReason_timeOut=226;
+	public static final int Auction_removeSellReason_timeOut=227;
 	
 	/** 拍卖行查询sql后，player不存在 */
-	public static final int Auction_query_playerNotExist=227;
+	public static final int Auction_query_playerNotExist=228;
 	
 	/** 申请匹配时，玩家正匹配中 */
-	public static final int ApplyMatch_playerInMatching=232;
+	public static final int ApplyMatch_playerInMatching=233;
 	
 	/** 申请匹配时，玩家正切换场景中 */
-	public static final int ApplyMatch_playerIsChangingScene=233;
+	public static final int ApplyMatch_playerIsChangingScene=234;
 	
 	/** 申请匹配时，不可匹配 */
-	public static final int ApplyMatch_playerCanNotMatch=234;
+	public static final int ApplyMatch_playerCanNotMatch=235;
 	
 	/** 取消匹配时，玩家不在匹配中 */
-	public static final int CancelMatch_playerNotInMatching=235;
+	public static final int CancelMatch_playerNotInMatching=236;
 	
 	/** 取消匹配时，玩家匹配的不是该功能 */
-	public static final int CancelMatch_playerMatchFuncError=236;
+	public static final int CancelMatch_playerMatchFuncError=237;
 	
 	/** 取消匹配时，找不到对应的匹配功能 */
-	public static final int CancelMatch_playerMatchFuncNotExist=237;
+	public static final int CancelMatch_playerMatchFuncNotExist=238;
 	
 	/** 接受匹配时，玩家不在匹配中 */
-	public static final int AcceptMatch_playerNotInMatching=238;
+	public static final int AcceptMatch_playerNotInMatching=239;
 	
 	/** 接受匹配时，玩家匹配的不是该功能 */
-	public static final int AcceptMatch_playerMatchFuncError=239;
+	public static final int AcceptMatch_playerMatchFuncError=240;
 	
 	/** 接受匹配时，找不到对应的匹配功能 */
-	public static final int AcceptMatch_playerMatchFuncNotExist=240;
+	public static final int AcceptMatch_playerMatchFuncNotExist=241;
 	
 	/** 领取成就奖励时，找不到成就 */
-	public static final int Achievement_achievementNotExist=245;
+	public static final int Achievement_achievementNotExist=246;
 	
 	/** 领取成就奖励时，已领取过 */
-	public static final int Achievement_alreadyGet=246;
+	public static final int Achievement_alreadyGet=247;
 	
 	/** 领取成就奖励时，背包空间不足 */
-	public static final int Achievement_bagNotEnough=247;
+	public static final int Achievement_bagNotEnough=248;
 	
 	/** 读取邮件时，索引错误 */
-	public static final int Mail_read_wrongIndex=252;
+	public static final int Mail_read_wrongIndex=253;
 	
 	/** 邮件标记已读时,找不到邮件 */
-	public static final int Mail_markReaded_canNotFindMail=253;
+	public static final int Mail_markReaded_canNotFindMail=254;
 	
 	/** 邮件标记已读时,邮件实例ID不匹配 */
-	public static final int Mail_markReaded_wrongID=254;
+	public static final int Mail_markReaded_wrongID=255;
 	
 	/** 邮件标记已读时,已经是已读 */
-	public static final int Mail_markReaded_alreadyReaded=255;
+	public static final int Mail_markReaded_alreadyReaded=256;
 	
 	/** 邮件移除小红点时，索引错误 */
-	public static final int Mail_removeRedPoint_wrongIndex=256;
+	public static final int Mail_removeRedPoint_wrongIndex=257;
 	
 	/** 邮件移除小红点时,找不到邮件 */
-	public static final int Mail_removeRedPoint_canNotFindMail=257;
+	public static final int Mail_removeRedPoint_canNotFindMail=258;
 	
 	/** 邮件移除小红点时,没有红点 */
-	public static final int Mail_removeRedPoint_redPointNotExist=258;
+	public static final int Mail_removeRedPoint_redPointNotExist=259;
 	
 	/** 领取邮件时，索引错误 */
-	public static final int Mail_take_wrongIndex=259;
+	public static final int Mail_take_wrongIndex=260;
 	
 	/** 领取邮件内容时,找不到邮件 */
-	public static final int Mail_take_canNotFindMail=260;
+	public static final int Mail_take_canNotFindMail=261;
 	
 	/** 领取邮件内容时,邮件实例ID不匹配 */
-	public static final int Mail_take_wrongID=261;
+	public static final int Mail_take_wrongID=262;
 	
 	/** 领取邮件内容时,已经领取过 */
-	public static final int Mail_take_alreadyTake=262;
+	public static final int Mail_take_alreadyTake=263;
 	
 	/** 领取邮件内容时,物品列表为空 */
-	public static final int Mail_take_itemListEmpty=263;
+	public static final int Mail_take_itemListEmpty=264;
 	
 	/** 领取邮件内容时,背包空间不足 */
-	public static final int Mail_take_bagNotEnough=264;
+	public static final int Mail_take_bagNotEnough=265;
 	
 	/** 删除邮件时，索引错误 */
-	public static final int Mail_remove_wrongIndex=265;
+	public static final int Mail_remove_wrongIndex=266;
 	
 	/** 删除邮件时,找不到邮件 */
-	public static final int Mail_remove_canNotFindMail=266;
+	public static final int Mail_remove_canNotFindMail=267;
 	
 	/** 删除邮件时,邮件实例ID不匹配 */
-	public static final int Mail_remove_wrongID=267;
+	public static final int Mail_remove_wrongID=268;
 	
 	/** 客户端发送邮件时,给自己 */
-	public static final int Mail_clientSend_canNotSendToSelf=268;
+	public static final int Mail_clientSend_canNotSendToSelf=269;
 	
 	/** 聊天时，聊天条件不满足 */
-	public static final int Chat_conditionNotMet=273;
+	public static final int Chat_conditionNotMet=274;
 	
 	/** 聊天时，聊天cd中 */
-	public static final int Chat_inCD=274;
+	public static final int Chat_inCD=275;
 	
 	/** 聊天时，聊天cost不足 */
-	public static final int Chat_costNotEnough=275;
+	public static final int Chat_costNotEnough=276;
 	
 	/** 聊天时，聊天有屏蔽字内容 */
-	public static final int Chat_sensitive=276;
+	public static final int Chat_sensitive=277;
 	
 	/** 附近聊天时,找不到单位 */
-	public static final int NearChat_canNotFindUnit=277;
+	public static final int NearChat_canNotFindUnit=278;
 	
 	/** 队伍聊天时,没有队伍 */
-	public static final int TeamChat_noTeam=278;
+	public static final int TeamChat_noTeam=279;
 	
 	/** 公会聊天时,没有公会 */
-	public static final int UnionChat_noUnion=279;
+	public static final int UnionChat_noUnion=280;
 	
 	/** 删除宠物时，宠物不存在 */
-	public static final int RemovePet_notExist=283;
+	public static final int RemovePet_notExist=284;
 	
 	/** 宠物出战时，宠物不存在 */
-	public static final int PetWork_notExist=284;
+	public static final int PetWork_notExist=285;
 	
 	/** 宠物出战时，已在出战状态 */
-	public static final int PetWork_isWorkingNow=285;
+	public static final int PetWork_isWorkingNow=286;
 	
 	/** 宠物出战时，当前不可出战 */
-	public static final int PetWork_cantWork=286;
+	public static final int PetWork_cantWork=287;
 	
 	/** 宠物出战时，当前场景不存在 */
-	public static final int PetWork_sceneNotExist=287;
+	public static final int PetWork_sceneNotExist=288;
 	
 	/** 宠物休息时，宠物不存在 */
-	public static final int PetReset_notExist=288;
+	public static final int PetReset_notExist=289;
 	
 	/** 宠物休息时，已在休息状态 */
-	public static final int PetReset_isNotWorkingNow=289;
+	public static final int PetReset_isNotWorkingNow=290;
 	
 	/** 长度 */
 	public static int size=0;

@@ -24,7 +24,7 @@ public class IntLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 	
 	public IntLinkedObjectMap()
 	{
-		this(_minSize);
+		init(_minSize);
 	}
 	
 	public IntLinkedObjectMap(int capacity)
@@ -32,9 +32,10 @@ public class IntLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		init(countCapacity(capacity));
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_values=new Node[capacity<<1];
 	}
@@ -397,24 +398,6 @@ public class IntLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		{
 			deleteOne(values[i]);
 			values[i]=null;
-		}
-	}
-	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_values==null)
-			{
-				init(t);
-			}
-			else if(t>_values.length)
-			{
-				rehash(t);
-			}
 		}
 	}
 	

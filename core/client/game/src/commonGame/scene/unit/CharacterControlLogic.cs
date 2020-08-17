@@ -148,7 +148,7 @@ public class CharacterControlLogic:UnitLogicBase
 		{
 			_moveDir.direction=dir;
 
-			if(_scene.play.canOperate())
+			if(_scene.method.canOperate())
 			{
 				_unit.aiCommand.moveDir(_moveDir);
 			}

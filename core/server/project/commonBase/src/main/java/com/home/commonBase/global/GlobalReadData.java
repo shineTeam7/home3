@@ -17,9 +17,6 @@ public class GlobalReadData extends BaseData
 	/** 每个区服设计注册人数 */
 	public int areaDesignRegistNum;
 	
-	/** 每个区最大注册人数 */
-	public int areaMaxRegistNum;
-	
 	/** 角色名字上限数目(机器字) */
 	public int playerNameLength;
 	
@@ -198,7 +195,7 @@ public class GlobalReadData extends BaseData
 	public int matchWaitTime;
 	
 	/** 场景AOI灯塔尺寸 */
-	public int aoiTowerSize;
+	public float aoiTowerSize;
 	
 	/** aoi可视单位上限 */
 	public int aoiSeeMax;
@@ -208,6 +205,9 @@ public class GlobalReadData extends BaseData
 	
 	/** 自增属性计算间隔(ms) */
 	public int increaseAttributeDelay;
+	
+	/** 场景AOI灯塔延长尺寸(过渡区为2倍 该值) */
+	public float aoiTowerExpandSize;
 	
 	/** 自动分线场景，单场景容量 */
 	public int autoLinedSceneCapacity;
@@ -319,8 +319,6 @@ public class GlobalReadData extends BaseData
 		this.gameMaxBearNum=stream.readInt();
 		
 		this.areaDesignRegistNum=stream.readInt();
-		
-		this.areaMaxRegistNum=stream.readInt();
 		
 		this.playerNameLength=stream.readInt();
 		
@@ -446,7 +444,9 @@ public class GlobalReadData extends BaseData
 		
 		this.matchWaitTime=stream.readInt();
 		
-		this.aoiTowerSize=stream.readInt();
+		this.aoiTowerSize=stream.readFloat();
+		
+		this.aoiTowerExpandSize=stream.readFloat();
 		
 		this.aoiSeeMax=stream.readInt();
 		

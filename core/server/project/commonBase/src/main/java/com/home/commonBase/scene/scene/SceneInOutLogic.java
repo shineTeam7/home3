@@ -11,6 +11,7 @@ import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.scene.base.SceneLogicBase;
 import com.home.commonBase.scene.base.Unit;
 import com.home.commonBase.utils.BaseGameUtils;
+import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.IntLongMap;
 import com.home.shine.support.collection.LongObjectMap;
 
@@ -161,5 +162,12 @@ public class SceneInOutLogic extends SceneLogicBase
 				_scene.unitFactory.createAddUnitByPlace(placeInstanceID);
 			}
 		}
+	}
+	
+	/** 玩家是否都进入完毕() */
+	public boolean isPlayerAllExist()
+	{
+		Ctrl.throwError("should be override");
+		return false;
 	}
 }

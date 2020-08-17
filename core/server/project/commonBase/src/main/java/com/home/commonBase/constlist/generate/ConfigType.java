@@ -396,4 +396,7 @@ public class ConfigType
 	/** 推送标签类型 */
 	public static final int PushTopicType=129;
 	
+	/** 单位组表 */
+	public static final int UnitGroup=130;
+	
 }

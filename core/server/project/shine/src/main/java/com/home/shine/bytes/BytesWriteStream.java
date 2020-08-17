@@ -12,6 +12,9 @@ import io.netty.buffer.ByteBuf;
 /** 字节写流 */
 public class BytesWriteStream extends PoolObject
 {
+	/** 是否使用bitBoolean */
+	private boolean _useBitBoolean=ShineSetting.bytesUseBitBoolean;
+	
 	private byte[] _buf;
 	
 	private int _length=0;
@@ -44,6 +47,11 @@ public class BytesWriteStream extends PoolObject
 	public BytesWriteStream(byte[] buf)
 	{
 		setBuf(buf);
+	}
+	
+	public void setUseBitBoolean(boolean value)
+	{
+		_useBitBoolean=value;
 	}
 	
 	/** 设置操作字节流 */
@@ -172,7 +180,7 @@ public class BytesWriteStream extends PoolObject
 	
 	public void clearBooleanPos()
 	{
-		if(!ShineSetting.bytesUseBitBoolean)
+		if(!_useBitBoolean)
 			return;
 		
 		_booleanBufPos=-1;
@@ -241,7 +249,7 @@ public class BytesWriteStream extends PoolObject
 	/** 写入一个布尔值 */
 	public void writeBoolean(boolean value)
 	{
-		if(ShineSetting.bytesUseBitBoolean)
+		if(_useBitBoolean)
 		{
 			//新的
 			if(_booleanBufPos==-1)
@@ -602,7 +610,7 @@ public class BytesWriteStream extends PoolObject
 	/** 开始写对象 */
 	public void startWriteObj()
 	{
-		if(ShineSetting.bytesUseBitBoolean)
+		if(_useBitBoolean)
 		{
 			getWriteStack().add3(_position,_booleanBufPos,_booleanBitIndex);
 			clearBooleanPos();
@@ -617,7 +625,7 @@ public class BytesWriteStream extends PoolObject
 	public void endWriteObj()
 	{
 		//倒序
-		if(ShineSetting.bytesUseBitBoolean)
+		if(_useBitBoolean)
 		{
 			_booleanBitIndex=_writeStack.pop();
 			_booleanBufPos=_writeStack.pop();

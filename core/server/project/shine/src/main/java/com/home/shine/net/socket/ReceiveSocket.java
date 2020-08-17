@@ -66,6 +66,12 @@ public class ReceiveSocket extends BaseSocket
 	{
 		refreshPingTime();
 		
+		if(_pingSending)
+		{
+			_ping=-1;
+		}
+		
+		_pingSending=true;
 		_sendPingTime=Ctrl.getTimer();
 		_pingIndex=index;
 		sendAbsForIO(RePingRequest.create(index));
@@ -75,6 +81,8 @@ public class ReceiveSocket extends BaseSocket
 	public void onAckPing(int index)
 	{
 		refreshPingTime();
+		
+		_pingSending=false;
 		
 		//相同
 		if(_pingIndex==index)

@@ -1,4 +1,6 @@
 
+using ShineEngine;
+
 public class GameEditorFactoryControl
 {
 	public virtual MainApp createMainApp()

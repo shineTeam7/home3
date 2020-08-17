@@ -14,12 +14,6 @@ public class SceneObject implements ILogic
 	
 	/** 逻辑体组 */
 	protected SList<SceneObjectLogicBase> _logics=new SList<>(SceneObjectLogicBase[]::new);
-	/** 逻辑体组 */
-	protected SList<SceneObjectLogicBase> _onFrameLogics=new SList<>(SceneObjectLogicBase[]::new);
-	/** 逻辑体组 */
-	protected SList<SceneObjectLogicBase> _onSecondLogics=new SList<>(SceneObjectLogicBase[]::new);
-	/** 逻辑体组 */
-	protected SList<SceneObjectLogicBase> _onPeiceLogics=new SList<>(SceneObjectLogicBase[]::new);
 	
 	/** 是否需要移除 */
 	private boolean _needRemove=false;

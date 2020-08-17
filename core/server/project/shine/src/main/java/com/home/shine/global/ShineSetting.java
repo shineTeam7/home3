@@ -106,7 +106,7 @@ public class ShineSetting
 	public static boolean clientWebSocketUseWSS=false;
 	/** ssl是否使用自签名 */
 	public static boolean sslUseSelfSigned=true;
-	/** 字节流序列化是否启动bitBoolean */
+	/** 字节流序列化是否启动bitBoolean(c++中强制不使用) */
 	public static boolean bytesUseBitBoolean=false;
 	
 	/** 二进制http标示 */
@@ -198,6 +198,8 @@ public class ShineSetting
 	//--线程/时间相关--//
 	/** 是否需要线程死循环检测 */
 	public static boolean needThreadDeadCheck=false;
+	/** 是否需要线程func唤醒 */
+	public static boolean needThreadNotify=false;
 	/** 是否需要线程观测 */
 	public static boolean needThreadWatch=true;
 	/** netty工作线程数目 */
@@ -208,10 +210,10 @@ public class ShineSetting
 	public static int poolThreadNum=4;
 	/** db线程数(2^x)(设置为0,即不启用) */
 	public static int dbThreadNum=4;
+	/** 默认线程tick间隔(毫秒) */
+	public static int defaultThreadTickDelay=5;
 	/** 默认线程sleep间隔(毫秒) */
 	public static int defaultThreadSleepDelay=5;
-	/** io线程帧间隔(毫秒) */
-	public static final int ioThreadFrameDelay=5;
 	/** 系统帧率(各种系统计时器用) */
 	public static final int systemFPS=30;
 	/** 系统间隔(毫秒)(各种系统计时器用) */
@@ -228,8 +230,6 @@ public class ShineSetting
 	public static int sThreadWaitCount=30;
 	/** s线程满时最长等待轮数 */
 	public static int sThreadWaitRound=3;
-	/** 线程每轮方法上限(CThread用) */
-	public static int cThreadRoundFuncMax=0;
 	/** 逻辑线程监控间隔 */
 	public static int logicThreadWatchDelay=5000;
 	/** io线程监控间隔 */
@@ -239,8 +239,6 @@ public class ShineSetting
 	
 	
 	//--业务相关--//
-	/** data构造上限值(目前设定最高值12010) */
-	public static int dataMaxNum=15000;
 	/** 最大序号值(20亿) */
 	public static final int indexMax=2000000000;
 	/** 最大序号值一半(10亿) */

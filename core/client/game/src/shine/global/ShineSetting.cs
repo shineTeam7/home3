@@ -78,7 +78,7 @@ namespace ShineEngine
 		public static bool needBytesLenLimitError=true;
 		/** 是否使用kcp通信 */
 		public static bool useKCP=false;
-		/** 字节流序列化是否启动bitBoolean */
+		/** 字节流序列化是否启动bitBoolean(c++中强制不使用) */
 		public static bool bytesUseBitBoolean=false;
 
 		/** 二进制http头 */
@@ -148,16 +148,14 @@ namespace ShineEngine
 		public static int defaultThreadSleepDelay=5;
 		/** 日期时间戳更新间隔(毫秒) */
 		public static int dateFixDelay=500;
+		/** 是否需要线程func唤醒 */
+		public static bool needThreadNotify=false;
 
 		//--业务相关--//
-		/** data构造上限值 */
-		public static int dataMaxNum=15000;
 		/** 最大序号值(20亿) */
 		public static int indexMax=2000000000;
 		/** 最大序号值一半(10亿) */
 		public static int indexMaxHalf=indexMax/2;
-		/** io线程帧间隔(毫秒) */
-		public static int ioThreadFrameDelay=5;
 		/** 事务默认执行时间(s) */
 		public static int affairDefaultExecuteTime=10;//10秒
 		/** cron表达式prev时间数 */
@@ -220,6 +218,8 @@ namespace ShineEngine
 		public static string rootSceneName="root";
 		/** uimask名字 */
 		public static string uiMaskName="UIMask";
+		/** uitouchmask名字 */
+		public static string uiTouchMaskName="UITouchMask";
 
 		//--UI相关--//
 		/** ui是否需要重置位置 */

@@ -7,6 +7,14 @@ namespace ShineEngine
 {
 	public class TimeUtils
 	{
+		/** 一天的毫秒数 */
+		public static long dayTime=60 * 60 * 24*1000;
+		/** 一小时的毫秒数 */
+		public static long hourTime=60 * 60 *1000;
+		/** 一分的毫秒数 */
+		public static long minuteTime=60 *1000;
+		/** 一秒的毫秒数 */
+		public static long secondTime=1000;
 		/** C#时间缩放 */
 		public static int timeScale=10000;
 		/** 启始时间(ms)(除过的) */

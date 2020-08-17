@@ -29,6 +29,9 @@ public class AttributeConfig extends BaseConfig
 	/** 属性id */
 	public int id;
 	
+	/** 当前属性是否可超过上限值 */
+	public boolean canOverMax;
+	
 	/** 推送角色自己方式 */
 	public int sendSelfType;
 	
@@ -92,6 +95,8 @@ public class AttributeConfig extends BaseConfig
 		
 		this.isCurrentDefaultFull=stream.readBoolean();
 		
+		this.canOverMax=stream.readBoolean();
+		
 		this.sendSelfType=stream.readInt();
 		
 		this.needSendOther=stream.readBoolean();
@@ -148,6 +153,8 @@ public class AttributeConfig extends BaseConfig
 		
 		stream.writeBoolean(this.isCurrentDefaultFull);
 		
+		stream.writeBoolean(this.canOverMax);
+		
 		stream.writeInt(this.sendSelfType);
 		
 		stream.writeBoolean(this.needSendOther);
@@ -167,6 +174,7 @@ public class AttributeConfig extends BaseConfig
 		re.increaseID=increaseID;
 		re.currentMaxID=currentMaxID;
 		re.isCurrentDefaultFull=isCurrentDefaultFull;
+		re.isCurrentCanOverMax=canOverMax;
 		re.needDispatchChange=needDispatchChange;
 		re.sendSelfType=sendSelfType;
 		re.needSendOther=needSendOther;

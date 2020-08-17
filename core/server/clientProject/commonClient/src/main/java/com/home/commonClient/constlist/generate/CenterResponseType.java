@@ -4,27 +4,27 @@ package com.home.commonClient.constlist.generate;
 public class CenterResponseType
 {
 	/** 起始 */
-	public static final int off=2700;
+	public static final int off=2800;
 	
 	/** 计数 */
-	public static final int count=2708;
+	public static final int count=2807;
 	
-	public static final int FuncFromCenterS=2700;
+	public static final int FuncFromCenterS=2800;
 	
 	/** 匹配成功到game */
-	public static final int FuncMatchSuccessFromCenter=2701;
+	public static final int FuncMatchSuccessFromCenter=2801;
 	
-	public static final int FuncSendAcceptMatchFromCenter=2702;
+	public static final int FuncSendAcceptMatchFromCenter=2802;
 	
-	public static final int FuncSendReAddMatchFromCenter=2703;
+	public static final int FuncSendReAddMatchFromCenter=2803;
 	
 	/** 推送中心服消息回执 */
-	public static final int SendCenterReceiptToClient=2704;
+	public static final int SendCenterReceiptToClient=2804;
 	
 	/** 中心服推送信息码 */
-	public static final int SendInfoCodeFromCenter=2705;
+	public static final int SendInfoCodeFromCenter=2805;
 	
 	/** 中心服推送带参信息码 */
-	public static final int SendInfoCodeWithArgsFromCenter=2706;
+	public static final int SendInfoCodeWithArgsFromCenter=2806;
 	
 }

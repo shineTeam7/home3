@@ -3,6 +3,7 @@ package com.home.shine.support.collection;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.ICreateArray;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -18,7 +19,7 @@ public class SList<V> extends BaseList implements Iterable<V>
 	
 	public SList()
 	{
-		
+		init(_minSize);
 	}
 	
 	public SList(int capacity)
@@ -42,6 +43,7 @@ public class SList<V> extends BaseList implements Iterable<V>
 	public SList(ICreateArray<V> createVArrFunc)
 	{
 		_createVArrFunc=createVArrFunc;
+		init(_minSize);
 	}
 	
 	public SList(ICreateArray<V> createVArrFunc,int capacity)
@@ -65,23 +67,8 @@ public class SList<V> extends BaseList implements Iterable<V>
 		}
 	}
 	
-	private void checkInit()
-	{
-		if(_values!=null)
-			return;
-		
-		init(_minSize);
-	}
-	
-	public int capacity()
-	{
-		checkInit();
-		return _values.length;
-	}
-	
 	public final V[] getValues()
 	{
-		checkInit();
 		return _values;
 	}
 	
@@ -95,28 +82,32 @@ public class SList<V> extends BaseList implements Iterable<V>
 		return ((V[])(new Object[length]));
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_values=createVArray(capacity);
+		if(capacity<_minSize)
+			capacity=_minSize;
 		
-		_size=0;
+		_capacity=capacity;
+		
+		_values=createVArray(capacity);
 	}
 	
-	private void remake(int capacity)
+	@Override
+	protected void remake(int capacity)
 	{
-		V[] n=createVArray(capacity);
+		V[] oldArr=_values;
+		init(capacity);
+		
 		if(_size>0)
-			System.arraycopy(_values,0,n,0,_size);
-		_values=n;
+			System.arraycopy(oldArr,0,_values,0,_size);
 	}
 	
 	/** 添加 */
 	public void add(V value)
 	{
-		checkInit();
-		
-		if(_size==_values.length)
-			remake(_values.length << 1);
+		if(_size==_capacity)
+			remake(_capacity << 1);
 		
 		_values[_size++]=value;
 	}
@@ -124,7 +115,6 @@ public class SList<V> extends BaseList implements Iterable<V>
 	/** 添加一组 */
 	public void addArr(V[] arr)
 	{
-		checkInit();
 		int d=_size + arr.length;
 		
 		if(d>_values.length)
@@ -139,11 +129,8 @@ public class SList<V> extends BaseList implements Iterable<V>
 	/** 添加元素到头 */
 	public void unshift(V value)
 	{
-		checkInit();
-		if(_size + 1>_values.length)
-		{
-			remake(_values.length << 1);
-		}
+		if(_size==_capacity)
+			remake(_capacity << 1);
 		
 		if(_size>0)
 			System.arraycopy(_values,0,_values,1,_size);
@@ -357,6 +344,7 @@ public class SList<V> extends BaseList implements Iterable<V>
 			
 			n[offset]=value;
 			_values=n;
+			_capacity=n.length;
 		}
 		else
 		{
@@ -419,19 +407,6 @@ public class SList<V> extends BaseList implements Iterable<V>
 		}
 		
 		_size=0;
-	}
-	
-	/** 扩容 */
-	public void ensureCapacity(int capacity)
-	{
-		if(_values==null)
-		{
-			init(countCapacity(capacity));
-		}
-		else if(capacity>_values.length)
-		{
-			remake(countCapacity(capacity));
-		}
 	}
 	
 	/** 尺寸扩容 */
@@ -497,15 +472,6 @@ public class SList<V> extends BaseList implements Iterable<V>
 		_size=d;
 	}
 	
-	/** 添加一组 */
-	public void addAll(Collection<? extends V> collection)
-	{
-		for(V v:collection)
-		{
-			add(v);
-		}
-	}
-	
 	/** 克隆 */
 	public SList<V> clone()
 	{
@@ -565,6 +531,27 @@ public class SList<V> extends BaseList implements Iterable<V>
 		}
 		
 		_size=length;
+	}
+	
+	/** 转化为原生集合 */
+	public ArrayList<V> toNatureList()
+	{
+		ArrayList<V> re=new ArrayList<>(size());
+		
+		V[] values=_values;
+		
+		for(int i=0, len=_size;i<len;++i)
+		{
+			re.add(values[i]);
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Collection<V> collection)
+	{
+		ensureCapacity(collection.size());
+		collection.forEach(this::add);
 	}
 	
 	@Override

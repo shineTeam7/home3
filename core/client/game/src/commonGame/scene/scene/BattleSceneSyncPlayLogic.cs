@@ -4,7 +4,7 @@ using ShineEngine;
 /// <summary>
 /// 副本帧同步场景逻辑
 /// </summary>
-public class BattleSceneSyncPlayLogic:BattleScenePlayLogic
+public class BattleSceneSyncPlayLogic:SceneMethodLogic
 {
 	/** 帧计时 */
 	private int _frameTime=0;

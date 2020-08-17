@@ -84,5 +84,8 @@ namespace ShineEngine
 		
 		/** RawImage图片加载器 */
 		public const int RawImageLoader=25;
-	}
+
+        /** 伪3D滚动容器 */
+        public const int SScrollViewFake3D = 26;
+    }
 }

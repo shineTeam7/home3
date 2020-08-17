@@ -3,7 +3,7 @@ package com.home.commonData.message.center.serverRequest.game.scene;
 import com.home.commonData.data.scene.scene.SceneLocationDO;
 import com.home.commonData.message.center.serverRequest.game.base.PlayerToGameMO;
 
-/** 进入指定场景到game */
+/** 进入指定场景到game(暂时废弃) */
 public class EnterSignedSceneToGameMO extends PlayerToGameMO
 {
 	/** 场景位置数据 */

@@ -72,15 +72,13 @@ public class RoleAttributeData extends BaseData
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						stream.writeInt(attributesK);
 						
 						stream.writeInt(attributesV);
@@ -136,15 +134,13 @@ public class RoleAttributeData extends BaseData
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						stream.writeInt(attributesK);
 						
 						stream.writeInt(attributesV);
@@ -197,15 +193,13 @@ public class RoleAttributeData extends BaseData
 			if(!mData.attributes.isEmpty())
 			{
 				int attributesKFreeValue=mData.attributes.getFreeValue();
-				long[] attributesKTable=mData.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=mData.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						int attributesW;
 						int attributesU;
 						attributesW=attributesK;
@@ -240,15 +234,13 @@ public class RoleAttributeData extends BaseData
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						int attributesU=attributesR.get(attributesK);
 						if(attributesV!=attributesU)
 							return false;
@@ -284,15 +276,13 @@ public class RoleAttributeData extends BaseData
 			if(!this.attributes.isEmpty())
 			{
 				int attributesKFreeValue=this.attributes.getFreeValue();
-				long[] attributesKTable=this.attributes.getTable();
-				long attributesKEntry;
-				for(int attributesKI=attributesKTable.length-1;attributesKI>=0;--attributesKI)
+				int[] attributesKTable=this.attributes.getTable();
+				for(int attributesKI=attributesKTable.length-2;attributesKI>=0;attributesKI-=2)
 				{
-					attributesKEntry=attributesKTable[attributesKI];
-					int attributesK=(int)attributesKEntry;
-					if(attributesK!=attributesKFreeValue)
+					if(attributesKTable[attributesKI]!=attributesKFreeValue)
 					{
-						int attributesV=(int)(attributesKEntry>>>32);
+						int attributesK=attributesKTable[attributesKI];
+						int attributesV=attributesKTable[attributesKI+1];
 						writer.writeTabs();
 						writer.sb.append(attributesK);
 						

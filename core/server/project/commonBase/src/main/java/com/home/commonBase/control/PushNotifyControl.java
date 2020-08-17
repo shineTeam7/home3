@@ -98,11 +98,11 @@ public class PushNotifyControl
 			return false;
 		}
 		
-		//if(!ShineSetting.isRelease)
-		//{
-		//	Ctrl.log("测试环境，不能推送");
-		//	return false;
-		//}
+		if(!ShineSetting.isRelease)
+		{
+			Ctrl.log("测试环境，不能推送");
+			return false;
+		}
 		
 		return true;
 	}

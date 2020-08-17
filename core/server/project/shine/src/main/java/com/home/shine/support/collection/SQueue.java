@@ -15,7 +15,7 @@ public class SQueue<V> extends BaseQueue implements Iterable<V>,IQueue<V>
 	
 	public SQueue()
 	{
-	
+		init(_minSize);
 	}
 	
 	public SQueue(int capacity)
@@ -26,6 +26,7 @@ public class SQueue<V> extends BaseQueue implements Iterable<V>,IQueue<V>
 	public SQueue(ICreateArray<V> createVArrFunc)
 	{
 		_createVArrFunc=createVArrFunc;
+		init(_minSize);
 	}
 	
 	public SQueue(ICreateArray<V> createVArrFunc,int capacity)
@@ -34,23 +35,8 @@ public class SQueue<V> extends BaseQueue implements Iterable<V>,IQueue<V>
 		init(countCapacity(capacity));
 	}
 	
-	private void checkInit()
-	{
-		if(_values!=null)
-			return;
-		
-		init(_minSize);
-	}
-	
-	public int capacity()
-	{
-		checkInit();
-		return _values.length;
-	}
-	
 	public final V[] getValues()
 	{
-		checkInit();
 		return _values;
 	}
 	
@@ -63,29 +49,23 @@ public class SQueue<V> extends BaseQueue implements Iterable<V>,IQueue<V>
 		return ((V[])(new Object[length]));
 	}
 	
-	/** 扩容 */
-	public void ensureCapacity(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		if(_values==null)
-		{
-			init(countCapacity(capacity));
-		}
-		else if(capacity>_values.length)
-		{
-			remake(countCapacity(capacity));
-		}
-	}
-	
-	private void init(int capacity)
-	{
+		if(capacity<_minSize)
+			capacity=_minSize;
+		
+		_capacity=capacity;
+		
 		_values=createVArray(capacity);
 		_mark=capacity-1;
-		_size=0;
 	}
 	
-	private void remake(int capacity)
+	@Override
+	protected void remake(int capacity)
 	{
-		V[] n=createVArray(capacity);
+		V[] oldArr=_values;
+		init(capacity);
 		
 		if(_size!=0)
 		{
@@ -93,30 +73,25 @@ public class SQueue<V> extends BaseQueue implements Iterable<V>,IQueue<V>
 			
 			if(_start<_end)
 			{
-				System.arraycopy(values,_start,n,0,_end - _start);
+				System.arraycopy(oldArr,_start,values,0,_end - _start);
 			}
 			else
 			{
-				int d=values.length - _start;
-				System.arraycopy(values,_start,n,0,d);
-				System.arraycopy(values,0,n,d,_end);
+				int d=oldArr.length - _start;
+				System.arraycopy(oldArr,_start,values,0,d);
+				System.arraycopy(oldArr,0,values,d,_end);
 			}
 		}
 		
 		_start=0;
 		_end=_size;
-		
-		_values=n;
-		_mark=capacity-1;
 	}
 	
 	/** 放入 */
 	public boolean offer(V v)
 	{
-		checkInit();
-		
-		if(_size==_values.length)
-			remake(_values.length << 1);
+		if(_size==_capacity)
+			remake(_capacity << 1);
 		
 		int end=_end;
 		

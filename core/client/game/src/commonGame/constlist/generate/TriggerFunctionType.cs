@@ -13,7 +13,7 @@ public class TriggerFunctionType
 	/// <summary>
 	/// 计数
 	/// </summary>
-	public const int count=148;
+	public const int count=159;
 	
 	/// <summary>
 	/// 如果
@@ -21,7 +21,7 @@ public class TriggerFunctionType
 	public const int If=1;
 	
 	/// <summary>
-	/// 循环
+	/// while循环
 	/// </summary>
 	public const int While=2;
 	
@@ -56,7 +56,7 @@ public class TriggerFunctionType
 	public const int Or=8;
 	
 	/// <summary>
-	/// 或者2
+	/// 或者2(3元)
 	/// </summary>
 	public const int Or2=9;
 	
@@ -86,662 +86,723 @@ public class TriggerFunctionType
 	public const int EqualsString=14;
 	
 	/// <summary>
+	/// 是否为空
+	/// </summary>
+	public const int IsNull=15;
+	
+	/// <summary>
+	/// 是否不为空
+	/// </summary>
+	public const int NotNull=16;
+	
+	/// <summary>
+	/// 比较int,type:CompareType
+	/// </summary>
+	public const int CompareInt=17;
+	
+	/// <summary>
+	/// 比较Float,type:CompareType
+	/// </summary>
+	public const int CompareFloat=18;
+	
+	/// <summary>
+	/// 比较long,type:CompareType
+	/// </summary>
+	public const int CompareLong=19;
+	
+	/// <summary>
 	/// 大于int
 	/// </summary>
-	public const int GreaterThanInt=15;
+	public const int GreaterThanInt=20;
 	
 	/// <summary>
 	/// 大于等于int
 	/// </summary>
-	public const int GreaterThanOrEqualInt=16;
+	public const int GreaterThanOrEqualInt=21;
 	
 	/// <summary>
 	/// 小于int
 	/// </summary>
-	public const int LessThanInt=17;
+	public const int LessThanInt=22;
 	
 	/// <summary>
 	/// 小于等于int
 	/// </summary>
-	public const int LessThanOrEqualInt=18;
+	public const int LessThanOrEqualInt=23;
 	
 	/// <summary>
 	/// 大于float
 	/// </summary>
-	public const int GreaterThanFloat=19;
+	public const int GreaterThanFloat=24;
 	
 	/// <summary>
 	/// 大于等于float
 	/// </summary>
-	public const int GreaterThanOrEqualFloat=20;
+	public const int GreaterThanOrEqualFloat=25;
 	
 	/// <summary>
 	/// 小于float
 	/// </summary>
-	public const int LessThanFloat=21;
+	public const int LessThanFloat=26;
 	
 	/// <summary>
 	/// 小于等于float
 	/// </summary>
-	public const int LessThanOrEqualFloat=22;
+	public const int LessThanOrEqualFloat=27;
 	
 	/// <summary>
 	/// 大于long
 	/// </summary>
-	public const int GreaterThanLong=23;
+	public const int GreaterThanLong=28;
 	
 	/// <summary>
 	/// 大于等于long
 	/// </summary>
-	public const int GreaterThanOrEqualLong=24;
+	public const int GreaterThanOrEqualLong=29;
 	
 	/// <summary>
 	/// 小于long
 	/// </summary>
-	public const int LessThanLong=25;
+	public const int LessThanLong=30;
 	
 	/// <summary>
 	/// 小于等于long
 	/// </summary>
-	public const int LessThanOrEqualLong=26;
+	public const int LessThanOrEqualLong=31;
 	
 	/// <summary>
 	/// 获取字符串key boolean
 	/// </summary>
-	public const int GetSBoolean=27;
+	public const int GetSBoolean=32;
 	
 	/// <summary>
-	/// 删除自定义字符串key变量
+	/// 获取局部字符串key boolean
 	/// </summary>
-	public const int RemoveSVar=28;
+	public const int GetLocalBoolean=33;
 	
 	/// <summary>
 	/// random一个bool值
 	/// </summary>
-	public const int RandomBoolean=29;
+	public const int RandomBoolean=34;
+	
+	/// <summary>
+	/// 该毫秒值是否为过去时间
+	/// </summary>
+	public const int IsTimeMillisPass=35;
 	
 	/// <summary>
 	/// int加法
 	/// </summary>
-	public const int AddInt=30;
+	public const int AddInt=36;
 	
 	/// <summary>
 	/// int减法
 	/// </summary>
-	public const int SubInt=31;
+	public const int SubInt=37;
 	
 	/// <summary>
 	/// int乘法
 	/// </summary>
-	public const int MulInt=32;
+	public const int MulInt=38;
 	
 	/// <summary>
 	/// int除法
 	/// </summary>
-	public const int DivInt=33;
+	public const int DivInt=39;
 	
 	/// <summary>
 	/// int取反
 	/// </summary>
-	public const int InvertInt=34;
+	public const int InvertInt=40;
 	
 	/// <summary>
 	/// int求余
 	/// </summary>
-	public const int RestInt=35;
+	public const int RestInt=41;
 	
 	/// <summary>
 	/// int绝对值
 	/// </summary>
-	public const int AbsInt=36;
+	public const int AbsInt=42;
 	
 	/// <summary>
 	/// int自增
 	/// </summary>
-	public const int Add1Int=37;
+	public const int Add1Int=43;
 	
 	/// <summary>
 	/// int自减
 	/// </summary>
-	public const int Sub1Int=38;
+	public const int Sub1Int=44;
 	
 	/// <summary>
 	/// float转int
 	/// </summary>
-	public const int ConvertFloat2Int=39;
+	public const int ConvertFloat2Int=45;
 	
 	/// <summary>
 	/// long转int
 	/// </summary>
-	public const int ConvertLong2Int=40;
+	public const int ConvertLong2Int=46;
 	
 	/// <summary>
 	/// 获取字符串key int
 	/// </summary>
-	public const int GetSInt=41;
+	public const int GetSInt=47;
+	
+	/// <summary>
+	/// 获取局部字符串key int
+	/// </summary>
+	public const int GetLocalInt=48;
 	
 	/// <summary>
 	/// 获取全局变量int
 	/// </summary>
-	public const int GetCurrentLoopIndex=42;
+	public const int GetCurrentLoopIndex=49;
 	
 	/// <summary>
 	/// 获取当前list遍历元素
 	/// </summary>
-	public const int GetCurrentListElement=43;
+	public const int GetCurrentListElement=50;
 	
 	/// <summary>
 	/// 随一整形(0<=value<range)
 	/// </summary>
-	public const int RandomInt=44;
+	public const int RandomInt=51;
 	
 	/// <summary>
 	/// 随一整形(start<=value<end)
 	/// </summary>
-	public const int RandomRange=45;
+	public const int RandomRange=52;
 	
 	/// <summary>
 	/// 获取triggerGM指令str变量
 	/// </summary>
-	public const int GetTriggerGMCommandIntArg=46;
+	public const int GetTriggerGMCommandIntArg=53;
 	
 	/// <summary>
 	/// float加法
 	/// </summary>
-	public const int AddFloat=47;
+	public const int AddFloat=54;
 	
 	/// <summary>
 	/// float减法
 	/// </summary>
-	public const int SubFloat=48;
+	public const int SubFloat=55;
 	
 	/// <summary>
 	/// float乘法
 	/// </summary>
-	public const int MulFloat=49;
+	public const int MulFloat=56;
 	
 	/// <summary>
 	/// float除法
 	/// </summary>
-	public const int DivFloat=50;
+	public const int DivFloat=57;
 	
 	/// <summary>
 	/// float取反
 	/// </summary>
-	public const int InvertFloat=51;
+	public const int InvertFloat=58;
 	
 	/// <summary>
 	/// float绝对值
 	/// </summary>
-	public const int AbsFloat=52;
+	public const int AbsFloat=59;
 	
 	/// <summary>
 	/// 获取字符串key变量float
 	/// </summary>
-	public const int GetSFloat=53;
+	public const int GetSFloat=60;
 	
 	/// <summary>
-	/// 获取全局变量float
+	/// 获取局部字符串key变量float
 	/// </summary>
-	public const int ConvertInt2Float=54;
+	public const int GetLocalFloat=61;
+	
+	/// <summary>
+	/// long转float
+	/// </summary>
+	public const int ConvertInt2Float=62;
 	
 	/// <summary>
 	/// float转float
 	/// </summary>
-	public const int ConvertLong2Float=55;
+	public const int ConvertLong2Float=63;
 	
 	/// <summary>
 	/// long加法
 	/// </summary>
-	public const int AddLong=56;
+	public const int AddLong=64;
 	
 	/// <summary>
 	/// long减法
 	/// </summary>
-	public const int SubLong=57;
+	public const int SubLong=65;
 	
 	/// <summary>
 	/// long乘法
 	/// </summary>
-	public const int MulLong=58;
+	public const int MulLong=66;
 	
 	/// <summary>
 	/// long除法
 	/// </summary>
-	public const int DivLong=59;
+	public const int DivLong=67;
 	
 	/// <summary>
 	/// long取反
 	/// </summary>
-	public const int InvertLong=60;
+	public const int InvertLong=68;
 	
 	/// <summary>
 	/// long绝对值
 	/// </summary>
-	public const int AbsLong=61;
+	public const int AbsLong=69;
 	
 	/// <summary>
 	/// int转long
 	/// </summary>
-	public const int ConvertInt2Long=62;
+	public const int ConvertInt2Long=70;
 	
 	/// <summary>
 	/// float转long
 	/// </summary>
-	public const int ConvertFloat2Long=63;
+	public const int ConvertFloat2Long=71;
 	
 	/// <summary>
 	/// 获取字符串key变量long
 	/// </summary>
-	public const int GetSLong=64;
+	public const int GetSLong=72;
 	
 	/// <summary>
-	/// 获取全局变量long
+	/// 获取局部字符串key变量long
 	/// </summary>
-	public const int GetTimeMillis=65;
+	public const int GetLocalLong=73;
+	
+	/// <summary>
+	/// 获取当前时间戳
+	/// </summary>
+	public const int GetTimeMillis=74;
 	
 	/// <summary>
 	/// string相加
 	/// </summary>
-	public const int AddStr=66;
+	public const int AddStr=75;
 	
 	/// <summary>
 	/// int转string
 	/// </summary>
-	public const int ConvertInt2Str=67;
+	public const int ConvertInt2Str=76;
 	
 	/// <summary>
 	/// float转string
 	/// </summary>
-	public const int ConvertFloat2Str=68;
+	public const int ConvertFloat2Str=77;
 	
 	/// <summary>
 	/// long转string
 	/// </summary>
-	public const int ConvertLong2Str=69;
+	public const int ConvertLong2Str=78;
 	
 	/// <summary>
 	/// bool转string
 	/// </summary>
-	public const int ConvertBool2Str=70;
+	public const int ConvertBool2Str=79;
 	
 	/// <summary>
 	/// 获取字符串key变量string
 	/// </summary>
-	public const int GetSString=71;
+	public const int GetSString=80;
 	
 	/// <summary>
-	/// 获取全局变量string
+	/// 获取局部字符串key变量string
 	/// </summary>
-	public const int AsList=72;
+	public const int GetLocalString=81;
+	
+	/// <summary>
+	/// 当做List
+	/// </summary>
+	public const int AsList=82;
 	
 	/// <summary>
 	/// 创建空List
 	/// </summary>
-	public const int CreateList=73;
+	public const int CreateList=83;
 	
 	/// <summary>
 	/// 获取list长度
 	/// </summary>
-	public const int GetListSize=74;
+	public const int GetListSize=84;
 	
 	/// <summary>
 	/// list添加
 	/// </summary>
-	public const int ListAdd=75;
+	public const int ListAdd=85;
 	
 	/// <summary>
 	/// list删除
 	/// </summary>
-	public const int ListRemove=76;
+	public const int ListRemove=86;
 	
 	/// <summary>
 	/// list删除元素
 	/// </summary>
-	public const int ListRemoveObj=77;
+	public const int ListRemoveObj=87;
 	
 	/// <summary>
 	/// list清空
 	/// </summary>
-	public const int ListClear=78;
+	public const int ListClear=88;
 	
 	/// <summary>
 	/// list查询
 	/// </summary>
-	public const int ListIndexOf=79;
+	public const int ListIndexOf=89;
 	
 	/// <summary>
 	/// list查询
 	/// </summary>
-	public const int ListContains=80;
+	public const int ListContains=90;
 	
 	/// <summary>
 	/// 遍历list
 	/// </summary>
-	public const int ForeachList=81;
+	public const int ForeachList=91;
 	
 	/// <summary>
 	/// list是否为空
 	/// </summary>
-	public const int ListIsEmpty=82;
+	public const int ListIsEmpty=92;
 	
-	public const int AsMap=83;
+	/// <summary>
+	/// 当做Map
+	/// </summary>
+	public const int AsMap=93;
 	
 	/// <summary>
 	/// 创建空Map
 	/// </summary>
-	public const int CreateMap=84;
+	public const int CreateMap=94;
 	
 	/// <summary>
 	/// 获取Map长度
 	/// </summary>
-	public const int GetMapSize=85;
+	public const int GetMapSize=95;
 	
 	/// <summary>
 	/// map添加
 	/// </summary>
-	public const int MapPut=86;
+	public const int MapPut=96;
 	
 	/// <summary>
 	/// Map删除
 	/// </summary>
-	public const int MapRemove=87;
+	public const int MapRemove=97;
 	
 	/// <summary>
 	/// Map清空
 	/// </summary>
-	public const int MapClear=88;
+	public const int MapClear=98;
 	
 	/// <summary>
 	/// Map包含
 	/// </summary>
-	public const int MapContains=89;
+	public const int MapContains=99;
 	
 	/// <summary>
 	/// map是否为空
 	/// </summary>
-	public const int MapIsEmpty=90;
+	public const int MapIsEmpty=100;
 	
-	public const int AsSet=91;
+	/// <summary>
+	/// 当做Set
+	/// </summary>
+	public const int AsSet=101;
 	
 	/// <summary>
 	/// 创建空Set
 	/// </summary>
-	public const int CreateSet=92;
+	public const int CreateSet=102;
 	
 	/// <summary>
 	/// 获取Set长度
 	/// </summary>
-	public const int GetSetSize=93;
+	public const int GetSetSize=103;
 	
 	/// <summary>
 	/// Set添加
 	/// </summary>
-	public const int SetAdd=94;
+	public const int SetAdd=104;
 	
 	/// <summary>
 	/// Set删除
 	/// </summary>
-	public const int SetRemove=95;
+	public const int SetRemove=105;
 	
 	/// <summary>
 	/// Set清空
 	/// </summary>
-	public const int SetClear=96;
+	public const int SetClear=106;
 	
 	/// <summary>
 	/// Set包含
 	/// </summary>
-	public const int SetContains=97;
+	public const int SetContains=107;
 	
 	/// <summary>
 	/// Set是否为空
 	/// </summary>
-	public const int SetIsEmpty=98;
+	public const int SetIsEmpty=108;
 	
 	/// <summary>
 	/// trigger初始化好
 	/// </summary>
-	public const int OnInit=99;
+	public const int OnInit=109;
 	
 	/// <summary>
 	/// 间隔执行
 	/// </summary>
-	public const int OnInterval=100;
+	public const int OnInterval=110;
 	
 	/// <summary>
 	/// triggerGM指令
 	/// </summary>
-	public const int OnTriggerGMCommand=101;
+	public const int OnTriggerGMCommand=111;
 	
 	/// <summary>
 	/// 开启trigger
 	/// </summary>
-	public const int OpenTrigger=102;
+	public const int OpenTrigger=112;
 	
 	/// <summary>
 	/// 关闭trigger
 	/// </summary>
-	public const int CloseTrigger=103;
+	public const int CloseTrigger=113;
 	
 	/// <summary>
 	/// 执行trigger(需要检查环境)
 	/// </summary>
-	public const int RunTrigger=104;
+	public const int RunTrigger=114;
 	
 	/// <summary>
 	/// 执行trigger(不检查环境)
 	/// </summary>
-	public const int RunTriggerAbs=105;
+	public const int RunTriggerAbs=115;
 	
 	/// <summary>
 	/// 等待(ms)
 	/// </summary>
-	public const int Wait=106;
+	public const int Wait=116;
 	
 	/// <summary>
 	/// 等待某条件成立(checkDelay:检查间隔(ms))
 	/// </summary>
-	public const int WaitUtil=107;
+	public const int WaitUtil=117;
 	
 	/// <summary>
 	/// 输出字符串
 	/// </summary>
-	public const int Print=108;
+	public const int Print=118;
 	
 	/// <summary>
 	/// 循环loop次(i从0到loop-1)
 	/// </summary>
-	public const int ForLoop=109;
+	public const int ForLoop=119;
 	
 	/// <summary>
 	/// 结束当前trigger执行动作
 	/// </summary>
-	public const int BreakTrigger=110;
+	public const int BreakTrigger=120;
 	
 	/// <summary>
 	/// 结束当前循环(对while有效)
 	/// </summary>
-	public const int BreakLoop=111;
+	public const int BreakLoop=121;
 	
 	/// <summary>
 	/// 跳过剩余脚本，继续执行循环(对while有效)
 	/// </summary>
-	public const int ContinueLoop=112;
+	public const int ContinueLoop=122;
 	
 	/// <summary>
 	/// 设置自定义字符串key变量
 	/// </summary>
-	public const int SetSVar=113;
+	public const int SetSVar=123;
+	
+	/// <summary>
+	/// 删除自定义字符串key变量
+	/// </summary>
+	public const int RemoveSVar=124;
 	
 	/// <summary>
 	/// 设置局部字符串key变量
 	/// </summary>
-	public const int SetLocalVar=114;
+	public const int SetLocalVar=125;
 	
 	/// <summary>
-	/// 设置全局变量boolean
+	/// 获取event int参数
 	/// </summary>
-	public const int GetEventIntArgs=115;
+	public const int GetEventIntArgs=126;
 	
 	/// <summary>
 	/// 获取event bool参数
 	/// </summary>
-	public const int GetEventBoolArgs=116;
+	public const int GetEventBoolArgs=127;
 	
 	/// <summary>
 	/// 获取event string参数
 	/// </summary>
-	public const int GetEventStringArgs=117;
+	public const int GetEventStringArgs=128;
 	
 	/// <summary>
 	/// 获取主引导步
 	/// </summary>
-	public const int GetGuideMainStep=118;
+	public const int GetGuideMainStep=129;
 	
 	/// <summary>
 	/// 游戏开始
 	/// </summary>
-	public const int OnGameStart=119;
+	public const int OnGameStart=130;
 	
 	/// <summary>
 	/// 设置主引导步
 	/// </summary>
-	public const int SetGuideMainStep=120;
+	public const int SetGuideMainStep=131;
 	
 	/// <summary>
 	/// 显示UI(key:UI表主键)
 	/// </summary>
-	public const int ShowUI=121;
+	public const int ShowUI=132;
 	
 	/// <summary>
 	/// 隐藏UI(key:UI表主键)
 	/// </summary>
-	public const int HideUI=122;
+	public const int HideUI=133;
 	
 	/// <summary>
 	/// c单位是否存活
 	/// </summary>
-	public const int UnitIsAlive=123;
+	public const int UnitIsAlive=134;
 	
 	/// <summary>
 	/// 对于某单位来说，点是否可走
 	/// </summary>
-	public const int IsPosEnabled=124;
+	public const int IsPosEnabled=135;
 	
 	/// <summary>
 	/// 当前触发单位
 	/// </summary>
-	public const int TriggerUnit=125;
+	public const int TriggerUnit=136;
 	
 	/// <summary>
 	/// e场景开始时
 	/// </summary>
-	public const int OnSceneStart=126;
+	public const int OnSceneStart=137;
 	
 	/// <summary>
 	/// 单位发生移动
 	/// </summary>
-	public const int OnUnitMove=127;
+	public const int OnUnitMove=138;
 	
 	/// <summary>
 	/// 单位受到伤害时
 	/// </summary>
-	public const int OnUnitBeDamage=128;
+	public const int OnUnitBeDamage=139;
 	
 	/// <summary>
 	/// 计算点距离
 	/// </summary>
-	public const int PosDistance=129;
+	public const int PosDistance=140;
 	
 	/// <summary>
 	/// 获取单位的战斗单位id
 	/// </summary>
-	public const int GetUnitFightUnitID=130;
+	public const int GetUnitFightUnitID=141;
 	
 	/// <summary>
 	/// 通过实例id获取单位
 	/// </summary>
-	public const int GetUnit=131;
+	public const int GetUnit=142;
 	
 	/// <summary>
 	/// 强制类型转化为单位
 	/// </summary>
-	public const int AsUnit=132;
+	public const int AsUnit=143;
 	
 	/// <summary>
 	/// 创建并添加傀儡
 	/// </summary>
-	public const int CreateAddPuppet=133;
+	public const int CreateAddPuppet=144;
 	
 	/// <summary>
 	/// 强制类型转化为点
 	/// </summary>
-	public const int AsPos=134;
+	public const int AsPos=145;
 	
 	/// <summary>
 	/// 获取单位位置
 	/// </summary>
-	public const int GetUnitPos=135;
+	public const int GetUnitPos=146;
 	
 	/// <summary>
 	/// 获取场景排放配置位置
 	/// </summary>
-	public const int GetScenePlacePos=136;
+	public const int GetScenePlacePos=147;
 	
 	/// <summary>
 	/// 极坐标取点
 	/// </summary>
-	public const int PosPolar=137;
+	public const int PosPolar=148;
 	
 	/// <summary>
 	/// 点相加
 	/// </summary>
-	public const int AddPos=138;
+	public const int AddPos=149;
 	
 	/// <summary>
 	/// 强制类型转化为朝向
 	/// </summary>
-	public const int AsDir=139;
+	public const int AsDir=150;
 	
 	/// <summary>
 	/// 获取单位朝向
 	/// </summary>
-	public const int GetUnitDir=140;
+	public const int GetUnitDir=151;
 	
 	/// <summary>
 	/// 朝向 相加
 	/// </summary>
-	public const int AddDir=141;
+	public const int AddDir=152;
 	
 	/// <summary>
 	/// 朝向 相加
 	/// </summary>
-	public const int AddDirFloat=142;
+	public const int AddDirFloat=153;
 	
 	/// <summary>
 	/// 强制击杀单位
 	/// </summary>
-	public const int KillUnit=143;
+	public const int KillUnit=154;
 	
 	/// <summary>
 	/// 移除单位
 	/// </summary>
-	public const int RemoveUnit=144;
+	public const int RemoveUnit=155;
 	
 	/// <summary>
 	/// 移动到目标单位
 	/// </summary>
-	public const int MoveToUnit=145;
+	public const int MoveToUnit=156;
 	
 	/// <summary>
 	/// 单位添加属性
 	/// </summary>
-	public const int UnitAddAttribute=146;
+	public const int UnitAddAttribute=157;
 	
 	/// <summary>
 	/// 单位治疗生命千分比
 	/// </summary>
-	public const int UnitAddHpPercent=147;
+	public const int UnitAddHpPercent=158;
 	
 }

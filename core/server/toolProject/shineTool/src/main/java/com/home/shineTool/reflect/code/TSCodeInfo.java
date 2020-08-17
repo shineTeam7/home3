@@ -25,6 +25,7 @@ public class TSCodeInfo extends CodeInfo
 		this.Float="number";
 		this.Double="number";
 		this.String="string";
+		this.Char="number";
 		
 		this.List="SList";
 		this.Set="SSet";
@@ -47,6 +48,7 @@ public class TSCodeInfo extends CodeInfo
 		this.FloatG="number";
 		this.DoubleG="number";
 		this.StringG="string";
+		this.CharG="number";
 		
 		this.LongDefaultValue="0";
 		this.FloatDefaultValue="0";

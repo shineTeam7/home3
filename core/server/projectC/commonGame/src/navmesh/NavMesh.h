@@ -2,6 +2,7 @@
 
 #include "SInclude.h"
 #include "bytes/BytesReadStream.h"
+#include "bytes/BytesWriteStream.h"
 #include "support/SMath.h"
 #include "support/collection/SList.h"
 #include <Recast.h>
@@ -12,8 +13,8 @@
 #include <DetourNavMesh.h>
 #include <DetourNavMeshQuery.h>
 #include <DetourNavMeshBuilder.h>
-#include "NavMeshHit.h"
-#include "NavMeshPath.h"
+#include "dataEx/ExternBuf.h"
+#include <math.h>
 
 static const int EXPECTED_LAYERS_PER_TILE = 4;
 static const int MAX_LAYERS = 32;
@@ -21,13 +22,31 @@ static const int MAX_LAYERS = 32;
 static const int TILECACHESET_MAGIC = 'T' << 24 | 'S' << 16 | 'E' << 8 | 'T'; //'TSET';
 static const int TILECACHESET_VERSION = 1;
 
-static const int RC_FORCE_UNWALKABLE_AREA = 0xff;
-
 static const int kNavMeshVertsPerPoly = 6;
+static const int kMaxNeis = 4;
+
+static const int kMaxSegsPerPoly = kNavMeshVertsPerPoly * 3;
 
 static const int kWalkable = 0;
 static const int kNotWalkable = 1;
 static const int kJump = 2;
+
+
+static const int MaxPathNum = 256;
+
+// Keep this enum in sync with the one defined in "OffMeshLink.bindings.cs"
+enum OffMeshLinkType
+{
+	kLinkTypeManual = 0,
+	kLinkTypeDropDown = 1,
+	kLinkTypeJumpAcross = 2
+};
+
+enum NavMeshLinkDirectionFlags
+{
+	kLinkDirectionOneWay = 0,
+	kLinkDirectionTwoWay = 1
+};
 
 struct TileCacheSetHeader
 {
@@ -113,19 +132,160 @@ struct LinearAllocator : public dtTileCacheAlloc
 	}
 };
 
-class BuildContext : public rcContext
+struct AutoLinkPoints
 {
-public:
-
-protected:
-
-	virtual void doLog(const rcLogCategory category, const char* msg, const int len);
+	Vector3 start;
+	Vector3 end;
 };
+
+struct EdgeSegment
+{
+	Vector3 start;
+	Vector3 end;
+	Vector3 normal;
+};
+
+// OffMeshLinkData is a scripting API type.
+struct AutoOffMeshLinkData
+{
+	Vector3 m_Start;
+	Vector3 m_End;
+	float m_Radius;
+	unsigned short m_LinkType;      // Off-mesh poly flags.
+	unsigned char m_Area;           // Off-mesh poly  area ids.
+	unsigned char m_LinkDirection;  // Off-mesh connection direction flags (NavMeshLinkDirectionFlags)
+};
+
+struct RasterizationContext
+{
+	RasterizationContext() :
+		solid(0),
+		triareas(0),
+		lset(0),
+		chf(0),
+		ntiles(0)
+	{
+		memset(tiles, 0, sizeof(TileCacheData) * MAX_LAYERS);
+	}
+
+	~RasterizationContext()
+	{
+		if (solid)
+		{
+			rcFreeHeightField(solid);
+			solid = nullptr;
+		}
+
+		if (triareas)
+		{
+			delete[] triareas;
+			triareas = nullptr;
+		}
+
+		if (lset)
+		{
+			rcFreeHeightfieldLayerSet(lset);
+			lset = nullptr;
+		}
+
+		if (chf)
+		{
+			rcFreeCompactHeightfield(chf);
+			chf = nullptr;
+		}
+
+		for (int i = 0; i < MAX_LAYERS; ++i)
+		{
+			if (tiles[i].data)
+			{
+				dtFree(tiles[i].data);
+				tiles[i].data = 0;
+			}
+		}
+	}
+
+	rcHeightfield* solid;
+	unsigned char* triareas;
+	rcHeightfieldLayerSet* lset;
+	rcCompactHeightfield* chf;
+	TileCacheData tiles[MAX_LAYERS];
+	int ntiles;
+};
+
+struct TileLayerInfo
+{
+	dtTileRef ref = 0;
+	bool* autoOML = nullptr;
+
+	TileLayerInfo()
+	{
+
+	}
+
+	~TileLayerInfo()
+	{
+		clear();
+	}
+
+	void clear()
+	{
+		if (autoOML)
+		{
+			delete[] autoOML;
+			autoOML = nullptr;
+		}
+	}
+};
+
+struct TileInfo
+{
+	int ntiles = 0;
+	TileLayerInfo tileLayers[MAX_LAYERS];
+
+	RasterizationContext* rc = nullptr;
+
+	~TileInfo()
+	{
+		clear();
+	}
+
+	void clear()
+	{
+		if (ntiles)
+		{
+			for (int i = 0; i < ntiles; ++i)
+			{
+				tileLayers[i].clear();
+			}
+
+			ntiles = 0;
+		}
+
+
+		if (rc)
+		{
+			delete rc;
+			rc = nullptr;
+		}
+	}
+};
+
+class NavMesh;
 
 struct MeshProcess : public dtTileCacheMeshProcess
 {
 public:
-	virtual void process(struct dtNavMeshCreateParams* params, unsigned char* polyAreas, unsigned short* polyFlags)override;
+	NavMesh* m_nm = nullptr;
+
+	~MeshProcess()
+	{
+		if (m_nm)
+		{
+			m_nm = nullptr;
+		}
+	}
+
+	virtual void process(struct dtNavMeshCreateParams* params, unsigned char* polyAreas, unsigned int* polyFlags)override;
 };
 
 class NavMeshConfig
@@ -133,13 +293,16 @@ class NavMeshConfig
 public:
 	float agentHeight = 2.0f;
 	float agentRadius = 0.5f;
-	float agentMaxClimb = 0.75f;
+	float agentMaxClimb = 0.4f;
 	float agentMaxSlope = 45.0f;
+
+	float dropHeight = 10.0f;
+	float jumpDistance = 2.0f;
 
 	float tileSize = 64;
 	float cellSize = 0.5f;
 
-	float regionMinSize = 8;
+	float minRegionArea = 2;
 	float edgeMaxError = 1.3f;
 
 	void read(BytesReadStream* stream);
@@ -183,7 +346,6 @@ class SceneRecastObjData
 {
 public:
 	int meshIndex;
-	int area;
 	//	Vector3 x;
 	//	Vector3 y;
 	//	Vector3 z;
@@ -197,6 +359,9 @@ public:
 	float w[3];
 	float min[3];
 	float max[3];
+
+	int area;
+	bool autoOML;
 
 	void read(BytesReadStream* stream);
 
@@ -228,16 +393,182 @@ public:
 	void read(BytesReadStream* stream);
 };
 
+
+
+class BuildContext : public rcContext
+{
+public:
+
+	NavMesh* m_nm = nullptr;
+
+	NavMeshConfig config;
+
+	rcConfig rcConfig;
+
+	TileInfo* m_recastTiles = nullptr;
+
+	int sizeX;
+	int sizeZ;
+	float tileSize;
+
+	BuildContext()
+	{
+		sizeX = 0;
+		sizeZ = 0;
+		tileSize = 0.0f;
+	}
+
+	~BuildContext()
+	{
+		if (m_nm)
+		{
+			m_nm = nullptr;
+		}
+
+		if (m_recastTiles)
+		{
+			delete[] m_recastTiles;
+			m_recastTiles = nullptr;
+		}
+	}
+
+	void setTile(int x, int z, const TileInfo& recastTile)
+	{
+		getTile(x, z) = recastTile;
+	}
+
+	TileInfo& getTile(int x, int z) const
+	{
+		int index = x + z * sizeX;
+		return m_recastTiles[index];
+	}
+
+	TileLayerInfo& getTileLayer(int x, int z, int layer)
+	{
+		return getTile(x, z).tileLayers[layer];
+	}
+
+	bool inRange(int x, int z) const
+	{
+		return x >= 0 && z >= 0 && x < sizeX && z < sizeZ;
+	}
+
+	void clearTile(int x, int z)
+	{
+		getTile(x, z).clear();
+	}
+
+	bool calcTileLoc(float posX, float posZ, int* ix, int* iz) const
+	{
+		*ix = (int)floorf(posX / tileSize);
+		*iz = (int)floorf(posZ / tileSize);
+		return inRange(*ix, *iz);
+	}
+
+	bool checkHeightfieldCollision(const float x, const float ymin, const float ymax, const float z) const;
+
+	int getNearestHeight(const float x, const float y, const float z, float* h) const;
+
+protected:
+
+	virtual void doLog(const rcLogCategory category, const char* msg, const int len);
+};
+
+//result
+
+class NavMeshPath
+{
+public:
+	float path[3 * MaxPathNum];
+	unsigned char areas[MaxPathNum];
+	int pointNum = 0;
+
+	void writeBuf(ExternBuf* buf)
+	{
+		//不写起始点
+
+		buf->writeInt(pointNum - 1);
+
+		for (int i = 1; i < pointNum; ++i)
+		{
+			buf->writeVector(&path[i * 3]);
+			buf->writeInt(areas[i]);
+		}
+	}
+};
+
+class NavMeshHit
+{
+public:
+	float position[3];
+	float normal[3];
+	float distance = 0;
+	uint16 mask = 0;
+	bool hit = false;
+
+	void setPosition(float* value)
+	{
+		position[0] = value[0];
+		position[1] = value[1];
+		position[2] = value[2];
+	}
+
+	void setNormal(float* value)
+	{
+		normal[0] = value[0];
+		normal[1] = value[1];
+		normal[2] = value[2];
+	}
+
+	void clear()
+	{
+		position[0] = 0;
+		position[1] = 0;
+		position[2] = 0;
+		normal[0] = 0;
+		normal[1] = 0;
+		normal[2] = 0;
+		distance = 0;
+		mask = 0;
+		hit = false;
+	}
+
+	void writeBuf(ExternBuf* buf)
+	{
+		buf->writeVector(position);
+		buf->writeVector(normal);
+		buf->writeFloat(distance);
+		buf->writeInt(mask);
+		buf->writeBoolean(hit);
+	}
+};
+
 class NavMesh
 {
 public:
+	BuildContext* m_ctx = nullptr;
 
 	NavMesh()
 	{
 
 	}
 
-	~NavMesh();
+	~NavMesh()
+	{
+		clear();
+	}
+
+	//是否读取过程
+	bool isReading = false;
+
+	//offMesLink
+	int offMeshConCount;
+	float* offMeshConVerts = nullptr;
+	float* offMeshConRad = nullptr;
+	unsigned int* offMeshConFlags = nullptr;
+	unsigned char* offMeshConAreas = nullptr;
+	unsigned char* offMeshConDir = nullptr;
+	unsigned int* offMeshConUserID = nullptr;
 
 	//export
 	void exportNav(const char* configPath, const char* dataPath, const char* savePath);
@@ -255,19 +586,62 @@ public:
 
 	bool findPath(NavMeshPath* path, const float* sourcePosition, const float* targetPosition, const dtQueryFilter& filter);
 
+	void addOffMeshConnection(const Vector3& start, const Vector3& end, const float radius,
+		bool bidirectional, unsigned char area, OffMeshLinkType linkType);
+
 private:
 
 	struct LinearAllocator* m_talloc = nullptr;
 	struct FastLZCompressor* m_tcomp = nullptr;
 	struct MeshProcess* m_tmproc = nullptr;
-	BuildContext* m_ctx = nullptr;
+
 
 	class dtTileCache* m_tileCache = nullptr;
-
 	class dtNavMesh* m_navMesh = nullptr;
 	class dtNavMeshQuery* m_navQuery = nullptr;
 
+	vector<AutoOffMeshLinkData> m_OffMeshLinks;
+
 	void clear();
 
-	int rasterizeTileLayers(SceneRecastData& data, const int x, const int y, const rcConfig& cfg, TileCacheData* tiles, const int maxTiles);
+	void clearOML();
+
+	/** 构造OML数据 */
+	void makeOML();
+
+	int rasterizeTileLayers(SceneRecastData& data, const int x, const int y, const rcConfig& cfg, TileCacheData* tiles, const int maxTiles, RasterizationContext& rc);
+
+	void appendOffMeshLinks(const int x, const int z);
+
+	void getMeshEdges(int x, int z, vector<EdgeSegment>& autoLinkEdgeSegments);
+
+	void placeDropDownLinks(vector<EdgeSegment>& autoLinkEdgeSegments);
+
+	void findValidDropDowns(vector<EdgeSegment>& autoLinkEdgeSegments, vector<AutoLinkPoints>& autoLinkPoints);
+
+	void getSubsampledLocations(Vector3 segmentStart, Vector3 segmentEnd, float subsampleDistance, vector<Vector3>& locations);
+
+	float verticalNavMeshTest(Vector3 testFrom, float testHeight);
+
+	bool dropDownBlocked(Vector3 startPos, Vector3 endPos, float cs, float ch);
+
+	void placeJumpAcrossLinks(vector<EdgeSegment>& autoLinkEdgeSegments);
+	void findValidJumpAcrossLinks(vector<EdgeSegment>& autoLinkEdgeSegments, vector<AutoLinkPoints>& autoLinkPoints);
+	bool jumpAcrossBlocked(Vector3 startPos, Vector3 endPos, float cs, float ch);
+
+	//navmeshQuery
+	dtStatus getPolyHeightLocal(dtPolyRef ref, const Vector3& pos, float* height);
 };
+
+// Checks for a heightfield collision
+// Params:
+// x, z - (in) x and z coordinates to test
+// ymin, ymax - (in) y range to test
+// hf - (in) rcHeightfield to test inside
+bool rcCheckHeightfieldCollision(const float x, const float ymin, const float ymax, const float z, const rcHeightfield& hf);
+
+// Get nearest heightfield height below specified heightfield location.
+// Params:
+// x, y, z - (in) x, y and z coordinates of the sampling point.
+// hf - (in) rcHeightfield to query
+bool rcGetNearestHeight(const float x, const float y, const float z, const rcHeightfield& hf, float* height);

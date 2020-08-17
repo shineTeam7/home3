@@ -3,6 +3,7 @@
 	/// <summary>
 	/// 容器
 	/// </summary>
+	[Hotfix(needChildren = false)]
 	public class UIContainer:UIObject
 	{
 		/** 子项组 */

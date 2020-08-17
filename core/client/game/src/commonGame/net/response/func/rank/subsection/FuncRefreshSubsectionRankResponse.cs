@@ -88,7 +88,7 @@ public class FuncRefreshSubsectionRankResponse:FuncSResponse
 	/// </summary>
 	protected override void execute()
 	{
-		
+		me.func.getSubsectionRankTool(funcID).onRefreshRank(rank,value);
 	}
 	
 	/// <summary>

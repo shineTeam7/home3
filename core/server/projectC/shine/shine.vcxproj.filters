@@ -160,5 +160,8 @@
     <ClCompile Include="src\utils\StringUtils.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\MathUtils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

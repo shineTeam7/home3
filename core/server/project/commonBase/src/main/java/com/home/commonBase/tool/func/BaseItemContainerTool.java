@@ -88,6 +88,18 @@ public abstract class BaseItemContainerTool extends FuncTool
 		return _gridNum>0 && getGridUseNum()>=_gridNum;
 	}
 	
+	/** 检查物品数目 */
+	protected boolean ensureNum(int num)
+	{
+		if(num<=0)
+		{
+			errorLog("检查物品数目出错",num);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	/** 获取空闲格子数目(无限返回-1) */
 	public int getFreeGridNum()
 	{
@@ -137,6 +149,8 @@ public abstract class BaseItemContainerTool extends FuncTool
 	
 	/** 移除执行序号物品数目(核心)(不回收) */
 	abstract protected void doRemoveItemByIndexC(int index,int num,ItemData data);
+	
+	
 	
 	@Override
 	public void onSecond(int delay)
@@ -476,12 +490,18 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 是否有物品位置 */
 	public boolean hasItemPlace(ItemData data)
 	{
+		if(!ensureNum(data.num))
+			return false;
+		
 		return doHasItemPlaceC(data.id,data.num,data);
 	}
 	
 	/** 是否有物品位置 */
 	public boolean hasItemPlace(int id,int num)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		return doHasItemPlaceC(id,num,null);
 	}
 	
@@ -501,6 +521,12 @@ public abstract class BaseItemContainerTool extends FuncTool
 		for(int i=0,len=list.size();i<len;++i)
 		{
 			data=values[i];
+			
+			if(!ensureNum(data.num))
+			{
+				_tempDic.clear();
+				return false;
+			}
 			
 			//有必要
 			if(ItemConfig.get(data.id).totalPlusMax>0)
@@ -545,6 +571,12 @@ public abstract class BaseItemContainerTool extends FuncTool
 		{
 			data=dataArr[i];
 			
+			if(!ensureNum(data.value))
+			{
+				_tempDic.clear();
+				return false;
+			}
+			
 			//有必要
 			if(ItemConfig.get(data.key).totalPlusMax>0)
 			{
@@ -577,6 +609,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 添加物品数据 */
 	public boolean addItem(ItemData data,int way)
 	{
+		if(!ensureNum(data.num))
+			return false;
+		
 		if(!doAddItemC(data.id,data.num,data))
 		{
 			rollBackAdd();
@@ -595,6 +630,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 添加指定id和数目的道具 */
 	public boolean addItem(int id,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		if(!doAddItemC(id,num,null))
 		{
 			rollBackAdd();
@@ -615,6 +653,12 @@ public abstract class BaseItemContainerTool extends FuncTool
 		{
 			data=values[i];
 			
+			if(!ensureNum(data.num))
+			{
+				rollBackAdd();
+				return false;
+			}
+			
 			if(!doAddItemC(data.id,data.num,data))
 			{
 				rollBackAdd();
@@ -629,8 +673,17 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 添加一组物品 */
 	public boolean addItems(DIntData[] list,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		for(DIntData v:list)
 		{
+			if(!ensureNum(v.value))
+			{
+				rollBackAdd();
+				return false;
+			}
+			
 			if(!doAddItemC(v.key,v.value*num,null))
 			{
 				rollBackAdd();
@@ -653,6 +706,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 是否有指定id数目的物品 */
 	public boolean containsItem(int id,int num)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		return getItemNum(id)>=num;
 	}
 	
@@ -667,6 +723,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 移除道具(会回收) */
 	public boolean removeItem(int id,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		if(!doRemoveItemC(id,num))
 		{
 			rollBackRemove();
@@ -680,8 +739,17 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 移除物品组 */
 	public boolean removeItems(DIntData[] items,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		for(DIntData v:items)
 		{
+			if(!ensureNum(v.value))
+			{
+				rollBackRemove();
+				return false;
+			}
+			
 			if(!doRemoveItemC(v.key,v.value*num))
 			{
 				rollBackRemove();
@@ -710,6 +778,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 移除指定序号的物品(部分数目)(不回收) */
 	public boolean removeItemByIndex(int index,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		ItemData data=getItem(index);
 		
 		if(data==null)
@@ -727,6 +798,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 添加新物品到格子 */
 	public boolean addNewItemToIndex(int index,ItemData data,int way)
 	{
+		if(!ensureNum(data.num))
+			return false;
+		
 		if(getItem(index)!=null)
 			return false;
 		
@@ -745,6 +819,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 给某格子物品添加一定数目 */
 	public boolean addItemPartialToIndex(int index,int num,int way)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		ItemData item=getItem(index);
 		
 		if(item==null)
@@ -772,6 +849,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 使用物品 */
 	public boolean useItemByIndex(int index,int num,UseItemArgData arg)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		ItemData data;
 		
 		if((data=getItem(index))==null)
@@ -783,6 +863,9 @@ public abstract class BaseItemContainerTool extends FuncTool
 	/** 客户端使用物品 */
 	public boolean clientUseItemByIndex(int index,int num,int itemID,UseItemArgData arg)
 	{
+		if(!ensureNum(num))
+			return false;
+		
 		ItemData data;
 		
 		if((data=getItem(index))==null)

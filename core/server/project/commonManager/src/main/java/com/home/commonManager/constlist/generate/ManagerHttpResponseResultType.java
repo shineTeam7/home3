@@ -13,11 +13,11 @@ public class ManagerHttpResponseResultType
 	
 	public static final int MAddPlayerWork=3501;
 	
-	public static final int MPlayerQueryWork=3502;
-	
-	public static final int MQueryPlayer=3503;
-	
 	/** 生成激活码返回 */
-	public static final int MMakeActivationCode=3504;
+	public static final int MMakeActivationCode=3502;
+	
+	public static final int MPlayerQueryWork=3503;
+	
+	public static final int MQueryPlayer=3504;
 	
 }

@@ -215,15 +215,13 @@ public class GameFuncPartData extends BaseData
 			if(!this.roleGroupIndexDic.isEmpty())
 			{
 				int roleGroupIndexDicKFreeValue=this.roleGroupIndexDic.getFreeValue();
-				long[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
-				long roleGroupIndexDicKEntry;
-				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-1;roleGroupIndexDicKI>=0;--roleGroupIndexDicKI)
+				int[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
+				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-2;roleGroupIndexDicKI>=0;roleGroupIndexDicKI-=2)
 				{
-					roleGroupIndexDicKEntry=roleGroupIndexDicKTable[roleGroupIndexDicKI];
-					int roleGroupIndexDicK=(int)roleGroupIndexDicKEntry;
-					if(roleGroupIndexDicK!=roleGroupIndexDicKFreeValue)
+					if(roleGroupIndexDicKTable[roleGroupIndexDicKI]!=roleGroupIndexDicKFreeValue)
 					{
-						int roleGroupIndexDicV=(int)(roleGroupIndexDicKEntry>>>32);
+						int roleGroupIndexDicK=roleGroupIndexDicKTable[roleGroupIndexDicKI];
+						int roleGroupIndexDicV=roleGroupIndexDicKTable[roleGroupIndexDicKI+1];
 						stream.writeInt(roleGroupIndexDicK);
 						
 						stream.writeInt(roleGroupIndexDicV);
@@ -397,15 +395,13 @@ public class GameFuncPartData extends BaseData
 			if(!this.roleGroupIndexDic.isEmpty())
 			{
 				int roleGroupIndexDicKFreeValue=this.roleGroupIndexDic.getFreeValue();
-				long[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
-				long roleGroupIndexDicKEntry;
-				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-1;roleGroupIndexDicKI>=0;--roleGroupIndexDicKI)
+				int[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
+				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-2;roleGroupIndexDicKI>=0;roleGroupIndexDicKI-=2)
 				{
-					roleGroupIndexDicKEntry=roleGroupIndexDicKTable[roleGroupIndexDicKI];
-					int roleGroupIndexDicK=(int)roleGroupIndexDicKEntry;
-					if(roleGroupIndexDicK!=roleGroupIndexDicKFreeValue)
+					if(roleGroupIndexDicKTable[roleGroupIndexDicKI]!=roleGroupIndexDicKFreeValue)
 					{
-						int roleGroupIndexDicV=(int)(roleGroupIndexDicKEntry>>>32);
+						int roleGroupIndexDicK=roleGroupIndexDicKTable[roleGroupIndexDicKI];
+						int roleGroupIndexDicV=roleGroupIndexDicKTable[roleGroupIndexDicKI+1];
 						stream.writeInt(roleGroupIndexDicK);
 						
 						stream.writeInt(roleGroupIndexDicV);
@@ -535,15 +531,13 @@ public class GameFuncPartData extends BaseData
 			if(!mData.roleGroupIndexDic.isEmpty())
 			{
 				int roleGroupIndexDicKFreeValue=mData.roleGroupIndexDic.getFreeValue();
-				long[] roleGroupIndexDicKTable=mData.roleGroupIndexDic.getTable();
-				long roleGroupIndexDicKEntry;
-				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-1;roleGroupIndexDicKI>=0;--roleGroupIndexDicKI)
+				int[] roleGroupIndexDicKTable=mData.roleGroupIndexDic.getTable();
+				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-2;roleGroupIndexDicKI>=0;roleGroupIndexDicKI-=2)
 				{
-					roleGroupIndexDicKEntry=roleGroupIndexDicKTable[roleGroupIndexDicKI];
-					int roleGroupIndexDicK=(int)roleGroupIndexDicKEntry;
-					if(roleGroupIndexDicK!=roleGroupIndexDicKFreeValue)
+					if(roleGroupIndexDicKTable[roleGroupIndexDicKI]!=roleGroupIndexDicKFreeValue)
 					{
-						int roleGroupIndexDicV=(int)(roleGroupIndexDicKEntry>>>32);
+						int roleGroupIndexDicK=roleGroupIndexDicKTable[roleGroupIndexDicKI];
+						int roleGroupIndexDicV=roleGroupIndexDicKTable[roleGroupIndexDicKI+1];
 						int roleGroupIndexDicW;
 						int roleGroupIndexDicU;
 						roleGroupIndexDicW=roleGroupIndexDicK;
@@ -649,15 +643,13 @@ public class GameFuncPartData extends BaseData
 			if(!this.roleGroupIndexDic.isEmpty())
 			{
 				int roleGroupIndexDicKFreeValue=this.roleGroupIndexDic.getFreeValue();
-				long[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
-				long roleGroupIndexDicKEntry;
-				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-1;roleGroupIndexDicKI>=0;--roleGroupIndexDicKI)
+				int[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
+				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-2;roleGroupIndexDicKI>=0;roleGroupIndexDicKI-=2)
 				{
-					roleGroupIndexDicKEntry=roleGroupIndexDicKTable[roleGroupIndexDicKI];
-					int roleGroupIndexDicK=(int)roleGroupIndexDicKEntry;
-					if(roleGroupIndexDicK!=roleGroupIndexDicKFreeValue)
+					if(roleGroupIndexDicKTable[roleGroupIndexDicKI]!=roleGroupIndexDicKFreeValue)
 					{
-						int roleGroupIndexDicV=(int)(roleGroupIndexDicKEntry>>>32);
+						int roleGroupIndexDicK=roleGroupIndexDicKTable[roleGroupIndexDicKI];
+						int roleGroupIndexDicV=roleGroupIndexDicKTable[roleGroupIndexDicKI+1];
 						int roleGroupIndexDicU=roleGroupIndexDicR.get(roleGroupIndexDicK);
 						if(roleGroupIndexDicV!=roleGroupIndexDicU)
 							return false;
@@ -774,15 +766,13 @@ public class GameFuncPartData extends BaseData
 			if(!this.roleGroupIndexDic.isEmpty())
 			{
 				int roleGroupIndexDicKFreeValue=this.roleGroupIndexDic.getFreeValue();
-				long[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
-				long roleGroupIndexDicKEntry;
-				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-1;roleGroupIndexDicKI>=0;--roleGroupIndexDicKI)
+				int[] roleGroupIndexDicKTable=this.roleGroupIndexDic.getTable();
+				for(int roleGroupIndexDicKI=roleGroupIndexDicKTable.length-2;roleGroupIndexDicKI>=0;roleGroupIndexDicKI-=2)
 				{
-					roleGroupIndexDicKEntry=roleGroupIndexDicKTable[roleGroupIndexDicKI];
-					int roleGroupIndexDicK=(int)roleGroupIndexDicKEntry;
-					if(roleGroupIndexDicK!=roleGroupIndexDicKFreeValue)
+					if(roleGroupIndexDicKTable[roleGroupIndexDicKI]!=roleGroupIndexDicKFreeValue)
 					{
-						int roleGroupIndexDicV=(int)(roleGroupIndexDicKEntry>>>32);
+						int roleGroupIndexDicK=roleGroupIndexDicKTable[roleGroupIndexDicKI];
+						int roleGroupIndexDicV=roleGroupIndexDicKTable[roleGroupIndexDicKI+1];
 						writer.writeTabs();
 						writer.sb.append(roleGroupIndexDicK);
 						

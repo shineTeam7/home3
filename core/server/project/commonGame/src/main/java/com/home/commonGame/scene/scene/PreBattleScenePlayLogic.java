@@ -1,6 +1,5 @@
 package com.home.commonGame.scene.scene;
 
-import com.home.commonBase.data.scene.scene.SceneEnterArgData;
 import com.home.commonBase.data.scene.scene.SceneLocationData;
 import com.home.commonBase.data.scene.unit.UnitData;
 import com.home.commonGame.control.LogicExecutor;
@@ -10,7 +9,7 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.LongSet;
 
 /** 副本预进入逻辑 */
-public class PreBattleScenePlayLogic extends GameScenePlayLogic
+public class PreBattleScenePlayLogic extends GameSceneMethodLogic
 {
 	private int _lastTime;
 	

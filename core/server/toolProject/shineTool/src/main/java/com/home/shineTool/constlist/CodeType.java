@@ -16,6 +16,8 @@ public class CodeType
 	//	/** lua */
 	//	public static final int Lua=5;
 	
+	public static final int size=6;
+	
 	/** 获取扩展名 */
 	public static String getExName(int type)
 	{

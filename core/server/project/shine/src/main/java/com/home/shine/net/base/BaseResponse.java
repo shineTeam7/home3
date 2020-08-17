@@ -32,10 +32,19 @@ public abstract class BaseResponse extends BaseData implements Runnable
 	/** 线程类型(默认主线程) */
 	protected int _threadType=ThreadType.Main;
 	
+	/** 创建线程序号 */
+	public byte createThreadInstance=-1;
+	/** 回收链表尾 */
+	public BaseResponse releaseLinkTail;
 	
 	public BaseResponse()
 	{
 		
+	}
+	
+	public int getThreadType()
+	{
+		return _threadType;
 	}
 	
 	/** 设置使用主线程 */

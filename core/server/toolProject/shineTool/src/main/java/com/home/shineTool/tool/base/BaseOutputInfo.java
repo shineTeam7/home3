@@ -69,7 +69,15 @@ public class BaseOutputInfo
 	
 	public boolean isServer()
 	{
-		return group==DataGroupType.Server || group==DataGroupType.Server2;
+		switch(group)
+		{
+			case DataGroupType.Server:
+			case DataGroupType.Server2:
+			case DataGroupType.ServerScene:
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public boolean isServerOrRobot()
@@ -78,6 +86,7 @@ public class BaseOutputInfo
 		{
 			case DataGroupType.Server:
 			case DataGroupType.Server2:
+			case DataGroupType.ServerScene:
 			case DataGroupType.Robot:
 			case DataGroupType.ClientDefine:
 				return true;

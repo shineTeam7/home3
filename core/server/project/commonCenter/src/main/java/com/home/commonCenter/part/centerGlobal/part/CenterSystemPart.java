@@ -155,7 +155,6 @@ public class CenterSystemPart extends CenterGlobalBasePart
 	{
 		data.serverOffTime=_d.serverOffTime;
 		data.serverBornCode=_d.serverBornCode;
-		data.clientGMSet=CenterC.clientGM.getCMDSet();
 		data.serverRunIndex=_d.serverRunIndex;
 	}
 	

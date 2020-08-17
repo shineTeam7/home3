@@ -75,7 +75,8 @@ public class ReBeGameToManagerServerResponse extends ManagerToGameServerResponse
 		
 		if(initData!=null)
 		{
-			GameC.app.onGetInitData(initData);
+			GameC.main.setInitData(initData);
+			GameC.server.onConnectManagerOver();
 		}
 	}
 	

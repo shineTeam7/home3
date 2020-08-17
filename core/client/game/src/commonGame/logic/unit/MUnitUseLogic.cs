@@ -64,7 +64,7 @@ public class MUnitUseLogic
 	{
 		setData(data);
 
-		MUnitFightDataLogic fightLogic=_fightLogic=new MUnitFightDataLogic();
+		MUnitFightDataLogic fightLogic=_fightLogic=GameC.factory.createMUnitFightDataLogic();
 
 		fightLogic.construct();
 

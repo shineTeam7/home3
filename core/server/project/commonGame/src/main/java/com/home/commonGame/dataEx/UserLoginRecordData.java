@@ -22,8 +22,8 @@ public class UserLoginRecordData extends PoolObject
 	public int version;
 	/** 令牌 */
 	public int token;
-	/** 登录时间(s) */
-	public int loginTime=0;
+	/** 登录时间(ms) */
+	public long loginTime=0L;
 	
 	//--client登录部分--//
 	/** socket */
@@ -37,12 +37,6 @@ public class UserLoginRecordData extends PoolObject
 	public AffairTimeLock creatingLock=new AffairTimeLock();
 	/** 角色登录计时锁 */
 	public AffairTimeLock playerLoginLock=new AffairTimeLock();
-	
-	/** 刷新登录时间 */
-	public void refreshLoginTime()
-	{
-		loginTime=CommonSetting.playerLoginTimeMax;
-	}
 	
 	/** 登录结束 */
 	public void loginOver()

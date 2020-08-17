@@ -70,13 +70,10 @@ public class NormalDBExportTool
 		
 		String codeEx=CodeType.getExName(CodeType.Java);
 		
-		
 		String pathH=ShineProjectPath.getDataPath(_isCommon);
 		String baseH=ShineProjectPath.getServerBasePath(_isCommon);
 		
-		
 		String centerURL=ServerConfig.getCenterConfig().mysql;
-		
 		
 		int idStart=_isCommon ? 1 : 50;
 		
@@ -84,7 +81,7 @@ public class NormalDBExportTool
 		
 		doExport(pathH + "/table/table",baseH + "/table",baseH + "/constlist/generate/" + _front + "BaseTableType.java",idStart,50);
 		
-		TableSqlTool centerSql=new TableSqlTool(pathH + "/table/list/"+_front+"CenterTLO."+codeEx,ShineToolGlobal.serverSqlPath + "/center.sql",ShineToolGlobal.serverSqlPath + "/truncateCenter.sql",centerURL,_record.isNew());
+		TableSqlTool centerSql=new TableSqlTool(pathH + "/table/list/"+_front+"CenterTLO."+codeEx,centerURL,_record.isNew());
 		centerSql.setExportTool(_exportTool);
 		centerSql.execute();
 		centerSql.write();
@@ -95,15 +92,12 @@ public class NormalDBExportTool
 		{
 			if(!v.isAssist)
 			{
-				int areaID=v.id;
 				String gameURL=v.mysql;
 				
 				//之前没有
 				if(gameMysqlSet.add(gameURL))
 				{
-					String sqlPath=ShineToolGlobal.serverSqlPath + "/game_"+areaID+".sql";
-					
-					TableSqlTool gameSql=new TableSqlTool(pathH + "/table/list/"+_front+"GameTLO."+codeEx,sqlPath,ShineToolGlobal.serverSqlPath + "/truncateGame.sql",gameURL,_record.isNew());
+					TableSqlTool gameSql=new TableSqlTool(pathH + "/table/list/"+_front+"GameTLO."+codeEx,gameURL,_record.isNew());
 					gameSql.setExportTool(_exportTool);
 					gameSql.execute();
 					gameSql.write();

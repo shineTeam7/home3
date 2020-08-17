@@ -115,7 +115,8 @@ public class InfoControl
 	{
 		Ctrl.print("需要退出",str);
 		GameC.main.setExit();
-		GameC.server.dispose();
+		GameC.main.disposeServer();
+
 		GameC.ui.alert(str,GameC.main.exit);
 	}
 
@@ -128,13 +129,13 @@ public class InfoControl
 		{
 			//TODO:这里需要补充一个策略，就是是否直接连回原game服,应对与没有分服的游戏,或记录好初始原服
 
-			GameC.server.close();
+			GameC.main.closeServer();
 			GameC.main.enterOfflineMode();
 		}
 		else
 		{
 			GameC.main.setExit();
-			GameC.server.dispose();
+			GameC.main.disposeServer();
 			GameC.ui.alert(str,GameC.main.backToLogin);
 		}
 	}

@@ -71,9 +71,7 @@ public class BeGameToManagerServerResponse extends GameToManagerServerResponse
 	@Override
 	protected void execute()
 	{
-		GameServerInfoData gameInfo=ManagerC.main.getGameInfo(id);
-		
-		if(gameInfo==null)
+		if(!ManagerC.main.hasGameServer(id))
 		{
 			Ctrl.throwError("找不到游戏服配置",id);
 			return;
@@ -81,18 +79,7 @@ public class BeGameToManagerServerResponse extends GameToManagerServerResponse
 		
 		ManagerC.server.getSocketInfo(SocketType.Game).registerSocket(id,socket);
 		
-		GameInitServerData initData=null;
-		
-		if(isFirst)
-		{
-			initData=new GameInitServerData();
-			initData.info=gameInfo;
-			initData.centerInfo=ManagerC.main.getCenterInfo();
-			initData.gameServerDic=ManagerC.main.getGameSimpleInfoDic();
-			initData.loginList=ManagerC.main.getLoginList();
-			initData.clientVersion=ManagerC.setting.clientVersionDic;
-			initData.isOfficial=ManagerC.setting.isOfficial;
-		}
+		GameInitServerData initData=isFirst ? ManagerC.main.createGameInitData(id) : null;
 		
 		socket.send(ReBeGameToManagerServerRequest.create(initData));
 	}

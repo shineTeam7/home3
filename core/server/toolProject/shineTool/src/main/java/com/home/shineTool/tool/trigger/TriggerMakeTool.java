@@ -4,6 +4,7 @@ import com.home.shine.constlist.STriggerObjectType;
 import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.SMap;
+import com.home.shine.support.collection.SSet;
 import com.home.shine.support.collection.StringIntMap;
 import com.home.shine.utils.FileUtils;
 import com.home.shine.utils.StringUtils;
@@ -11,7 +12,6 @@ import com.home.shineTool.constlist.CodeType;
 import com.home.shineTool.constlist.DataGroupType;
 import com.home.shineTool.constlist.ProjectType;
 import com.home.shineTool.constlist.VisitType;
-import com.home.shineTool.global.ShineToolGlobal;
 import com.home.shineTool.global.ShineToolSetting;
 import com.home.shineTool.reflect.FieldInfo;
 import com.home.shineTool.reflect.MethodInfo;
@@ -54,6 +54,9 @@ public class TriggerMakeTool
 	/** 子工具 */
 	private TriggerMakeTool _childTool;
 	
+	/** 是否生成代码 */
+	public boolean needGenerateCode=false;
+	
 	/** 组定义  */
 	public StringIntMap groupDefineDic;
 	/** 组定义类型 */
@@ -66,13 +69,20 @@ public class TriggerMakeTool
 	
 	/** 方法定义 */
 	public StringIntMap functionDefineDic;
+	/** 方法类别定义 */
+	public SMap<String,String> functionTTypeDic;
 	/** 方法定义类型 */
 	public IntIntMap functionDefineTypeDic;
 	/** 方法信息 */
 	public IntObjectMap<MethodInfo> functionInfoDic;
 	
+	/** 系统方法组 */
+	public SSet<String> systemMethodSet=new SSet<>();
+	
 	protected ClassInfo _clientControlCls;
-	protected ClassInfo _servefControlCls;
+	protected ClassInfo _serverControlCls;
+	
+	private SMap<String,ClassInfo> _beGetClsDic=new SMap<>();
 	
 	public String getProjectPath(int projectType,boolean isClient)
 	{
@@ -119,6 +129,16 @@ public class TriggerMakeTool
 		_record.setVersion(ShineToolSetting.configExportVersion);
 	}
 	
+	public FileRecordTool getRecordTool()
+	{
+		return _record;
+	}
+	
+	public String getInputPath()
+	{
+		return _inputPath;
+	}
+	
 	/** 设置父 */
 	public void setParentTool(TriggerMakeTool tool)
 	{
@@ -140,6 +160,7 @@ public class TriggerMakeTool
 			objectDefineDic=new StringIntMap();
 			objectStrDefineDic=new SMap<>();
 			functionDefineDic=new StringIntMap();
+			functionTTypeDic=new SMap<>();
 			functionDefineTypeDic=new IntIntMap();
 			functionInfoDic=new IntObjectMap<>(k->new MethodInfo[k]);
 			
@@ -159,12 +180,13 @@ public class TriggerMakeTool
 			objectStrDefineDic.put(code.Long,"STriggerObjectType.Long");
 			objectDefineDic.put(code.String,STriggerObjectType.String);
 			objectStrDefineDic.put(code.String,"STriggerObjectType.String");
-			objectDefineDic.put(code.List,STriggerObjectType.List);
-			objectStrDefineDic.put(code.List,"STriggerObjectType.List");
-			objectDefineDic.put(code.Map,STriggerObjectType.Map);
-			objectStrDefineDic.put(code.Map,"STriggerObjectType.Map");
-			objectDefineDic.put(code.Set,STriggerObjectType.Set);
-			objectStrDefineDic.put(code.Set,"STriggerObjectType.Set");
+			
+			//objectDefineDic.put(code.List,STriggerObjectType.List);
+			//objectStrDefineDic.put(code.List,"STriggerObjectType.List");
+			//objectDefineDic.put(code.Map,STriggerObjectType.Map);
+			//objectStrDefineDic.put(code.Map,"STriggerObjectType.Map");
+			//objectDefineDic.put(code.Set,STriggerObjectType.Set);
+			//objectStrDefineDic.put(code.Set,"STriggerObjectType.Set");
 			
 			objectDefineDic.put("Runnable",STriggerObjectType.Runnable);
 			objectStrDefineDic.put("Runnable","STriggerObjectType.Runnable");
@@ -178,19 +200,15 @@ public class TriggerMakeTool
 			objectDefineDic=_parentTool.objectDefineDic.clone();
 			objectStrDefineDic=_parentTool.objectStrDefineDic.clone();
 			functionDefineDic=_parentTool.functionDefineDic.clone();
+			functionTTypeDic=_parentTool.functionTTypeDic.clone();
 			functionDefineTypeDic=_parentTool.functionDefineTypeDic.clone();
 			functionInfoDic=_parentTool.functionInfoDic.clone();
+			systemMethodSet=_parentTool.systemMethodSet.clone();
 		}
 		
 		toExecuteGroupDefine();
 		toExecuteObjectDefine();
 		toExecuteFunctionDefine();
-		
-		//game
-		if(_projectType==ProjectType.Game)
-		{
-			toExecuteExport();
-		}
 	}
 	
 	private void toExecuteGroupDefine()
@@ -209,9 +227,12 @@ public class TriggerMakeTool
 		
 		export.execute();
 		
-		define0.write();
-		if(ShineToolSetting.needClient)
-			define1.write();
+		if(needGenerateCode)
+		{
+			define0.write();
+			if(ShineToolSetting.needClient)
+				define1.write();
+		}
 	}
 	
 	private void toExecuteObjectDefine()
@@ -230,9 +251,13 @@ public class TriggerMakeTool
 		
 		export.execute();
 		
-		define0.write();
-		if(ShineToolSetting.needClient)
-			define1.write();
+		if(needGenerateCode)
+		{
+			define0.write();
+			if(ShineToolSetting.needClient)
+				define1.write();
+		}
+		
 	}
 	
 	private void toExecuteFunctionDefine()
@@ -244,27 +269,45 @@ public class TriggerMakeTool
 		DataDefineTool eventDefine0=new DataDefineTool(_serverCodePath+"/constlist/generate/" + _projectUFront + "TriggerEventType."+CodeType.getExName(_serverCode),start,1000,false);
 		DataDefineTool eventDefine1=new DataDefineTool(_clientCodePath+"/constlist/generate/" + _projectUFront + "TriggerEventType."+CodeType.getExName(_clientCode),start,1000,false);
 		
+		TriggerMethodMakeTool maker0=new TriggerMethodMakeTool(_serverCodePath+"/trigger/generate/"+ _projectUFront + "TriggerRegister."+CodeType.getExName(_serverCode)
+				,_serverCodePath+"/trigger/generate/"+ _projectUFront + "TriggerMethod."+CodeType.getExName(_serverCode),define0,this);
+		TriggerMethodMakeTool maker1=new TriggerMethodMakeTool(_clientCodePath+"/trigger/generate/"+ _projectUFront + "TriggerRegister."+CodeType.getExName(_clientCode),
+				_clientCodePath+"/trigger/generate/"+ _projectUFront + "TriggerMethod."+CodeType.getExName(_clientCode),define1,this);
+		
 		TriggerFunctionDefineTool export=new TriggerFunctionDefineTool(this);
 		export.setNeedTrace(false);
 		export.setFileRecordTool(_record);
 		export.addDefine(DataGroupType.Server,define0);
+		export.addMethodMakeTool(DataGroupType.Server,maker0);
 		if(ShineToolSetting.needClient)
+		{
 			export.addDefine(DataGroupType.Client,define1);
+			export.addMethodMakeTool(DataGroupType.Client,maker1);
+		}
+		
 		export.setEventDefine(eventDefine0,eventDefine1);
 		export.setInput(_inputPath+"/trigger/base","T",null,CodeType.Java);
 		
 		export.execute();
 		
-		define0.write();
-		if(ShineToolSetting.needClient)
-			define1.write();
-		eventDefine0.write();
-		if(ShineToolSetting.needClient)
-			eventDefine1.write();
-		
-		doFunctionRegist(false,export);
-		if(ShineToolSetting.needClient)
-			doFunctionRegist(true,export);
+		if(needGenerateCode)
+		{
+			define0.write();
+			if(ShineToolSetting.needClient)
+				define1.write();
+			
+			maker0.write();
+			if(ShineToolSetting.needClient)
+				maker1.write();
+			
+			eventDefine0.write();
+			if(ShineToolSetting.needClient)
+				eventDefine1.write();
+			
+			doFunctionRegist(false,export);
+			if(ShineToolSetting.needClient)
+				doFunctionRegist(true,export);
+		}
 	}
 	
 	private void doFunctionRegist(boolean isClient,TriggerFunctionDefineTool export)
@@ -280,7 +323,7 @@ public class TriggerMakeTool
 			
 			if(_parentTool!=null)
 			{
-				ClassInfo superCls=isClient ? _parentTool._clientControlCls : _parentTool._servefControlCls;
+				ClassInfo superCls=isClient ? _parentTool._clientControlCls : _parentTool._serverControlCls;
 				cls.addImport(superCls.getQName());
 				cls.extendsClsName=superCls.clsName;
 			}
@@ -306,12 +349,10 @@ public class TriggerMakeTool
 			}
 		}
 		
-		
-		
 		if(isClient)
 			_clientControlCls=cls;
 		else
-			_servefControlCls=cls;
+			_serverControlCls=cls;
 		
 		MethodInfo method=new MethodInfo();
 		method.name="registReturnType";
@@ -345,6 +386,9 @@ public class TriggerMakeTool
 				{
 					String tt=objectStrDefineDic.get(methodInfo.returnType);
 					
+					if(tt==null)
+						tt=objectStrDefineDic.get(CodeInfo.getCode(ShineToolSetting.defaultCodeType).Object);
+					
 					writer.writeCustom(defineClass.getThisFront()+"funcReturnTypeDic["+defineClass.clsName+"."+dName+"]="+tt+";");
 					writer.writeCustom(defineClass.getThisFront()+"funcNameDic["+defineClass.clsName+"."+dName+"]=\""+methodInfo.name+"\";");
 				}
@@ -360,21 +404,18 @@ public class TriggerMakeTool
 		cls.write();
 	}
 	
-	private void toExecuteExport()
-	{
-		TriggerDataExportTool export=new TriggerDataExportTool(this);
-		
-		export.setNeedTrace(false);
-		export.setFileRecordTool(_record);
-		export.setInput(_inputPath+"/trigger/data","T",null,CodeType.Java);
-		export.setSavePath(ShineToolGlobal.configSavePath+"/trigger.xml");
-		
-		export.execute();
-	}
-	
 	/** 获取对象类型定义 */
 	public int getObjectType(String type)
 	{
+		return objectDefineDic.get(type);
+	}
+	
+	/** 获取对象类型定义 */
+	public int getObjectTypeWhole(String type)
+	{
+		if(!objectDefineDic.contains(type))
+			return STriggerObjectType.Object;
+		
 		return objectDefineDic.get(type);
 	}
 	
@@ -391,5 +432,38 @@ public class TriggerMakeTool
 	public boolean isEventFunc(String methodName)
 	{
 		return methodName.startsWith("on");
+	}
+	
+	/** 通过完全限定名获取类 */
+	public ClassInfo getInputCls(String qName)
+	{
+		ClassInfo classInfo=_beGetClsDic.get(qName);
+		
+		if(classInfo!=null)
+			return classInfo;
+		
+		if(_parentTool!=null)
+		{
+			ClassInfo re=_parentTool.getInputCls(qName);
+			
+			if(re!=null)
+			{
+				_beGetClsDic.put(qName,re);
+				return re;
+			}
+		}
+		
+		int next=qName.indexOf('.',9);//跳过com.home.
+		
+		String path=_inputPath + qName.substring(next,qName.length()).replace('.','/') +"." + CodeType.getExName(ShineToolSetting.defaultCodeType);
+		
+		classInfo=ClassInfo.getClassInfoFromPath(path);
+		
+		if(classInfo!=null)
+		{
+			_beGetClsDic.put(qName,classInfo);
+		}
+		
+		return classInfo;
 	}
 }

@@ -1071,7 +1071,7 @@ public class SceneFightLogic extends SceneLogicBase
 						{
 							momentHitted=true;
 							doAttackMoment(AttackMomentType.AttackOnHitAnyTarget,from,attacker,target,data,damageOneData);
-							_scene.play.onUnitAttackOnHitAnyTarget(attacker,target,data);
+							_scene.method.onUnitAttackOnHitAnyTarget(attacker,target,data);
 						}
 						
 						if(target==mTarget)
@@ -1160,7 +1160,7 @@ public class SceneFightLogic extends SceneLogicBase
 						
 						if(realDamage>0)
 						{
-							_scene.play.onUnitTakeDamage(target,realDamage,attacker);
+							_scene.method.onUnitTakeDamage(target,realDamage,attacker);
 						}
 						
 						//onDamage接口

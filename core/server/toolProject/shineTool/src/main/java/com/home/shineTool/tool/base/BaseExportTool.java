@@ -6,6 +6,7 @@ import com.home.shine.support.collection.SList;
 import com.home.shine.support.collection.SMap;
 import com.home.shine.support.collection.SSet;
 import com.home.shine.support.collection.StringIntMap;
+import com.home.shine.support.func.ObjectFunc2;
 import com.home.shine.utils.FileUtils;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.constlist.CodeType;
@@ -58,7 +59,7 @@ public abstract class BaseExportTool
 	protected String _defaultNameTail="Data";
 	
 	/** 是否需要记录 */
-	private boolean _needRecord=true;
+	protected boolean _needRecord=true;
 	
 	/** 文件记录 */
 	protected FileRecordTool _fileRecord;
@@ -71,6 +72,8 @@ public abstract class BaseExportTool
 	private IntObjectMap<DataMakerTool> _makerDic=new IntObjectMap<>();
 	/** 消息绑定组 */
 	private IntObjectMap<DataMessageBindTool> _messageBindDic=new IntObjectMap<>();
+	/** 组过滤器 */
+	private IntObjectMap<ObjectFunc2<Boolean,String>> _groupFilters=new IntObjectMap<>();
 	
 	/** 输出组 */
 	protected List<BaseOutputInfo> _outputs=new ArrayList<>();
@@ -184,6 +187,7 @@ public abstract class BaseExportTool
 	{
 		_defines.add(define);
 		_defineDic.put(group,define);
+		define.group=group;
 	}
 	
 	/** 添加构造 */
@@ -196,6 +200,11 @@ public abstract class BaseExportTool
 	public void addMessageBind(int group,DataMessageBindTool tool)
 	{
 		_messageBindDic.put(group,tool);
+	}
+	
+	public void addGroupFilter(int group,ObjectFunc2<Boolean,String> func)
+	{
+		_groupFilters.put(group,func);
 	}
 	
 	/** 设置输入 */
@@ -304,12 +313,12 @@ public abstract class BaseExportTool
 	}
 	
 	/** 添加一条定义(0为主) */
-	protected int addOneDefine(String cName,String des)
+	protected int addOneDefine(String cName,String des,String qName)
 	{
-		return doAddOneDefine(cName,des);
+		return doAddOneDefine(cName,des,qName);
 	}
 	
-	protected int doAddOneDefine(String cName,String des)
+	protected int doAddOneDefine(String cName,String des,String qName)
 	{
 		if(_defines.isEmpty())
 		{
@@ -320,7 +329,13 @@ public abstract class BaseExportTool
 		
 		for(DataDefineTool define : _defines)
 		{
-			num=define.addOne(cName,des,num);
+			ObjectFunc2<Boolean,String> func=getGroupFilter(define.group);
+			
+			//允许执行
+			if(func==null || qName==null || func.apply(qName))
+			{
+				num=define.addOne(cName,des,num);
+			}
 		}
 		
 		return num;
@@ -704,6 +719,11 @@ public abstract class BaseExportTool
 		return _defineDic.get(group).getCls();
 	}
 	
+	public ObjectFunc2<Boolean,String> getGroupFilter(int group)
+	{
+		return _groupFilters.get(group);
+	}
+	
 	//--执行--//
 	
 	public void setNeedRecord(boolean value)
@@ -1025,7 +1045,7 @@ public abstract class BaseExportTool
 		//不是虚类
 		if(!_inputCls.isAbstract)
 		{
-			addOneDefine(cName,_inputCls.clsDescribe);
+			addOneDefine(cName,_inputCls.clsDescribe,_inputCls.getQName());
 		}
 		
 		//删除输入记录
@@ -1085,12 +1105,21 @@ public abstract class BaseExportTool
 	/** 获取文件的ex记录 */
 	protected String getRecordEx(File f)
 	{
+		if(!_needRecord)
+			return "";
+		
 		return _fileRecord.getFileEx(f);
 	}
 	
 	private void addNewRecord(RecordDataClassInfo cls)
 	{
 		addToRecordDic(newRecordClsDic,cls);
+	}
+	
+	/** 判断cls继承 */
+	public static boolean isExtendFrom(String qName,String superQName)
+	{
+		return isExtendFrom(newRecordClsDic.get(qName),superQName);
 	}
 	
 	/** 判断cls继承 */
@@ -1175,7 +1204,10 @@ public abstract class BaseExportTool
 	/** 添加记录 */
 	protected void addRecord(File f)
 	{
-		_fileRecord.addFile(f,_recordCls.toString());
+		if(_needRecord)
+		{
+			_fileRecord.addFile(f,_recordCls.toString());
+		}
 	}
 	
 	/** 通过输入File获取inputFile */
@@ -1197,22 +1229,26 @@ public abstract class BaseExportTool
 		
 		String path=FileUtils.fixPath2(_inputRootPath);
 		
-		for(String v : _fileRecord.getRecordDic().keySet())
+		if(_needRecord)
 		{
-			if(v.startsWith(path))
+			for(String v : _fileRecord.getRecordDic().keySet())
 			{
-				File f=new File(v);
-				
-				String cName=getCNameByFile(f);
-				
-				if(_inputFileDic.containsKey(cName))
+				if(v.startsWith(path))
 				{
-					Ctrl.warnLog("输入文件fileRecord中，有重复的CName记录",cName,f.getPath());
+					File f=new File(v);
+					
+					String cName=getCNameByFile(f);
+					
+					if(_inputFileDic.containsKey(cName))
+					{
+						Ctrl.warnLog("输入文件fileRecord中，有重复的CName记录",cName,f.getPath());
+					}
+					
+					_inputFileDic.put(cName,f);
 				}
-				
-				_inputFileDic.put(cName,f);
 			}
 		}
+		
 	}
 	
 	/** 从文件中读取ex的信息 */
@@ -1337,7 +1373,10 @@ public abstract class BaseExportTool
 	/** 删除上一个文件 */
 	protected void removeLastFile(File file)
 	{
-		_fileRecord.removePath(file.getPath());
+		if(_needRecord)
+		{
+			_fileRecord.removePath(file.getPath());
+		}
 	}
 	
 	/** 删除输出文件前 */
@@ -1494,6 +1533,13 @@ public abstract class BaseExportTool
 	/** 检查当前是否需要执行 */
 	protected boolean checkNeedDoCurrent()
 	{
+		ObjectFunc2<Boolean,String> groupFilter=getGroupFilter(_outputInfo.group);
+		
+		if(groupFilter!=null && !groupFilter.apply(_inputCls.getQName()))
+		{
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -1761,8 +1807,11 @@ public abstract class BaseExportTool
 	{
 		if(_oldInputFile!=null)
 		{
-			//移除旧记录
-			_fileRecord.removePath(_oldInputFile.getPath());
+			if(_needRecord)
+			{
+				//移除旧记录
+				_fileRecord.removePath(_oldInputFile.getPath());
+			}
 		}
 	}
 	
@@ -1820,7 +1869,7 @@ public abstract class BaseExportTool
 		//需要添加
 		if(isNeedAddField(field))
 		{
-			List<String> fieldList=_inputCls.getFieldNameList();
+			SList<String> fieldList=_inputCls.getFieldNameList();
 			
 			//以前有
 			if(_oldInputFieldSet==null || _oldInputFieldSet.contains(field.name))

@@ -1,5 +1,6 @@
 package com.home.shine.utils;
 
+import com.home.shine.agent.AgentControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.BaseData;
 import com.home.shine.data.DIntData;
@@ -13,6 +14,7 @@ import com.home.shine.support.collection.SSet;
 import com.home.shine.support.collection.inter.ICreateArray;
 import com.home.shine.support.pool.StringBuilderPool;
 
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,18 +47,6 @@ public class ObjectUtils
 	public static final String[] EmptyStringArr=new String[0];
 	/** 空obj数组 */
 	public static final Object[] EmptyObjectArr=new Object[0];
-	
-	/** 干掉警告 */
-	public static void fixWarning(Object obj)
-	{
-		
-	}
-	
-	/** 干掉警告 */
-	public static void fixWarning(Object... obj)
-	{
-		
-	}
 	
 	/** 获取字典key的排序List */
 	public static <K> List<K> getSortMapKeys(Map<K,?> map)
@@ -430,5 +421,27 @@ public class ObjectUtils
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/** 查看对象大小 */
+	public static long sizeOf(Object obj)
+	{
+		Instrumentation inst=AgentControl.getInstrumentation();
+		
+		if(inst==null)
+			return 0;
+		
+		return inst.getObjectSize(obj);
+	}
+	
+	/** 查看对象递归尺寸 */
+	public static long deepSizeOf(Object obj)
+	{
+		return 0;
+	}
+	
+	public static int arrayGetOrDefault(int[] arr,int index,int defaultValue)
+	{
+		return index<arr.length ? arr[index] : defaultValue;
 	}
 }

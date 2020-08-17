@@ -9,6 +9,9 @@ namespace ShineEngine
 	/// </summary>
 	public class BytesWriteStream:PoolObject
 	{
+		/** 是否使用bitBoolean */
+		private bool _useBitBoolean=ShineSetting.bytesUseBitBoolean;
+
 		private byte[] _buf;
 
 		private int _length=0;
@@ -43,6 +46,11 @@ namespace ShineEngine
 			setBuf(buf);
 
 			_canGrow=false;
+		}
+
+		public void setUseBitBoolean(bool value)
+		{
+			_useBitBoolean=value;
 		}
 
 		/// <summary>
@@ -187,7 +195,7 @@ namespace ShineEngine
 
 		public void clearBooleanPos()
 		{
-			if(!ShineSetting.bytesUseBitBoolean)
+			if(!_useBitBoolean)
 				return;
 			
 			_booleanBufPos=-1;
@@ -262,7 +270,7 @@ namespace ShineEngine
 		/// </summary>
 		public void writeBoolean(bool value)
 		{
-			if(ShineSetting.bytesUseBitBoolean)
+			if(_useBitBoolean)
 			{
 				//新的
 				if(_booleanBufPos==-1)
@@ -661,7 +669,7 @@ namespace ShineEngine
 		/** 开始写对象 */
 		public void startWriteObj()
 		{
-			if(ShineSetting.bytesUseBitBoolean)
+			if(_useBitBoolean)
 			{
 				getWriteStack().add3(_position,_booleanBufPos,_booleanBitIndex);
 				clearBooleanPos();
@@ -676,7 +684,7 @@ namespace ShineEngine
 		public void endWriteObj()
 		{
 			//倒序
-			if(ShineSetting.bytesUseBitBoolean)
+			if(_useBitBoolean)
 			{
 				_booleanBitIndex=_writeStack.pop();
 				_booleanBufPos=_writeStack.pop();

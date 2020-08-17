@@ -1,5 +1,6 @@
 package com.home.shine.net.socket;
 
+import com.home.shine.ShineSetup;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.net.NettyGroup;
@@ -46,6 +47,10 @@ public class SendSocketContent extends BaseSocketContent
 		{
 			close();
 		}
+		
+		//退出中不再连接
+		if(ShineSetup.isExiting())
+			return;
 		
 		try
 		{

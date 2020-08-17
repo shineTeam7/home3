@@ -1948,15 +1948,13 @@ public class TestData extends BaseData
 			if(!this.e1.isEmpty())
 			{
 				int e1KFreeValue=this.e1.getFreeValue();
-				long[] e1KTable=this.e1.getTable();
-				long e1KEntry;
-				for(int e1KI=e1KTable.length-1;e1KI>=0;--e1KI)
+				int[] e1KTable=this.e1.getTable();
+				for(int e1KI=e1KTable.length-2;e1KI>=0;e1KI-=2)
 				{
-					e1KEntry=e1KTable[e1KI];
-					int e1K=(int)e1KEntry;
-					if(e1K!=e1KFreeValue)
+					if(e1KTable[e1KI]!=e1KFreeValue)
 					{
-						int e1V=(int)(e1KEntry>>>32);
+						int e1K=e1KTable[e1KI];
+						int e1V=e1KTable[e1KI+1];
 						stream.writeInt(e1K);
 						
 						stream.writeInt(e1V);
@@ -4010,15 +4008,13 @@ public class TestData extends BaseData
 			if(!this.e1.isEmpty())
 			{
 				int e1KFreeValue=this.e1.getFreeValue();
-				long[] e1KTable=this.e1.getTable();
-				long e1KEntry;
-				for(int e1KI=e1KTable.length-1;e1KI>=0;--e1KI)
+				int[] e1KTable=this.e1.getTable();
+				for(int e1KI=e1KTable.length-2;e1KI>=0;e1KI-=2)
 				{
-					e1KEntry=e1KTable[e1KI];
-					int e1K=(int)e1KEntry;
-					if(e1K!=e1KFreeValue)
+					if(e1KTable[e1KI]!=e1KFreeValue)
 					{
-						int e1V=(int)(e1KEntry>>>32);
+						int e1K=e1KTable[e1KI];
+						int e1V=e1KTable[e1KI+1];
 						stream.writeInt(e1K);
 						
 						stream.writeInt(e1V);
@@ -5350,15 +5346,13 @@ public class TestData extends BaseData
 			if(!mData.e1.isEmpty())
 			{
 				int e1KFreeValue=mData.e1.getFreeValue();
-				long[] e1KTable=mData.e1.getTable();
-				long e1KEntry;
-				for(int e1KI=e1KTable.length-1;e1KI>=0;--e1KI)
+				int[] e1KTable=mData.e1.getTable();
+				for(int e1KI=e1KTable.length-2;e1KI>=0;e1KI-=2)
 				{
-					e1KEntry=e1KTable[e1KI];
-					int e1K=(int)e1KEntry;
-					if(e1K!=e1KFreeValue)
+					if(e1KTable[e1KI]!=e1KFreeValue)
 					{
-						int e1V=(int)(e1KEntry>>>32);
+						int e1K=e1KTable[e1KI];
+						int e1V=e1KTable[e1KI+1];
 						int e1W;
 						int e1U;
 						e1W=e1K;
@@ -6978,15 +6972,13 @@ public class TestData extends BaseData
 			if(!this.e1.isEmpty())
 			{
 				int e1KFreeValue=this.e1.getFreeValue();
-				long[] e1KTable=this.e1.getTable();
-				long e1KEntry;
-				for(int e1KI=e1KTable.length-1;e1KI>=0;--e1KI)
+				int[] e1KTable=this.e1.getTable();
+				for(int e1KI=e1KTable.length-2;e1KI>=0;e1KI-=2)
 				{
-					e1KEntry=e1KTable[e1KI];
-					int e1K=(int)e1KEntry;
-					if(e1K!=e1KFreeValue)
+					if(e1KTable[e1KI]!=e1KFreeValue)
 					{
-						int e1V=(int)(e1KEntry>>>32);
+						int e1K=e1KTable[e1KI];
+						int e1V=e1KTable[e1KI+1];
 						int e1U=e1R.get(e1K);
 						if(e1V!=e1U)
 							return false;
@@ -8666,15 +8658,13 @@ public class TestData extends BaseData
 			if(!this.e1.isEmpty())
 			{
 				int e1KFreeValue=this.e1.getFreeValue();
-				long[] e1KTable=this.e1.getTable();
-				long e1KEntry;
-				for(int e1KI=e1KTable.length-1;e1KI>=0;--e1KI)
+				int[] e1KTable=this.e1.getTable();
+				for(int e1KI=e1KTable.length-2;e1KI>=0;e1KI-=2)
 				{
-					e1KEntry=e1KTable[e1KI];
-					int e1K=(int)e1KEntry;
-					if(e1K!=e1KFreeValue)
+					if(e1KTable[e1KI]!=e1KFreeValue)
 					{
-						int e1V=(int)(e1KEntry>>>32);
+						int e1K=e1KTable[e1KI];
+						int e1V=e1KTable[e1KI+1];
 						writer.writeTabs();
 						writer.sb.append(e1K);
 						

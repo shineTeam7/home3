@@ -9,7 +9,8 @@
 
 		protected int _size;
 
-		protected int _maxSize;
+		/** 容量 */
+		protected int _capacity;
 
 		protected int _version=0;
 
@@ -38,21 +39,15 @@
 			return _size;
 		}
 
+		public int capacity()
+		{
+			return _capacity;
+		}
+
 		/** 尺寸 */
 		public int Count
 		{
 			get {return _size;}
-		}
-
-		public int capacity()
-		{
-			return _maxSize;
-		}
-
-		/** 获取数组长度 */
-		protected int getArrCapacity()
-		{
-			return _maxSize<<1;
 		}
 
 		/** 是否空 */
@@ -104,8 +99,16 @@
 		public void copyBase(BaseHash target)
 		{
 			_size=target._size;
-			_maxSize=target._maxSize;
+			_capacity=target._capacity;
 			_version=0;
+		}
+
+
+		protected virtual void init(int capacity)
+		{
+			_capacity=capacity;
+
+			Ctrl.throwError("should be override");
 		}
 
 		/** 清空 */
@@ -116,11 +119,56 @@
 			_lastFreeIndex=-1;
 		}
 
-		protected virtual void rehash(int size)
+		public void reset()
 		{
-			++_version;
-			_lastFreeIndex=-1;
+			if(_size==0)
+			{
+				if(_capacity==_minSize)
+					return;
+			}
+			else
+			{
+				justClearSize();
+			}
+
+			init(_minSize);
 		}
+
+		/** 扩容 */
+		public void ensureCapacity(int capacity)
+		{
+			if(capacity>_capacity)
+			{
+				rehash(countCapacity(capacity));
+			}
+		}
+
+		/** 缩容 */
+		public void shrink()
+		{
+			if(_size==0)
+			{
+				if(_capacity==_minSize)
+					return;
+
+				init(_minSize);
+			}
+			else
+			{
+				int capacity=countCapacity(_size);
+
+				if(capacity<_capacity)
+				{
+					rehash(capacity);
+				}
+			}
+		}
+
+		protected virtual void rehash(int size)
+        {
+        	++_version;
+        	_lastFreeIndex=-1;
+        }
 
 		protected void postInsertHook(int index)
 		{
@@ -131,9 +179,9 @@
 				_lastFreeIndex=-1;
 			}
 
-			if((++_size)>(_maxSize))
+			if((++_size)>_capacity)
 			{
-				rehash(getArrCapacity() << 1);
+				rehash(_capacity << 1);
 			}
 		}
 

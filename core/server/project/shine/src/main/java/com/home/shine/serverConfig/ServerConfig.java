@@ -20,6 +20,8 @@ public class ServerConfig
 	private static IntObjectMap<BaseServerConfig> _loginConfigDic;
 	/** 区服配置组 */
 	private static IntObjectMap<GameServerConfig> _gameConfigDic;
+	/** 场景服配置组 */
+	private static IntObjectMap<BaseServerConfig> _sceneConfigDic;
 	
 	/** 初始化 */
 	public static synchronized void init()
@@ -54,13 +56,13 @@ public class ServerConfig
 		
 		XML xml=FileUtils.readFileForXML(ShineGlobal.serverConfigPath);
 		
-		_centerConfig=new BaseServerConfig();
-		_centerConfig.readByXML(xml.getChildrenByNameOne("center"));
+		BaseServerConfig centerConfig=new BaseServerConfig();
+		centerConfig.readByXML(xml.getChildrenByNameOne("center"));
 		
 		if(ip!=null)
-			makeLocalConfig(_centerConfig,ip,mysql);
+			makeLocalConfig(centerConfig,ip,mysql);
 		
-		_loginConfigDic=new IntObjectMap<>();
+		IntObjectMap<BaseServerConfig> loginConfigDic=new IntObjectMap<>();
 		
 		for(XML xl : xml.getChildrenByName("login"))
 		{
@@ -70,10 +72,10 @@ public class ServerConfig
 			if(ip!=null)
 				makeLocalConfig(config,ip,mysql);
 			
-			_loginConfigDic.put(config.id,config);
+			loginConfigDic.put(config.id,config);
 		}
 		
-		_gameConfigDic=new IntObjectMap<>();
+		IntObjectMap<GameServerConfig> gameConfigDic=new IntObjectMap<>();
 		
 		for(XML xl : xml.getChildrenByName("game"))
 		{
@@ -83,17 +85,33 @@ public class ServerConfig
 			if(ip!=null)
 				makeLocalConfig(config,ip,mysql);
 			
-			_gameConfigDic.put(config.id,config);
+			gameConfigDic.put(config.id,config);
 		}
 		
+		IntObjectMap<BaseServerConfig> sceneConfigDic=new IntObjectMap<>();
 		
-		XML manger=xml.getChildrenByNameOne("manager");
-		
-		if(manger!=null)
+		for(XML xl : xml.getChildrenByName("scene"))
 		{
-			_managerConfig=new BaseServerConfig();
-			_managerConfig.readByXML(manger);
+			BaseServerConfig config=new BaseServerConfig();
+			config.readByXML(xl);
+			
+			if(ip!=null)
+				makeLocalConfig(config,ip,mysql);
+			
+			sceneConfigDic.put(config.id,config);
 		}
+		
+		BaseServerConfig managerConfig=new BaseServerConfig();
+		XML manager=xml.getChildrenByNameOne("manager");
+		if(manager!=null)
+			managerConfig.readByXML(manager);
+		
+		
+		_centerConfig=centerConfig;
+		_loginConfigDic=loginConfigDic;
+		_gameConfigDic=gameConfigDic;
+		_sceneConfigDic=sceneConfigDic;
+		_managerConfig=managerConfig;
 	}
 	
 	private static void makeLocalConfig(BaseServerConfig config,String ip,String mysql)
@@ -136,5 +154,11 @@ public class ServerConfig
 	public static IntObjectMap<GameServerConfig> getGameConfigDic()
 	{
 		return _gameConfigDic;
+	}
+	
+	/** 获取全部区服配置 */
+	public static IntObjectMap<BaseServerConfig> getSceneConfigDic()
+	{
+		return _sceneConfigDic;
 	}
 }

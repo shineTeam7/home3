@@ -5,6 +5,7 @@ namespace ShineEngine
 	/// <summary>
 	/// 数据构造器
 	/// </summary>
+	[Hotfix(needChildren = false)]
 	public class DataMaker:ArrayDic<Func<BaseData>>
 	{
 		/** 通过id取得Data类型 */

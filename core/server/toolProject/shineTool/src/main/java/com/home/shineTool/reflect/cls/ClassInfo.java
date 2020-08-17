@@ -89,7 +89,7 @@ public abstract class ClassInfo
 	/** 值属性字典 */
 	private Map<String,FieldInfo> _fieldDic=new HashMap<>();
 	/** 值属性名字序列 */
-	private List<String> _fieldNameList=new ArrayList<>();
+	private SList<String> _fieldNameList=new SList<>(String[]::new);
 	/** 构造函数方法(构造函数只能有一个) */
 	protected MainMethodInfo _mainMethod;
 	
@@ -227,7 +227,7 @@ public abstract class ClassInfo
 	}
 	
 	/** 获取属性名组 */
-	public List<String> getFieldNameList()
+	public SList<String> getFieldNameList()
 	{
 		return _fieldNameList;
 	}
@@ -415,7 +415,7 @@ public abstract class ClassInfo
 				index=_fieldNameList.size();
 			}
 			
-			_fieldNameList.add(index,field.name);
+			_fieldNameList.insert(index,field.name);
 		}
 	}
 	

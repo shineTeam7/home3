@@ -9,7 +9,7 @@ import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.utils.MathUtils;
 
 /** 属性计算工具 */
-public abstract class AttributeTool
+public abstract class AttributeTool implements IAttributeTool
 {
 	protected AttributeCalculateInfo _info;
 	
@@ -66,7 +66,7 @@ public abstract class AttributeTool
 		_attributes=new int[info.size];
 		_attributeModifications=new boolean[info.size];
 		_changeSet=new boolean[info.size];
-		_normalLastAttributes=new int[info.size];
+		
 		_lastDispatch=new int[info.size];
 		
 		_currentMaxCache=new int[info.currentList.length];
@@ -83,11 +83,6 @@ public abstract class AttributeTool
 	public void setIsM(boolean value)
 	{
 		_isM=value;
-		
-		if(value)
-		{
-			_normalLastAttributes=new int[_info.size];
-		}
 	}
 	
 	/** 设置数据 */
@@ -138,14 +133,17 @@ public abstract class AttributeTool
 		boolean[] changeSet=_changeSet;
 		int[] normalLastAttributes=_normalLastAttributes;
 		
-		
 		for(int i=_info.size - 1;i >= 0;--i)
 		{
 			attributes[i]=0;
 			attributeModifications[i]=false;
 			lastAttributes[i]=0;
 			changeSet[i]=false;
-			normalLastAttributes[i]=0;
+			
+			if(normalLastAttributes!=null)
+			{
+				normalLastAttributes[i]=0;
+			}
 		}
 		
 		int[] currentMaxCache=_currentMaxCache;
@@ -266,10 +264,10 @@ public abstract class AttributeTool
 				_currentMaxCache[sIndex]=nowMax;
 			}
 			
-			int nowValue;
 			int[] attributes;
+			int nowValue=(attributes=_attributes)[type];
 			//范围
-			if((nowValue=(attributes=_attributes)[type])>nowMax)
+			if(!_info.currentCanOverMax[type] && nowValue>nowMax)
 			{
 				attributes[type]=nowValue=nowMax;
 			}
@@ -340,8 +338,11 @@ public abstract class AttributeTool
 			if(attributes[k]!=0)
 			{
 				//无上限值或还没满
-				if(_increaseNeedSet[index]=((maxID=info.currentToMaxMap[currentID=info.increaseToCurrentMap[k]])<=0 || attributes[currentID]<attributes[maxID]))
+				boolean b=(maxID=info.currentToMaxMap[currentID=info.increaseToCurrentMap[k]])<=0 || attributes[currentID]<attributes[maxID];
+				
+				if(b)
 				{
+					_increaseNeedSet[index]=true;
 					_needIncrease=true;
 				}
 			}
@@ -460,7 +461,9 @@ public abstract class AttributeTool
 							sendSelfDic=new IntIntMap();
 						
 						sendSelfDic.put(k,value);
-						normalAttributeChanges[k]=value;
+						
+						if(normalAttributeChanges!=null)
+							normalAttributeChanges[k]=value;
 					}
 				}
 				
@@ -510,7 +513,7 @@ public abstract class AttributeTool
 		{
 			try
 			{
-				toDispatchAttribute(dispatchList,num,dispatchSet,lastDispatch);
+				toDispatchAttribute(dispatchList,num,dispatchSet);
 			}
 			catch(Exception e)
 			{
@@ -531,7 +534,7 @@ public abstract class AttributeTool
 	/** 广播别人 */
 	abstract protected void toSendOther(IntIntMap dic);
 	/** 派发刷新属性 */
-	abstract protected void toDispatchAttribute(int[] changeList,int num,boolean[] changeSet,int[] lastAttributes);
+	abstract protected void toDispatchAttribute(int[] changeList,int num,boolean[] changeSet);
 	
 	/** 设置单个属性值 */
 	public void setOneAttribute(int type,int value)
@@ -591,6 +594,7 @@ public abstract class AttributeTool
 	}
 	
 	/** 获取属性 */
+	@Override
 	public int getAttribute(int type)
 	{
 		//当前属性有变化
@@ -619,6 +623,7 @@ public abstract class AttributeTool
 	}
 	
 	/** 获取属性增加率 */
+	@Override
 	public float getAddRatio(int type)
 	{
 		int re;
@@ -702,6 +707,9 @@ public abstract class AttributeTool
 		if(bb)
 		{
 			IntIntMap sendDic=null;
+			
+			if(_normalLastAttributes==null)
+				_normalLastAttributes=new int[_info.size];
 			
 			int[] normalLastAttributes=_normalLastAttributes;
 			int[] attributes=_attributes;

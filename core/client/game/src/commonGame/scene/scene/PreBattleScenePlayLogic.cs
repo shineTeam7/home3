@@ -4,7 +4,7 @@ using ShineEngine;
 /// <summary>
 /// 预备副本逻辑
 /// </summary>
-public class PreBattleScenePlayLogic:ScenePlayLogic
+public class PreBattleScenePlayLogic:SceneMethodLogic
 {
 
 }

@@ -39,6 +39,11 @@ public class ActivityConfig:BaseConfig
 	public int[][] enableConditions;
 	
 	/// <summary>
+	/// 失效条件
+	/// </summary>
+	public int[][] invalidConditions;
+	
+	/// <summary>
 	/// 重置时间
 	/// </summary>
 	public string resetTime;
@@ -162,6 +167,29 @@ public class ActivityConfig:BaseConfig
 			enableConditionsT[enableConditionsI]=enableConditionsV;
 		}
 		
+		int invalidConditionsLen=stream.readLen();
+		if(this.invalidConditions==null || this.invalidConditions.Length!=invalidConditionsLen)
+		{
+			this.invalidConditions=new int[invalidConditionsLen][];
+		}
+		int[][] invalidConditionsT=this.invalidConditions;
+		for(int invalidConditionsI=0;invalidConditionsI<invalidConditionsLen;++invalidConditionsI)
+		{
+			int[] invalidConditionsV;
+			int invalidConditionsVLen=stream.readLen();
+			invalidConditionsV=new int[invalidConditionsVLen];
+			int[] invalidConditionsVT=invalidConditionsV;
+			for(int invalidConditionsVI=0;invalidConditionsVI<invalidConditionsVLen;++invalidConditionsVI)
+			{
+				int invalidConditionsVV;
+				invalidConditionsVV=stream.readInt();
+				
+				invalidConditionsVT[invalidConditionsVI]=invalidConditionsVV;
+			}
+			
+			invalidConditionsT[invalidConditionsI]=invalidConditionsV;
+		}
+		
 		int joinConditionsLen=stream.readLen();
 		if(this.joinConditions==null || this.joinConditions.Length!=joinConditionsLen)
 		{
@@ -265,6 +293,36 @@ public class ActivityConfig:BaseConfig
 		else
 		{
 			nullObjError("enableConditions");
+		}
+		
+		if(this.invalidConditions!=null)
+		{
+			int[][] invalidConditionsT=this.invalidConditions;
+			stream.writeLen(invalidConditionsT.Length);
+			for(int invalidConditionsVI=0,invalidConditionsVLen=invalidConditionsT.Length;invalidConditionsVI<invalidConditionsVLen;++invalidConditionsVI)
+			{
+				int[] invalidConditionsV=invalidConditionsT[invalidConditionsVI];
+				if(invalidConditionsV!=null)
+				{
+					int[] invalidConditionsVT=invalidConditionsV;
+					stream.writeLen(invalidConditionsVT.Length);
+					for(int invalidConditionsVVI=0,invalidConditionsVVLen=invalidConditionsVT.Length;invalidConditionsVVI<invalidConditionsVVLen;++invalidConditionsVVI)
+					{
+						int invalidConditionsVV=invalidConditionsVT[invalidConditionsVVI];
+						stream.writeInt(invalidConditionsVV);
+						
+					}
+				}
+				else
+				{
+					nullObjError("invalidConditionsV");
+				}
+				
+			}
+		}
+		else
+		{
+			nullObjError("invalidConditions");
 		}
 		
 		if(this.joinConditions!=null)

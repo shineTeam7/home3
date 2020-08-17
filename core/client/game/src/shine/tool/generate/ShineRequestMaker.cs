@@ -17,6 +17,7 @@ public class ShineRequestMaker:DataMaker
 		list[ShineRequestType.SocketReconnectSuccess-offSet]=createSocketReconnectSuccessRequest;
 		list[ShineRequestType.AckPing-offSet]=createAckPingRequest;
 		list[ShineRequestType.SocketReconnectFailed-offSet]=createSocketReconnectFailedRequest;
+		list[ShineRequestType.SocketClose-offSet]=createSocketCloseRequest;
 	}
 	
 	private BaseData createPingRequest()
@@ -52,6 +53,11 @@ public class ShineRequestMaker:DataMaker
 	private BaseData createSocketReconnectFailedRequest()
 	{
 		return new SocketReconnectFailedRequest();
+	}
+	
+	private BaseData createSocketCloseRequest()
+	{
+		return new SocketCloseRequest();
 	}
 	
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using ILRuntime.CLR.Method;
 using ILRuntime.Runtime.Enviorment;
 using ILRuntime.Runtime.Intepreter;
@@ -54,11 +55,11 @@ namespace ShineEngine
 			IMethod _m0;
 			bool _g0;
 			bool _b0;
-			protected override void copyData()
+			public override void clear()
 			{
 				if(!_g0)
 				{
-					_m0=instance.Type.GetMethod("copyData",0);
+					_m0=instance.Type.GetMethod("clear",0);
 					_g0=true;
 				}
 				
@@ -71,7 +72,7 @@ namespace ShineEngine
 				}
 				else
 				{
-					base.copyData();
+					base.clear();
 				}
 			}
 			
@@ -104,21 +105,96 @@ namespace ShineEngine
 			IMethod _m2;
 			bool _g2;
 			bool _b2;
-			protected override void doWriteToStream(BytesWriteStream stream)
+			public override string getDataClassName()
 			{
 				if(!_g2)
 				{
-					_m2=instance.Type.GetMethod("doWriteToStream",1);
+					_m2=instance.Type.GetMethod("getDataClassName",0);
 					_g2=true;
 				}
 				
 				if(_m2!=null && !_b2)
 				{
 					_b2=true;
-					_p1[0]=stream;
-					appdomain.Invoke(_m2,instance,_p1);
-					_p1[0]=null;
+					string re=(string)appdomain.Invoke(_m2,instance,null);
 					_b2=false;
+					return re;
+					
+				}
+				else
+				{
+					return base.getDataClassName();
+				}
+			}
+			
+			IMethod _m3;
+			bool _g3;
+			bool _b3;
+			protected override void toWriteDataString(DataWriter writer)
+			{
+				if(!_g3)
+				{
+					_m3=instance.Type.GetMethod("toWriteDataString",1);
+					_g3=true;
+				}
+				
+				if(_m3!=null && !_b3)
+				{
+					_b3=true;
+					_p1[0]=writer;
+					appdomain.Invoke(_m3,instance,_p1);
+					_p1[0]=null;
+					_b3=false;
+					
+				}
+				else
+				{
+					base.toWriteDataString(writer);
+				}
+			}
+			
+			IMethod _m4;
+			bool _g4;
+			bool _b4;
+			protected override void copyData()
+			{
+				if(!_g4)
+				{
+					_m4=instance.Type.GetMethod("copyData",0);
+					_g4=true;
+				}
+				
+				if(_m4!=null && !_b4)
+				{
+					_b4=true;
+					appdomain.Invoke(_m4,instance,null);
+					_b4=false;
+					
+				}
+				else
+				{
+					base.copyData();
+				}
+			}
+			
+			IMethod _m5;
+			bool _g5;
+			bool _b5;
+			protected override void doWriteToStream(BytesWriteStream stream)
+			{
+				if(!_g5)
+				{
+					_m5=instance.Type.GetMethod("doWriteToStream",1);
+					_g5=true;
+				}
+				
+				if(_m5!=null && !_b5)
+				{
+					_b5=true;
+					_p1[0]=stream;
+					appdomain.Invoke(_m5,instance,_p1);
+					_p1[0]=null;
+					_b5=false;
 					
 				}
 				else
@@ -127,24 +203,24 @@ namespace ShineEngine
 				}
 			}
 			
-			IMethod _m3;
-			bool _g3;
-			bool _b3;
+			IMethod _m6;
+			bool _g6;
+			bool _b6;
 			protected override void doWriteBytesSimple(BytesWriteStream stream)
 			{
-				if(!_g3)
+				if(!_g6)
 				{
-					_m3=instance.Type.GetMethod("doWriteBytesSimple",1);
-					_g3=true;
+					_m6=instance.Type.GetMethod("doWriteBytesSimple",1);
+					_g6=true;
 				}
 				
-				if(_m3!=null && !_b3)
+				if(_m6!=null && !_b6)
 				{
-					_b3=true;
+					_b6=true;
 					_p1[0]=stream;
-					appdomain.Invoke(_m3,instance,_p1);
+					appdomain.Invoke(_m6,instance,_p1);
 					_p1[0]=null;
-					_b3=false;
+					_b6=false;
 					
 				}
 				else

@@ -9,7 +9,6 @@ import com.home.commonBase.global.Global;
 import com.home.commonBase.part.player.clientData.PetClientPartData;
 import com.home.commonBase.part.player.data.PetPartData;
 import com.home.commonBase.scene.base.Unit;
-import com.home.commonGame.global.GameC;
 import com.home.commonGame.logic.unit.PetUseLogic;
 import com.home.commonGame.net.request.role.pet.AddPetRequest;
 import com.home.commonGame.net.request.role.pet.RefreshPetIsWorkingRequest;

@@ -24,9 +24,6 @@ public class GameLoginDO
 	Map<Integer,ActivityServerDO> activities;
 	/** 服务器出生码 */
 	int serverBornCode;
-	/** 客户端gm指令组 */
-	@MaybeNull
-	Set<String> clientGMSet;
 	/** 中心服运行序号 */
 	int serverRunIndex;
 }

@@ -53,6 +53,12 @@ public abstract class SendSocket extends BaseSocket
 	{
 		//主动发送的不断
 		setNeedPingCut(false);
+		
+		if(ShineSetting.isAllInOne)
+		{
+			//本地建立连接加快
+			_tryConnectTime.setTimeMax(1);
+		}
 	}
 	
 	@Override
@@ -72,6 +78,10 @@ public abstract class SendSocket extends BaseSocket
 	/** 连接单次(io线程) */
 	private void toConnectOnce()
 	{
+		//退出中不再连接
+		if(ShineSetup.isExiting())
+			return;
+		
 		createNewContent();
 		
 		_state=Connecting;
@@ -328,6 +338,12 @@ public abstract class SendSocket extends BaseSocket
 	/** 发送心跳(IO线程) */
 	protected void sendPingRequest()
 	{
+		if(_pingSending)
+		{
+			_ping=-1;
+		}
+		
+		_pingSending=true;
 		_sendPingTime=Ctrl.getTimer();
 		sendAbsForIO(PingRequest.create(++_pingIndex));
 	}
@@ -336,6 +352,8 @@ public abstract class SendSocket extends BaseSocket
 	public void onRePing(int index)
 	{
 		refreshPingTime();
+		
+		_pingSending=false;
 		
 		//相同
 		if(_pingIndex==index)

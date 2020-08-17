@@ -19,19 +19,14 @@ public class ManagerHttpResponseMaker extends DataMaker
 		list=new CreateDataFunc[ManagerHttpResponseType.count-offSet];
 		list[ManagerHttpResponseType.GMClientLogin-offSet]=this::createGMClientLoginHttpResponse;
 		list[ManagerHttpResponseType.MAddPlayerWork-offSet]=this::createMAddPlayerWorkHttpResponse;
+		list[ManagerHttpResponseType.MMakeActivationCode-offSet]=this::createMMakeActivationCodeHttpResponse;
 		list[ManagerHttpResponseType.MPlayerQueryWork-offSet]=this::createMPlayerQueryWorkHttpResponse;
 		list[ManagerHttpResponseType.MQueryPlayer-offSet]=this::createMQueryPlayerHttpResponse;
-		list[ManagerHttpResponseType.MMakeActivationCode-offSet]=this::createMMakeActivationCodeHttpResponse;
 	}
 	
 	private BaseData createGMClientLoginHttpResponse()
 	{
 		return new GMClientLoginHttpResponse();
-	}
-	
-	private BaseData createManagerRHttpResponse()
-	{
-		return new ManagerRHttpResponse();
 	}
 	
 	private BaseData createMQueryPlayerHttpResponse()

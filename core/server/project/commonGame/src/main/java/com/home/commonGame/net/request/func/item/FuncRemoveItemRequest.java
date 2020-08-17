@@ -37,15 +37,13 @@ public class FuncRemoveItemRequest extends FuncSRequest
 			if(!dicTemp.isEmpty())
 			{
 				int dicKFreeValue=dicTemp.getFreeValue();
-				long[] dicKTable=dicTemp.getTable();
-				long dicKEntry;
-				for(int dicKI=dicKTable.length-1;dicKI>=0;--dicKI)
+				int[] dicKTable=dicTemp.getTable();
+				for(int dicKI=dicKTable.length-2;dicKI>=0;dicKI-=2)
 				{
-					dicKEntry=dicKTable[dicKI];
-					int dicK=(int)dicKEntry;
-					if(dicK!=dicKFreeValue)
+					if(dicKTable[dicKI]!=dicKFreeValue)
 					{
-						int dicV=(int)(dicKEntry>>>32);
+						int dicK=dicKTable[dicKI];
+						int dicV=dicKTable[dicKI+1];
 						int dicW;
 						int dicU;
 						dicW=dicK;
@@ -98,15 +96,13 @@ public class FuncRemoveItemRequest extends FuncSRequest
 			if(!this.dic.isEmpty())
 			{
 				int dicKFreeValue=this.dic.getFreeValue();
-				long[] dicKTable=this.dic.getTable();
-				long dicKEntry;
-				for(int dicKI=dicKTable.length-1;dicKI>=0;--dicKI)
+				int[] dicKTable=this.dic.getTable();
+				for(int dicKI=dicKTable.length-2;dicKI>=0;dicKI-=2)
 				{
-					dicKEntry=dicKTable[dicKI];
-					int dicK=(int)dicKEntry;
-					if(dicK!=dicKFreeValue)
+					if(dicKTable[dicKI]!=dicKFreeValue)
 					{
-						int dicV=(int)(dicKEntry>>>32);
+						int dicK=dicKTable[dicKI];
+						int dicV=dicKTable[dicKI+1];
 						writer.writeTabs();
 						writer.sb.append(dicK);
 						
@@ -143,15 +139,13 @@ public class FuncRemoveItemRequest extends FuncSRequest
 			if(!this.dic.isEmpty())
 			{
 				int dicKFreeValue=this.dic.getFreeValue();
-				long[] dicKTable=this.dic.getTable();
-				long dicKEntry;
-				for(int dicKI=dicKTable.length-1;dicKI>=0;--dicKI)
+				int[] dicKTable=this.dic.getTable();
+				for(int dicKI=dicKTable.length-2;dicKI>=0;dicKI-=2)
 				{
-					dicKEntry=dicKTable[dicKI];
-					int dicK=(int)dicKEntry;
-					if(dicK!=dicKFreeValue)
+					if(dicKTable[dicKI]!=dicKFreeValue)
 					{
-						int dicV=(int)(dicKEntry>>>32);
+						int dicK=dicKTable[dicKI];
+						int dicV=dicKTable[dicKI+1];
 						stream.writeInt(dicK);
 						
 						stream.writeInt(dicV);
@@ -182,15 +176,13 @@ public class FuncRemoveItemRequest extends FuncSRequest
 			if(!this.dic.isEmpty())
 			{
 				int dicKFreeValue=this.dic.getFreeValue();
-				long[] dicKTable=this.dic.getTable();
-				long dicKEntry;
-				for(int dicKI=dicKTable.length-1;dicKI>=0;--dicKI)
+				int[] dicKTable=this.dic.getTable();
+				for(int dicKI=dicKTable.length-2;dicKI>=0;dicKI-=2)
 				{
-					dicKEntry=dicKTable[dicKI];
-					int dicK=(int)dicKEntry;
-					if(dicK!=dicKFreeValue)
+					if(dicKTable[dicKI]!=dicKFreeValue)
 					{
-						int dicV=(int)(dicKEntry>>>32);
+						int dicK=dicKTable[dicKI];
+						int dicV=dicKTable[dicKI+1];
 						stream.writeInt(dicK);
 						
 						stream.writeInt(dicV);

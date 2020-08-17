@@ -29,6 +29,11 @@ public class FightUnitConfig:BaseConfig
 	public int modelID;
 	
 	/// <summary>
+	/// 所属组
+	/// </summary>
+	public int[] groups;
+	
+	/// <summary>
 	/// 死亡保留时间(ms)
 	/// </summary>
 	public int deathKeepTime;
@@ -88,6 +93,8 @@ public class FightUnitConfig:BaseConfig
 	/// </summary>
 	public float wakeUpCompanionAttackRadius;
 	
+	public float wakeUpCompanionAttackRadiusT;
+	
 	/// <summary>
 	/// 跟随半径
 	/// </summary>
@@ -99,9 +106,29 @@ public class FightUnitConfig:BaseConfig
 	public float followRadiusT;
 	
 	/// <summary>
+	/// 驾驶方式转向角速度(角度/s)
+	/// </summary>
+	public float driveAngleSpeed;
+	
+	/// <summary>
+	/// 驾驶方式转向角速度(弧度/ms)
+	/// </summary>
+	public float driveDirectionSpeedT;
+	
+	/// <summary>
+	/// 驾驶方式转向半径
+	/// </summary>
+	public float driveTurnRadius;
+	
+	/// <summary>
 	/// 可攻击目标类型
 	/// </summary>
 	public int[] attackInfluenceType;
+	
+	/// <summary>
+	/// 驾驶方式是否可原地转向
+	/// </summary>
+	public bool canDriveTurnAtPivot;
 	
 	/// <summary>
 	/// 地图移动类型
@@ -111,17 +138,12 @@ public class FightUnitConfig:BaseConfig
 	/// <summary>
 	/// 走跑移速比率
 	/// </summary>
-	public int walkSpeedRatio;
+	public float walkSpeedRatio;
 	
 	/// <summary>
 	/// 是否使用驾驶方式移动
 	/// </summary>
 	public bool needDrive;
-	
-	/// <summary>
-	/// 驾驶方式转向半径
-	/// </summary>
-	public float driveTurnRadius;
 	
 	/// <summary>
 	/// 是否启用仇恨目标切换
@@ -197,6 +219,20 @@ public class FightUnitConfig:BaseConfig
 		
 		this.vocation=stream.readInt();
 		
+		int groupsLen=stream.readLen();
+		if(this.groups==null || this.groups.Length!=groupsLen)
+		{
+			this.groups=new int[groupsLen];
+		}
+		int[] groupsT=this.groups;
+		for(int groupsI=0;groupsI<groupsLen;++groupsI)
+		{
+			int groupsV;
+			groupsV=stream.readInt();
+			
+			groupsT[groupsI]=groupsV;
+		}
+		
 		this.deathKeepTime=stream.readInt();
 		
 		this.reviveWaitTime=stream.readInt();
@@ -235,13 +271,17 @@ public class FightUnitConfig:BaseConfig
 		
 		this.mapMoveType=stream.readInt();
 		
-		this.walkSpeedRatio=stream.readInt();
+		this.walkSpeedRatio=stream.readFloat();
 		
 		this.needDrive=stream.readBoolean();
 		
-		this.driveTurnRadius=stream.readFloat();
+		this.driveAngleSpeed=stream.readFloat();
 		
 		this.driveAccelerateSpeed=stream.readInt();
+		
+		this.driveTurnRadius=stream.readFloat();
+		
+		this.canDriveTurnAtPivot=stream.readBoolean();
 		
 		this.needHateSwitchTarget=stream.readBoolean();
 		
@@ -254,7 +294,9 @@ public class FightUnitConfig:BaseConfig
 		passiveAttackRadiusT=passiveAttackRadius * passiveAttackRadius;
 		initiativeAttackRadiusT=initiativeAttackRadius * initiativeAttackRadius;
 		followRadiusT=followRadius * followRadius;
+		wakeUpCompanionAttackRadiusT=wakeUpCompanionAttackRadius * wakeUpCompanionAttackRadius;
 		attackInfluenceTypeT=SkillInfluenceTypeConfig.getInfluenceSet(attackInfluenceType);
+		driveDirectionSpeedT=MathUtils.angleToDirection(driveAngleSpeed)/1000f;
 	}
 	
 	/// <summary>
@@ -281,6 +323,22 @@ public class FightUnitConfig:BaseConfig
 		stream.writeInt(this.effectID);
 		
 		stream.writeInt(this.vocation);
+		
+		if(this.groups!=null)
+		{
+			int[] groupsT=this.groups;
+			stream.writeLen(groupsT.Length);
+			for(int groupsVI=0,groupsVLen=groupsT.Length;groupsVI<groupsVLen;++groupsVI)
+			{
+				int groupsV=groupsT[groupsVI];
+				stream.writeInt(groupsV);
+				
+			}
+		}
+		else
+		{
+			nullObjError("groups");
+		}
 		
 		stream.writeInt(this.deathKeepTime);
 		
@@ -322,16 +380,36 @@ public class FightUnitConfig:BaseConfig
 		
 		stream.writeInt(this.mapMoveType);
 		
-		stream.writeInt(this.walkSpeedRatio);
+		stream.writeFloat(this.walkSpeedRatio);
 		
 		stream.writeBoolean(this.needDrive);
 		
-		stream.writeFloat(this.driveTurnRadius);
+		stream.writeFloat(this.driveAngleSpeed);
 		
 		stream.writeInt(this.driveAccelerateSpeed);
 		
+		stream.writeFloat(this.driveTurnRadius);
+		
+		stream.writeBoolean(this.canDriveTurnAtPivot);
+		
 		stream.writeBoolean(this.needHateSwitchTarget);
 		
+	}
+	
+	/// <summary>
+	/// 是否包含某组
+	/// </summary>
+	public bool hasGroup(int groupID)
+	{
+		int[] groups;
+
+		for(int i=(groups=this.groups).Length-1;i>=0;--i)
+		{
+			if(groups[i]==groupID)
+				return true;
+		}
+
+		return false;
 	}
 	
 }

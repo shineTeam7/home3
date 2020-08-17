@@ -35,7 +35,7 @@ public class LoginResponse extends GameResponse
 		
 		Player player;
 		
-		if((player=((GameReceiveSocket)socket).player)!=null)
+		if((player=gameSocket.player)!=null)
 		{
 			setPlayer(player);
 		}

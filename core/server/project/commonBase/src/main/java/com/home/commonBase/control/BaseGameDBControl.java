@@ -400,10 +400,11 @@ public abstract class BaseGameDBControl extends BaseDBControl
 				
 				table=v.table;
 				
+				if(table.tableState==TableStateType.NeedInsert)
+					table.setNormal();
+				
 				if(table.needRemoveAfterWrite())
-				{
 					removeRoleSocialTable(table);
-				}
 			}
 		}
 	}

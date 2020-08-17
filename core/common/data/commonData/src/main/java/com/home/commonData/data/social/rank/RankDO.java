@@ -9,4 +9,6 @@ public class RankDO extends KeyDO
 	int rank;
 	/** 排行值(如以后一个值不够用,再补,理论上应该是够的) */
 	long value;
+	/** 排行值刷新时间 */
+	long valueRefreshTime;
 }

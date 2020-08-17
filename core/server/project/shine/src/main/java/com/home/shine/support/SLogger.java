@@ -156,14 +156,13 @@ public class SLogger
 	/** 获取一个logger(isText:是否纯文字,不走格式) */
 	private static Logger getLogger(String name,boolean needDir)
 	{
-		return getLoggerForPath(getLogPath(name,needDir));
+		return getLoggerForPath(name,getLogPath(name,needDir));
 	}
 	
 	/** 通过完整路径获取log */
-	private static Logger getLoggerForPath(String path)
+	private static Logger getLoggerForPath(String name,String path)
 	{
-		String name="file" + _logAtomic.getAndIncrement();
-		
+		//String name="file" + _logAtomic.getAndIncrement();
 		Properties pp=new Properties();
 		
 		pp.setProperty("log4j.logger." + name,"info," + name);

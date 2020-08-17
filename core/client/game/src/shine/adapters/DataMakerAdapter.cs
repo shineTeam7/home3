@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using ILRuntime.CLR.Method;
 using ILRuntime.Runtime.Enviorment;
 using ILRuntime.Runtime.Intepreter;

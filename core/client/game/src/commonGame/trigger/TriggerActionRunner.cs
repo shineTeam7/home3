@@ -93,7 +93,11 @@ public class TriggerActionRunner:IPoolObject
 	/** 获取局部变量 */
 	public object getLocalVar(string str)
 	{
-		return root._localVarDic.get(str);
+		SMap<string,object> dic;
+		if((dic=root._localVarDic)==null)
+			return null;
+
+		return dic.get(str);
 	}
 
 	/** 设置局部变量 */

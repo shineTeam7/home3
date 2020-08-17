@@ -1,5 +1,7 @@
 package com.home.commonData.trigger.base;
 
+import com.home.shineData.support.TriggerType;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +34,7 @@ public abstract class BaseT
 	protected boolean and2(boolean arg1,boolean arg2,boolean arg3){return arg1 && arg2 && arg3;}
 	/** 或者 */
 	protected boolean or(boolean arg1,boolean arg2){return arg1 || arg2;}
-	/** 或者2 */
+	/** 或者2(3元) */
 	protected boolean or2(boolean arg1,boolean arg2,boolean arg3){return arg1 || arg2 || arg3;}
 	/** 判断相等 */
 	protected boolean equals(Object arg1,Object arg2){return arg1==arg2;}
@@ -44,37 +46,66 @@ public abstract class BaseT
 	protected boolean equalsLong(long arg1,long arg2){return arg1==arg2;}
 	/** 判断string相等 */
 	protected boolean equalsString(String arg1,String arg2){return arg1.equals(arg2);}
+	
+	/** 是否为空 */
+	protected boolean isNull(Object arg1){return arg1==null;}
+	/** 是否不为空 */
+	protected boolean notNull(Object arg1){return arg1!=null;}
+	
+	/** 比较int,type:CompareType */
+	protected boolean compareInt(int arg1,int arg2,int type){return false;}
+	/** 比较Float,type:CompareType */
+	protected boolean compareFloat(float arg1,float arg2,int type){return false;}
+	/** 比较long,type:CompareType */
+	protected boolean compareLong(long arg1,long arg2,int type){return false;}
+	
 	/** 大于int */
+	@Deprecated
 	protected boolean greaterThanInt(int arg1,int arg2){return arg1>arg2;}
 	/** 大于等于int */
+	@Deprecated
 	protected boolean greaterThanOrEqualInt(int arg1,int arg2){return arg1>=arg2;}
 	/** 小于int */
+	@Deprecated
 	protected boolean lessThanInt(int arg1,int arg2){return arg1<arg2;}
 	/** 小于等于int */
+	@Deprecated
 	protected boolean lessThanOrEqualInt(int arg1,int arg2){return arg1<=arg2;}
 	/** 大于float */
+	@Deprecated
 	protected boolean greaterThanFloat(float arg1,float arg2){return arg1>arg2;}
 	/** 大于等于float */
+	@Deprecated
 	protected boolean greaterThanOrEqualFloat(float arg1,float arg2){return arg1>=arg2;}
 	/** 小于float */
+	@Deprecated
 	protected boolean lessThanFloat(float arg1,float arg2){return arg1<arg2;}
 	/** 小于等于float */
+	@Deprecated
 	protected boolean lessThanOrEqualFloat(float arg1,float arg2){return arg1<=arg2;}
 	/** 大于long */
+	@Deprecated
 	protected boolean greaterThanLong(long arg1,long arg2){return arg1>arg2;}
 	/** 大于等于long */
+	@Deprecated
 	protected boolean greaterThanOrEqualLong(long arg1,long arg2){return arg1>=arg2;}
 	/** 小于long */
+	@Deprecated
 	protected boolean lessThanLong(long arg1,long arg2){return arg1<arg2;}
 	/** 小于等于long */
+	@Deprecated
 	protected boolean lessThanOrEqualLong(long arg1,long arg2){return arg1<=arg2;}
+	
 	/** 获取字符串key boolean */
 	protected boolean getSBoolean(String key){return false;}
-	/** 删除自定义字符串key变量 */
-	protected boolean removeSVar(String key){return false;}
+	/** 获取局部字符串key boolean */
+	protected boolean getLocalBoolean(String key){return false;}
 	
 	/** random一个bool值 */
 	protected boolean randomBoolean(){return false;}
+	
+	/** 该毫秒值是否为过去时间 */
+	protected boolean isTimeMillisPass(long time){return false;}
 	
 	//--int--//
 	/** int加法 */
@@ -101,6 +132,8 @@ public abstract class BaseT
 	protected int convertLong2Int(long arg){return (int)arg;}
 	/** 获取字符串key int */
 	protected int getSInt(String key){return 0;}
+	/** 获取局部字符串key int */
+	protected int getLocalInt(String key){return 0;}
 	///** 获取全局变量int */
 	//protected int getInt(int key){return 0;}
 	///** 获取循环变量(index为第几层循环) */
@@ -133,8 +166,8 @@ public abstract class BaseT
 	protected float absFloat(int arg){return arg>=0f ? arg : -arg;}
 	/** 获取字符串key变量float */
 	protected float getSFloat(String key){return 0f;}
-	///** 获取全局变量float */
-	//protected float getFloat(int key){return 0f;}
+	/** 获取局部字符串key变量float */
+	protected float getLocalFloat(String key){return 0f;}
 	
 	/** long转float */
 	protected float convertInt2Float(int arg){return (float)arg;}
@@ -160,8 +193,8 @@ public abstract class BaseT
 	protected long convertFloat2Long(float arg){return (long)arg;}
 	/** 获取字符串key变量long */
 	protected long getSLong(String key){return 0L;}
-	///** 获取全局变量long */
-	//protected long getLong(int key){return 0L;}
+	/** 获取局部字符串key变量long */
+	protected long getLocalLong(String key){return 0L;}
 	
 	/** 获取当前时间戳 */
 	protected long getTimeMillis(){return 0L;}
@@ -179,65 +212,65 @@ public abstract class BaseT
 	protected String convertBool2Str(boolean arg){return String.valueOf(arg);}
 	/** 获取字符串key变量string */
 	protected String getSString(String key){return "";}
-	///** 获取全局变量string */
-	//protected String getString(int key){return "";}
+	/** 获取局部字符串key变量string */
+	protected String getLocalString(String key){return "";}
 	
 	//--collection--//
 	
-	
-	protected List asList(Object obj){return null;}
+	/** 当做List */
+	protected List<Object> asList(Object obj){return null;}
 	/** 创建空List */
-	protected List createList(){return null;}
+	protected List<Object> createList(){return null;}
 	/** 获取list长度 */
-	protected int getListSize(List list){return 0;}
+	protected int getListSize(List<Object> list){return 0;}
 	/** list添加 */
-	protected void listAdd(List list,Object value){}
+	protected void listAdd(List<Object> list,Object value){}
 	/** list删除 */
-	protected void listRemove(List list,int index){}
+	protected void listRemove(List<Object> list,int index){}
 	/** list删除元素 */
-	protected boolean listRemoveObj(List list,Object value){return false;}
+	protected boolean listRemoveObj(List<Object> list,Object value){return false;}
 	/** list清空 */
-	protected void listClear(List list){}
+	protected void listClear(List<Object> list){}
 	/** list查询 */
-	protected int listIndexOf(List list,Object value){return -1;}
+	protected int listIndexOf(List<Object> list,Object value){return -1;}
 	/** list查询 */
-	protected boolean listContains(List list,Object value){return false;}
+	protected boolean listContains(List<Object> list,Object value){return false;}
 	/** 遍历list */
-	protected void foreachList(List list,Runnable func){}
+	protected void foreachList(List<Object> list,Runnable func){}
 	/** list是否为空 */
-	protected boolean listIsEmpty(List list){return false;}
-	
-	protected Map asMap(Object obj){return null;}
+	protected boolean listIsEmpty(List<Object> list){return false;}
+	/** 当做Map */
+	protected Map<Object,Object> asMap(Object obj){return null;}
 	/** 创建空Map */
-	protected Map createMap(){return null;}
+	protected Map<Object,Object> createMap(){return null;}
 	/** 获取Map长度 */
-	protected int getMapSize(Map map){return 0;}
+	protected int getMapSize(Map<Object,Object> map){return 0;}
 	/** map添加 */
-	protected void mapPut(Map map,Object key,Object value){}
+	protected void mapPut(Map<Object,Object> map,Object key,Object value){}
 	/** Map删除 */
-	protected boolean mapRemove(Map map,Object key){return false;}
+	protected boolean mapRemove(Map<Object,Object> map,Object key){return false;}
 	/** Map清空 */
-	protected void mapClear(Map map){}
+	protected void mapClear(Map<Object,Object> map){}
 	/** Map包含 */
-	protected boolean mapContains(Map map,Object key){return false;}
+	protected boolean mapContains(Map<Object,Object> map,Object key){return false;}
 	/** map是否为空 */
-	protected boolean mapIsEmpty(Map map){return false;}
-	
-	protected Set asSet(Object obj){return null;}
+	protected boolean mapIsEmpty(Map<Object,Object> map){return false;}
+	/** 当做Set */
+	protected Set<Object> asSet(Object obj){return null;}
 	/** 创建空Set */
-	protected Set createSet(){return null;}
+	protected Set<Object> createSet(){return null;}
 	/** 获取Set长度 */
-	protected int getSetSize(Set value){return 0;}
+	protected int getSetSize(Set<Object> value){return 0;}
 	/** Set添加 */
-	protected void setAdd(Set map,Object key){}
+	protected void setAdd(Set<Object> map,Object key){}
 	/** Set删除 */
-	protected boolean setRemove(Set map,Object key){return false;}
+	protected boolean setRemove(Set<Object> map,Object key){return false;}
 	/** Set清空 */
-	protected void setClear(Set map){}
+	protected void setClear(Set<Object> map){}
 	/** Set包含 */
-	protected boolean setContains(Set map,Object key){return false;}
+	protected boolean setContains(Set<Object> map,Object key){return false;}
 	/** Set是否为空 */
-	protected boolean setIsEmpty(Set map){return false;}
+	protected boolean setIsEmpty(Set<Object> map){return false;}
 	
 	//--event--//
 	/** trigger初始化好 */
@@ -274,21 +307,10 @@ public abstract class BaseT
 	protected void continueLoop(){}
 	/** 设置自定义字符串key变量 */
 	protected void setSVar(String key,Object value){}
-	
-	
+	/** 删除自定义字符串key变量 */
+	protected void removeSVar(String key){}
 	/** 设置局部字符串key变量 */
 	protected void setLocalVar(String key,Object value){}
-	
-	///** 设置全局变量boolean */
-	//protected void setBoolean(int key,boolean value){}
-	///** 设置全局变量int */
-	//protected void setInt(int key,int value){}
-	///** 设置全局变量float */
-	//protected void setFloat(int key,float value){}
-	///** 设置全局变量long */
-	//protected void setLong(int key,long value){}
-	///** 设置全局变量String */
-	//protected void setString(int key,String value){}
 	
 	/** 获取event int参数 */
 	protected int getEventIntArgs(int index){return 0;}

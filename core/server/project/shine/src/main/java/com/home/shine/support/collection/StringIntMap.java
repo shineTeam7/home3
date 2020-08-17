@@ -4,7 +4,9 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.IStringIntConsumer;
 
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class StringIntMap extends BaseHash
 {
@@ -16,7 +18,7 @@ public class StringIntMap extends BaseHash
 	
 	public StringIntMap()
 	{
-	
+		init(_minSize);
 	}
 	
 	public StringIntMap(int capacity)
@@ -24,29 +26,20 @@ public class StringIntMap extends BaseHash
 		init(countCapacity(capacity));
 	}
 	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
-	}
-	
 	public final String[] getKeys()
 	{
-		checkInit();
 		return _set;
 	}
 	
 	public final int[] getValues()
 	{
-		checkInit();
 		return _values;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_set=new String[capacity<<1];
 		
@@ -186,8 +179,6 @@ public class StringIntMap extends BaseHash
 			Ctrl.throwError("key不能为null");
 			return;
 		}
-		
-		checkInit();
 		
 		int index=insert(key,value);
 		
@@ -367,24 +358,6 @@ public class StringIntMap extends BaseHash
 		return re;
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	public int putIfAbsent(String key,int value)
 	{
 		if(key==null)
@@ -392,8 +365,6 @@ public class StringIntMap extends BaseHash
 			Ctrl.throwError("key不能为null");
 			return 0;
 		}
-		
-		checkInit();
 		
 		int index=insert(key,value);
 		
@@ -410,8 +381,6 @@ public class StringIntMap extends BaseHash
 	/** 增加值 */
 	public int addValue(String key,int value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -422,6 +391,31 @@ public class StringIntMap extends BaseHash
 		{
 			return _values[index]+=value;
 		}
+	}
+	
+	/** 转化为原生集合 */
+	public HashMap<String,Integer> toNatureMap()
+	{
+		HashMap<String,Integer> re=new HashMap<>(size());
+		
+		String[] keys=_set;
+		int[] vals=_values;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			String key;
+			if((key=keys[i])!=null)
+			{
+				re.put(key,vals[i]);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Map<String,Integer> map)
+	{
+		ensureCapacity(map.size());
+		map.forEach(this::put);
 	}
 	
 	/** 遍历 */

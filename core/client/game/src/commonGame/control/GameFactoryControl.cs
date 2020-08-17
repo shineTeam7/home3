@@ -27,6 +27,11 @@ public class GameFactoryControl
 		return new GameServer();
 	}
 
+	public virtual SceneServer createSceneServer()
+	{
+		return new SceneServer();
+	}
+
 	public virtual Player createPlayer()
 	{
 		return new Player();
@@ -292,20 +297,9 @@ public class GameFactoryControl
 		return new BagPart();
 	}
 
-
 	public virtual BaseServer createBaseServer()
 	{
 		return new BaseServer();
-	}
-
-	public virtual BattleSceneEnterData createBattleSceneEnterData()
-	{
-		return new BattleSceneEnterData();
-	}
-
-	public virtual BattleScenePlayLogic createBattleScenePlayLogic()
-	{
-		return new BattleScenePlayLogic();
 	}
 
 	public virtual BattleSceneSyncPlayLogic createBattleSceneSyncPlayLogic()
@@ -708,9 +702,9 @@ public class GameFactoryControl
 		return new ScenePlaceConfig();
 	}
 
-	public virtual ScenePlayLogic createScenePlayLogic()
+	public virtual SceneMethodLogic createScenePlayLogic()
 	{
-		return new ScenePlayLogic();
+		return new SceneMethodLogic();
 	}
 
 	public virtual ScenePosLogic createScenePosLogic()
@@ -956,5 +950,575 @@ public class GameFactoryControl
 	public virtual EquipContainerData createEquipContainerData()
 	{
 		return new EquipContainerData();
+	}
+
+	public virtual AreaGlobalWorkCompleteData createAreaGlobalWorkCompleteData()
+	{
+		return new AreaGlobalWorkCompleteData();
+	}
+
+	public virtual AreaServerData createAreaServerData()
+	{
+		return new AreaServerData();
+	}
+
+	public virtual AuctionBuyItemData createAuctionBuyItemData()
+	{
+		return new AuctionBuyItemData();
+	}
+
+	public virtual AuctionItemData createAuctionItemData()
+	{
+		return new AuctionItemData();
+	}
+
+	public virtual AuctionItemRecordData createAuctionItemRecordData()
+	{
+		return new AuctionItemRecordData();
+	}
+
+	public virtual AuctionQueryConditionData createAuctionQueryConditionData()
+	{
+		return new AuctionQueryConditionData();
+	}
+
+	public virtual AuctionSoldLogData createAuctionSoldLogData()
+	{
+		return new AuctionSoldLogData();
+	}
+
+	public virtual AuctionToolData createAuctionToolData()
+	{
+		return new AuctionToolData();
+	}
+
+	public virtual BigFloatData createBigFloatData()
+	{
+		return new BigFloatData();
+	}
+
+	public virtual BuildingIdentityData createBuildingIdentityData()
+	{
+		return new BuildingIdentityData();
+	}
+
+	public virtual CenterRoleGroupToolData createCenterRoleGroupToolData()
+	{
+		return new CenterRoleGroupToolData();
+	}
+
+	public virtual CharacterControlLogic createCharacterControlLogic()
+	{
+		return new CharacterControlLogic();
+	}
+
+	public virtual ChatChannelData createChatChannelData()
+	{
+		return new ChatChannelData();
+	}
+
+	public virtual ClientLoginResultData createClientLoginResultData()
+	{
+		return new ClientLoginResultData();
+	}
+
+	public virtual ClientLoginServerInfoData createClientLoginServerInfoData()
+	{
+		return new ClientLoginServerInfoData();
+	}
+
+	public virtual CountData createCountData()
+	{
+		return new CountData();
+	}
+
+	public virtual CreateRoleGroupData createCreateRoleGroupData()
+	{
+		return new CreateRoleGroupData();
+	}
+
+	public virtual CreateSceneData createCreateSceneData()
+	{
+		return new CreateSceneData();
+	}
+
+	public virtual CreateTeamData createCreateTeamData()
+	{
+		return new CreateTeamData();
+	}
+
+	public virtual CreateUnionData createCreateUnionData()
+	{
+		return new CreateUnionData();
+	}
+
+	public virtual DriveData createDriveData()
+	{
+		return new DriveData();
+	}
+
+	public virtual FieldItemBagBindData createFieldItemBagBindData()
+	{
+		return new FieldItemBagBindData();
+	}
+
+	public virtual FieldItemBagIdentityData createFieldItemBagIdentityData()
+	{
+		return new FieldItemBagIdentityData();
+	}
+
+	public virtual FieldItemIdentityData createFieldItemIdentityData()
+	{
+		return new FieldItemIdentityData();
+	}
+
+	public virtual FightUnitIdentityData createFightUnitIdentityData()
+	{
+		return new FightUnitIdentityData();
+	}
+
+	public virtual FuncInfoLogData createFuncInfoLogData()
+	{
+		return new FuncInfoLogData();
+	}
+
+	public virtual GameAuctionToolData createGameAuctionToolData()
+	{
+		return new GameAuctionToolData();
+	}
+
+	public virtual GMCommandUI createGMCommandUI()
+	{
+		return new GMCommandUI();
+	}
+
+	public virtual GuidePart createGuidePart()
+	{
+		return new GuidePart();
+	}
+
+	public virtual InfoLogData createInfoLogData()
+	{
+		return new InfoLogData();
+	}
+
+	public virtual IntAuctionQueryConditionData createIntAuctionQueryConditionData()
+	{
+		return new IntAuctionQueryConditionData();
+	}
+
+	public virtual InviteRoleGroupReceiveData createInviteRoleGroupReceiveData()
+	{
+		return new InviteRoleGroupReceiveData();
+	}
+
+	public virtual ItemChatElementData createItemChatElementData()
+	{
+		return new ItemChatElementData();
+	}
+
+	public virtual ItemDicContainerData createItemDicContainerData()
+	{
+		return new ItemDicContainerData();
+	}
+
+	public virtual JoyDriveLogic createJoyDriveLogic()
+	{
+		return new JoyDriveLogic();
+	}
+
+	public virtual JoystickLogic createJoystickLogic()
+	{
+		return new JoystickLogic();
+	}
+
+	public virtual MUnitIdentityData createMUnitIdentityData()
+	{
+		return new MUnitIdentityData();
+	}
+
+	public virtual MUnitSaveData createMUnitSaveData()
+	{
+		return new MUnitSaveData();
+	}
+
+	public virtual NatureUIBase createNatureUIBase()
+	{
+		return new NatureUIBase();
+	}
+
+	public virtual OperationIdentityData createOperationIdentityData()
+	{
+		return new OperationIdentityData();
+	}
+
+	public virtual PetPart createPetPart()
+	{
+		return new PetPart();
+	}
+
+	public virtual PetSaveData createPetSaveData()
+	{
+		return new PetSaveData();
+	}
+
+	public virtual PetUseLogic createPetUseLogic()
+	{
+		return new PetUseLogic();
+	}
+
+	public virtual PlayerApplyRoleGroupData createPlayerApplyRoleGroupData()
+	{
+		return new PlayerApplyRoleGroupData();
+	}
+
+	public virtual PlayerApplyRoleGroupSelfData createPlayerApplyRoleGroupSelfData()
+	{
+		return new PlayerApplyRoleGroupSelfData();
+	}
+
+	public virtual PlayerAuctionToolData createPlayerAuctionToolData()
+	{
+		return new PlayerAuctionToolData();
+	}
+
+	public virtual PlayerRoleGroup createPlayerRoleGroup()
+	{
+		return new PlayerRoleGroup();
+	}
+
+	public virtual PlayerRoleGroupClientToolData createPlayerRoleGroupClientToolData()
+	{
+		return new PlayerRoleGroupClientToolData();
+	}
+
+	public virtual PlayerRoleGroupData createPlayerRoleGroupData()
+	{
+		return new PlayerRoleGroupData();
+	}
+
+	public virtual PlayerRoleGroupExData createPlayerRoleGroupExData()
+	{
+		return new PlayerRoleGroupExData();
+	}
+
+	public virtual PlayerRoleGroupMemberData createPlayerRoleGroupMemberData()
+	{
+		return new PlayerRoleGroupMemberData();
+	}
+
+	public virtual PlayerRoleGroupSaveData createPlayerRoleGroupSaveData()
+	{
+		return new PlayerRoleGroupSaveData();
+	}
+
+	public virtual PlayerRoleGroupToolData createPlayerRoleGroupToolData()
+	{
+		return new PlayerRoleGroupToolData();
+	}
+
+	public virtual PlayerSubsectionRankToolData createPlayerSubsectionRankToolData()
+	{
+		return new PlayerSubsectionRankToolData();
+	}
+
+	public virtual PlayerTeam createPlayerTeam()
+	{
+		return new PlayerTeam();
+	}
+
+	public virtual PlayerTeamData createPlayerTeamData()
+	{
+		return new PlayerTeamData();
+	}
+
+	public virtual PlayerUnion createPlayerUnion()
+	{
+		return new PlayerUnion();
+	}
+
+	public virtual PlayerUnionData createPlayerUnionData()
+	{
+		return new PlayerUnionData();
+	}
+
+	public virtual PlayerUnionSaveData createPlayerUnionSaveData()
+	{
+		return new PlayerUnionSaveData();
+	}
+
+	public virtual PlayerWorkCompleteData createPlayerWorkCompleteData()
+	{
+		return new PlayerWorkCompleteData();
+	}
+
+	public virtual QueryPlayerResultData createQueryPlayerResultData()
+	{
+		return new QueryPlayerResultData();
+	}
+
+	public virtual RectData createRectData()
+	{
+		return new RectData();
+	}
+
+	public virtual RegionData createRegionData()
+	{
+		return new RegionData();
+	}
+
+	public virtual RoleAttributeData createRoleAttributeData()
+	{
+		return new RoleAttributeData();
+	}
+
+	public virtual RoleAttributeDataLogic createRoleAttributeDataLogic()
+	{
+		return new RoleAttributeDataLogic();
+	}
+
+	public virtual RoleAttributeLogic createRoleAttributeLogic()
+	{
+		return new RoleAttributeLogic();
+	}
+
+	public virtual RoleBuildLogic createRoleBuildLogic()
+	{
+		return new RoleBuildLogic();
+	}
+
+	public virtual RoleChatData createRoleChatData()
+	{
+		return new RoleChatData();
+	}
+
+	public virtual RoleForceData createRoleForceData()
+	{
+		return new RoleForceData();
+	}
+
+	public virtual RoleForceLogic createRoleForceLogic()
+	{
+		return new RoleForceLogic();
+	}
+
+	public virtual RoleGroupChangeData createRoleGroupChangeData()
+	{
+		return new RoleGroupChangeData();
+	}
+
+	public virtual RoleGroupCreateSceneData createRoleGroupCreateSceneData()
+	{
+		return new RoleGroupCreateSceneData();
+	}
+
+	public virtual RoleGroupData createRoleGroupData()
+	{
+		return new RoleGroupData();
+	}
+
+	public virtual RoleGroupMemberChangeData createRoleGroupMemberChangeData()
+	{
+		return new RoleGroupMemberChangeData();
+	}
+
+	public virtual RoleGroupMemberData createRoleGroupMemberData()
+	{
+		return new RoleGroupMemberData();
+	}
+
+	public virtual RoleGroupRankData createRoleGroupRankData()
+	{
+		return new RoleGroupRankData();
+	}
+
+	public virtual RoleGroupSimpleData createRoleGroupSimpleData()
+	{
+		return new RoleGroupSimpleData();
+	}
+
+	public virtual RoleGroupToolData createRoleGroupToolData()
+	{
+		return new RoleGroupToolData();
+	}
+
+	public virtual RoleLogicBase createRoleLogicBase()
+	{
+		return new RoleLogicBase();
+	}
+
+	public virtual RoleShowInfoLogData createRoleShowInfoLogData()
+	{
+		return new RoleShowInfoLogData();
+	}
+
+	public virtual RoleShowLogData createRoleShowLogData()
+	{
+		return new RoleShowLogData();
+	}
+
+	public virtual RoleSocialPoolData createRoleSocialPoolData()
+	{
+		return new RoleSocialPoolData();
+	}
+
+	public virtual RoleSocialPoolToolData createRoleSocialPoolToolData()
+	{
+		return new RoleSocialPoolToolData();
+	}
+
+	public virtual SceneCameraFixedLogic createSceneCameraFixedLogic()
+	{
+		return new SceneCameraFixedLogic();
+	}
+
+	public virtual SceneCameraLogic3DOne createSceneCameraLogic3DOne()
+	{
+		return new SceneCameraLogic3DOne();
+	}
+
+	public virtual SceneLocationData createSceneLocationData()
+	{
+		return new SceneLocationData();
+	}
+
+	public virtual SceneLocationRoleShowChangeData createSceneLocationRoleShowChangeData()
+	{
+		return new SceneLocationRoleShowChangeData();
+	}
+
+	public virtual ScenePosLogic3DOne createScenePosLogic3DOne()
+	{
+		return new ScenePosLogic3DOne();
+	}
+
+	public virtual SceneRoleData createSceneRoleData()
+	{
+		return new SceneRoleData();
+	}
+
+	public virtual SceneRoleLogic createSceneRoleLogic()
+	{
+		return new SceneRoleLogic();
+	}
+
+	public virtual SceneShowLogic3DOne createSceneShowLogic3DOne()
+	{
+		return new SceneShowLogic3DOne();
+	}
+
+	public virtual SceneUnitFactoryLogic createSceneUnitFactoryLogic()
+	{
+		return new SceneUnitFactoryLogic();
+	}
+
+	public virtual SelectServerUI createSelectServerUI()
+	{
+		return new SelectServerUI();
+	}
+
+	public virtual StatusDataLogic createStatusDataLogic()
+	{
+		return new StatusDataLogic();
+	}
+
+	public virtual SubsectionRankSimpleData createSubsectionRankSimpleData()
+	{
+		return new SubsectionRankSimpleData();
+	}
+
+	public virtual SubsectionRankToolData createSubsectionRankToolData()
+	{
+		return new SubsectionRankToolData();
+	}
+
+	public virtual TeamData createTeamData()
+	{
+		return new TeamData();
+	}
+
+	public virtual TeamMemberData createTeamMemberData()
+	{
+		return new TeamMemberData();
+	}
+
+	public virtual TeamSimpleData createTeamSimpleData()
+	{
+		return new TeamSimpleData();
+	}
+
+	public virtual UII18NText createUII18NText()
+	{
+		return new UII18NText();
+	}
+
+	public virtual UnionData createUnionData()
+	{
+		return new UnionData();
+	}
+
+	public virtual UnionMemberData createUnionMemberData()
+	{
+		return new UnionMemberData();
+	}
+
+	public virtual UnionSimpleData createUnionSimpleData()
+	{
+		return new UnionSimpleData();
+	}
+
+	public virtual UnitAICommandLogic createUnitAICommandLogic()
+	{
+		return new UnitAICommandLogic();
+	}
+
+	public virtual UnitFuncData createUnitFuncData()
+	{
+		return new UnitFuncData();
+	}
+
+	public virtual UnitHeadLogic3DOne createUnitHeadLogic3DOne()
+	{
+		return new UnitHeadLogic3DOne();
+	}
+
+	public virtual UnitMoveData createUnitMoveData()
+	{
+		return new UnitMoveData();
+	}
+
+	public virtual UnitMoveLogic createUnitMoveLogic()
+	{
+		return new UnitMoveLogic();
+	}
+
+	public virtual UnitNormalData createUnitNormalData()
+	{
+		return new UnitNormalData();
+	}
+
+	public virtual UnitShowLogic3DOne createUnitShowLogic3DOne()
+	{
+		return new UnitShowLogic3DOne();
+	}
+
+	public virtual VehicleIdentityLogic createVehicleIdentityLogic()
+	{
+		return new VehicleIdentityLogic();
+	}
+
+	public virtual WorkCompleteData createWorkCompleteData()
+	{
+		return new WorkCompleteData();
+	}
+
+	public virtual WorkReceiverData createWorkReceiverData()
+	{
+		return new WorkReceiverData();
+	}
+
+	public virtual BattleSceneData createBattleSceneData()
+	{
+		return new BattleSceneData();
 	}
 }

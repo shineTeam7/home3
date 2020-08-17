@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using ILRuntime.CLR.Method;
 using ILRuntime.Runtime.Enviorment;
 using ILRuntime.Runtime.Intepreter;
@@ -51,6 +52,7 @@ namespace ShineEngine
 
 			IMethod _m0;
 			bool _g0;
+			bool _b0;
 			public override void clear()
 			{
 				if(!_g0)
@@ -59,10 +61,16 @@ namespace ShineEngine
 					_g0=true;
 				}
 				
-				if(_m0!=null)
+				if(_m0!=null && !_b0)
 				{
+					_b0=true;
 					appdomain.Invoke(_m0,instance,null);
+					_b0=false;
 					
+				}
+				else
+				{
+					base.clear();
 				}
 			}
 			

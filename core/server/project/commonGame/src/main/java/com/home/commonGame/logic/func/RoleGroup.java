@@ -38,8 +38,6 @@ import com.home.commonBase.data.social.roleGroup.work.LeaveRoleGroupWData;
 import com.home.commonBase.data.system.InfoLogData;
 import com.home.commonBase.global.BaseC;
 import com.home.commonBase.tool.func.FuncTool;
-import com.home.commonBase.tool.func.RankTool;
-import com.home.commonBase.utils.BaseGameUtils;
 import com.home.commonGame.global.GameC;
 import com.home.commonGame.net.base.GameRequest;
 import com.home.commonGame.net.request.func.roleGroup.FuncSendAddApplyRoleGroupRequest;
@@ -611,6 +609,8 @@ public class RoleGroup
 		if(_members.isEmpty())
 			return;
 		
+		request.write();
+		
 		_members.forEachValue(v->
 		{
 			//在线才广播
@@ -627,6 +627,8 @@ public class RoleGroup
 		if(_handleApplyMemberDic.isEmpty())
 			return;
 		
+		request.write();
+		
 		_handleApplyMemberDic.forEachValue(v->
 		{
 			if(v.socialData.isOnline)
@@ -641,6 +643,8 @@ public class RoleGroup
 	{
 		if(_handleApplyMemberDic.isEmpty())
 			return;
+		
+		request.write();
 		
 		_handleApplyMemberDic.forEachValue(v->
 		{
@@ -707,7 +711,7 @@ public class RoleGroup
 		wData.data=roleGroupData;
 		wData.type=type;
 		
-		_tool.addPlayerWork(mData.playerID,wData);
+		_tool.addPlayerAbsWork(mData.playerID,wData);
 	}
 	
 	/** 移除成员 */
@@ -740,7 +744,7 @@ public class RoleGroup
 		LeaveRoleGroupWData wData=new LeaveRoleGroupWData();
 		wData.groupID=groupID;
 		wData.type=type;
-		_tool.addPlayerWork(playerID,wData);
+		_tool.addPlayerAbsWork(playerID,wData);
 		
 		if(needSend)
 		{
@@ -1630,7 +1634,7 @@ public class RoleGroup
 		
 		request.executorIndex=_ownSceneLocation.executorIndex;
 		request.instanceID=_ownSceneLocation.instanceID;
-		request.send(_ownSceneLocation.gameID);
+		request.send(_ownSceneLocation.serverID);
 	}
 	
 	//funcTools

@@ -1,6 +1,7 @@
 package com.home.commonCenter.control;
 
 import com.home.commonBase.constlist.generate.InfoCodeType;
+import com.home.commonBase.global.BaseC;
 import com.home.commonCenter.global.CenterC;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
@@ -15,21 +16,9 @@ public class CenterClientGMControl
 	
 	private SList<DescribeObj> _describeList=new SList<>();
 	
-	private SSet<String> _cmdSet=new SSet<>();
-	
 	public void init()
 	{
 		regist();
-		
-		_cmdDic.forEach((k,v)->
-		{
-			_cmdSet.add(k);
-		});
-	}
-	
-	public SSet<String> getCMDSet()
-	{
-		return _cmdSet;
 	}
 	
 	/** 注册指令组 */

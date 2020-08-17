@@ -54,6 +54,16 @@ public class BuffConfig:BaseConfig
 	public int[][] subNums;
 	
 	/// <summary>
+	/// 图标
+	/// </summary>
+	public string icon;
+	
+	/// <summary>
+	/// 图标(资源转)
+	/// </summary>
+	public int iconT;
+	
+	/// <summary>
 	/// 次数消耗类型转
 	/// </summary>
 	public int[] subNumsDicT;
@@ -176,6 +186,8 @@ public class BuffConfig:BaseConfig
 		
 		this.effect=stream.readInt();
 		
+		this.icon=stream.readUTF();
+		
 		this.explain=stream.readUTF();
 		
 		int influenceTypeLen=stream.readLen();
@@ -255,6 +267,7 @@ public class BuffConfig:BaseConfig
 			_explain=explain;
 		explain=LanguageConfig.getText(_explain);
 		
+		iconT=LoadControl.getResourceIDByName(icon);
 	}
 	
 	/// <summary>
@@ -325,6 +338,8 @@ public class BuffConfig:BaseConfig
 		}
 		
 		stream.writeInt(this.effect);
+		
+		stream.writeUTF(this.icon);
 		
 		stream.writeUTF(this.explain);
 		

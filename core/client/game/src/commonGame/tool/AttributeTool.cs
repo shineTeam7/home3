@@ -186,10 +186,10 @@ public abstract class AttributeTool
 				_currentMaxCache[sIndex]=nowMax;
 			}
 
-			int nowValue;
 			int[] attributes;
+			int nowValue=(attributes=_attributes)[type];
 			//范围
-			if((nowValue=(attributes=_attributes)[type])>nowMax)
+			if(!_info.currentCanOverMax[type] && nowValue>nowMax)
 			{
 				attributes[type]=nowValue=nowMax;
 			}
@@ -375,6 +375,23 @@ public abstract class AttributeTool
 
 	/** 派发刷新属性 */
 	abstract protected void toDispatchAttribute(int[] changeList,int num,bool[] changeSet,int[] lastAttributes);
+
+	public void writeForCopy()
+	{
+		doRefresh();
+
+		IntIntMap dic=_attributesDataDic;
+		dic.clear();
+
+		int[] attributes=_attributes;
+		int v;
+
+		for(int i=attributes.Length-1;i>=0;--i)
+		{
+			if((v=(attributes[i]))!=0)
+				dic.put(i,v);
+		}
+	}
 
 	/** 设置单个属性值 */
 	public void setOneAttribute(int type,int value)

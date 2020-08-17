@@ -21,9 +21,9 @@ public class SceneLocationData:BaseData
 	public int lineID=-1;
 	
 	/// <summary>
-	/// 所在游戏服ID
+	/// 所在服(游戏服或场景服)ID
 	/// </summary>
-	public int gameID=-1;
+	public int serverID=-1;
 	
 	/// <summary>
 	/// 执行器号
@@ -59,7 +59,7 @@ public class SceneLocationData:BaseData
 		
 		this.lineID=stream.readInt();
 		
-		this.gameID=stream.readInt();
+		this.serverID=stream.readInt();
 		
 		this.executorIndex=stream.readInt();
 		
@@ -79,7 +79,7 @@ public class SceneLocationData:BaseData
 		
 		stream.writeInt(this.lineID);
 		
-		stream.writeInt(this.gameID);
+		stream.writeInt(this.serverID);
 		
 		stream.writeInt(this.executorIndex);
 		
@@ -97,7 +97,7 @@ public class SceneLocationData:BaseData
 		
 		this.lineID=stream.readInt();
 		
-		this.gameID=stream.readInt();
+		this.serverID=stream.readInt();
 		
 		this.executorIndex=stream.readInt();
 		
@@ -114,7 +114,7 @@ public class SceneLocationData:BaseData
 		
 		stream.writeInt(this.lineID);
 		
-		stream.writeInt(this.gameID);
+		stream.writeInt(this.serverID);
 		
 		stream.writeInt(this.executorIndex);
 		
@@ -134,7 +134,7 @@ public class SceneLocationData:BaseData
 		
 		this.sceneID=mData.sceneID;
 		this.lineID=mData.lineID;
-		this.gameID=mData.gameID;
+		this.serverID=mData.serverID;
 		this.executorIndex=mData.executorIndex;
 		this.instanceID=mData.instanceID;
 	}
@@ -153,7 +153,7 @@ public class SceneLocationData:BaseData
 		
 		this.lineID=mData.lineID;
 		
-		this.gameID=mData.gameID;
+		this.serverID=mData.serverID;
 		
 		this.executorIndex=mData.executorIndex;
 		
@@ -173,7 +173,7 @@ public class SceneLocationData:BaseData
 		if(this.lineID!=mData.lineID)
 			return false;
 		
-		if(this.gameID!=mData.gameID)
+		if(this.serverID!=mData.serverID)
 			return false;
 		
 		if(this.executorIndex!=mData.executorIndex)
@@ -203,9 +203,9 @@ public class SceneLocationData:BaseData
 		
 		writer.writeEnter();
 		writer.writeTabs();
-		writer.sb.Append("gameID");
+		writer.sb.Append("serverID");
 		writer.sb.Append(':');
-		writer.sb.Append(this.gameID);
+		writer.sb.Append(this.serverID);
 		
 		writer.writeEnter();
 		writer.writeTabs();
@@ -237,7 +237,7 @@ public class SceneLocationData:BaseData
 	{
 		this.sceneID=0;
 		this.lineID=0;
-		this.gameID=0;
+		this.serverID=0;
 		this.executorIndex=0;
 		this.instanceID=0;
 	}

@@ -13,7 +13,7 @@ public abstract class StatusTool
 	
 	/** 状态组 */
 	private IntBooleanMap _statusDataDic;
-	/** buff统计组 */
+	/** status统计组 */
 	private int[] _statusCounts;
 	/** 改变组 */
 	private int[] _changeList;
@@ -96,7 +96,6 @@ public abstract class StatusTool
 		
 		int[] statusCounts=_statusCounts;
 		int type;
-		int v;
 		
 		for(int i=list.length - 1;i >= 0;--i)
 		{

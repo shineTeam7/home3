@@ -314,7 +314,7 @@ public class Global
 	/// <summary>
 	/// 场景AOI灯塔尺寸
 	/// </summary>
-	public static int aoiTowerSize;
+	public static float aoiTowerSize;
 	
 	/// <summary>
 	/// aoi可视单位上限
@@ -330,6 +330,11 @@ public class Global
 	/// 自增属性计算间隔(ms)
 	/// </summary>
 	public static int increaseAttributeDelay;
+	
+	/// <summary>
+	/// 场景AOI灯塔延长尺寸(过渡区为2倍 该值)
+	/// </summary>
+	public static float aoiTowerExpandSize;
 	
 	/// <summary>
 	/// 拾取范围半径平方(米)
@@ -576,6 +581,7 @@ public class Global
 		bornTownPosID=data.bornTownPosID;
 		matchWaitTime=data.matchWaitTime;
 		aoiTowerSize=data.aoiTowerSize;
+		aoiTowerExpandSize=data.aoiTowerExpandSize;
 		aoiSeeMax=data.aoiSeeMax;
 		pickUpRadius=data.pickUpRadius;
 		cameraMinDistance=data.cameraMinDistance;

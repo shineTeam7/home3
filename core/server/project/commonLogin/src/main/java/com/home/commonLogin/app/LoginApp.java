@@ -85,15 +85,6 @@ public class LoginApp extends BaseGameApp
 		return _initLast;
 	}
 	
-	public void setInitData(LoginInitServerData initData)
-	{
-		LoginC.main.setInfos(initData.games);
-		LoginC.main.setClientInfo(initData.clientVersion,initData.redirectURLDic);
-		LoginC.main.setIsOpen(initData.isOpen);
-		
-		LoginC.server.setInfos(initData);
-	}
-	
 	public void initNext()
 	{
 		if(_initNext)

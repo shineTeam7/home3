@@ -12,7 +12,7 @@ namespace ShineEngine
 
 		public LongSet()
 		{
-
+			init(_minSize);
 		}
 
 		public LongSet(int capacity)
@@ -20,13 +20,6 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
-		}
 
 		public long getFreeValue()
 		{
@@ -35,13 +28,12 @@ namespace ShineEngine
 
 		public long[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new long[capacity<<1];
 
@@ -170,8 +162,6 @@ namespace ShineEngine
 
 		public bool add(long key)
 		{
-			checkInit();
-
 			long free;
 			if(key==(free=_freeValue))
 			{
@@ -300,21 +290,32 @@ namespace ShineEngine
 			ObjectUtils.arrayFill(_set,_freeValue);
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
+		/** 转化为原生集合 */
+		public HashSet<long> toNatureList()
 		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
+			HashSet<long> re=new HashSet<long>();
 
-				if(_set==null)
+			long free=_freeValue;
+			long[] keys=_set;
+			for(int i=(keys.Length) - 1;i>=0;--i)
+			{
+				long key;
+				if((key=keys[i])!=free)
 				{
-					init(t);
+					re.Add(key);
 				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
+			}
+
+			return re;
+		}
+
+		public void addAll(HashSet<long> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(long v in map)
+			{
+				this.add(v);
 			}
 		}
 

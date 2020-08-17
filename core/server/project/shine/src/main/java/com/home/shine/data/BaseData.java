@@ -15,14 +15,6 @@ public class BaseData extends PoolObject implements Cloneable
 	/** 数据类型ID */
 	protected int _dataID=-1;
 	
-	/** 是否是空读出来的(BytesStream为0继续读的) */
-	private boolean _isEmptyRead=false;
-	
-	/** 创建线程序号 */
-	public byte createThreadInstance=-1;
-	/** 回收链表尾 */
-	public BaseData releaseLinkTail;
-	
 	public BaseData()
 	{
 		
@@ -39,18 +31,9 @@ public class BaseData extends PoolObject implements Cloneable
 		return _dataID==data._dataID;
 	}
 	
-	/** 是否空读出 */
-	public boolean isEmptyRead()
-	{
-		return _isEmptyRead;
-	}
-	
 	/** 读取字节流(完整版,为DB) */
 	public final void readBytesFull(BytesReadStream stream)
 	{
-		//空读标记
-		_isEmptyRead=stream.isEmpty();
-		
 		stream.startReadObj();
 		
 		try

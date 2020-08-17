@@ -8,7 +8,7 @@ import com.home.shine.support.collection.IntObjectMap;
 public class PlayerLoginEachGameTempData
 {
 	/** 等待时间 */
-	public int waitTime;
+	public long waitTime;
 	
 	public IntObjectMap<PlayerLoginToEachGameData> dic=new IntObjectMap<>(PlayerLoginToEachGameData[]::new);
 	

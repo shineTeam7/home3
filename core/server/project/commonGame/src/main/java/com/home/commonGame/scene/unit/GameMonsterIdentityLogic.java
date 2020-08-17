@@ -10,14 +10,15 @@ import com.home.commonBase.global.Global;
 import com.home.commonBase.scene.base.Unit;
 import com.home.commonBase.scene.unit.MonsterIdentityLogic;
 import com.home.commonGame.logic.team.PlayerTeam;
-import com.home.commonGame.net.request.scene.scene.AddFieldItemBagBindRequest;
+import com.home.commonSceneBase.net.sceneBaseRequest.scene.AddFieldItemBagBindRequest;
 import com.home.commonGame.part.player.Player;
 import com.home.commonGame.scene.base.GameUnit;
+import com.home.commonSceneBase.scene.unit.BMonsterIdentityLogic;
 import com.home.shine.support.collection.LongObjectMap;
 import com.home.shine.support.collection.SList;
 
 /** 逻辑服怪物逻辑 */
-public class GameMonsterIdentityLogic extends MonsterIdentityLogic
+public class GameMonsterIdentityLogic extends BMonsterIdentityLogic
 {
 	@Override
 	protected void makeDropList(SList<Unit> list,Unit source)

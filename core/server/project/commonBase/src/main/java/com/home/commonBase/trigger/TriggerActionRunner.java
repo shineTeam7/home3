@@ -114,7 +114,11 @@ public class TriggerActionRunner implements IPoolObject
 	/** 获取局部变量 */
 	public Object getLocalVar(String str)
 	{
-		return root._localVarDic.get(str);
+		SMap<String,Object> dic;
+		if((dic=root._localVarDic)==null)
+			return null;
+		
+		return dic.get(str);
 	}
 	
 	/** 设置局部变量 */

@@ -309,6 +309,7 @@ namespace ShineEngine
                     // Ctrl.printExceptionForIO(e);
                     hasError=true;
                 }
+
             }
             else
             {
@@ -318,7 +319,8 @@ namespace ShineEngine
             if(hasError)
             {
                 preBeClose(7);
-                Thread.Sleep(ShineSetting.ioThreadFrameDelay);
+
+                // Thread.Sleep(5);
             }
         }
 

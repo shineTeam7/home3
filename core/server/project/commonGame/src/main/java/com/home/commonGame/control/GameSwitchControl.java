@@ -504,10 +504,10 @@ public class GameSwitchControl
 		
 		if(sData==null)
 		{
-			//if(needWarn)
-			//{
-			//	Ctrl.warnLog("sourceSwitchToExit时,找不到switch数据",playerID);
-			//}
+			if(needWarn)
+			{
+				Ctrl.debugLog("sourceSwitchToExit时,找不到switch数据",playerID);
+			}
 			
 			return;
 		}
@@ -1133,7 +1133,6 @@ public class GameSwitchControl
 					socket.close();
 				}
 				
-				
 				if(ShineSetting.needDebugLog)
 					Ctrl.debugLog("接收切换游戏服数据时,需要下线了",switchToRecordData.keyData.getInfo());
 				
@@ -1212,6 +1211,8 @@ public class GameSwitchControl
 		
 		//登录中
 		sPart.setLoginState(PlayerLoginStateType.Logining);
+		
+		GameC.main.addPlayerToLoginingDic(player);
 		
 		if(socket!=null)
 		{

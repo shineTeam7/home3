@@ -8,7 +8,7 @@ public class StatusDataLogic:StatusTool
 {
 	private UnitFightDataLogic _parent;
 
-	public StatusDataLogic(UnitFightDataLogic parent)
+	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
 		setInfo(AttributeControl.status);

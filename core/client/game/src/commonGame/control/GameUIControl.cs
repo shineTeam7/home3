@@ -10,7 +10,7 @@ public class GameUIControl:SEventRegister
 	private IntObjectMap<GameUIBase> _uiDic=new IntObjectMap<GameUIBase>();
 
 	/** 多实例ui池 */
-	private IntObjectMap<ObjectPool<GameUIBase>> _multiUIPoolDic=new IntObjectMap<ObjectPool<GameUIBase>>();
+	private IntObjectMap<ShineEngine.ObjectPool<GameUIBase>> _multiUIPoolDic=new IntObjectMap<ShineEngine.ObjectPool<GameUIBase>>();
 
 	/** ui执行时刻字典 */
 	private IntList[] _uiMoments=new IntList[UIDoMomentType.size];
@@ -20,9 +20,6 @@ public class GameUIControl:SEventRegister
 
 	/** view栈 */
 	private IntList _viewStack=new IntList();
-
-	/** uiMask检测 */
-	protected int _uiMaskCheckIndex = -1;
 
 	/** 实际显示的UI组(GameObject加载出来的) */
 	private SList<UIBase> _realShowUIList=new SList<UIBase>();
@@ -440,7 +437,7 @@ public class GameUIControl:SEventRegister
 	}
 
 	/** 添加实际显示 */
-	public void addRealShow(UIBase ui)
+	public virtual void addRealShow(UIBase ui)
 	{
 		Transform transform=ui.gameObject.transform;
 		transform.SetAsLastSibling();
@@ -487,7 +484,7 @@ public class GameUIControl:SEventRegister
 	}
 
 	/** 移除实际显示 */
-	public void removeRealShow(UIBase ui)
+	public virtual void removeRealShow(UIBase ui)
 	{
 		_realShowUIList.removeObj(ui);
 
@@ -506,7 +503,7 @@ public class GameUIControl:SEventRegister
 
 		UIBase[] values=_realShowUIList.getValues();
 
-		for(int i=_realShowUIList.length()-2;i>=0;--i)
+		for(int i=_realShowUIList.length()-1;i>=0;--i)
 		{
 			if(values[i].getUIConfig().isModal)
 			{

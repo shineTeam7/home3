@@ -579,4 +579,10 @@ public class Unit extends SceneObject
 			}
 		}
 	}
+	
+	/** m类消息是否需要广播自己 */
+	public boolean needRadioSelf()
+	{
+		return identity.isCUnitNotM();
+	}
 }

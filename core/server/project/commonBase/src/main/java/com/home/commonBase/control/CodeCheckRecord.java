@@ -4,21 +4,21 @@ package com.home.commonBase.control;
 public class CodeCheckRecord
 {
 	/** 配置文件代码版本校验值 */
-	public static final String configMD5="a149b19d0c0436aa9c3e5c0202db8072";
+	public static final String configMD5="642f429244379cae7ce87cc62432d9b7";
 	
 	/** 服务器存库数据结构校验 */
-	public static final String dbDataMD5="254cf514c36cd558155ca83b16f9dcb6";
+	public static final String dbDataMD5="38c95a731aa4116ee9b69ac9c9e2fa71";
 	
 	/** 通信存库数据结构校验 */
-	public static final String msgDataMD5="7362f566b92909f31414ac84d0a01596";
+	public static final String msgDataMD5="9818fbc16fecbb453c5e2b66ba5b0ff0";
 	
 	/** 服务器数据结构版本号(只记录不兼容修改) */
 	public static final int dbDataVersion=83676115;
 	
 	/** 通信数据结构版本号(只记录不兼容修改) */
-	public static final int msgDataVersion=24158829;
+	public static final int msgDataVersion=93059735;
 	
 	/** 配置文件代码数据结构版本号 */
-	public static final int configVersion=1007803;
+	public static final int configVersion=43532889;
 	
 }

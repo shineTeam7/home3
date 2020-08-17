@@ -13,7 +13,7 @@ namespace ShineEngine
 
 		public LongList()
 		{
-			_values=ObjectUtils.EmptyLongArr;
+			init(0);
 		}
 
 		public LongList(int capacity)
@@ -21,37 +21,34 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		public int capacity()
-		{
-			return _values.Length;
-		}
-
 		public long[] getValues()
 		{
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_values=new long[capacity];
+			_capacity=capacity;
 
-			_size=0;
+			if(capacity==0)
+				_values=ObjectUtils.EmptyLongArr;
+			else
+				_values=new long[capacity];
 		}
 
-		private void remake(int capacity)
+		protected override void remake(int capacity)
 		{
-			long[] n=new long[capacity];
-			Array.Copy(_values,0,n,0,_size);
-			_values=n;
+			long[] oldValues=_values;
+			init(capacity);
+
+			if(oldValues.Length>0 && _size>0)
+				Array.Copy(oldValues,0,_values,0,_size);
 		}
 
 		/** 添加 */
 		public void add(long value)
 		{
-			if(_values.Length==0)
-				init(_minSize);
-			else if(_size==_values.Length)
-				remake(_values.Length<<1);
+			addCapacity();
 
 			_values[_size++]=value;
 		}
@@ -73,10 +70,7 @@ namespace ShineEngine
 		/** 添加元素到头 */
 		public void unshift(long value)
 		{
-			if(_values.Length==0)
-				init(_minSize);
-			else if(_size==_values.Length)
-				remake(_values.Length<<1);
+			addCapacity();
 
 			if(_size>0)
 				Array.Copy(_values,0,_values,1,_size);
@@ -197,6 +191,7 @@ namespace ShineEngine
 
 				n[offset]=value;
 				_values=n;
+				_capacity=n.Length;
 			}
 			else
 			{
@@ -206,20 +201,6 @@ namespace ShineEngine
 			}
 
 			++_size;
-		}
-
-		public void clear()
-		{
-			_size=0;
-		}
-
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_values.Length)
-			{
-				remake(countCapacity(capacity));
-			}
 		}
 
 		/** 转换数组 */
@@ -244,6 +225,31 @@ namespace ShineEngine
 				return;
 
 			Array.Sort(_values,0,_size);
+		}
+
+		/** 转化为原生集合 */
+		public List<long> toNatureList()
+		{
+			List<long> re=new List<long>(size());
+
+			long[] values=_values;
+
+			for(int i=0,len=_size;i<len;++i)
+			{
+				re.Add(values[i]);
+			}
+
+			return re;
+		}
+
+		public void addAll(List<long> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(long v in map)
+			{
+				this.add(v);
+			}
 		}
 
 		public void forEach(Action<long> consumer)

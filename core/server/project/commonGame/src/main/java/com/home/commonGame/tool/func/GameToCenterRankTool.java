@@ -247,7 +247,8 @@ public class GameToCenterRankTool extends FuncTool implements IGameRankTool
 		
 		if(data==null)
 		{
-			Ctrl.throwError("移除排行数据时，不存在");
+			//这里就不需要了，因为version不同时，会走到这里
+//			Ctrl.throwError("移除排行数据时，不存在");
 			return;
 		}
 		

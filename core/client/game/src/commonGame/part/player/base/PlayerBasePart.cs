@@ -3,7 +3,7 @@
 /// <summary>
 /// 角色部件基础
 /// </summary>
-[HotfixAdapter]
+[Hotfix(needFactory = false)]
 public abstract class PlayerBasePart:BasePart
 {
 	/// <summary>

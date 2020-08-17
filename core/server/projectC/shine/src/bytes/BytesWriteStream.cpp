@@ -103,12 +103,42 @@ void BytesWriteStream::insertVoidBytes(int num, int length)
 
 void BytesWriteStream::writeBoolean(bool value)
 {
-	if (!ensureCanWrite(1))
+	if (ShineSetting::bytesUseBitBoolean)
 	{
-		return;
+		//新的
+		if (_booleanBufPos == -1)
+		{
+			if (!ensureCanWrite(1))
+				return;
+
+			_booleanBufPos = _position;
+			_buf[_position++] = (value ? 1 : 0);
+			_booleanBitIndex = 1;
+		}
+		else
+		{
+			if (value)
+			{
+				_buf[_booleanBufPos] |= 1 << _booleanBitIndex;
+			}
+
+			if ((++_booleanBitIndex) == 8)
+			{
+				_booleanBufPos = -1;
+				_booleanBitIndex = 0;
+			}
+		}
+	}
+	else
+	{
+		if (!ensureCanWrite(1))
+		{
+			return;
+		}
+
+		_buf[_position++] = value ? 1 : 0;
 	}
 
-	_buf[_position++] = value ? 1 : 0;
 }
 
 void BytesWriteStream::writeByte(int value)
@@ -365,6 +395,28 @@ void BytesWriteStream::writeLen(int value)
 	}
 }
 
+
+void BytesWriteStream::writeMem(void* ptr, int len)
+{
+	if (!ensureCanWrite(len))
+	{
+		return;
+	}
+
+	memcpy(_buf + _position, ptr, len);
+	_position += len;
+}
+
+
+void BytesWriteStream::clearBooleanPos()
+{
+	if (!ShineSetting::bytesUseBitBoolean)
+		return;
+
+	_booleanBufPos = -1;
+	_booleanBitIndex = 0;
+}
+
 int BytesWriteStream::getLenSize(int value)
 {
 	if (value < 0)
@@ -390,14 +442,33 @@ int BytesWriteStream::getLenSize(int value)
 	}
 }
 
-int BytesWriteStream::startWriteObj()
+void BytesWriteStream::startWriteObj()
 {
-	return _position;
+	if (ShineSetting::bytesUseBitBoolean)
+	{
+		_writeStack.add3(_position, _booleanBufPos, _booleanBitIndex);
+	}
+	else
+	{
+		_writeStack.add(_position);
+	}
 }
 
-void BytesWriteStream::endWriteObj(int position)
+void BytesWriteStream::endWriteObj()
 {
-	insertLenToPos(position);
+	//倒序
+	if (ShineSetting::bytesUseBitBoolean)
+	{
+		_booleanBitIndex = _writeStack.back();
+		_writeStack.pop_back();
+		_booleanBufPos = _writeStack.back();
+		_writeStack.pop_back();
+	}
+
+	int pos = _writeStack.back();
+	_writeStack.pop_back();
+
+	insertLenToPos(pos);
 }
 
 void BytesWriteStream::writeBytesStream(BytesWriteStream stream, int pos, int length)

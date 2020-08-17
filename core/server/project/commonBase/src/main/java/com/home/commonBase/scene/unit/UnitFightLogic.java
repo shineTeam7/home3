@@ -361,6 +361,18 @@ public class UnitFightLogic extends UnitLogicBase
 		if(!isSkilling())
 			return;
 		
+		boolean needOver=false;
+		
+		if(_currentSkillLastTime>0)
+		{
+			if((_currentSkillLastTime-=delay)<=0)
+			{
+				_currentSkillLastTime=0;
+				
+				needOver=true;
+			}
+		}
+		
 		//当前在技能动作中
 		if(_fightExData.currentSkillStep>0)
 		{
@@ -393,14 +405,9 @@ public class UnitFightLogic extends UnitLogicBase
 			}
 		}
 		
-		if(_currentSkillLastTime>0)
+		if(needOver)
 		{
-			if((_currentSkillLastTime-=delay)<=0)
-			{
-				_currentSkillLastTime=0;
-				
-				skillOver(true);
-			}
+			skillOver(true);
 		}
 	}
 	
@@ -1986,7 +1993,11 @@ public class UnitFightLogic extends UnitLogicBase
 		//引导技能不靠这个结束
 		if(_currentSkillConfig.useType==SkillUseType.Facilitation)
 		{
-			resetStep(0);
+			//还有剩余时间，才继续
+			if(_currentSkillLastTime>0)
+			{
+				resetStep(0);
+			}
 			
 			return;
 		}
@@ -2817,7 +2828,7 @@ public class UnitFightLogic extends UnitLogicBase
 		if(!_unit.isDriveAll())
 			return;
 		
-		doDead(_unit,UnitDeadType.Skill);
+		doDead(_unit,UnitDeadType.KillSelf);
 	}
 	
 	//推送
@@ -2871,8 +2882,8 @@ public class UnitFightLogic extends UnitLogicBase
 		}
 	}
 	
-	/** 推送属性变化(给别人) */
-	public void onAttributeChange(int[] changeList,int num,boolean[] changeSet,int[] lastAttributes)
+	/** 推送属性变化 */
+	public void onAttributeChange(int[] changeList,int num,boolean[] changeSet)
 	{
 		if(changeSet[AttributeType.MoveSpeed])
 		{
@@ -3251,7 +3262,7 @@ public class UnitFightLogic extends UnitLogicBase
 			
 			onRealDead(source,type);
 			//玩法单位死亡
-			_scene.play.onUnitRealDead(_unit,attacker,type);
+			_scene.method.onUnitRealDead(_unit,attacker,type);
 		}
 	}
 	
@@ -3283,7 +3294,7 @@ public class UnitFightLogic extends UnitLogicBase
 	/** 单位死亡结束 */
 	protected void onDeadOver()
 	{
-		_scene.play.onUnitDeadOver(_unit);
+		_scene.method.onUnitDeadOver(_unit);
 	}
 	
 	/** 单位复活 */

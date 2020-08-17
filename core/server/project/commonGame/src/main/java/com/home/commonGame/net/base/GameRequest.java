@@ -14,32 +14,11 @@ import com.home.shine.thread.AbstractThread;
 
 public class GameRequest extends BaseRequest
 {
-	/** 是否需要转发 */
-	private boolean _needTrans;
-	
 	private byte[] _data;
 	
 	public GameRequest()
 	{
 		setNeedFullWrite(ShineSetting.clientMessageUseFull);
-	}
-	
-	@Override
-	protected void doWriteToStream(BytesWriteStream stream)
-	{
-		if(_needTrans)
-		{
-			stream.setPosition(0);
-			//直接协议号和内容
-			stream.natureWriteUnsignedShort(_dataID);
-			doWriteBytesSimple(stream);
-			
-			_data=stream.getByteArray();
-		}
-		else
-		{
-			super.doWriteToStream(stream);
-		}
 	}
 	
 	/** 发送到角色(如switch中，阻塞) */
@@ -91,10 +70,13 @@ public class GameRequest extends BaseRequest
 			return;
 		}
 		
-		_needTrans=true;
-		
 		write();
 		
-		SendGameRequestToPlayerServerRequest.create(_data).sendToPlayer(playerID);
+		if(_data!=null)
+		{
+			_data=getWriteBytes();
+		}
+		
+		SendGameRequestToPlayerServerRequest.create(getDataID(),_data).sendToPlayer(playerID);
 	}
 }

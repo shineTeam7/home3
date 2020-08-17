@@ -2,7 +2,6 @@ package com.home.shine.support.collection;
 
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.hash.LHash;
 
 /** 基于koloboke的hash集合组基类 */
 public class BaseHash
@@ -11,8 +10,8 @@ public class BaseHash
 	
 	protected int _size;
 	
-	/** 给基类使用 */
-	protected int _maxSize;
+	/** 容量 */
+	protected int _capacity;
 	
 	/** 遍历版本 */
 	protected int _version=0;
@@ -25,9 +24,7 @@ public class BaseHash
 		capacity=MathUtils.getPowerOf2(capacity);
 		
 		if(capacity<_minSize)
-		{
 			capacity=_minSize;
-		}
 		
 		return capacity;
 	}
@@ -44,15 +41,9 @@ public class BaseHash
 		return _size;
 	}
 	
-	public int capacity()
+	public final int capacity()
 	{
-		return _maxSize;
-	}
-	
-	/** 获取数组长度 */
-	protected int getArrCapacity()
-	{
-		return _maxSize<<1;
+		return _capacity;
 	}
 	
 	/** 是否空 */
@@ -69,32 +60,48 @@ public class BaseHash
 		_lastFreeIndex=-1;
 	}
 	
-	protected final int hashChar(char arg)
+	protected final int hashChar(char key)
 	{
-		return LHash.SeparateKVCharKeyMixing.mix(arg);
+		int h = key * -1640531527;
+		return h ^ h >> 10;
+		//return LHash.SeparateKVCharKeyMixing.mix(arg);
 	}
 	
-	protected final int hashLong(long arg)
+	protected final int hashLong(long key)
 	{
-		return LHash.SeparateKVLongKeyMixing.mix(arg);
+		long h = key * -7046029254386353131L;
+		h ^= h >> 32;
+		return (int)(h ^ h >> 16);
+		//return LHash.SeparateKVLongKeyMixing.mix(arg);
 	}
 	
-	protected final int hashInt(int arg)
+	protected final int hashInt(int key)
 	{
-		return LHash.SeparateKVIntKeyMixing.mix(arg);
+		int h = key * -1640531527;
+		return h ^ h >> 16;
+		//return LHash.SeparateKVIntKeyMixing.mix(arg);
 	}
 	
 	protected final int hashObj(Object obj)
 	{
-		return LHash.ParallelKVObjKeyMixing.mix(obj.hashCode());
+		int hash=obj.hashCode();
+		return hash ^ hash >> 16;
+		//return LHash.ParallelKVObjKeyMixing.mix(obj.hashCode());
 	}
 	
 	/** 拷贝基础,为了clone系列 */
 	public void copyBase(BaseHash target)
 	{
 		_size=target._size;
-		_maxSize=target._maxSize;
+		_capacity=target._capacity;
 		_version=0;
+	}
+	
+	protected void init(int capacity)
+	{
+		_capacity=capacity;
+		
+		Ctrl.throwError("should be override");
 	}
 	
 	/** 清空 */
@@ -103,6 +110,60 @@ public class BaseHash
 		_size=0;
 		++_version;
 		_lastFreeIndex=-1;
+	}
+	
+	public final void reset()
+	{
+		if(_size==0)
+		{
+			if(_capacity==_minSize)
+				return;
+		}
+		else
+		{
+			justClearSize();
+		}
+		
+		init(_minSize);
+	}
+	
+	/** 扩容 */
+	public final void ensureCapacity(int capacity)
+	{
+		if(capacity>_capacity)
+		{
+			rehash(countCapacity(capacity));
+		}
+	}
+	
+	/** 缩容 */
+	public final void shrink()
+	{
+		if(_size==0)
+		{
+			if(_capacity==_minSize)
+				return;
+			
+			init(_minSize);
+		}
+		else
+		{
+			int capacity=countCapacity(_size);
+			
+			if(capacity<_capacity)
+			{
+				rehash(capacity);
+			}
+		}
+	}
+	
+	public void tryShrink()
+	{
+		//容量小于1/4
+		if(_capacity>=64 && _size<=(_capacity>>2))
+		{
+			shrink();
+		}
 	}
 	
 	protected void rehash(int size)
@@ -120,9 +181,9 @@ public class BaseHash
 			_lastFreeIndex=-1;
 		}
 		
-		if((++_size)>(_maxSize))
+		if((++_size)>_capacity)
 		{
-			rehash(getArrCapacity() << 1);
+			rehash(_capacity << 1);
 		}
 	}
 	

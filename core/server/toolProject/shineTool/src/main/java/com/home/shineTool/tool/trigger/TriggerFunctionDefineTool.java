@@ -1,15 +1,17 @@
 package com.home.shineTool.tool.trigger;
 
+import com.home.shine.ctrl.Ctrl;
+import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.utils.StringUtils;
-import com.home.shineTool.constlist.DataGroupType;
-import com.home.shineTool.constlist.ProjectType;
 import com.home.shineTool.constlist.VisitType;
+import com.home.shineTool.reflect.AnnotationInfo;
 import com.home.shineTool.reflect.FieldInfo;
 import com.home.shineTool.reflect.MethodArgInfo;
 import com.home.shineTool.reflect.MethodInfo;
 import com.home.shineTool.reflect.cls.ClassInfo;
 import com.home.shineTool.tool.base.BaseExportTool;
 import com.home.shineTool.tool.data.DataDefineTool;
+import com.home.shineTool.tool.data.DataMakerTool;
 
 import java.io.File;
 
@@ -20,6 +22,9 @@ public class TriggerFunctionDefineTool extends BaseExportTool
 	
 	private DataDefineTool _serverEventDefine;
 	private DataDefineTool _clientEventDefine;
+	
+	/** 构造组 */
+	private IntObjectMap<TriggerMethodMakeTool> _methodMakerDic=new IntObjectMap<>();
 	
 	public TriggerFunctionDefineTool(TriggerMakeTool makeTool)
 	{
@@ -40,14 +45,16 @@ public class TriggerFunctionDefineTool extends BaseExportTool
 		//common
 		if(_makeTool.getParentTool()==null)
 		{
-			addSystemMethod("if","如果","boolean");
-			addSystemMethod("while","循环","boolean");
+			addSystemMethod("if","如果","boolean","Runnable","Runnable");
+			addSystemMethod("while","while循环","boolean","Runnable");
 		}
 	}
 	
 	@Override
 	protected void toMakeInput()
 	{
+		String defaultTriggerType=getTriggerClsType(_inputCls);
+		
 		for(String s : _inputCls.getMethodKeyList())
 		{
 			MethodInfo method=_inputCls.getMethod(s);
@@ -55,9 +62,53 @@ public class TriggerFunctionDefineTool extends BaseExportTool
 			//不是虚函数
 			if(!method.isAbstract)
 			{
-				addOneMethod(method);
+				addOneMethod(method,defaultTriggerType);
 			}
 		}
+		
+	}
+	
+	private String getTriggerClsType(ClassInfo inCls)
+	{
+		String type=inCls.getAnnotationValue("TriggerType");
+		
+		if(type!=null)
+			return StringUtils.cutOutsideOne(type);
+		
+		String qName=inCls.getExtendClsQName();
+		
+		if(qName.isEmpty())
+			return "";
+		
+		ClassInfo superCls=getInputClsAbs(qName);
+		
+		if(superCls==null)
+			return "";
+		
+		return getTriggerClsType(superCls);
+	}
+	
+	private String getTriggerClsDef(ClassInfo inCls)
+	{
+		if(inCls==null)
+			return "";
+		
+		String type=inCls.getAnnotationValue("TriggerClass");
+		
+		if(type!=null)
+			return StringUtils.cutOutsideOne(type);
+		
+		String qName=inCls.getExtendClsQName();
+		
+		if(qName.isEmpty())
+			return "";
+		
+		ClassInfo superCls=getInputClsAbs(qName);
+		
+		if(superCls==null)
+			return "";
+		
+		return getTriggerClsDef(superCls);
 	}
 	
 	@Override
@@ -79,7 +130,7 @@ public class TriggerFunctionDefineTool extends BaseExportTool
 	}
 	
 	@Override
-	protected int addOneDefine(String cName,String des)
+	protected int addOneDefine(String cName,String des,String qName)
 	{
 		//不用默认
 		return -1;
@@ -102,13 +153,29 @@ public class TriggerFunctionDefineTool extends BaseExportTool
 	//	DataDefineTool.getDefineDicFromCls(_makeTool.functionDefineDic,cls,true);
 	//}
 	
-	private void addOneMethod(MethodInfo method)
+	public void addMethodMakeTool(int group,TriggerMethodMakeTool maker)
+	{
+		_methodMakerDic.put(group,maker);
+	}
+	
+	private void addOneMethod(MethodInfo method,String defaultTriggerType)
 	{
 		String cName=StringUtils.ucWord(method.name);
 		
-		int index=doAddOneDefine(cName,method.describe);
+		int index=doAddOneDefine(cName,method.describe,null);
+		
+		for(TriggerMethodMakeTool maker : _methodMakerDic)
+		{
+			maker.addOne(method,_inputCls,getTriggerClsDef(_inputCls));
+		}
+		
+		AnnotationInfo aInfo=method.getAnnotation("TriggerType");
+		
+		if(aInfo!=null)
+			defaultTriggerType=StringUtils.cutOutsideOne(aInfo.args[0]);
 		
 		_makeTool.functionDefineDic.put(method.name,index);
+		_makeTool.functionTTypeDic.put(method.name,defaultTriggerType);
 		
 		int type=3;
 		
@@ -145,7 +212,9 @@ public class TriggerFunctionDefineTool extends BaseExportTool
 			method.args.add(new MethodArgInfo("arg"+(i+1),args[i]));
 		}
 		
-		addOneMethod(method);
+		_makeTool.systemMethodSet.add(name);
+		
+		addOneMethod(method,"");
 	}
 	
 	private void addMethodContent(int index,MethodInfo method)

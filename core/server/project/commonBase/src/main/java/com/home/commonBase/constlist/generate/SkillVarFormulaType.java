@@ -18,7 +18,16 @@ public class SkillVarFormulaType
 	/** 两项和 arg1+arg2 */
 	public static final int TwoPlus=5;
 	
+	/** 三项和 arg1+arg2+arg3 */
+	public static final int ThreePlus=6;
+	
+	/** 四项和 arg1+arg2+arg3+arg4 */
+	public static final int FourPlus=7;
+	
+	/** 五项和 arg1+arg2+arg3+arg4+arg5 */
+	public static final int FivePlus=8;
+	
 	/** 长度 */
-	public static int size=6;
+	public static int size=9;
 	
 }

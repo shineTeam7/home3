@@ -4,10 +4,12 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.IIntConsumer;
 import com.home.shine.utils.MathUtils;
 import com.home.shine.utils.ObjectUtils;
-import com.koloboke.collect.impl.IntArrays;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class IntSet extends BaseHash implements Iterable<Integer>
@@ -18,20 +20,12 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 	
 	public IntSet()
 	{
-	
+		init(_minSize);
 	}
 	
 	public IntSet(int capacity)
 	{
 		init(countCapacity(capacity));
-	}
-	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
 	}
 	
 	public final int getFreeValue()
@@ -41,14 +35,13 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 
 	public final int[] getKeys()
 	{
-		checkInit();
-		
 		return _set;
 	}
 
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 
 		_set=new int[capacity<<1];
 		
@@ -61,7 +54,17 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 	private int changeFree()
 	{
 		int newFree=findNewFreeOrRemoved();
-		IntArrays.replaceAll(_set,_freeValue,newFree);
+		
+		int free=_freeValue;
+		int[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -160,8 +163,6 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 	
 	public boolean add(int key)
 	{
-		checkInit();
-		
 		int free;
 		if(key==(free=_freeValue))
 		{
@@ -325,24 +326,6 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 		return re;
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	/** 转换数组(带排序) */
 	public int[] toArray()
 	{
@@ -380,7 +363,6 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 		}
 		
 		IntList re=new IntList(_size);
-		int j=0;
 		
 		int[] keys=_set;
 		int fv=_freeValue;
@@ -397,6 +379,32 @@ public class IntSet extends BaseHash implements Iterable<Integer>
 		re.sort();
 		
 		return re;
+	}
+	
+	/** 转化为原生集合 */
+	public HashSet<Integer> toNatureSet()
+	{
+		HashSet<Integer> re=new HashSet<>(size());
+		
+		int[] keys=_set;
+		int fv=_freeValue;
+		int k;
+		
+		for(int i=keys.length-1;i>=0;--i)
+		{
+			if((k=keys[i])!=fv)
+			{
+				re.add(k);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Collection<Integer> collection)
+	{
+		ensureCapacity(collection.size());
+		collection.forEach(this::add);
 	}
 	
 	/** 遍历 */

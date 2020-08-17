@@ -6,8 +6,6 @@
 #include "../navmesh/NavMesh.h"
 #include "../global/GameC.h"
 #include "dataEx/ExternBuf.h"
-#include "../navmesh/NavMeshHit.h"
-#include "../navmesh/NavMeshPath.h"
 
 jboolean _bFalse = false;
 

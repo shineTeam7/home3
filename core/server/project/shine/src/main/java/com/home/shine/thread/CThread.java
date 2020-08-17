@@ -1,7 +1,6 @@
 package com.home.shine.thread;
 
 import com.home.shine.ctrl.Ctrl;
-import com.home.shine.global.ShineSetting;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -18,24 +17,29 @@ public class CThread extends AbstractThread
 	public void run()
 	{
 		Runnable func=null;
-		int num=0;
-		int max=ShineSetting.cThreadRoundFuncMax;
-		
-		if(max<=0)
-		{
-			max=Integer.MAX_VALUE;
-		}
 		
 		_running=true;
 		
 		ConcurrentLinkedQueue<Runnable> queue=_queue;
 		
 		long lastTime=Ctrl.getTimer();
-		int delay;
 		long time;
+		long sleepTime=Ctrl.getTimer();
+		int delay;
+		int tickMax=_tickDelay;
+		int tickTime=0;
+		int sleepD;
 		
 		while(_running)
 		{
+			time=Ctrl.getTimer();
+			sleepD=(int)(time-sleepTime);
+			
+			if(sleepD>0)
+			{
+				_restTime+=sleepD;
+			}
+			
 			if(_pause)
 			{
 				if(_resume)
@@ -62,40 +66,43 @@ public class CThread extends AbstractThread
 			{
 				++_runIndex;
 				
-				time=Ctrl.getTimer();
 				delay=(int)(time - lastTime);
 				lastTime=time;
 				
-				//防止系统时间改小
-				if(delay<0)
-					delay=0;
-				
-				_passTime+=delay;
-				++_roundNum;
-				
-				//先时间
-				
-				try
+				if(delay>0)
 				{
-					tick(delay);
+					if((tickTime+=delay)>=tickMax)
+					{
+						try
+						{
+							tick(tickTime);
+						}
+						catch(Exception e)
+						{
+							Ctrl.errorLog("线程tick出错",e);
+						}
+						
+						tickTime=0;
+					}
+					
+					_passTime+=delay;
 				}
-				catch(Exception e)
-				{
-					Ctrl.errorLog("线程tick出错",e);
-				}
+				
+				//try
+				//{
+				//	runEx();
+				//}
+				//catch(Exception e)
+				//{
+				//	Ctrl.errorLog("线程runEx出错",e);
+				//}
 				
 				//再事务
-				num=0;
-				func=null;
 				
-				while(_running && num<max)
+				while(_running)
 				{
-					func=queue.poll();
-					
-					if(func==null)
-					{
+					if((func=queue.poll())==null)
 						break;
-					}
 					
 					try
 					{
@@ -106,25 +113,40 @@ public class CThread extends AbstractThread
 						Ctrl.errorLog(e);
 					}
 					
-					++num;
-				}
-				
-				if(num>_maxFuncNum)
-				{
-					_maxFuncNum=num;
+					++_funcNum;
 				}
 			}
 			
+			sleepTime=Ctrl.getTimer();
 			//最后睡
 			threadSleep();
 		}
 		
 		if(!queue.isEmpty())
 		{
-			System.out.println("线程关闭后，队列还有残留:"+getName());
+			System.out.println("线程关闭后，队列还有残留:"+getName()+" num:"+queue.size());
+			
+			//while(true)
+			//{
+			//	if((func=queue.poll())!=null)
+			//	{
+			//		try
+			//		{
+			//			func.run();
+			//		}
+			//		catch(Exception e)
+			//		{
+			//			Ctrl.errorLog(e);
+			//		}
+			//	}
+			//	else
+			//	{
+			//		break;
+			//	}
+			//}
 		}
 	}
-
+	
 	@Override
 	protected void toAddFunc(Runnable func,AbstractThread from)
 	{

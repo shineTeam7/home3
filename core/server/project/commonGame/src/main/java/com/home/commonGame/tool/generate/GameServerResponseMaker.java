@@ -122,6 +122,12 @@ import com.home.commonGame.net.serverResponse.login.system.SendInfoCodeFromLogin
 import com.home.commonGame.net.serverResponse.manager.HotfixToGameServerResponse;
 import com.home.commonGame.net.serverResponse.manager.ManagerToGameCommandServerResponse;
 import com.home.commonGame.net.serverResponse.manager.ReBeGameToManagerServerResponse;
+import com.home.commonGame.net.serverResponse.manager.ReloadServerConfigToGameServerResponse;
+import com.home.commonGame.net.serverResponse.scene.base.PlayerSceneToGameServerResponse;
+import com.home.commonGame.net.serverResponse.scene.login.PlayerLeaveSceneOverToGameServerResponse;
+import com.home.commonGame.net.serverResponse.scene.login.PlayerSwitchToSceneOverServerResponse;
+import com.home.commonGame.net.serverResponse.scene.login.RePlayerSwitchToSceneServerResponse;
+import com.home.commonGame.net.serverResponse.scene.system.ReBeGameToSceneServerResponse;
 import com.home.shine.data.BaseData;
 import com.home.shine.tool.CreateDataFunc;
 import com.home.shine.tool.DataMaker;
@@ -133,10 +139,10 @@ public class GameServerResponseMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
-		list[ServerMessageType.FuncCenterToGame-offSet]=this::createFuncCenterToGameServerResponse;
-		list[ServerMessageType.FuncRefreshAuctionItemPriceToGame-offSet]=this::createFuncRefreshAuctionItemPriceToGameServerResponse;
-		list[ServerMessageType.FuncCommitRankValueToSourceGame-offSet]=this::createFuncCommitRankValueToSourceGameServerResponse;
-		list[ServerMessageType.FuncSendAuctionSellItemToSourceGame-offSet]=this::createFuncSendAuctionSellItemToSourceGameServerResponse;
+		list[ServerMessageType.HotfixToGame-offSet]=this::createHotfixToGameServerResponse;
+		list[ServerMessageType.ManagerToGameCommand-offSet]=this::createManagerToGameCommandServerResponse;
+		list[ServerMessageType.ReBeGameToManager-offSet]=this::createReBeGameToManagerServerResponse;
+		list[ServerMessageType.ReloadServerConfigToGame-offSet]=this::createReloadServerConfigToGameServerResponse;
 		list[ServerMessageType.ActivityResetToGame-offSet]=this::createActivityResetToGameServerResponse;
 		list[ServerMessageType.ActivitySwitchToGame-offSet]=this::createActivitySwitchToGameServerResponse;
 		list[ServerMessageType.CenterTransCenterToGame-offSet]=this::createCenterTransCenterToGameServerResponse;
@@ -144,29 +150,88 @@ public class GameServerResponseMaker extends DataMaker
 		list[ServerMessageType.CreateSignedSceneToGame-offSet]=this::createCreateSignedSceneToGameServerResponse;
 		list[ServerMessageType.EnterSignedSceneToGame-offSet]=this::createEnterSignedSceneToGameServerResponse;
 		list[ServerMessageType.FuncAddRankToGame-offSet]=this::createFuncAddRankToGameServerResponse;
+		list[ServerMessageType.FuncAddSubsectionRankToGame-offSet]=this::createFuncAddSubsectionRankToGameServerResponse;
+		list[ServerMessageType.FuncCenterToGame-offSet]=this::createFuncCenterToGameServerResponse;
 		list[ServerMessageType.FuncMatchTimeOutToGame-offSet]=this::createFuncMatchTimeOutToGameServerResponse;
 		list[ServerMessageType.FuncPlayerToGame-offSet]=this::createFuncPlayerToGameServerResponse;
+		list[ServerMessageType.FuncReGetPageShowToPlayer-offSet]=this::createFuncReGetPageShowToPlayerServerResponse;
 		list[ServerMessageType.FuncReGetRandomPlayerListFromRoleSocialPoolToCenter-offSet]=this::createFuncReGetRandomPlayerListFromRoleSocialPoolToCenterServerResponse;
+		list[ServerMessageType.FuncRefreshAuctionItemPriceToGame-offSet]=this::createFuncRefreshAuctionItemPriceToGameServerResponse;
 		list[ServerMessageType.FuncRefreshRankToGame-offSet]=this::createFuncRefreshRankToGameServerResponse;
+		list[ServerMessageType.FuncRefreshSubsectionIndexToGame-offSet]=this::createFuncRefreshSubsectionIndexToGameServerResponse;
+		list[ServerMessageType.FuncRefreshSubsectionRankToGame-offSet]=this::createFuncRefreshSubsectionRankToGameServerResponse;
 		list[ServerMessageType.FuncRemoveRankToGame-offSet]=this::createFuncRemoveRankToGameServerResponse;
+		list[ServerMessageType.FuncRemoveSubsectionRankToGame-offSet]=this::createFuncRemoveSubsectionRankToGameServerResponse;
 		list[ServerMessageType.FuncResetRankToGame-offSet]=this::createFuncResetRankToGameServerResponse;
+		list[ServerMessageType.FuncResetSubsectionRankToGame-offSet]=this::createFuncResetSubsectionRankToGameServerResponse;
 		list[ServerMessageType.GameExit-offSet]=this::createGameExitServerResponse;
 		list[ServerMessageType.GameReloadConfig-offSet]=this::createGameReloadConfigServerResponse;
-		list[ServerMessageType.FuncSendAuctionCancelSellItemToSourceGame-offSet]=this::createFuncSendAuctionCancelSellItemToSourceGameServerResponse;
 		list[ServerMessageType.KickPlayerFromCenter-offSet]=this::createKickPlayerFromCenterServerResponse;
 		list[ServerMessageType.PlayerToGame-offSet]=this::createPlayerToGameServerResponse;
 		list[ServerMessageType.PlayerToGameTransCenterToGame-offSet]=this::createPlayerToGameTransCenterToGameServerResponse;
 		list[ServerMessageType.ReBeGameToCenter-offSet]=this::createReBeGameToCenterServerResponse;
+		list[ServerMessageType.ReceiptWorkToGameFromCenter-offSet]=this::createReceiptWorkToGameFromCenterServerResponse;
+		list[ServerMessageType.RefreshRoleGroupChangeToGame-offSet]=this::createRefreshRoleGroupChangeToGameServerResponse;
+		list[ServerMessageType.RefreshRoleShowDataChangeToGame-offSet]=this::createRefreshRoleShowDataChangeToGameServerResponse;
 		list[ServerMessageType.RefreshServerOffTimeToGame-offSet]=this::createRefreshServerOffTimeToGameServerResponse;
+		list[ServerMessageType.RemoveCenterRoleSocialDataToPlayer-offSet]=this::createRemoveCenterRoleSocialDataToPlayerServerResponse;
+		list[ServerMessageType.SendAreaWorkToGameFromCenter-offSet]=this::createSendAreaWorkToGameFromCenterServerResponse;
 		list[ServerMessageType.SendGetRoleSocialDataToGame-offSet]=this::createSendGetRoleSocialDataToGameServerResponse;
 		list[ServerMessageType.SendMailToGame-offSet]=this::createSendMailToGameServerResponse;
 		list[ServerMessageType.SendPlayerWorkComplete-offSet]=this::createSendPlayerWorkCompleteServerResponse;
 		list[ServerMessageType.SendPlayerWork-offSet]=this::createSendPlayerWorkServerResponse;
 		list[ServerMessageType.SendWorkFailed-offSet]=this::createSendWorkFailedServerResponse;
 		list[ServerMessageType.BeLoginToGame-offSet]=this::createBeLoginToGameServerResponse;
-		list[ServerMessageType.FuncSendAuctionBuyItemToSourceGame-offSet]=this::createFuncSendAuctionBuyItemToSourceGameServerResponse;
+		list[ServerMessageType.PlayerBindPlatformToGame-offSet]=this::createPlayerBindPlatformToGameServerResponse;
+		list[ServerMessageType.ReceiptUserWorkToGame-offSet]=this::createReceiptUserWorkToGameServerResponse;
+		list[ServerMessageType.SendInfoCodeFromLogin-offSet]=this::createSendInfoCodeFromLoginServerResponse;
+		list[ServerMessageType.UserLoginToGame-offSet]=this::createUserLoginToGameServerResponse;
+		list[ServerMessageType.PlayerSceneToGame-offSet]=this::createPlayerSceneToGameServerResponse;
+		list[ServerMessageType.PlayerSwitchToSceneOver-offSet]=this::createPlayerSwitchToSceneOverServerResponse;
+		list[ServerMessageType.ReBeGameToScene-offSet]=this::createReBeGameToSceneServerResponse;
+		list[ServerMessageType.RePlayerSwitchToScene-offSet]=this::createRePlayerSwitchToSceneServerResponse;
 		list[ServerMessageType.BeGameToGame-offSet]=this::createBeGameToGameServerResponse;
-		list[ServerMessageType.FuncAddSubsectionRankToGame-offSet]=this::createFuncAddSubsectionRankToGameServerResponse;
+		list[ServerMessageType.FuncAddRoleGroupSimpleToGame-offSet]=this::createFuncAddRoleGroupSimpleToGameServerResponse;
+		list[ServerMessageType.FuncAgreeApplyNextRoleGroupToGame-offSet]=this::createFuncAgreeApplyNextRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncAgreeInviteCreateRoleGroupToGame-offSet]=this::createFuncAgreeInviteCreateRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncAgreeInviteRoleGroupToGame-offSet]=this::createFuncAgreeInviteRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncApplyRoleGroupToGame-offSet]=this::createFuncApplyRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncChangeLeaderRoleGroupToGame-offSet]=this::createFuncChangeLeaderRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncChangeRoleGroupApplyTypeToGame-offSet]=this::createFuncChangeRoleGroupApplyTypeToGameServerResponse;
+		list[ServerMessageType.FuncChangeRoleGroupNameToGame-offSet]=this::createFuncChangeRoleGroupNameToGameServerResponse;
+		list[ServerMessageType.FuncChangeRoleGroupNoticeToGame-offSet]=this::createFuncChangeRoleGroupNoticeToGameServerResponse;
+		list[ServerMessageType.FuncCommitRankValueToSourceGame-offSet]=this::createFuncCommitRankValueToSourceGameServerResponse;
+		list[ServerMessageType.FuncDisbandRoleGroupToGame-offSet]=this::createFuncDisbandRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncHandleApplyRoleGroupToGame-offSet]=this::createFuncHandleApplyRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncKickMemberRoleGroupToGame-offSet]=this::createFuncKickMemberRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncLeaveRoleGroupToGame-offSet]=this::createFuncLeaveRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncPlayerGameToGame-offSet]=this::createFuncPlayerGameToGameServerResponse;
+		list[ServerMessageType.FuncPlayerRoleGroupGameToGame-offSet]=this::createFuncPlayerRoleGroupGameToGameServerResponse;
+		list[ServerMessageType.FuncReGetPageShowGameToPlayer-offSet]=this::createFuncReGetPageShowGameToPlayerServerResponse;
+		list[ServerMessageType.FuncRefreshRankForRoleGroup-offSet]=this::createFuncRefreshRankForRoleGroupServerResponse;
+		list[ServerMessageType.FuncRefreshTitleRoleGroupToPlayer-offSet]=this::createFuncRefreshTitleRoleGroupToPlayerServerResponse;
+		list[ServerMessageType.FuncRemoveRoleGroupSimpleToGame-offSet]=this::createFuncRemoveRoleGroupSimpleToGameServerResponse;
+		list[ServerMessageType.FuncResetRankForRoleGroup-offSet]=this::createFuncResetRankForRoleGroupServerResponse;
+		list[ServerMessageType.FuncRoleGroupChangeSimpleToGame-offSet]=this::createFuncRoleGroupChangeSimpleToGameServerResponse;
+		list[ServerMessageType.FuncRoleGroupChangeToPlayer-offSet]=this::createFuncRoleGroupChangeToPlayerServerResponse;
+		list[ServerMessageType.FuncRoleGroupEnterOwnSceneToGame-offSet]=this::createFuncRoleGroupEnterOwnSceneToGameServerResponse;
+		list[ServerMessageType.FuncRoleGroupMemberChangeToPlayer-offSet]=this::createFuncRoleGroupMemberChangeToPlayerServerResponse;
+		list[ServerMessageType.FuncRoleGroupReEnterOwnSceneArgToPlayer-offSet]=this::createFuncRoleGroupReEnterOwnSceneArgToPlayerServerResponse;
+		list[ServerMessageType.FuncRoleGroupRefreshRoleShowDataToGame-offSet]=this::createFuncRoleGroupRefreshRoleShowDataToGameServerResponse;
+		list[ServerMessageType.FuncRoleGroupRefreshRoleShowDataToPlayer-offSet]=this::createFuncRoleGroupRefreshRoleShowDataToPlayerServerResponse;
+		list[ServerMessageType.FuncRoleGroupToGame-offSet]=this::createFuncRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncSendAuctionBuyItemToSourceGame-offSet]=this::createFuncSendAuctionBuyItemToSourceGameServerResponse;
+		list[ServerMessageType.FuncSendAuctionCancelSellItemToSourceGame-offSet]=this::createFuncSendAuctionCancelSellItemToSourceGameServerResponse;
+		list[ServerMessageType.FuncSendAuctionSellItemToSourceGame-offSet]=this::createFuncSendAuctionSellItemToSourceGameServerResponse;
+		list[ServerMessageType.FuncSendChangeLeaderRoleGroupToPlayer-offSet]=this::createFuncSendChangeLeaderRoleGroupToPlayerServerResponse;
+		list[ServerMessageType.FuncSendGetPageShowToGame-offSet]=this::createFuncSendGetPageShowToGameServerResponse;
+		list[ServerMessageType.FuncSendRoleGroupAddMemberToPlayer-offSet]=this::createFuncSendRoleGroupAddMemberToPlayerServerResponse;
+		list[ServerMessageType.FuncSendRoleGroupJoinResult-offSet]=this::createFuncSendRoleGroupJoinResultServerResponse;
+		list[ServerMessageType.FuncSendRoleGroupRemoveMemberToPlayer-offSet]=this::createFuncSendRoleGroupRemoveMemberToPlayerServerResponse;
+		list[ServerMessageType.FuncSetTitleRoleGroupToGame-offSet]=this::createFuncSetTitleRoleGroupToGameServerResponse;
+		list[ServerMessageType.FuncToGame-offSet]=this::createFuncToGameServerResponse;
+		list[ServerMessageType.GetRoleSocialDataToPlayer-offSet]=this::createGetRoleSocialDataToPlayerServerResponse;
+		list[ServerMessageType.PlayerCallSwitchBackToGame-offSet]=this::createPlayerCallSwitchBackToGameServerResponse;
 		list[ServerMessageType.PlayerExitOverToSource-offSet]=this::createPlayerExitOverToSourceServerResponse;
 		list[ServerMessageType.PlayerExitSwitchBack-offSet]=this::createPlayerExitSwitchBackServerResponse;
 		list[ServerMessageType.PlayerGameToGame-offSet]=this::createPlayerGameToGameServerResponse;
@@ -177,84 +242,31 @@ public class GameServerResponseMaker extends DataMaker
 		list[ServerMessageType.PlayerSwitchGameReceiveResultToSource-offSet]=this::createPlayerSwitchGameReceiveResultToSourceServerResponse;
 		list[ServerMessageType.PlayerToGameTransGameToGame-offSet]=this::createPlayerToGameTransGameToGameServerResponse;
 		list[ServerMessageType.PreSwitchGame-offSet]=this::createPreSwitchGameServerResponse;
+		list[ServerMessageType.RadioPlayerChatToGame-offSet]=this::createRadioPlayerChatToGameServerResponse;
 		list[ServerMessageType.ReBeGameToGame-offSet]=this::createReBeGameToGameServerResponse;
 		list[ServerMessageType.RePlayerLoginFromEachGame-offSet]=this::createRePlayerLoginFromEachGameServerResponse;
-		list[ServerMessageType.FuncRefreshSubsectionIndexToGame-offSet]=this::createFuncRefreshSubsectionIndexToGameServerResponse;
+		list[ServerMessageType.RePlayerPreExitToGame-offSet]=this::createRePlayerPreExitToGameServerResponse;
 		list[ServerMessageType.RePlayerPreSwitchGameToGame-offSet]=this::createRePlayerPreSwitchGameToGameServerResponse;
 		list[ServerMessageType.RePreSwitchGameFailed-offSet]=this::createRePreSwitchGameFailedServerResponse;
 		list[ServerMessageType.RePreSwitchGame-offSet]=this::createRePreSwitchGameServerResponse;
 		list[ServerMessageType.ReceiptWorkToGame-offSet]=this::createReceiptWorkToGameServerResponse;
+		list[ServerMessageType.RefreshGameLoginLimitToGame-offSet]=this::createRefreshGameLoginLimitToGameServerResponse;
 		list[ServerMessageType.RefreshRoleShowToSourceGame-offSet]=this::createRefreshRoleShowToSourceGameServerResponse;
 		list[ServerMessageType.SaveSwitchedPlayerList-offSet]=this::createSaveSwitchedPlayerListServerResponse;
+		list[ServerMessageType.SendAreaWorkCompleteToGame-offSet]=this::createSendAreaWorkCompleteToGameServerResponse;
+		list[ServerMessageType.SendAreaWorkToGame-offSet]=this::createSendAreaWorkToGameServerResponse;
+		list[ServerMessageType.SendGameRequestToPlayer-offSet]=this::createSendGameRequestToPlayerServerResponse;
 		list[ServerMessageType.SendPlayerCenterRequestListToGame-offSet]=this::createSendPlayerCenterRequestListToGameServerResponse;
 		list[ServerMessageType.SendPlayerCenterRequestToGame-offSet]=this::createSendPlayerCenterRequestToGameServerResponse;
+		list[ServerMessageType.SendPlayerChatToPlayer-offSet]=this::createSendPlayerChatToPlayerServerResponse;
 		list[ServerMessageType.SendPlayerToGameRequestListToGame-offSet]=this::createSendPlayerToGameRequestListToGameServerResponse;
 		list[ServerMessageType.SendPlayerToGameRequestToGame-offSet]=this::createSendPlayerToGameRequestToGameServerResponse;
 		list[ServerMessageType.SendPlayerWorkCompleteListToGame-offSet]=this::createSendPlayerWorkCompleteListToGameServerResponse;
 		list[ServerMessageType.SendPlayerWorkCompleteToGame-offSet]=this::createSendPlayerWorkCompleteToGameServerResponse;
 		list[ServerMessageType.SendPlayerWorkListToGame-offSet]=this::createSendPlayerWorkListToGameServerResponse;
 		list[ServerMessageType.SendPlayerWorkToGame-offSet]=this::createSendPlayerWorkToGameServerResponse;
-		list[ServerMessageType.FuncRefreshSubsectionRankToGame-offSet]=this::createFuncRefreshSubsectionRankToGameServerResponse;
-		list[ServerMessageType.FuncRemoveSubsectionRankToGame-offSet]=this::createFuncRemoveSubsectionRankToGameServerResponse;
-		list[ServerMessageType.SendAreaWorkToGame-offSet]=this::createSendAreaWorkToGameServerResponse;
-		list[ServerMessageType.SendAreaWorkCompleteToGame-offSet]=this::createSendAreaWorkCompleteToGameServerResponse;
-		list[ServerMessageType.FuncResetSubsectionRankToGame-offSet]=this::createFuncResetSubsectionRankToGameServerResponse;
-		list[ServerMessageType.SendGameRequestToPlayer-offSet]=this::createSendGameRequestToPlayerServerResponse;
-		list[ServerMessageType.RemoveCenterRoleSocialDataToPlayer-offSet]=this::createRemoveCenterRoleSocialDataToPlayerServerResponse;
-		list[ServerMessageType.ReceiptUserWorkToGame-offSet]=this::createReceiptUserWorkToGameServerResponse;
-		list[ServerMessageType.SendInfoCodeFromLogin-offSet]=this::createSendInfoCodeFromLoginServerResponse;
-		list[ServerMessageType.FuncReGetPageShowToPlayer-offSet]=this::createFuncReGetPageShowToPlayerServerResponse;
-		list[ServerMessageType.FuncReGetPageShowGameToPlayer-offSet]=this::createFuncReGetPageShowGameToPlayerServerResponse;
-		list[ServerMessageType.FuncSendGetPageShowToGame-offSet]=this::createFuncSendGetPageShowToGameServerResponse;
-		list[ServerMessageType.FuncAddRoleGroupSimpleToGame-offSet]=this::createFuncAddRoleGroupSimpleToGameServerResponse;
-		list[ServerMessageType.FuncRemoveRoleGroupSimpleToGame-offSet]=this::createFuncRemoveRoleGroupSimpleToGameServerResponse;
-		list[ServerMessageType.FuncSendRoleGroupRemoveMemberToPlayer-offSet]=this::createFuncSendRoleGroupRemoveMemberToPlayerServerResponse;
-		list[ServerMessageType.FuncRoleGroupChangeSimpleToGame-offSet]=this::createFuncRoleGroupChangeSimpleToGameServerResponse;
-		list[ServerMessageType.FuncChangeRoleGroupApplyTypeToGame-offSet]=this::createFuncChangeRoleGroupApplyTypeToGameServerResponse;
-		list[ServerMessageType.FuncChangeRoleGroupNameToGame-offSet]=this::createFuncChangeRoleGroupNameToGameServerResponse;
-		list[ServerMessageType.FuncRoleGroupEnterOwnSceneToGame-offSet]=this::createFuncRoleGroupEnterOwnSceneToGameServerResponse;
-		list[ServerMessageType.FuncRoleGroupReEnterOwnSceneArgToPlayer-offSet]=this::createFuncRoleGroupReEnterOwnSceneArgToPlayerServerResponse;
-		list[ServerMessageType.FuncHandleApplyRoleGroupToGame-offSet]=this::createFuncHandleApplyRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncPlayerRoleGroupGameToGame-offSet]=this::createFuncPlayerRoleGroupGameToGameServerResponse;
-		list[ServerMessageType.FuncRoleGroupChangeToPlayer-offSet]=this::createFuncRoleGroupChangeToPlayerServerResponse;
-		list[ServerMessageType.FuncSendChangeLeaderRoleGroupToPlayer-offSet]=this::createFuncSendChangeLeaderRoleGroupToPlayerServerResponse;
-		list[ServerMessageType.FuncSendRoleGroupAddMemberToPlayer-offSet]=this::createFuncSendRoleGroupAddMemberToPlayerServerResponse;
-		list[ServerMessageType.FuncRoleGroupRefreshRoleShowDataToGame-offSet]=this::createFuncRoleGroupRefreshRoleShowDataToGameServerResponse;
-		list[ServerMessageType.FuncRoleGroupRefreshRoleShowDataToPlayer-offSet]=this::createFuncRoleGroupRefreshRoleShowDataToPlayerServerResponse;
-		list[ServerMessageType.FuncRoleGroupMemberChangeToPlayer-offSet]=this::createFuncRoleGroupMemberChangeToPlayerServerResponse;
 		list[ServerMessageType.SignedSceneGameToGame-offSet]=this::createSignedSceneGameToGameServerResponse;
-		list[ServerMessageType.FuncAgreeInviteCreateRoleGroupToGame-offSet]=this::createFuncAgreeInviteCreateRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncAgreeInviteRoleGroupToGame-offSet]=this::createFuncAgreeInviteRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncApplyRoleGroupToGame-offSet]=this::createFuncApplyRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncChangeLeaderRoleGroupToGame-offSet]=this::createFuncChangeLeaderRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncChangeRoleGroupNoticeToGame-offSet]=this::createFuncChangeRoleGroupNoticeToGameServerResponse;
-		list[ServerMessageType.FuncDisbandRoleGroupToGame-offSet]=this::createFuncDisbandRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncKickMemberRoleGroupToGame-offSet]=this::createFuncKickMemberRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncLeaveRoleGroupToGame-offSet]=this::createFuncLeaveRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncPlayerGameToGame-offSet]=this::createFuncPlayerGameToGameServerResponse;
-		list[ServerMessageType.FuncRefreshTitleRoleGroupToPlayer-offSet]=this::createFuncRefreshTitleRoleGroupToPlayerServerResponse;
-		list[ServerMessageType.FuncRoleGroupToGame-offSet]=this::createFuncRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncSetTitleRoleGroupToGame-offSet]=this::createFuncSetTitleRoleGroupToGameServerResponse;
-		list[ServerMessageType.FuncToGame-offSet]=this::createFuncToGameServerResponse;
-		list[ServerMessageType.RadioPlayerChatToGame-offSet]=this::createRadioPlayerChatToGameServerResponse;
-		list[ServerMessageType.SendPlayerChatToPlayer-offSet]=this::createSendPlayerChatToPlayerServerResponse;
-		list[ServerMessageType.RefreshGameLoginLimitToGame-offSet]=this::createRefreshGameLoginLimitToGameServerResponse;
-		list[ServerMessageType.GetRoleSocialDataToPlayer-offSet]=this::createGetRoleSocialDataToPlayerServerResponse;
-		list[ServerMessageType.ReBeGameToManager-offSet]=this::createReBeGameToManagerServerResponse;
-		list[ServerMessageType.PlayerBindPlatformToGame-offSet]=this::createPlayerBindPlatformToGameServerResponse;
-		list[ServerMessageType.UserLoginToGame-offSet]=this::createUserLoginToGameServerResponse;
-		list[ServerMessageType.PlayerCallSwitchBackToGame-offSet]=this::createPlayerCallSwitchBackToGameServerResponse;
-		list[ServerMessageType.RePlayerPreExitToGame-offSet]=this::createRePlayerPreExitToGameServerResponse;
-		list[ServerMessageType.ManagerToGameCommand-offSet]=this::createManagerToGameCommandServerResponse;
-		list[ServerMessageType.HotfixToGame-offSet]=this::createHotfixToGameServerResponse;
-		list[ServerMessageType.ReceiptWorkToGameFromCenter-offSet]=this::createReceiptWorkToGameFromCenterServerResponse;
-		list[ServerMessageType.FuncRefreshRankForRoleGroup-offSet]=this::createFuncRefreshRankForRoleGroupServerResponse;
-		list[ServerMessageType.FuncResetRankForRoleGroup-offSet]=this::createFuncResetRankForRoleGroupServerResponse;
-		list[ServerMessageType.SendAreaWorkToGameFromCenter-offSet]=this::createSendAreaWorkToGameFromCenterServerResponse;
-		list[ServerMessageType.RefreshRoleGroupChangeToGame-offSet]=this::createRefreshRoleGroupChangeToGameServerResponse;
-		list[ServerMessageType.RefreshRoleShowDataChangeToGame-offSet]=this::createRefreshRoleShowDataChangeToGameServerResponse;
-		list[ServerMessageType.FuncSendRoleGroupJoinResult-offSet]=this::createFuncSendRoleGroupJoinResultServerResponse;
-		list[ServerMessageType.FuncAgreeApplyNextRoleGroupToGame-offSet]=this::createFuncAgreeApplyNextRoleGroupToGameServerResponse;
+		list[ServerMessageType.PlayerLeaveSceneOverToGame-offSet]=this::createPlayerLeaveSceneOverToGameServerResponse;
 	}
 	
 	private BaseData createFuncCenterToGameServerResponse()
@@ -865,6 +877,36 @@ public class GameServerResponseMaker extends DataMaker
 	private BaseData createFuncAgreeApplyNextRoleGroupToGameServerResponse()
 	{
 		return new FuncAgreeApplyNextRoleGroupToGameServerResponse();
+	}
+	
+	private BaseData createReloadServerConfigToGameServerResponse()
+	{
+		return new ReloadServerConfigToGameServerResponse();
+	}
+	
+	private BaseData createReBeGameToSceneServerResponse()
+	{
+		return new ReBeGameToSceneServerResponse();
+	}
+	
+	private BaseData createPlayerSwitchToSceneOverServerResponse()
+	{
+		return new PlayerSwitchToSceneOverServerResponse();
+	}
+	
+	private BaseData createRePlayerSwitchToSceneServerResponse()
+	{
+		return new RePlayerSwitchToSceneServerResponse();
+	}
+	
+	private BaseData createPlayerSceneToGameServerResponse()
+	{
+		return new PlayerSceneToGameServerResponse();
+	}
+	
+	private BaseData createPlayerLeaveSceneOverToGameServerResponse()
+	{
+		return new PlayerLeaveSceneOverToGameServerResponse();
 	}
 	
 }

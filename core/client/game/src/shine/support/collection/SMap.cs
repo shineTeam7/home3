@@ -23,6 +23,7 @@ namespace ShineEngine
 		{
 			_defaultKey=default(K);
 			_defaultValue=default(V);
+			init(_minSize);
 		}
 
 		public SMap(int capacity)
@@ -32,31 +33,21 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
-		}
-
 		/** 获取表 */
 		public K[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
 		/** 获取表 */
 		public V[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
-		protected void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new K[capacity<<1];
 			_values=new V[capacity<<1];
@@ -69,8 +60,6 @@ namespace ShineEngine
 				Ctrl.throwError("key不能为空");
 				return;
 			}
-
-			checkInit();
 
 			int index=insert(key,value);
 
@@ -400,24 +389,6 @@ namespace ShineEngine
 			set {put(key,value);}
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
-
 		/** 没有就赋值(成功添加返回null,否则返回原值) */
 		public V putIfAbsent(K key,V value)
 		{
@@ -426,8 +397,6 @@ namespace ShineEngine
 				Ctrl.throwError("key不能为空");
 				return default(V);
 			}
-
-			checkInit();
 
 			int index=insert(key,value);
 
@@ -443,8 +412,6 @@ namespace ShineEngine
 
 		public V computeIfAbsent(K key,Func<K,V> mappingFunction)
 		{
-			checkInit();
-
 			K[] keys=_set;
 			V[] vals=_values;
 			int capacityMask;
@@ -564,6 +531,36 @@ namespace ShineEngine
 			re._defaultValue=_defaultValue;
 			re.copyBase(this);
 			return re;
+		}
+
+		/** 转化为原生集合 */
+		public Dictionary<K,V> toNatureMap()
+		{
+			Dictionary<K,V> re=new Dictionary<K,V>(size());
+
+			K[] keys=_set;
+			V[] vals=_values;
+			K key;
+
+			for(int i=(keys.Length) - 1;i>=0;--i)
+			{
+				if(!Equals(_defaultKey,key=keys[i]))
+				{
+					re.Add(key,vals[i]);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(Dictionary<K,V> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(KeyValuePair<K,V> kv in map)
+			{
+				this.put(kv.Key,kv.Value);
+			}
 		}
 
 		public void forEach(Action<K,V> consumer)

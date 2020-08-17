@@ -2,6 +2,7 @@
 
 #include "../SInclude.h"
 #include "../bytes/BytesReadStream.h"
+#include "../bytes/BytesWriteStream.h"
 
 /** 文件方法类 */
 class FileUtils
@@ -22,7 +23,7 @@ public:
 	/** 从文件中读取字节 */
 	static char* readFileForBytes(string& path, int& size)
 	{
-		return readFileForBytes(path.c_str(),size);
+		return readFileForBytes(path.c_str(), size);
 	}
 
 	/** 从文件中读取字节流 */
@@ -36,5 +37,22 @@ public:
 	{
 		int size;
 		return readFileForBytes(path, size);
+	}
+
+	static bool writeFileForBytes(const char* path, const void* ptr, int len);
+
+	static bool writeFileForBytes(string& path, const void* ptr, int len)
+	{
+		return writeFileForBytes(path.c_str(), ptr, len);
+	}
+
+	static bool writeFileForBytesWriteStream(const char* path, BytesWriteStream& stream)
+	{
+		return writeFileForBytes(path, stream.getBuf(), stream.length());
+	}
+
+	static bool writeFileForBytesWriteStream(string& path, BytesWriteStream& stream)
+	{
+		return writeFileForBytes(path.c_str(), stream.getBuf(), stream.length());
 	}
 };

@@ -74,7 +74,7 @@ public class DataExportApp
 		
 		if(ShineToolSetting.needTrace)
 		{
-			Ctrl.print("commonEnd:" + _commonTool.getEnd());
+			Ctrl.print("commonEnd:" + _commonTool.getLastDataSectionEnd());
 		}
 		
 		makeVersion(true);
@@ -84,12 +84,12 @@ public class DataExportApp
 			ShineToolSetting.isAllRefresh=true;
 		}
 		
-		_gameTool.setStart(_commonTool.getEnd());
+		//_gameTool.setStart(_commonTool.getEnd());
 		_gameTool.execute();
 		
 		if(ShineToolSetting.needTrace)
 		{
-			Ctrl.print("gameEnd:" + _gameTool.getEnd());
+			Ctrl.print("gameEnd:" + _gameTool.getLastDataSectionEnd());
 		}
 		
 		makeVersion(false);
@@ -294,7 +294,7 @@ public class DataExportApp
 	{
 		ShineToolSetup.init();
 		
-		//ShineToolSetting.needTrace=true;
+		ShineToolSetting.needTrace=false;
 		//ShineToolSetting.isAllRefreshMessage=true;
 		
 		new DataExportApp().executeAll(false,ExecuteReleaseType.Debug);

@@ -1,6 +1,7 @@
 package com.home.commonBase.data.scene.scene;
 import com.home.commonBase.constlist.generate.BaseDataType;
 import com.home.commonBase.data.scene.role.SceneRoleData;
+import com.home.commonBase.data.scene.scene.BattleSceneData;
 import com.home.commonBase.data.scene.scene.FieldItemBagBindData;
 import com.home.commonBase.data.scene.unit.UnitData;
 import com.home.commonBase.data.scene.unit.UnitSimpleData;
@@ -30,6 +31,9 @@ public class SceneEnterData extends BaseData
 	
 	/** 视野绑定单位数据 */
 	public IntObjectMap<UnitSimpleData> bindVisionUnits;
+	
+	/** 副本数据 */
+	public BattleSceneData battleData;
 	
 	/** 单位数据 */
 	public SList<UnitData> units;
@@ -265,6 +269,35 @@ public class SceneEnterData extends BaseData
 			this.bindVisionUnits=null;
 		}
 		
+		if(stream.readBoolean())
+		{
+			BaseData battleDataT=stream.readDataFullNotNull();
+			if(battleDataT!=null)
+			{
+				if(battleDataT instanceof BattleSceneData)
+				{
+					this.battleData=(BattleSceneData)battleDataT;
+				}
+				else
+				{
+					this.battleData=new BattleSceneData();
+					if(!(battleDataT.getClass().isAssignableFrom(BattleSceneData.class)))
+					{
+						stream.throwTypeReadError(BattleSceneData.class,battleDataT.getClass());
+					}
+					this.battleData.shadowCopy(battleDataT);
+				}
+			}
+			else
+			{
+				this.battleData=null;
+			}
+		}
+		else
+		{
+			this.battleData=null;
+		}
+		
 		stream.endReadObj();
 	}
 	
@@ -406,6 +439,16 @@ public class SceneEnterData extends BaseData
 			stream.writeBoolean(false);
 		}
 		
+		if(this.battleData!=null)
+		{
+			stream.writeBoolean(true);
+			stream.writeDataFullNotNull(this.battleData);
+		}
+		else
+		{
+			stream.writeBoolean(false);
+		}
+		
 		stream.endWriteObj();
 	}
 	
@@ -531,6 +574,15 @@ public class SceneEnterData extends BaseData
 		else
 		{
 			this.bindVisionUnits=null;
+		}
+		
+		if(stream.readBoolean())
+		{
+			this.battleData=(BattleSceneData)stream.readDataSimpleNotNull();
+		}
+		else
+		{
+			this.battleData=null;
 		}
 		
 	}
@@ -665,6 +717,16 @@ public class SceneEnterData extends BaseData
 					}
 				}
 			}
+		}
+		else
+		{
+			stream.writeBoolean(false);
+		}
+		
+		if(this.battleData!=null)
+		{
+			stream.writeBoolean(true);
+			stream.writeDataSimpleNotNull(this.battleData);
 		}
 		else
 		{
@@ -862,6 +924,15 @@ public class SceneEnterData extends BaseData
 			this.bindVisionUnits=null;
 		}
 		
+		if(mData.battleData!=null)
+		{
+			this.battleData=(BattleSceneData)mData.battleData.clone();
+		}
+		else
+		{
+			this.battleData=null;
+		}
+		
 	}
 	
 	/** 复制(潜拷贝) */
@@ -878,6 +949,7 @@ public class SceneEnterData extends BaseData
 		this.roles=mData.roles;
 		this.selfBindFieldItemBags=mData.selfBindFieldItemBags;
 		this.bindVisionUnits=mData.bindVisionUnits;
+		this.battleData=mData.battleData;
 	}
 	
 	/** 是否数据一致 */
@@ -1055,6 +1127,19 @@ public class SceneEnterData extends BaseData
 		else
 		{
 			if(this.bindVisionUnits!=null)
+				return false;
+		}
+		
+		if(mData.battleData!=null)
+		{
+			if(this.battleData==null)
+				return false;
+			if(!this.battleData.dataEquals(mData.battleData))
+				return false;
+		}
+		else
+		{
+			if(this.battleData!=null)
 				return false;
 		}
 		
@@ -1264,6 +1349,19 @@ public class SceneEnterData extends BaseData
 		}
 		
 		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.append("battleData");
+		writer.sb.append(':');
+		if(this.battleData!=null)
+		{
+			this.battleData.writeDataString(writer);
+		}
+		else
+		{
+			writer.sb.append("BattleSceneData=null");
+		}
+		
+		writer.writeEnter();
 	}
 	
 	/** 初始化初值 */
@@ -1283,6 +1381,7 @@ public class SceneEnterData extends BaseData
 		this.roles=null;
 		this.selfBindFieldItemBags=null;
 		this.bindVisionUnits=null;
+		this.battleData=null;
 	}
 	
 }

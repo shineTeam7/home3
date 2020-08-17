@@ -397,7 +397,6 @@ public class MainLoginControl
 
 	protected virtual void callGAppMain(bool isForEditor)
 	{
-
 		string clsName=CommonSetting.clientNeedHotfix ? "HGameApp" : "GGameApp";
 		string mName=isForEditor ? "mainForEditor" : "main";
 
@@ -405,8 +404,14 @@ public class MainLoginControl
 
 		Type type=callingAssembly.GetType(clsName);
 
+		if(type==null)
+		{
+			Ctrl.throwError("未加载hotfix工程");
+			return;
+		}
+
 		//当前域
-		MethodInfo method=Assembly.GetCallingAssembly().GetType(clsName).GetMethod(mName);
+		MethodInfo method=type.GetMethod(mName);
 
 		if(method==null)
 		{
@@ -441,7 +446,7 @@ public class MainLoginControl
 		//调试
 		else
 		{
-			_app.LoadAssembly(new MemoryStream(dllBytes),new MemoryStream(pdbBytes),new Mono.Cecil.Pdb.PdbReaderProvider());
+			_app.LoadAssembly(new MemoryStream(dllBytes),new MemoryStream(pdbBytes),new ILRuntime.Mono.Cecil.Pdb.PdbReaderProvider());
 		}
 
 		//初始化
@@ -841,5 +846,10 @@ public class MainLoginControl
 	protected virtual void exitGame()
 	{
 		ShineSetup.exit();
+	}
+	
+	public long versionReSize()
+	{
+		return _versionRe.size;
 	}
 }

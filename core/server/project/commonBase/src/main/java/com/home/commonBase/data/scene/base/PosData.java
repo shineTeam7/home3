@@ -177,9 +177,9 @@ public class PosData extends BaseData
 	protected void beforeWrite()
 	{
 		float scale;
-		ix=(int)(x*(scale=Global.posSendScale));
-		iy=(int)(y*scale);
-		iz=(int)(z*scale);
+		ix=Math.round(x*(scale=Global.posSendScale));
+		iy=Math.round(y*scale);
+		iz=Math.round(z*scale);
 	}
 	
 	@Override

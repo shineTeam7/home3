@@ -5,6 +5,7 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.BaseData;
 import com.home.shine.global.ShineSetting;
 import com.home.shine.net.base.BaseResponse;
+import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.IntSet;
 import com.home.shine.thread.AbstractThread;
 import com.home.shine.tool.CreateDataFunc;
@@ -16,38 +17,21 @@ import java.lang.reflect.Field;
 /** 字节控制(包括Data序列化/反序列化)(compress部分没封装完) */
 public class BytesControl
 {
-	/** 构造组(服务器用完整数组) */
-	private static CreateDataFunc[] _dataCreateList=new CreateDataFunc[ShineSetting.dataMaxNum];
-	/** 发送消息 */
+	/** 数据Maker(包括Response) */
+	private static DataMaker _dataMaker=new DataMaker();
+	/** 发送消息(只Request) */
 	private static DataMaker _requestMaker=new DataMaker();
-	///** 数据名字组 */
-	//private static String[] _dataNames=new String[ShineSetting.dataMaxNum];
 	/** 发送名字组 */
-	private static String[] _requestNames=new String[ShineSetting.dataMaxNum];
+	private static IntObjectMap<String> _requestNames=new IntObjectMap<>();
 	/** 接收名字组 */
-	private static String[] _responseNames=new String[ShineSetting.dataMaxNum];
-	
+	private static IntObjectMap<String> _responseNames=new IntObjectMap<>();
 	/** 协议忽略mid */
 	private static IntSet _messageIgnoreSet=new IntSet();
 	
 	/** 添加数据构造器 */
 	public static void addDataMaker(DataMaker maker)
 	{
-		int len=maker.offSet + maker.list.length;
-		
-		CreateDataFunc func;
-		
-		for(int i=maker.offSet;i<len;++i)
-		{
-			func=maker.list[i - maker.offSet];
-			
-			//不为空的
-			if(func!=null)
-			{
-				_dataCreateList[i]=func;
-				//_dataNames[i]=func.create().getClass().getSimpleName();//反射取(因为Message没有生成ClassName)
-			}
-		}
+		_dataMaker.addDic(maker);
 	}
 	
 	/** 添加消息maker */
@@ -88,11 +72,11 @@ public class BytesControl
 					
 					if(isRequest)
 					{
-						_requestNames[id]=isServer ? name+"ServerRequest" : name+"Request";
+						_requestNames.put(id,isServer ? name+"ServerRequest" : name+"Request");
 					}
 					else
 					{
-						_responseNames[id]=isServer ? name+"ServerResponse" : name+"Response";
+						_responseNames.put(id,isServer ? name+"ServerResponse" : name+"Response");
 					}
 				}
 			}
@@ -113,15 +97,15 @@ public class BytesControl
 			return null;
 		}
 		
-		CreateDataFunc func=_dataCreateList[dataID];
+		BaseData re=_dataMaker.getDataByID(dataID);
 		
-		if(func==null)
+		if(re==null)
 		{
 			Ctrl.throwError("找不到Data类型" + dataID);
 			return null;
 		}
 		
-		return func.create();
+		return re;
 	}
 	
 	/** 通过id取得Request类型 */
@@ -172,13 +156,13 @@ public class BytesControl
 	/** 获取request名字 */
 	public static String getRequestName(int mid)
 	{
-		return _requestNames[mid];
+		return _requestNames.get(mid);
 	}
 	
 	/** 获取response名字 */
 	public static String getResponseName(int mid)
 	{
-		return _responseNames[mid];
+		return _responseNames.get(mid);
 	}
 	
 	/** 添加要被忽略的消息mid */
@@ -200,7 +184,7 @@ public class BytesControl
 		if(ShineSetting.messageUsePool && (thread=ThreadControl.getCurrentShineThread())!=null)
 		{
 			BaseData data=thread.pool.createData(dataID);
-			data.createThreadInstance=thread.instanceIndex;
+			//data.createThreadInstance=thread.instanceIndex;
 			return data;
 		}
 		else
@@ -216,7 +200,7 @@ public class BytesControl
 		if(ShineSetting.messageUsePool && (thread=ThreadControl.getCurrentShineThread())!=null)
 		{
 			BaseData request=thread.pool.createRequest(dataID);
-			request.createThreadInstance=thread.instanceIndex;
+			//request.createThreadInstance=thread.instanceIndex;
 			return request;
 		}
 		else
@@ -231,9 +215,9 @@ public class BytesControl
 		AbstractThread thread;
 		if(ShineSetting.messageUsePool && (thread=ThreadControl.getCurrentShineThread())!=null)
 		{
-			BaseData response=thread.pool.createData(dataID);
+			BaseResponse response=(BaseResponse)thread.pool.createData(dataID);
 			response.createThreadInstance=thread.instanceIndex;
-			return (BaseResponse)response;
+			return response;
 		}
 		else
 		{

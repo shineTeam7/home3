@@ -5,8 +5,11 @@ import com.home.commonBase.config.other.MapInfoConfig;
 import com.home.commonBase.constlist.generate.InfoCodeType;
 import com.home.commonBase.constlist.generate.SceneInstanceType;
 import com.home.commonBase.data.role.RoleShowData;
+import com.home.commonBase.data.scene.match.MatchSceneData;
 import com.home.commonBase.data.scene.match.PlayerMatchData;
+import com.home.commonBase.data.scene.match.PlayerMatchSuccessWData;
 import com.home.commonBase.data.scene.scene.CreateSceneData;
+import com.home.commonBase.data.scene.scene.SceneEnterArgData;
 import com.home.commonBase.data.scene.scene.SceneLocationData;
 import com.home.commonBase.extern.ExternMethodNative;
 import com.home.commonBase.global.BaseC;
@@ -20,6 +23,7 @@ import com.home.commonGame.net.serverRequest.center.scene.ReCreateSignedSceneToC
 import com.home.commonGame.part.player.Player;
 import com.home.commonGame.scene.base.GameScene;
 import com.home.commonGame.tool.func.IGameMatchTool;
+import com.home.shine.control.DateControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
@@ -32,7 +36,9 @@ import com.home.shine.utils.MathUtils;
 /** 场景控制 */
 public class SceneControl
 {
-	//TODO:
+	/** 离开当前场景的next信息 */
+	private SceneEnterArgData _leaveSceneEnterArg;
+	
 	/** 角色分线字典 */
 	private LongIntMap _playerLineDic=new LongIntMap();
 	/** 分线人数字典 */
@@ -66,12 +72,31 @@ public class SceneControl
 				}
 			});
 		}
+		
+		_leaveSceneEnterArg=BaseC.factory.createSceneEnterArgData();
+		SceneLocationData sceneLocationData=new SceneLocationData();
+		sceneLocationData.sceneID=-1;
+		sceneLocationData.instanceID=-1;
+		sceneLocationData.serverID=-1;
+		_leaveSceneEnterArg.location=sceneLocationData;
 	}
 	
 	/** 析构 */
 	public void dispose()
 	{
 	
+	}
+	
+	public SceneEnterArgData getLeaveSceneEnterArgData()
+	{
+		return _leaveSceneEnterArg;
+	}
+	
+	/** 是否是离开场景的标记数据 */
+	public boolean isLeaveSceneEnterArg(SceneEnterArgData data)
+	{
+		SceneLocationData location=data.location;
+		return location.instanceID==-1 && location.sceneID==-1 && location.serverID==-1;
 	}
 	
 	protected void onSecond(int delay)
@@ -447,50 +472,17 @@ public class SceneControl
 		//创建指定场景
 		createSignedScene(createSceneData,signedPlayers,eData->
 		{
-			FuncMatchOverRequest request=FuncMatchOverRequest.create(funcID);
-			request.write();
+			MatchSceneData data=BaseC.factory.createMatchSceneData();
+			data.funcID=funcID;
+			data.matchTime=DateControl.getTimeMillis();
+			data.location=eData;
 			
-			for(PlayerMatchData v : matches)
+			for(RoleShowData v:signedPlayers)
 			{
-				Player player=GameC.main.getPlayerByID(v.showData.playerID);
+				PlayerMatchSuccessWData wData=new PlayerMatchSuccessWData();
+				wData.data=data;
 				
-				if(player!=null)
-				{
-					//切到自己的线程再进入目标场景
-					player.addFunc(()->
-					{
-						//匹配完成
-						player.scene.setMatchingFuncID(-1);
-						//推送
-						player.send(request);
-						
-						player.scene.playerEnterSignedSceneAndCheck(eData);
-					});
-				}
-				else
-				{
-					Ctrl.warnLog("匹配成功时找不到玩家(下线了)",v.showData.playerID);
-					
-					////是限定场景,依然取到离线玩家进入
-					//if(SceneInstanceType.isFinite(config.instanceType))
-					//{
-					//	Player outPlayer=GameC.main.getOfflinePlayer(v.playerID);
-					//
-					//	if(outPlayer==null)
-					//	{
-					//		Ctrl.throwError("匹配成功二阶段，还是找不到玩家，这就不对了");
-					//	}
-					//	else
-					//	{
-					//		//到目标场景
-					//		executor.addFunc(()->
-					//		{
-					//			//离线进入
-					//			unit.gameInOut.playerEnterForOffline(outPlayer);
-					//		});
-					//	}
-					//}
-				}
+				GameC.main.addPlayerOfflineWork(v.playerID,wData);
 			}
 		});
 	}
@@ -502,24 +494,6 @@ public class SceneControl
 		{
 			ReCreateSignedSceneToCenterServerRequest.create(index,eData).send();
 		});
-	}
-	
-	/** 进入指定场景(池线程) */
-	public void enterSignedSceneByCenter(Player player,SceneLocationData data)
-	{
-		if(isMatchingSceneByCenter(data.sceneID))
-		{
-			//还在匹配中
-			if(player.scene.isMatching())
-			{
-				//推送
-				player.send(FuncMatchOverRequest.create(player.scene.getMatchingFuncID()));
-				//匹配完成
-				player.scene.setMatchingFuncID(-1);
-			}
-		}
-		
-		player.getExecutor().playerEnterSignedScene(player,data);
 	}
 	
 	/** 查询某场景ID是否是匹配场景(默认全是） */

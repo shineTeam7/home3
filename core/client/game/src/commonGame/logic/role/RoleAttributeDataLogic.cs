@@ -9,7 +9,7 @@ public class RoleAttributeDataLogic:AttributeTool
 	/** 父属性逻辑 */
 	private RoleAttributeLogic _parent;
 
-	public RoleAttributeDataLogic(RoleAttributeLogic parent)
+	public void setParent(RoleAttributeLogic parent)
 	{
 		_parent=parent;
 

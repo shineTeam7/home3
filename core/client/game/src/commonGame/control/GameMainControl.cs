@@ -77,6 +77,12 @@ public class GameMainControl
 	/** 是否进入过初次场景 */
 	private bool _enteredFirstScene=false;
 
+	//scene
+
+	private ClientLoginServerInfoData _sceneInfo;
+
+	private bool _isSwitchingScene=false;
+
 	public GameMainControl()
 	{
 
@@ -235,7 +241,7 @@ public class GameMainControl
 		GameC.scene.leaveSceneAbs();
 		GameC.ui.hideAllUI();
 
-		GameC.server.dispose();
+		disposeServer();
 
 		//初始化过的
 		if(GameC.player.system.inited())
@@ -1210,7 +1216,8 @@ public class GameMainControl
 		if(canOfflineMode())
 		{
 			//关了连接,直接进入离线状态
-			GameC.server.close();
+			closeServer();
+
 			enterOfflineMode();
 		}
 	}
@@ -1272,5 +1279,77 @@ public class GameMainControl
 		{
 			player.dispatch(GameEventType.ApplicationPause,pauseStatus);
 		}
+	}
+
+	public void closeServer()
+	{
+		GameC.server.close();
+
+		if(CommonSetting.useSceneServer)
+			GameC.sceneServer.close();
+	}
+
+	public void disposeServer()
+	{
+		GameC.server.dispose();
+
+		if(CommonSetting.useSceneServer)
+			GameC.sceneServer.dispose();
+	}
+
+	//scene
+
+	/** 切换scene服 */
+	public void onSwitchScene(ClientLoginServerInfoData info)
+	{
+		//重新赋值
+		_sceneInfo=info;
+		_isSwitchingScene=true;
+
+		GameC.sceneServer.close();
+		GameC.sceneServer.connect(info.host,info.port);
+	}
+
+	/** 连接游戏服成功 */
+	public void connectSceneSuccess()
+	{
+		if(!_running)
+			return;
+
+		if(!_isSwitchingScene)
+		{
+			Ctrl.warnLog("连接场景服成功时，不在切换中");
+			return;
+		}
+
+		Ctrl.debugLog("连接scene成功");
+
+		_isSwitchingScene=false;
+		PlayerSwitchSceneRequest.create(_sceneInfo.token).send();
+	}
+
+	/** 连接scene失败 */
+	public void connectSceneFailed()
+	{
+		if(!_running)
+			return;
+
+		//需要退出了
+		GameC.ui.notice(TextEnum.ServerNotRespond);
+	}
+
+	/** sceneSocket断开(过了socket的断线重连,开始逻辑层断线重连) */
+	public virtual void onSceneSocketClosed()
+	{
+		if(!_running)
+			return;
+
+		//切换中忽略
+		if(_isSwitchingScene)
+			return;
+
+		Ctrl.print("onSceneSocketClosed");
+
+		GameC.ui.alert(TextEnum.SocketClosed,backToLogin);
 	}
 }

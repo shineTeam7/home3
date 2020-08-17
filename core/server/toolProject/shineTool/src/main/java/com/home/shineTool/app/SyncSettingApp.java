@@ -29,14 +29,14 @@ public class SyncSettingApp
 		ShineToolSetup.init();
 		
 		//第一个为主工程
-		_projectList.add("limitlessGit");
-		_projectList.add("h1Git");
-		_projectList.add("jm1Git");
-		_projectList.add("zc1Git");
 		_projectList.add("tryGit");
+		//_projectList.add("limitlessGit");
+		//_projectList.add("h1Git");
+		_projectList.add("tankGit");
+		//_projectList.add("rogeGit");
 		
-		//makeAnt();
-		//makeGitIgnore();
+		makeAnt();
+		makeGitIgnore();
 		makeLink();
 		
 		Ctrl.print("OK");

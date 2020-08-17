@@ -52,8 +52,9 @@ public class CenterServerRequestMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
-		list[ServerMessageType.FuncCenterToGame-offSet]=this::createFuncCenterToGameServerRequest;
-		list[ServerMessageType.FuncRefreshAuctionItemPriceToGame-offSet]=this::createFuncRefreshAuctionItemPriceToGameServerRequest;
+		list[ServerMessageType.BeCenterToManager-offSet]=this::createBeCenterToManagerServerRequest;
+		list[ServerMessageType.ReMAddPlayerWorkToCenter-offSet]=this::createReMAddPlayerWorkToCenterServerRequest;
+		list[ServerMessageType.ReMQueryPlayerWorkToCenter-offSet]=this::createReMQueryPlayerWorkToCenterServerRequest;
 		list[ServerMessageType.ActivityResetToGame-offSet]=this::createActivityResetToGameServerRequest;
 		list[ServerMessageType.ActivitySwitchToGame-offSet]=this::createActivitySwitchToGameServerRequest;
 		list[ServerMessageType.CenterTransCenterToGame-offSet]=this::createCenterTransCenterToGameServerRequest;
@@ -61,38 +62,37 @@ public class CenterServerRequestMaker extends DataMaker
 		list[ServerMessageType.CreateSignedSceneToGame-offSet]=this::createCreateSignedSceneToGameServerRequest;
 		list[ServerMessageType.EnterSignedSceneToGame-offSet]=this::createEnterSignedSceneToGameServerRequest;
 		list[ServerMessageType.FuncAddRankToGame-offSet]=this::createFuncAddRankToGameServerRequest;
+		list[ServerMessageType.FuncAddSubsectionRankToGame-offSet]=this::createFuncAddSubsectionRankToGameServerRequest;
+		list[ServerMessageType.FuncCenterToGame-offSet]=this::createFuncCenterToGameServerRequest;
 		list[ServerMessageType.FuncMatchTimeOutToGame-offSet]=this::createFuncMatchTimeOutToGameServerRequest;
 		list[ServerMessageType.FuncPlayerToGame-offSet]=this::createFuncPlayerToGameServerRequest;
+		list[ServerMessageType.FuncReGetPageShowToPlayer-offSet]=this::createFuncReGetPageShowToPlayerServerRequest;
 		list[ServerMessageType.FuncReGetRandomPlayerListFromRoleSocialPoolToCenter-offSet]=this::createFuncReGetRandomPlayerListFromRoleSocialPoolToCenterServerRequest;
+		list[ServerMessageType.FuncRefreshAuctionItemPriceToGame-offSet]=this::createFuncRefreshAuctionItemPriceToGameServerRequest;
 		list[ServerMessageType.FuncRefreshRankToGame-offSet]=this::createFuncRefreshRankToGameServerRequest;
+		list[ServerMessageType.FuncRefreshSubsectionIndexToGame-offSet]=this::createFuncRefreshSubsectionIndexToGameServerRequest;
+		list[ServerMessageType.FuncRefreshSubsectionRankToGame-offSet]=this::createFuncRefreshSubsectionRankToGameServerRequest;
 		list[ServerMessageType.FuncRemoveRankToGame-offSet]=this::createFuncRemoveRankToGameServerRequest;
+		list[ServerMessageType.FuncRemoveSubsectionRankToGame-offSet]=this::createFuncRemoveSubsectionRankToGameServerRequest;
 		list[ServerMessageType.FuncResetRankToGame-offSet]=this::createFuncResetRankToGameServerRequest;
+		list[ServerMessageType.FuncResetSubsectionRankToGame-offSet]=this::createFuncResetSubsectionRankToGameServerRequest;
 		list[ServerMessageType.GameExit-offSet]=this::createGameExitServerRequest;
 		list[ServerMessageType.GameReloadConfig-offSet]=this::createGameReloadConfigServerRequest;
 		list[ServerMessageType.KickPlayerFromCenter-offSet]=this::createKickPlayerFromCenterServerRequest;
 		list[ServerMessageType.PlayerToGame-offSet]=this::createPlayerToGameServerRequest;
 		list[ServerMessageType.PlayerToGameTransCenterToGame-offSet]=this::createPlayerToGameTransCenterToGameServerRequest;
 		list[ServerMessageType.ReBeGameToCenter-offSet]=this::createReBeGameToCenterServerRequest;
+		list[ServerMessageType.ReceiptWorkToGameFromCenter-offSet]=this::createReceiptWorkToGameFromCenterServerRequest;
+		list[ServerMessageType.RefreshRoleGroupChangeToGame-offSet]=this::createRefreshRoleGroupChangeToGameServerRequest;
+		list[ServerMessageType.RefreshRoleShowDataChangeToGame-offSet]=this::createRefreshRoleShowDataChangeToGameServerRequest;
 		list[ServerMessageType.RefreshServerOffTimeToGame-offSet]=this::createRefreshServerOffTimeToGameServerRequest;
+		list[ServerMessageType.RemoveCenterRoleSocialDataToPlayer-offSet]=this::createRemoveCenterRoleSocialDataToPlayerServerRequest;
+		list[ServerMessageType.SendAreaWorkToGameFromCenter-offSet]=this::createSendAreaWorkToGameFromCenterServerRequest;
 		list[ServerMessageType.SendGetRoleSocialDataToGame-offSet]=this::createSendGetRoleSocialDataToGameServerRequest;
 		list[ServerMessageType.SendMailToGame-offSet]=this::createSendMailToGameServerRequest;
 		list[ServerMessageType.SendPlayerWorkComplete-offSet]=this::createSendPlayerWorkCompleteServerRequest;
 		list[ServerMessageType.SendPlayerWork-offSet]=this::createSendPlayerWorkServerRequest;
 		list[ServerMessageType.SendWorkFailed-offSet]=this::createSendWorkFailedServerRequest;
-		list[ServerMessageType.FuncAddSubsectionRankToGame-offSet]=this::createFuncAddSubsectionRankToGameServerRequest;
-		list[ServerMessageType.FuncRefreshSubsectionIndexToGame-offSet]=this::createFuncRefreshSubsectionIndexToGameServerRequest;
-		list[ServerMessageType.FuncRefreshSubsectionRankToGame-offSet]=this::createFuncRefreshSubsectionRankToGameServerRequest;
-		list[ServerMessageType.FuncRemoveSubsectionRankToGame-offSet]=this::createFuncRemoveSubsectionRankToGameServerRequest;
-		list[ServerMessageType.ReMAddPlayerWorkToCenter-offSet]=this::createReMAddPlayerWorkToCenterServerRequest;
-		list[ServerMessageType.ReMQueryPlayerWorkToCenter-offSet]=this::createReMQueryPlayerWorkToCenterServerRequest;
-		list[ServerMessageType.FuncResetSubsectionRankToGame-offSet]=this::createFuncResetSubsectionRankToGameServerRequest;
-		list[ServerMessageType.RemoveCenterRoleSocialDataToPlayer-offSet]=this::createRemoveCenterRoleSocialDataToPlayerServerRequest;
-		list[ServerMessageType.FuncReGetPageShowToPlayer-offSet]=this::createFuncReGetPageShowToPlayerServerRequest;
-		list[ServerMessageType.BeCenterToManager-offSet]=this::createBeCenterToManagerServerRequest;
-		list[ServerMessageType.ReceiptWorkToGameFromCenter-offSet]=this::createReceiptWorkToGameFromCenterServerRequest;
-		list[ServerMessageType.SendAreaWorkToGameFromCenter-offSet]=this::createSendAreaWorkToGameFromCenterServerRequest;
-		list[ServerMessageType.RefreshRoleGroupChangeToGame-offSet]=this::createRefreshRoleGroupChangeToGameServerRequest;
-		list[ServerMessageType.RefreshRoleShowDataChangeToGame-offSet]=this::createRefreshRoleShowDataChangeToGameServerRequest;
 	}
 	
 	private BaseData createFuncCenterToGameServerRequest()

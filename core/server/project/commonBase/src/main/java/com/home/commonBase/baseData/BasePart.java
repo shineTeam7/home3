@@ -33,7 +33,7 @@ public abstract class BasePart
 	public void checkNewAdd()
 	{
 		//空读的
-		if(_data==null || _data.isEmptyRead())
+		if(_data==null)
 		{
 			newInitData();
 			onNewCreate();

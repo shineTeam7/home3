@@ -1,5 +1,6 @@
 package com.home.commonData.data.login;
 
+import com.home.commonData.data.scene.scene.SceneEnterArgDO;
 import com.home.commonData.data.social.RoleSocialDO;
 import com.home.commonData.data.social.roleGroup.PlayerRoleGroupDO;
 import com.home.shineData.support.MapKeyInValue;
@@ -20,4 +21,6 @@ public class PlayerSwitchGameDO
 	Map<Long,RoleSocialDO> roleSocialDatas;
 	/** 玩家群组(key:funcID) */
 	Map<Integer,Map<Long,PlayerRoleGroupDO>> roleGroups;
+	/** 下个进入场景数据 */
+	SceneEnterArgDO nextEnterSceneData;
 }

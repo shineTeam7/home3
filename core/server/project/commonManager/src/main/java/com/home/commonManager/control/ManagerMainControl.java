@@ -1,25 +1,36 @@
 package com.home.commonManager.control;
 
 import com.home.commonBase.constlist.system.ManagerCommandType;
+import com.home.commonBase.data.login.CenterInitServerData;
+import com.home.commonBase.data.login.GameInitServerData;
+import com.home.commonBase.data.login.LoginInitServerData;
+import com.home.commonBase.data.login.SceneInitServerData;
 import com.home.commonBase.data.system.GameServerClientSimpleData;
 import com.home.commonBase.data.system.GameServerInfoData;
 import com.home.commonBase.data.system.GameServerSimpleInfoData;
 import com.home.commonBase.data.system.ServerInfoData;
 import com.home.commonBase.data.system.ServerSimpleInfoData;
 import com.home.commonBase.global.BaseC;
+import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.table.table.ServerTable;
 import com.home.commonManager.dataEx.GMClientUser;
 import com.home.commonManager.global.ManagerC;
 import com.home.commonManager.net.serverRequest.center.CenterExitServerRequest;
 import com.home.commonManager.net.serverRequest.center.ManagerToCenterCommandServerRequest;
+import com.home.commonManager.net.serverRequest.center.ReloadServerConfigToCenterServerRequest;
 import com.home.commonManager.net.serverRequest.game.HotfixToGameServerRequest;
-import com.home.commonManager.net.serverRequest.login.login.HotfixToLoginServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.LoginExitServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.ManagerToLoginCommandServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.SendServerOpenToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.game.ReloadServerConfigToGameServerRequest;
+import com.home.commonManager.net.serverRequest.login.HotfixToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.login.LoginExitServerRequest;
+import com.home.commonManager.net.serverRequest.login.ManagerToLoginCommandServerRequest;
+import com.home.commonManager.net.serverRequest.login.ReloadServerConfigToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.login.SendServerOpenToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.scene.SceneExitServerRequest;
 import com.home.shine.ShineSetup;
+import com.home.shine.constlist.SocketType;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.serverConfig.ServerConfig;
 import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.support.collection.IntList;
@@ -45,6 +56,11 @@ public class ManagerMainControl
 	private IntObjectMap<ServerSimpleInfoData> _loginSimpleInfoDic=new IntObjectMap<>(ServerSimpleInfoData[]::new);
 	/** 登陆服id列表 */
 	private int[] _loginList;
+	
+	/** 场景服列表 */
+	private IntObjectMap<ServerInfoData> _sceneInfoDic=new IntObjectMap<>(ServerInfoData[]::new);
+	/** 场景服简版信息列表 */
+	private IntObjectMap<ServerSimpleInfoData> _sceneSimpleInfoDic=new IntObjectMap<>(ServerSimpleInfoData[]::new);
 	
 	/** 游戏服列表 */
 	private IntObjectMap<GameServerInfoData> _gameInfoDic=new IntObjectMap<>(GameServerInfoData[]::new);
@@ -86,6 +102,9 @@ public class ManagerMainControl
 		_centerInfo=new ServerSimpleInfoData();
 		_centerInfo.readByConfig(ServerConfig.getCenterConfig());
 		
+		_loginInfoDic.clear();
+		_loginSimpleInfoDic.clear();
+		
 		IntList loginList=new IntList();
 		//login
 		ServerConfig.getLoginConfigDic().forEachValue(v->
@@ -102,6 +121,11 @@ public class ManagerMainControl
 		});
 		
 		_loginList=loginList.toArray();
+		
+		_gameInfoDic.clear();
+		_areaDic.clear();
+		_gameSimpleInfoDic.clear();
+		_gameList.clear();
 		
 		IntSet tempAreaSet=new IntSet();
 		
@@ -177,6 +201,23 @@ public class ManagerMainControl
 			ShineSetup.exit();
 			return;
 		}
+		
+		//scene
+		if(CommonSetting.useSceneServer)
+		{
+			_sceneSimpleInfoDic.clear();
+			
+			ServerConfig.getSceneConfigDic().forEachValue(v->
+			{
+				ServerInfoData data=new ServerInfoData();
+				data.readByConfig(v);
+				_sceneInfoDic.put(data.id,data);
+				
+				ServerSimpleInfoData sData=new ServerSimpleInfoData();
+				sData.readByConfig(v);
+				_sceneSimpleInfoDic.put(sData.id,sData);
+			});
+		}
 	}
 	
 	/** 更改服务器开放状态 */
@@ -208,10 +249,22 @@ public class ManagerMainControl
 		return _centerInfo;
 	}
 	
+	/** 是否有登录服 */
+	public boolean hasLoginServer(int id)
+	{
+		return _loginInfoDic.contains(id);
+	}
+	
 	/** 登录服信息组 */
 	public ServerInfoData getLoginInfo(int id)
 	{
 		return _loginInfoDic.get(id);
+	}
+	
+	/** 是否有game服 */
+	public boolean hasGameServer(int id)
+	{
+		return _gameInfoDic.contains(id);
 	}
 	
 	/** 游戏服信息组 */
@@ -220,28 +273,16 @@ public class ManagerMainControl
 		return _gameInfoDic.get(id);
 	}
 	
-	/** 获取登陆服简版信息组 */
-	public IntObjectMap<ServerSimpleInfoData> getLoginSimpleInfoDic()
+	/** 是否有场景服 */
+	public boolean hasSceneServer(int id)
 	{
-		return _loginSimpleInfoDic;
+		return _sceneInfoDic.contains(id);
 	}
 	
-	/** 获取简版game信息组 */
-	public IntObjectMap<GameServerSimpleInfoData> getGameSimpleInfoDic()
+	/** 场景服信息组 */
+	public ServerInfoData getSceneInfo(int id)
 	{
-		return _gameSimpleInfoDic;
-	}
-	
-	/** 游戏服信息组 */
-	public IntObjectMap<GameServerClientSimpleData> getGameServerClientDic()
-	{
-		return _gameClientSimpleDic;
-	}
-	
-	/** 获取登陆列表 */
-	public int[] getLoginList()
-	{
-		return _loginList;
+		return _sceneInfoDic.get(id);
 	}
 	
 	/** 重新加载配置(主线程) */
@@ -269,6 +310,27 @@ public class ManagerMainControl
 			//global
 			//CenterC.global.onReloadConfig();
 		}
+	}
+	
+	/** 重新加载服务器配置(主线程) */
+	public void reloadServerConfig()
+	{
+		Ctrl.log("reloadManagerServerConfig");
+		
+		ServerConfig.load();
+		initConfigs();
+		
+		ManagerC.server.getCenterSocket().send(ReloadServerConfigToCenterServerRequest.create(createCenterInitData()));
+		
+		ManagerC.server.getSocketInfo(SocketType.Login).socketDic.forEach((k,v)->
+		{
+			v.send(ReloadServerConfigToLoginServerRequest.create(createLoginInitData(k)));
+		});
+		
+		ManagerC.server.getSocketInfo(SocketType.Game).socketDic.forEach((k,v)->
+		{
+			v.send(ReloadServerConfigToGameServerRequest.create(createGameInitData(k)));
+		});
 	}
 	
 	/** 客户端版本热更 */
@@ -334,5 +396,70 @@ public class ManagerMainControl
 		ManagerC.server.getCenterSocket().send(CenterExitServerRequest.create());
 		
 		ManagerC.server.radioLogins(LoginExitServerRequest.create());
+		
+		ManagerC.server.radioScenes(SceneExitServerRequest.create());
+	}
+	
+	public LoginInitServerData createLoginInitData(int id)
+	{
+		ServerInfoData loginInfo=getLoginInfo(id);
+		
+		if(loginInfo==null)
+			return null;
+		
+		LoginInitServerData initData=new LoginInitServerData();
+		initData.info=loginInfo;
+		initData.loginServerDic=_loginSimpleInfoDic;
+		initData.gameServerDic=_gameSimpleInfoDic;
+		initData.games=_gameClientSimpleDic;
+		initData.clientVersion=ManagerC.setting.clientVersionDic;
+		initData.redirectURLDic=ManagerC.setting.redirectURLDic;
+		initData.isOpen=ManagerC.main.isOpen();
+		
+		return initData;
+	}
+	
+	public GameInitServerData createGameInitData(int id)
+	{
+		GameServerInfoData gameInfo=getGameInfo(id);
+		
+		if(gameInfo==null)
+			return null;
+		
+		GameInitServerData initData=new GameInitServerData();
+		initData.info=gameInfo;
+		initData.centerInfo=getCenterInfo();
+		initData.gameServerDic=_gameSimpleInfoDic;
+		initData.sceneServerDic=_sceneSimpleInfoDic;
+		initData.loginList=_loginList;
+		initData.clientVersion=ManagerC.setting.clientVersionDic;
+		initData.isOfficial=ManagerC.setting.isOfficial;
+		
+		return initData;
+	}
+	
+	public CenterInitServerData createCenterInitData()
+	{
+		CenterInitServerData initData=new CenterInitServerData();
+		initData.info=new ServerInfoData();
+		initData.info.readByConfig(ServerConfig.getCenterConfig());
+		
+		initData.areaDic=_areaDic;
+		
+		return initData;
+	}
+	
+	public SceneInitServerData createSceneInitData(int id)
+	{
+		ServerInfoData sceneInfo=getSceneInfo(id);
+		
+		if(sceneInfo==null)
+			return null;
+		
+		SceneInitServerData initData=new SceneInitServerData();
+		initData.info=sceneInfo;
+		initData.areaDic=_areaDic;
+		
+		return initData;
 	}
 }

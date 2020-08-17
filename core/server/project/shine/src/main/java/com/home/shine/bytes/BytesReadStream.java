@@ -12,6 +12,9 @@ import com.home.shine.utils.ObjectUtils;
 /** 字节读流 */
 public class BytesReadStream
 {
+	/** 是否使用bitBoolean */
+	private boolean _useBitBoolean=ShineSetting.bytesUseBitBoolean;
+	
 	private byte[] _buf=BytesUtils.EmptyByteArr;
 	
 	protected int _off=0;
@@ -56,6 +59,11 @@ public class BytesReadStream
 	public BytesReadStream(byte[] buf,int off,int length)
 	{
 		setBuf(buf,off,length);
+	}
+	
+	public void setUseBitBoolean(boolean value)
+	{
+		_useBitBoolean=value;
 	}
 	
 	/** 设置操作字节流 */
@@ -168,7 +176,7 @@ public class BytesReadStream
 	
 	public void clearBooleanPos()
 	{
-		if(!ShineSetting.bytesUseBitBoolean)
+		if(!_useBitBoolean)
 			return;
 		
 		_booleanBitIndex=-1;
@@ -282,7 +290,7 @@ public class BytesReadStream
 	/** 读出一个布尔值 */
 	public boolean readBoolean()
 	{
-		if(ShineSetting.bytesUseBitBoolean)
+		if(_useBitBoolean)
 		{
 			//新的
 			if(_booleanBitIndex==-1)
@@ -775,7 +783,7 @@ public class BytesReadStream
 		_readNum++;
 		_length=pos;
 		
-		if(ShineSetting.bytesUseBitBoolean)
+		if(_useBitBoolean)
 		{
 			getReadStack().add3(re,_booleanBitIndex,_booleanBitValue);
 			clearBooleanPos();
@@ -796,7 +804,7 @@ public class BytesReadStream
 		}
 		
 		//倒序
-		if(ShineSetting.bytesUseBitBoolean)
+		if(_useBitBoolean)
 		{
 			_booleanBitValue=_readStack.pop();
 			_booleanBitIndex=_readStack.pop();
@@ -834,7 +842,7 @@ public class BytesReadStream
 	
 	//--data--//
 	
-	/** 读出一个非空数据(完整版) */
+	/** 读出一个非空数据(完整版)(stream空时，读出来为null) */
 	public BaseData readDataFullNotNull()
 	{
 		if(isEmpty())

@@ -7,7 +7,8 @@ using UnityEngine;
 	/// </summary>
 	public class SceneElementComponent:MonoBehaviour
 	{
-		/** 实例ID */
-		[HideInInspector]
+		/// <summary>
+		/// 实例ID(不可修改)
+		/// </summary>
 		public int instanceID;
 	}

@@ -21,9 +21,6 @@ import com.home.shine.support.collection.IntObjectMap;
 
 public class LoginServer extends BaseGameServer
 {
-	/** 信息数据 */
-	private ServerInfoData _info;
-	
 	/** 全部登陆服简版信息 */
 	private IntObjectMap<ServerSimpleInfoData> _loginSimpleInfoDic;
 	/** 全部游戏服简版信息 */
@@ -54,7 +51,7 @@ public class LoginServer extends BaseGameServer
 	}
 	
 	@Override
-	protected void onConnectManagerOver()
+	public void onConnectManagerOver()
 	{
 		LoginC.app.startNext();
 		
@@ -63,6 +60,16 @@ public class LoginServer extends BaseGameServer
 	
 	/** 初始化后续 */
 	public void initNext()
+	{
+		connectOthers();
+		
+		startServerSocket(_selfInfo.serverPort);
+		
+		checkNext();
+	}
+	
+	/** 连接其他服 */
+	public void connectOthers()
 	{
 		_loginSimpleInfoDic.forEachValue(v->
 		{
@@ -77,10 +84,6 @@ public class LoginServer extends BaseGameServer
 		{
 			connectServer(v,SocketType.Game,false);
 		});
-		
-		startServerSocket(_info.serverPort);
-		
-		checkNext();
 	}
 	
 	public void checkNext()
@@ -131,7 +134,7 @@ public class LoginServer extends BaseGameServer
 	
 	public void openClient()
 	{
-		ServerHttp serverHttp=startClientHttp(_info.clientHttpPort);
+		ServerHttp serverHttp=startClientHttp(_selfInfo.clientHttpPort);
 		
 		if(ShineSetting.clientHttpUseBase64)
 		{
@@ -146,13 +149,18 @@ public class LoginServer extends BaseGameServer
 	{
 		super.onSendConnectSuccessOnMain(socket,isFirst);
 		
-		if(socket.type==SocketType.Game)
+		switch(socket.type)
 		{
-			socket.send(BeLoginToGameServerRequest.create(LoginC.app.id));
-		}
-		else if(socket.type==SocketType.Login)
-		{
-			socket.send(BeLoginToLoginServerRequest.create(LoginC.app.id));
+			case SocketType.Game:
+			{
+				socket.send(BeLoginToGameServerRequest.create(LoginC.app.id));
+			}
+				break;
+			case SocketType.Login:
+			{
+				socket.send(BeLoginToLoginServerRequest.create(LoginC.app.id));
+			}
+				break;
 		}
 	}
 	
@@ -163,22 +171,18 @@ public class LoginServer extends BaseGameServer
 		_gameSimpleInfoDic=initData.gameServerDic;
 		LoginC.db.setURL(initData.info.mysql);
 		
-		_loginList=new int[_loginSimpleInfoDic.size()];
+		int[] loginList=new int[_loginSimpleInfoDic.size()];
 		
 		int i=0;
 		
 		for(ServerSimpleInfoData v : _loginSimpleInfoDic)
 		{
-			_loginList[i++]=v.id;
+			loginList[i++]=v.id;
 		}
 		
-		setSelfInfo(_info=initData.info);
-	}
-	
-	/** 信息数据 */
-	public ServerInfoData getInfo()
-	{
-		return _info;
+		_loginList=loginList;
+		
+		setSelfInfo(initData.info);
 	}
 	
 	public GameServerSimpleInfoData getGameSimpleInfo(int gameID)

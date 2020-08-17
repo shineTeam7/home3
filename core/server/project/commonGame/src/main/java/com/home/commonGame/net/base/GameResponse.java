@@ -58,7 +58,7 @@ public abstract class GameResponse extends BaseResponse
 		}
 	}
 	
-	protected void setPlayer(Player player)
+	public void setPlayer(Player player)
 	{
 		me=player;
 	}

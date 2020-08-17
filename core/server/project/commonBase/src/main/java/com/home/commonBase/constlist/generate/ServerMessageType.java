@@ -7,497 +7,542 @@ public class ServerMessageType
 	public static final int off=3900;
 	
 	/** 计数 */
-	public static final int count=4169;
+	public static final int count=4097;
 	
-	public static final int FuncCenterToGame=3900;
-	
-	/** 刷新拍卖行物品价格消息到逻辑服 */
-	public static final int FuncRefreshAuctionItemPriceToGame=3901;
-	
-	/** 推送出售物品到中心服消息 */
-	public static final int FuncSendAuctionSellItemToCenter=3902;
-	
-	/** 提交排行数据到源服 */
-	public static final int FuncCommitRankValueToSourceGame=3903;
-	
-	/** 推送拍卖行出售物品到源服 */
-	public static final int FuncSendAuctionSellItemToSourceGame=3904;
-	
-	/** 活动重置 */
-	public static final int ActivityResetToGame=3905;
-	
-	/** 活动切换开启/关闭 */
-	public static final int ActivitySwitchToGame=3906;
-	
-	/** 中心服转发消息 */
-	public static final int CenterTransCenterToGame=3907;
-	
-	/** 改变活动强制关闭消息 */
-	public static final int ChangeActivityForceCloseToGame=3908;
-	
-	/** 创建指定场景到Game服 */
-	public static final int CreateSignedSceneToGame=3909;
-	
-	/** 进入指定场景到game */
-	public static final int EnterSignedSceneToGame=3910;
-	
-	/** 推送增加排行榜数据消息 */
-	public static final int FuncAddRankToGame=3911;
-	
-	/** 匹配超时到游戏服 */
-	public static final int FuncMatchTimeOutToGame=3912;
-	
-	public static final int FuncPlayerToGame=3913;
-	
-	public static final int FuncReGetRandomPlayerListFromRoleSocialPoolToCenter=3914;
-	
-	/** 取消上架物品到拍卖行 */
-	public static final int FuncSendAuctionCancelSellItemToCenter=3915;
-	
-	/** 推送更新排行榜数据消息 */
-	public static final int FuncRefreshRankToGame=3916;
-	
-	/** 推送移除排行榜数据消息 */
-	public static final int FuncRemoveRankToGame=3917;
-	
-	/** 重置排行榜到game服 */
-	public static final int FuncResetRankToGame=3918;
-	
-	/** 关闭game服消息 */
-	public static final int GameExit=3919;
-	
-	/** 游戏服重新加载配置消息 */
-	public static final int GameReloadConfig=3920;
-	
-	/** 取消上架拍卖行到源服 */
-	public static final int FuncSendAuctionCancelSellItemToSourceGame=3921;
-	
-	/** 踢玩家下线 */
-	public static final int KickPlayerFromCenter=3922;
-	
-	/** 角色到逻辑服消息(只有在线角色响应)(switching时,消息阻塞) */
-	public static final int PlayerToGame=3923;
-	
-	public static final int PlayerToGameTransCenterToGame=3924;
-	
-	/** 回复获取逻辑服消息 */
-	public static final int ReBeGameToCenter=3925;
-	
-	/** 刷新服务器偏移时间到游戏服 */
-	public static final int RefreshServerOffTimeToGame=3926;
-	
-	public static final int SendGetRoleSocialDataToGame=3927;
-	
-	/** 发送邮件到game服 */
-	public static final int SendMailToGame=3928;
-	
-	/** 发送角色事务完成消息 */
-	public static final int SendPlayerWorkComplete=3929;
-	
-	/** 推送角色事务 */
-	public static final int SendPlayerWork=3930;
-	
-	/** 推送事务执行失败(找不到game服) */
-	public static final int SendWorkFailed=3931;
-	
-	/** be逻辑服消息 */
-	public static final int BeGameToCenter=3932;
-	
-	/** 中心服转发消息到中心服 */
-	public static final int CenterTransGameToCenter=3933;
-	
-	/** 客户端GM指令到中心服 */
-	public static final int ClientGMToCenter=3934;
-	
-	/** 提交角色显示数据到中心服 */
-	public static final int CommitRoleSocialToCenter=3935;
-	
-	/** 接收匹配到中心服消息 */
-	public static final int FuncAcceptMatchToCenter=3936;
-	
-	/** 功能申请需要匹配到中心服 */
-	public static final int FuncApplyCancelMatchToCenter=3937;
-	
-	/** 申请匹配到中心服 */
-	public static final int FuncApplyMatchToCenter=3938;
-	
-	/** 排行榜提交排行值到中心服 */
-	public static final int FuncCommitRankValueToCenter=3939;
-	
-	/** 获取随机的角色列表从中心服社交数据池 */
-	public static final int FuncGetRandomPlayerListFromRoleSocialPoolToCenter=3940;
-	
-	public static final int FuncPlayerToCenter=3941;
-	
-	/** 排行榜删除排行到中心服 */
-	public static final int FuncRemoveRankToCenter=3942;
-	
-	/** 拍卖行购买物品到中心服 */
-	public static final int FuncSendAuctionBuyItemToCenter=3943;
-	
-	/** 角色到中心服消息(主线程执行) */
-	public static final int PlayerToCenter=3944;
-	
-	/** 回创建指定场景到中心服 */
-	public static final int ReCreateSignedSceneToCenter=3945;
-	
-	/** 事务回执到中心服 */
-	public static final int ReceiptWorkToCenter=3946;
-	
-	/** 更新角色显示数据到中心服 */
-	public static final int RefreshRoleSocialToCenter=3947;
-	
-	/** 推送中心服事务到中心服 */
-	public static final int SendCenterWorkToCenter=3948;
-	
-	/** 推送GM查询结果到中心服 */
-	public static final int SendMQueryPlayerWorkResultToCenter=3949;
-	
-	/** 推送角色事务到中心服 */
-	public static final int SendPlayerWorkToCenter=3950;
-	
-	public static final int BeLoginToGame=3951;
-	
-	/** 拍卖行购买物品到源服 */
-	public static final int FuncSendAuctionBuyItemToSourceGame=3952;
-	
-	/** 分段排行榜提交排行值到中心服 */
-	public static final int FuncCommitSubsectionRankValueToCenter=3953;
-	
-	/** 客户端申请绑定平台消息 */
-	public static final int ClientApplyBindPlatformToLogin=3954;
-	
-	/** 限制某取服注册到登陆服 */
-	public static final int LimitAreaToLogin=3955;
-	
-	public static final int ReBeLoginToGame=3956;
-	
-	/** 分段排行榜删除排行到中心服 */
-	public static final int FuncRemoveSubsectionRankToCenter=3957;
-	
-	/** 逻辑服确认消息 */
-	public static final int BeGameToGame=3958;
-	
-	/** 推送增加排行榜数据消息 */
-	public static final int FuncAddSubsectionRankToGame=3959;
-	
-	/** 角色下线完毕到源服消息 */
-	public static final int PlayerExitOverToSource=3960;
-	
-	/** 回复角色退出返回消息 */
-	public static final int PlayerExitSwitchBack=3961;
-	
-	/** 角色的game2game传输消息(switching时,消息阻塞) */
-	public static final int PlayerGameToGame=3962;
-	
-	/** 登陆拉取数据消息 */
-	public static final int PlayerLoginToEachGame=3963;
-	
-	/** 角色预备退出消息(发到源服) */
-	public static final int PlayerPreExitToGame=3964;
-	
-	/** 角色预切换game到中心服 */
-	public static final int PlayerPreSwitchGameToGame=3965;
-	
-	/** 角色切换游戏服完毕推到源服消息(切换完毕) */
-	public static final int PlayerSwitchGameCompleteToSource=3966;
-	
-	/** 角色切换game服数据接收结果到源服 */
-	public static final int PlayerSwitchGameReceiveResultToSource=3967;
-	
-	public static final int PlayerToGameTransGameToGame=3968;
-	
-	/** 准备切换游戏服消息 */
-	public static final int PreSwitchGame=3969;
-	
-	/** 回复成为game服消息 */
-	public static final int ReBeGameToGame=3970;
-	
-	/** 回复登陆逻辑服角色 */
-	public static final int RePlayerLoginFromEachGame=3971;
-	
-	/** 刷新subIndex */
-	public static final int FuncRefreshSubsectionIndexToGame=3972;
-	
-	/** 回复角色预切换game消息 */
-	public static final int RePlayerPreSwitchGameToGame=3973;
-	
-	/** 回复游戏服角色切换回失败消息(服务器即将关闭) */
-	public static final int RePreSwitchGameFailed=3974;
-	
-	/** 回复游戏服角色切换回消息 */
-	public static final int RePreSwitchGame=3975;
-	
-	/** 事务回执到game服 */
-	public static final int ReceiptWorkToGame=3976;
-	
-	/** 更新角色显示数据到源服 */
-	public static final int RefreshRoleShowToSourceGame=3977;
-	
-	/** 保存切换后的角色数据消息 */
-	public static final int SaveSwitchedPlayerList=3978;
-	
-	public static final int SendPlayerCenterRequestListToGame=3979;
-	
-	/** 发送角色中心服直达消息到目标逻辑服 */
-	public static final int SendPlayerCenterRequestToGame=3980;
-	
-	public static final int SendPlayerToGameRequestListToGame=3981;
-	
-	public static final int SendPlayerToGameRequestToGame=3982;
-	
-	public static final int SendPlayerWorkCompleteListToGame=3983;
-	
-	public static final int SendPlayerWorkCompleteToGame=3984;
-	
-	/** 推送角色实例组到逻辑服 */
-	public static final int SendPlayerWorkListToGame=3985;
-	
-	/** 推送角色事务到逻辑服 */
-	public static final int SendPlayerWorkToGame=3986;
-	
-	public static final int BeLoginToLogin=3987;
-	
-	/** 客户端登陆转移消息 */
-	public static final int ClientLoginTransfer=3988;
-	
-	public static final int ReBeLoginToLogin=3989;
-	
-	/** 回复客户端登陆错误码 */
-	public static final int ReClientLoginError=3990;
-	
-	public static final int ReClientLoginTransfer=3991;
-	
-	/** 推送更新排行榜数据消息 */
-	public static final int FuncRefreshSubsectionRankToGame=3992;
-	
-	/** 添加角色事务到中心服 */
-	public static final int MAddPlayerWorkToCenter=3993;
-	
-	/** 执行查询事务到中心服 */
-	public static final int MQueryPlayerWorkToCenter=3994;
-	
-	/** 推送移除排行榜数据消息 */
-	public static final int FuncRemoveSubsectionRankToGame=3995;
-	
-	/** 回复添加角色事务到中心服 */
-	public static final int ReMAddPlayerWorkToCenter=3996;
-	
-	/** 查询事务到中心服 */
-	public static final int ReMQueryPlayerWorkToCenter=3997;
-	
-	public static final int SendAreaWorkToGame=3998;
-	
-	public static final int SendAreaWorkCompleteToGame=3999;
-	
-	/** 重置排行榜到game服 */
-	public static final int FuncResetSubsectionRankToGame=4000;
-	
-	public static final int SendGameRequestToPlayer=4026;
-	
-	/** 使用激活码 */
-	public static final int UseActivationCodeToCenter=4032;
-	
-	/** 中心服移除角色社交数据到角色 */
-	public static final int RemoveCenterRoleSocialDataToPlayer=4033;
-	
-	/** 推送user事务到登陆服消息 */
-	public static final int SendUserWorkToLogin=4034;
-	
-	/** 回复UserWork到 */
-	public static final int ReceiptUserWorkToGame=4036;
-	
-	/** 发送信息码来自登录服 */
-	public static final int SendInfoCodeFromLogin=4037;
-	
-	/** 推送获取翻页显示到中心服 */
-	public static final int FuncSendGetPageShowToCenter=4039;
-	
-	public static final int FuncReGetPageShowToPlayer=4040;
-	
-	public static final int FuncReGetPageShowGameToPlayer=4041;
-	
-	/** 发送获取翻页显示到逻辑服 */
-	public static final int FuncSendGetPageShowToGame=4042;
-	
-	/** 逻辑服登录到中心服数据 */
-	public static final int GameLoginToCenter=4057;
-	
-	/** 添加玩家群简版信息到其他逻辑服 */
-	public static final int FuncAddRoleGroupSimpleToGame=4058;
-	
-	/** 移除玩家群简版信息到其他逻辑服 */
-	public static final int FuncRemoveRoleGroupSimpleToGame=4059;
-	
-	/** 玩家群移除成员 */
-	public static final int FuncSendRoleGroupRemoveMemberToPlayer=4066;
-	
-	/** 玩家群简版数据变更到逻辑服 */
-	public static final int FuncRoleGroupChangeSimpleToGame=4068;
-	
-	/** 更改玩家群申请方式 */
-	public static final int FuncChangeRoleGroupApplyTypeToGame=4071;
-	
-	public static final int FuncChangeRoleGroupNameToGame=4072;
-	
-	/** 玩家群进入专属场景消息 */
-	public static final int FuncRoleGroupEnterOwnSceneToGame=4079;
-	
-	/** 回复玩家群进入专属场景参数消息 */
-	public static final int FuncRoleGroupReEnterOwnSceneArgToPlayer=4080;
-	
-	/** 提交自定义社交数据到中心服 */
-	public static final int CommitCustomRoleSocialToCenter=4081;
-	
-	/** 处理结果到玩家群 */
-	public static final int FuncHandleApplyRoleGroupToGame=4084;
-	
-	public static final int FuncPlayerRoleGroupGameToGame=4088;
-	
-	/** 改变玩家群显示到每个玩家 */
-	public static final int FuncRoleGroupChangeToPlayer=4090;
-	
-	/** 推送leader变化 */
-	public static final int FuncSendChangeLeaderRoleGroupToPlayer=4092;
-	
-	/** 推送玩家群添加成员 */
-	public static final int FuncSendRoleGroupAddMemberToPlayer=4093;
-	
-	/** 玩家群更新社交数据 */
-	public static final int FuncRoleGroupRefreshRoleShowDataToGame=4095;
-	
-	public static final int FuncRoleGroupRefreshRoleShowDataToPlayer=4096;
-	
-	public static final int FuncRoleGroupMemberChangeToPlayer=4097;
-	
-	/** 指定场景消息 */
-	public static final int SignedSceneGameToGame=4098;
-	
-	/** 同意邀请创建到逻辑服 */
-	public static final int FuncAgreeInviteCreateRoleGroupToGame=4099;
-	
-	/** 同意邀请入群到逻辑服 */
-	public static final int FuncAgreeInviteRoleGroupToGame=4100;
-	
-	/** 申请加入玩家群 */
-	public static final int FuncApplyRoleGroupToGame=4101;
-	
-	/** 禅让群主 */
-	public static final int FuncChangeLeaderRoleGroupToGame=4102;
-	
-	public static final int FuncChangeRoleGroupNoticeToGame=4103;
-	
-	/** 解散玩家群到逻辑服 */
-	public static final int FuncDisbandRoleGroupToGame=4104;
-	
-	/** 踢出成员 */
-	public static final int FuncKickMemberRoleGroupToGame=4105;
-	
-	/** 离开玩家群到逻辑服 */
-	public static final int FuncLeaveRoleGroupToGame=4106;
-	
-	public static final int FuncPlayerGameToGame=4107;
-	
-	/** 更新职位到角色 */
-	public static final int FuncRefreshTitleRoleGroupToPlayer=4108;
-	
-	public static final int FuncRoleGroupToGame=4109;
-	
-	/** 设置职位消息 */
-	public static final int FuncSetTitleRoleGroupToGame=4110;
-	
-	public static final int FuncToGame=4111;
-	
-	/** 推送在线角色数到中心服消息 */
-	public static final int SendPlayerOnlineNumToCenter=4112;
-	
-	public static final int ReUserLoginToLogin=4120;
-	
-	/** 广播玩家聊天 */
-	public static final int RadioPlayerChatToGame=4123;
-	
-	/** 推送玩家聊天消息 */
-	public static final int SendPlayerChatToPlayer=4124;
-	
-	/** 更新逻辑服登录限制消息 */
-	public static final int RefreshGameLoginLimitToGame=4131;
-	
-	public static final int GetRoleSocialDataToPlayer=4133;
-	
-	public static final int BeLoginToManager=4134;
-	
-	/** 回复be登录服消息 */
-	public static final int ReBeLoginToManager=4135;
-	
-	public static final int BeCenterToManager=4136;
-	
-	public static final int ReBeCenterToManager=4137;
-	
-	public static final int BeGameToManager=4138;
-	
-	public static final int ReBeGameToManager=4139;
+	public static final int BeLoginToManager=3900;
 	
 	/** 登录服热更新消息 */
-	public static final int HotfixToLogin=4141;
+	public static final int HotfixToLogin=3901;
 	
 	/** 关闭登录服消息 */
-	public static final int LoginExit=4142;
+	public static final int LoginExit=3902;
+	
+	public static final int ManagerToLoginCommand=3903;
+	
+	/** 回复be登录服消息 */
+	public static final int ReBeLoginToManager=3904;
+	
+	public static final int ReloadServerConfigToLogin=3905;
 	
 	/** 推送服务器开放状态到登陆服 */
-	public static final int SendServerOpenToLogin=4143;
+	public static final int SendServerOpenToLogin=3906;
 	
-	public static final int CenterExit=4145;
+	public static final int BeCenterToManager=3907;
 	
-	/** 角色绑定平台到game服消息 */
-	public static final int PlayerBindPlatformToGame=4148;
+	/** 回复添加角色事务到中心服 */
+	public static final int ReMAddPlayerWorkToCenter=3908;
 	
-	public static final int UserLoginToGame=4149;
+	/** 查询事务到中心服 */
+	public static final int ReMQueryPlayerWorkToCenter=3909;
 	
-	/** 角色召唤切换回消息 */
-	public static final int PlayerCallSwitchBackToGame=4150;
+	public static final int CenterExit=3910;
 	
-	/** 回复角色预备退出消息(源服回复) */
-	public static final int RePlayerPreExitToGame=4151;
+	/** 添加角色事务到中心服 */
+	public static final int MAddPlayerWorkToCenter=3911;
 	
-	public static final int ManagerToLoginCommand=4152;
+	/** 执行查询事务到中心服 */
+	public static final int MQueryPlayerWorkToCenter=3912;
 	
 	/** manager到中心服指令 */
-	public static final int ManagerToCenterCommand=4153;
+	public static final int ManagerToCenterCommand=3913;
 	
-	public static final int ManagerToGameCommand=4154;
+	public static final int ReBeCenterToManager=3914;
+	
+	public static final int ReloadServerConfigToCenter=3915;
+	
+	public static final int BeGameToManager=3916;
 	
 	/** 游戏服热更消息 */
-	public static final int HotfixToGame=4155;
+	public static final int HotfixToGame=3917;
 	
-	public static final int ReceiptWorkToGameFromCenter=4156;
+	public static final int ManagerToGameCommand=3918;
 	
-	/** 提交玩家群数据到中心服 */
-	public static final int CommitRoleGroupToCenter=4157;
+	public static final int ReBeGameToManager=3919;
 	
-	public static final int SendCenterWorkCompleteToCenter=4158;
+	public static final int ReloadServerConfigToGame=3920;
 	
-	public static final int FuncRoleGroupChangeSimpleToCenter=4159;
+	public static final int BeSceneToManager=3921;
 	
-	public static final int FuncToCenter=4160;
+	public static final int ReBeSceneToManager=3922;
 	
-	/** 更新排行(玩家群)消息 */
-	public static final int FuncRefreshRankForRoleGroup=4161;
+	/** 活动重置 */
+	public static final int ActivityResetToGame=3923;
 	
-	/** 玩家群排行榜重置 */
-	public static final int FuncResetRankForRoleGroup=4162;
+	/** 活动切换开启/关闭 */
+	public static final int ActivitySwitchToGame=3924;
 	
-	public static final int SendAreaWorkToGameFromCenter=4163;
+	/** 中心服转发消息 */
+	public static final int CenterTransCenterToGame=3925;
+	
+	/** 改变活动强制关闭消息 */
+	public static final int ChangeActivityForceCloseToGame=3926;
+	
+	/** 创建指定场景到Game服 */
+	public static final int CreateSignedSceneToGame=3927;
+	
+	/** 进入指定场景到game(暂时废弃) */
+	public static final int EnterSignedSceneToGame=3928;
+	
+	/** 推送增加排行榜数据消息 */
+	public static final int FuncAddRankToGame=3929;
+	
+	/** 推送增加排行榜数据消息 */
+	public static final int FuncAddSubsectionRankToGame=3930;
+	
+	public static final int FuncCenterToGame=3931;
+	
+	/** 匹配超时到游戏服 */
+	public static final int FuncMatchTimeOutToGame=3932;
+	
+	public static final int FuncPlayerToGame=3933;
+	
+	public static final int FuncReGetPageShowToPlayer=3934;
+	
+	public static final int FuncReGetRandomPlayerListFromRoleSocialPoolToCenter=3935;
+	
+	/** 刷新拍卖行物品价格消息到逻辑服 */
+	public static final int FuncRefreshAuctionItemPriceToGame=3936;
+	
+	/** 推送更新排行榜数据消息 */
+	public static final int FuncRefreshRankToGame=3937;
+	
+	/** 刷新subIndex */
+	public static final int FuncRefreshSubsectionIndexToGame=3938;
+	
+	/** 推送更新排行榜数据消息 */
+	public static final int FuncRefreshSubsectionRankToGame=3939;
+	
+	/** 推送移除排行榜数据消息 */
+	public static final int FuncRemoveRankToGame=3940;
+	
+	/** 推送移除排行榜数据消息 */
+	public static final int FuncRemoveSubsectionRankToGame=3941;
+	
+	/** 重置排行榜到game服 */
+	public static final int FuncResetRankToGame=3942;
+	
+	/** 重置排行榜到game服 */
+	public static final int FuncResetSubsectionRankToGame=3943;
+	
+	/** 关闭game服消息 */
+	public static final int GameExit=3944;
+	
+	/** 游戏服重新加载配置消息 */
+	public static final int GameReloadConfig=3945;
+	
+	/** 踢玩家下线 */
+	public static final int KickPlayerFromCenter=3946;
+	
+	/** 角色到逻辑服消息(只有在线角色响应)(switching时,消息阻塞) */
+	public static final int PlayerToGame=3947;
+	
+	public static final int PlayerToGameTransCenterToGame=3948;
+	
+	/** 回复获取逻辑服消息 */
+	public static final int ReBeGameToCenter=3949;
+	
+	public static final int ReceiptWorkToGameFromCenter=3950;
 	
 	/** 刷新 */
-	public static final int RefreshRoleGroupChangeToGame=4165;
+	public static final int RefreshRoleGroupChangeToGame=3951;
 	
 	/** 刷新排行榜角色显示数据 */
-	public static final int RefreshRoleShowDataChangeToGame=4166;
+	public static final int RefreshRoleShowDataChangeToGame=3952;
 	
-	/** 推送加入玩家群类消息结果 */
-	public static final int FuncSendRoleGroupJoinResult=4167;
+	/** 刷新服务器偏移时间到游戏服 */
+	public static final int RefreshServerOffTimeToGame=3953;
+	
+	/** 中心服移除角色社交数据到角色 */
+	public static final int RemoveCenterRoleSocialDataToPlayer=3954;
+	
+	public static final int SendAreaWorkToGameFromCenter=3955;
+	
+	public static final int SendGetRoleSocialDataToGame=3956;
+	
+	/** 发送邮件到game服 */
+	public static final int SendMailToGame=3957;
+	
+	/** 发送角色事务完成消息 */
+	public static final int SendPlayerWorkComplete=3958;
+	
+	/** 推送角色事务 */
+	public static final int SendPlayerWork=3959;
+	
+	/** 推送事务执行失败(找不到game服) */
+	public static final int SendWorkFailed=3960;
+	
+	public static final int BeGameToCenter=3961;
+	
+	/** 中心服转发消息到中心服 */
+	public static final int CenterTransGameToCenter=3962;
+	
+	/** 客户端GM指令到中心服 */
+	public static final int ClientGMToCenter=3963;
+	
+	/** 提交自定义社交数据到中心服 */
+	public static final int CommitCustomRoleSocialToCenter=3964;
+	
+	/** 提交玩家群数据到中心服 */
+	public static final int CommitRoleGroupToCenter=3965;
+	
+	/** 提交角色显示数据到中心服 */
+	public static final int CommitRoleSocialToCenter=3966;
+	
+	/** 接收匹配到中心服消息 */
+	public static final int FuncAcceptMatchToCenter=3967;
+	
+	/** 功能申请需要匹配到中心服 */
+	public static final int FuncApplyCancelMatchToCenter=3968;
+	
+	/** 申请匹配到中心服 */
+	public static final int FuncApplyMatchToCenter=3969;
+	
+	/** 排行榜提交排行值到中心服 */
+	public static final int FuncCommitRankValueToCenter=3970;
+	
+	/** 分段排行榜提交排行值到中心服 */
+	public static final int FuncCommitSubsectionRankValueToCenter=3971;
+	
+	/** 获取随机的角色列表从中心服社交数据池 */
+	public static final int FuncGetRandomPlayerListFromRoleSocialPoolToCenter=3972;
+	
+	public static final int FuncPlayerToCenter=3973;
+	
+	/** 排行榜删除排行到中心服 */
+	public static final int FuncRemoveRankToCenter=3974;
+	
+	/** 分段排行榜删除排行到中心服 */
+	public static final int FuncRemoveSubsectionRankToCenter=3975;
+	
+	public static final int FuncRoleGroupChangeSimpleToCenter=3976;
+	
+	/** 拍卖行购买物品到中心服 */
+	public static final int FuncSendAuctionBuyItemToCenter=3977;
+	
+	/** 取消上架物品到拍卖行 */
+	public static final int FuncSendAuctionCancelSellItemToCenter=3978;
+	
+	/** 推送出售物品到中心服消息 */
+	public static final int FuncSendAuctionSellItemToCenter=3979;
+	
+	/** 推送获取翻页显示到中心服 */
+	public static final int FuncSendGetPageShowToCenter=3980;
+	
+	public static final int FuncToCenter=3981;
+	
+	/** 逻辑服登录到中心服数据 */
+	public static final int GameLoginToCenter=3982;
+	
+	/** 角色到中心服消息(主线程执行) */
+	public static final int PlayerToCenter=3983;
+	
+	/** 回创建指定场景到中心服 */
+	public static final int ReCreateSignedSceneToCenter=3984;
+	
+	/** 事务回执到中心服 */
+	public static final int ReceiptWorkToCenter=3985;
+	
+	/** 更新角色显示数据到中心服 */
+	public static final int RefreshRoleSocialToCenter=3986;
+	
+	public static final int SendCenterWorkCompleteToCenter=3987;
+	
+	/** 推送中心服事务到中心服 */
+	public static final int SendCenterWorkToCenter=3988;
+	
+	/** 推送GM查询结果到中心服 */
+	public static final int SendMQueryPlayerWorkResultToCenter=3989;
+	
+	/** 推送在线角色数到中心服消息 */
+	public static final int SendPlayerOnlineNumToCenter=3990;
+	
+	/** 推送角色事务到中心服 */
+	public static final int SendPlayerWorkToCenter=3991;
+	
+	/** 使用激活码 */
+	public static final int UseActivationCodeToCenter=3992;
+	
+	public static final int BeLoginToGame=3993;
+	
+	/** 角色绑定平台到game服消息 */
+	public static final int PlayerBindPlatformToGame=3994;
+	
+	/** 回复UserWork到 */
+	public static final int ReceiptUserWorkToGame=3995;
+	
+	/** 发送信息码来自登录服 */
+	public static final int SendInfoCodeFromLogin=3996;
+	
+	public static final int UserLoginToGame=3997;
+	
+	/** 客户端申请绑定平台消息 */
+	public static final int ClientApplyBindPlatformToLogin=3998;
+	
+	/** 限制某取服注册到登陆服 */
+	public static final int LimitAreaToLogin=3999;
+	
+	public static final int ReBeLoginToGame=4000;
+	
+	public static final int ReUserLoginToLogin=4001;
+	
+	/** 刷新Game登录限制到登录服 */
+	public static final int RefreshGameLoginLimitToLogin=4002;
+	
+	/** 推送user事务到登陆服消息 */
+	public static final int SendUserWorkToLogin=4003;
+	
+	/** 角色场景服到game服消息 */
+	public static final int PlayerSceneToGame=4004;
+	
+	/** 场景切换到场景服结束 */
+	public static final int PlayerSwitchToSceneOver=4005;
+	
+	public static final int ReBeGameToScene=4006;
+	
+	/** 回复玩家切换到场景 */
+	public static final int RePlayerSwitchToScene=4007;
+	
+	public static final int BeGameToScene=4008;
+	
+	/** 玩家进入场景服消息 */
+	public static final int PlayerEnterServerScene=4009;
+	
+	/** 玩家Game服到场景服消息 */
+	public static final int PlayerGameToScene=4010;
+	
+	/** 玩家登录到场景服消息 */
+	public static final int PlayerSwitchToScene=4011;
+	
+	/** 逻辑服确认消息 */
+	public static final int BeGameToGame=4012;
+	
+	/** 添加玩家群简版信息到其他逻辑服 */
+	public static final int FuncAddRoleGroupSimpleToGame=4013;
 	
 	/** 同意申请入群下一步 */
-	public static final int FuncAgreeApplyNextRoleGroupToGame=4168;
+	public static final int FuncAgreeApplyNextRoleGroupToGame=4014;
+	
+	/** 同意邀请创建到逻辑服 */
+	public static final int FuncAgreeInviteCreateRoleGroupToGame=4015;
+	
+	/** 同意邀请入群到逻辑服 */
+	public static final int FuncAgreeInviteRoleGroupToGame=4016;
+	
+	/** 申请加入玩家群 */
+	public static final int FuncApplyRoleGroupToGame=4017;
+	
+	/** 禅让群主 */
+	public static final int FuncChangeLeaderRoleGroupToGame=4018;
+	
+	/** 更改玩家群申请方式 */
+	public static final int FuncChangeRoleGroupApplyTypeToGame=4019;
+	
+	public static final int FuncChangeRoleGroupNameToGame=4020;
+	
+	public static final int FuncChangeRoleGroupNoticeToGame=4021;
+	
+	/** 提交排行数据到源服 */
+	public static final int FuncCommitRankValueToSourceGame=4022;
+	
+	/** 解散玩家群到逻辑服 */
+	public static final int FuncDisbandRoleGroupToGame=4023;
+	
+	/** 处理结果到玩家群 */
+	public static final int FuncHandleApplyRoleGroupToGame=4024;
+	
+	/** 踢出成员 */
+	public static final int FuncKickMemberRoleGroupToGame=4025;
+	
+	/** 离开玩家群到逻辑服 */
+	public static final int FuncLeaveRoleGroupToGame=4026;
+	
+	public static final int FuncPlayerGameToGame=4027;
+	
+	public static final int FuncPlayerRoleGroupGameToGame=4028;
+	
+	public static final int FuncReGetPageShowGameToPlayer=4029;
+	
+	/** 更新排行(玩家群)消息 */
+	public static final int FuncRefreshRankForRoleGroup=4030;
+	
+	/** 更新职位到角色 */
+	public static final int FuncRefreshTitleRoleGroupToPlayer=4031;
+	
+	/** 移除玩家群简版信息到其他逻辑服 */
+	public static final int FuncRemoveRoleGroupSimpleToGame=4032;
+	
+	/** 玩家群排行榜重置 */
+	public static final int FuncResetRankForRoleGroup=4033;
+	
+	/** 玩家群简版数据变更到逻辑服 */
+	public static final int FuncRoleGroupChangeSimpleToGame=4034;
+	
+	/** 改变玩家群显示到每个玩家 */
+	public static final int FuncRoleGroupChangeToPlayer=4035;
+	
+	/** 玩家群进入专属场景消息 */
+	public static final int FuncRoleGroupEnterOwnSceneToGame=4036;
+	
+	public static final int FuncRoleGroupMemberChangeToPlayer=4037;
+	
+	/** 回复玩家群进入专属场景参数消息 */
+	public static final int FuncRoleGroupReEnterOwnSceneArgToPlayer=4038;
+	
+	/** 玩家群更新社交数据 */
+	public static final int FuncRoleGroupRefreshRoleShowDataToGame=4039;
+	
+	public static final int FuncRoleGroupRefreshRoleShowDataToPlayer=4040;
+	
+	public static final int FuncRoleGroupToGame=4041;
+	
+	/** 拍卖行购买物品到源服 */
+	public static final int FuncSendAuctionBuyItemToSourceGame=4042;
+	
+	/** 取消上架拍卖行到源服 */
+	public static final int FuncSendAuctionCancelSellItemToSourceGame=4043;
+	
+	/** 推送拍卖行出售物品到源服 */
+	public static final int FuncSendAuctionSellItemToSourceGame=4044;
+	
+	/** 推送leader变化 */
+	public static final int FuncSendChangeLeaderRoleGroupToPlayer=4045;
+	
+	/** 发送获取翻页显示到逻辑服 */
+	public static final int FuncSendGetPageShowToGame=4046;
+	
+	/** 推送玩家群添加成员 */
+	public static final int FuncSendRoleGroupAddMemberToPlayer=4047;
+	
+	/** 推送加入玩家群类消息结果 */
+	public static final int FuncSendRoleGroupJoinResult=4048;
+	
+	/** 玩家群移除成员 */
+	public static final int FuncSendRoleGroupRemoveMemberToPlayer=4049;
+	
+	/** 设置职位消息 */
+	public static final int FuncSetTitleRoleGroupToGame=4050;
+	
+	public static final int FuncToGame=4051;
+	
+	public static final int GetRoleSocialDataToPlayer=4052;
+	
+	/** 角色召唤切换回消息 */
+	public static final int PlayerCallSwitchBackToGame=4053;
+	
+	/** 角色下线完毕到源服消息 */
+	public static final int PlayerExitOverToSource=4054;
+	
+	/** 回复角色退出返回消息 */
+	public static final int PlayerExitSwitchBack=4055;
+	
+	/** 角色的game2game传输消息(switching时,消息阻塞) */
+	public static final int PlayerGameToGame=4056;
+	
+	/** 登陆拉取数据消息 */
+	public static final int PlayerLoginToEachGame=4057;
+	
+	/** 角色预备退出消息(发到源服) */
+	public static final int PlayerPreExitToGame=4058;
+	
+	/** 角色预切换game到中心服 */
+	public static final int PlayerPreSwitchGameToGame=4059;
+	
+	/** 角色切换游戏服完毕推到源服消息(切换完毕) */
+	public static final int PlayerSwitchGameCompleteToSource=4060;
+	
+	/** 角色切换game服数据接收结果到源服 */
+	public static final int PlayerSwitchGameReceiveResultToSource=4061;
+	
+	public static final int PlayerToGameTransGameToGame=4062;
+	
+	/** 准备切换游戏服消息 */
+	public static final int PreSwitchGame=4063;
+	
+	/** 广播玩家聊天 */
+	public static final int RadioPlayerChatToGame=4064;
+	
+	/** 回复成为game服消息 */
+	public static final int ReBeGameToGame=4065;
+	
+	/** 回复登陆逻辑服角色 */
+	public static final int RePlayerLoginFromEachGame=4066;
+	
+	/** 回复角色预备退出消息(源服回复) */
+	public static final int RePlayerPreExitToGame=4067;
+	
+	/** 回复角色预切换game消息 */
+	public static final int RePlayerPreSwitchGameToGame=4068;
+	
+	/** 回复游戏服角色切换回失败消息(服务器即将关闭) */
+	public static final int RePreSwitchGameFailed=4069;
+	
+	/** 回复游戏服角色切换回消息 */
+	public static final int RePreSwitchGame=4070;
+	
+	/** 事务回执到game服 */
+	public static final int ReceiptWorkToGame=4071;
+	
+	/** 更新逻辑服登录限制消息 */
+	public static final int RefreshGameLoginLimitToGame=4072;
+	
+	/** 更新角色显示数据到源服 */
+	public static final int RefreshRoleShowToSourceGame=4073;
+	
+	/** 保存切换后的角色数据消息 */
+	public static final int SaveSwitchedPlayerList=4074;
+	
+	public static final int SendAreaWorkCompleteToGame=4075;
+	
+	public static final int SendAreaWorkToGame=4076;
+	
+	public static final int SendGameRequestToPlayer=4077;
+	
+	public static final int SendPlayerCenterRequestListToGame=4078;
+	
+	/** 发送角色中心服直达消息到目标逻辑服 */
+	public static final int SendPlayerCenterRequestToGame=4079;
+	
+	/** 推送玩家聊天消息 */
+	public static final int SendPlayerChatToPlayer=4080;
+	
+	public static final int SendPlayerToGameRequestListToGame=4081;
+	
+	public static final int SendPlayerToGameRequestToGame=4082;
+	
+	public static final int SendPlayerWorkCompleteListToGame=4083;
+	
+	public static final int SendPlayerWorkCompleteToGame=4084;
+	
+	/** 推送角色实例组到逻辑服 */
+	public static final int SendPlayerWorkListToGame=4085;
+	
+	/** 推送角色事务到逻辑服 */
+	public static final int SendPlayerWorkToGame=4086;
+	
+	/** 指定场景消息 */
+	public static final int SignedSceneGameToGame=4087;
+	
+	public static final int BeLoginToLogin=4088;
+	
+	/** 客户端登陆转移消息 */
+	public static final int ClientLoginTransfer=4089;
+	
+	public static final int ReBeLoginToLogin=4090;
+	
+	/** 回复客户端登陆错误码 */
+	public static final int ReClientLoginError=4091;
+	
+	public static final int ReClientLoginTransfer=4092;
+	
+	/** 玩家离开场景完毕到game服 */
+	public static final int PlayerLeaveSceneOverToGame=4093;
+	
+	/** 玩家离开场景到场景服消息 */
+	public static final int PlayerLeaveSceneToScene=4094;
+	
+	public static final int ClientGMToScene=4095;
+	
+	/** 场景服退出消息 */
+	public static final int SceneExit=4096;
 	
 }

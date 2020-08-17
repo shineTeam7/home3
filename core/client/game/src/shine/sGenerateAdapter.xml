@@ -1,0 +1,14 @@
+<info>
+    <root path="src/shine">
+    </root>
+    <customClass name="MonoBehaviour">
+        <method name="Start" visitType="private" needBaseCall="false"/>
+        <method name="Update" visitType="private" needBaseCall="false"/>
+        <method name="FixedUpdate" visitType="private" needBaseCall="false"/>
+        <method name="OnGUI" visitType="private" needBaseCall="false"/>
+        <method name="OnDestroy" visitType="private" needBaseCall="false"/>
+    </customClass>
+    <namespace name="ShineEngine"/>
+    <allowMethod cls="BaseRequest" methods="copyData,doWriteToStream,doWriteBytesSimple,toWriteBytesSimple,toWriteBytesFull,getDataClassName,toWriteDataString,clear"/>
+    <allowMethod cls="BaseResponse" methods="readFromStream,preExecute,execute,toReadBytesSimple,toReadBytesFull,getDataClassName,toWriteDataString,clear"/>
+</info>

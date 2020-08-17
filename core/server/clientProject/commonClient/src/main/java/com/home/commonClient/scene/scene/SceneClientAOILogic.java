@@ -1,5 +1,6 @@
 package com.home.commonClient.scene.scene;
 
+import com.home.commonBase.data.scene.unit.UnitData;
 import com.home.commonBase.scene.base.Unit;
 import com.home.commonBase.scene.scene.SceneAOILogic;
 import com.home.shine.net.base.BaseRequest;
@@ -18,6 +19,18 @@ public class SceneClientAOILogic extends SceneAOILogic
 	public void unitRemove(Unit unit,boolean needSelf)
 	{
 	
+	}
+	
+	@Override
+	protected BaseRequest createAddUnitRequest(UnitData data)
+	{
+		return null;
+	}
+	
+	@Override
+	protected BaseRequest createUnitRemoveRequest(int instanceID)
+	{
+		return null;
 	}
 	
 	@Override

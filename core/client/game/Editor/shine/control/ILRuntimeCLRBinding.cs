@@ -68,47 +68,42 @@ namespace ShineEngine
         {
             initGenerate();
 
-            string front="Assets/src/commonGame";
-            doOneGenerate(front + "/cGenerateAdapter.xml"
-                ,front + "/control/CILRuntimeControl.cs"
-                ,front+"/adapters",Project_Common);
+            string sFront="Assets/src/shine";
+            XML sXML=preDoOneGenerate(sFront + "/sGenerateAdapter.xml");
+            string cFront="Assets/src/commonGame";
+            XML cXML=preDoOneGenerate(cFront + "/cGenerateAdapter.xml");
+            string gFront="Assets/src/game";
+            XML gXML=preDoOneGenerate(gFront + "/gGenerateAdapter.xml");
 
-            front="Assets/src/game";
+            loadAssembly();
 
-            doOneGenerate(front + "/gGenerateAdapter.xml"
-                ,front + "/control/GILRuntimeControl.cs"
-                ,front+"/adapters",Project_Game);
+            doOneGenerate(sXML
+                ,sFront + "/control/ILRuntimeControl.cs"
+                ,sFront+"/adapters",Project_Shine);
 
-            Ctrl.print("OK!");
-            AssetDatabase.Refresh();
-        }
+            doOneGenerate(cXML
+                ,cFront + "/control/CILRuntimeControl.cs"
+                ,cFront+"/adapters",Project_Common);
 
-        public static void GenerateCommon()
-        {
-            initGenerate();
 
-            string front="Assets/src/commonGame";
-
-            doOneGenerate(front + "/cGenerateAdapter.xml"
-                ,front + "/control/CILRuntimeControl.cs"
-                ,front+"/adapters",Project_Common);
+            doOneGenerate(gXML
+                ,gFront + "/control/GILRuntimeControl.cs"
+                ,gFront+"/adapters",Project_Game);
 
             Ctrl.print("OK!");
             AssetDatabase.Refresh();
         }
 
-        public static void GenerateGame()
+        public static void cleanAll()
         {
             initGenerate();
 
-            string front="Assets/src/game";
-
-            doOneGenerate(front + "/gGenerateAdapter.xml"
-                ,front + "/control/GILRuntimeControl.cs"
-                ,front+"/adapters",Project_Game);
-
-            Ctrl.print("OK!");
-            AssetDatabase.Refresh();
+            string sFront="Assets/src/shine";
+            doOneClean(sFront + "/control/ILRuntimeControl.cs",sFront + "/adapters",Project_Shine);
+            string cFront="Assets/src/commonGame";
+            doOneClean(cFront + "/control/CILRuntimeControl.cs",cFront+"/adapters",Project_Common);
+            string gFront="Assets/src/game";
+            doOneClean(gFront + "/control/GILRuntimeControl.cs",gFront+"/adapters",Project_Game);
         }
 
         /** 替换方法字符串 */
@@ -266,11 +261,13 @@ namespace ShineEngine
                 if(i>0)
                     sb2.Append(",");
 
-                if(arg.isRef)
+                if(arg.isIn)
+                    sb2.Append("in ");
+                else if(arg.isOut)
+                    sb2.Append("out ");
+                else if(arg.isRef)
                     sb2.Append("ref ");
 
-                if(arg.isOut)
-                    sb2.Append("out ");
 
                 sb2.Append(arg.type);
                 sb2.Append(" ");
@@ -387,11 +384,12 @@ namespace ShineEngine
                     if(i>0)
                         sb2.Append(",");
 
-                    if(arg.isRef)
-                        sb2.Append("ref ");
-
-                    if(arg.isOut)
+                    if(arg.isIn)
+                        sb2.Append("in ");
+                    else if(arg.isOut)
                         sb2.Append("out ");
+                    else if(arg.isRef)
+                        sb2.Append("ref ");
 
                     sb2.Append(arg.name);
                 }
@@ -409,6 +407,7 @@ namespace ShineEngine
 
         private static void initGenerate()
         {
+            clearGenerateAll();
             _templete=FileUtils.readFileForUTF("Assets/src/shine/ILRuntime/adapterTemplate.txt");
         }
 
@@ -427,20 +426,26 @@ namespace ShineEngine
         /** 类允许方法 */
         private static SMap<string,SSet<string>> _clsAllowMethods=new SMap<string,SSet<string>>();
 
+        private const int Project_Shine=0;
         private const int Project_Common=1;
         private const int Project_Game=2;
         private const int Project_Hotfix=3;
 
-        private static void clearGenerate()
+        private static void clearGenerateAll()
         {
+            clearGenerate();
+
+            _clsIgnoreMethods.clear();
+            _clsAllowMethods.clear();
             _allowNameSpace.clear();
             _typeDic.clear();
+        }
+
+        private static void clearGenerate()
+        {
             _clsNameToPathDic.clear();
             _adapterClsDic.clear();
             _factoryClsDic.clear();
-            _clsIgnoreMethods.clear();
-            _clsAllowMethods.clear();
-
         }
 
         /** 类型信息 */
@@ -448,8 +453,6 @@ namespace ShineEngine
         {
             /** 类名 */
             public string clsName;
-            /** 类路径 */
-            public string clsPath;
             /** 类内容 */
             public Type clsType;
             /** ILClass信息 */
@@ -457,9 +460,11 @@ namespace ShineEngine
             /** 基类信息 */
             public TypeInfo baseTypeInfo;
             /** 是否有热更标记 */
-            public bool hasHotfixMark;
+            public bool hasHotfixMark=false;
             /** 是否需要生成工厂方法*/
-            public bool needFactory;
+            public bool needFactory=false;
+            /** 是否传递给子组 */
+            public bool needHotfixChildren=false;
 
             private bool _inited=false;
 
@@ -487,9 +492,12 @@ namespace ShineEngine
                         //     return;
                         // }
 
-                        //从基类传递
-                        hasHotfixMark=baseTypeInfo.hasHotfixMark;
-                        needFactory=baseTypeInfo.needFactory;
+                        if(baseTypeInfo.needHotfixChildren)
+                        {
+                            //从基类传递
+                            hasHotfixMark=baseTypeInfo.hasHotfixMark;
+                            needFactory=baseTypeInfo.needFactory;
+                        }
 
                         //添加基类进来
                         foreach(ILMethodInfo ilMethodInfo in baseTypeInfo.iCls.methods)
@@ -512,11 +520,15 @@ namespace ShineEngine
                     //是否虚类
                     iCls.isAbstract=clsType.IsAbstract;
 
-                    bool hotfixMark=clsType.GetCustomAttribute<Hotfix>()!=null;
-                    bool adapterMark=clsType.GetCustomAttribute<HotfixAdapter>()!=null;
-                    //热更标记
-                    hasHotfixMark=hotfixMark || adapterMark;
-                    needFactory=hotfixMark;
+                    Attribute customAttribute=Attribute.GetCustomAttribute(clsType,typeof(Hotfix),false);
+
+                    if(customAttribute!=null)
+                    {
+                        Hotfix hotfixAttribute=(Hotfix)customAttribute;
+                        hasHotfixMark=true;
+                        needFactory=hotfixAttribute.needFactory;
+                        needHotfixChildren=hotfixAttribute.needChildren;
+                    }
 
                     MethodInfo[] methodInfos=clsType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
@@ -549,8 +561,16 @@ namespace ShineEngine
                                         MethodArgInfo iArg=new MethodArgInfo();
                                         iArg.name=parameterInfo.Name;
                                         iArg.type=getTypeName(parameterInfo.ParameterType);
+                                        iArg.isIn=parameterInfo.IsIn;
                                         iArg.isOut=parameterInfo.IsOut;
-                                        iArg.isRef=parameterInfo.ParameterType.Name.EndsWith("&");
+                                        // iArg.isRef=parameterInfo.ParameterType.Name.EndsWith("&");
+                                        iArg.isRef=parameterInfo.IsRetval;
+
+                                        // if(parameterInfo.IsRetval)
+                                        // {
+                                        //     Ctrl.print("A1",methodInfo.Name,parameterInfo.Name);
+                                        // }
+
                                         // iArg.autoLength=parameterInfo.IsOptional;
                                         iArg.defaultValue=parameterInfo.DefaultValue!=null ? parameterInfo.DefaultValue.ToString() : "";
                                         iMethod.args.add(iArg);
@@ -623,6 +643,7 @@ namespace ShineEngine
                         aXML.setProperty("type",argInfo.type);
                         aXML.setProperty("defaultValue",argInfo.defaultValue);
                         aXML.setProperty("autoLength",argInfo.autoLength ? "true" : "false");
+                        aXML.setProperty("isIn",argInfo.isIn ? "true" : "false");
                         aXML.setProperty("isOut",argInfo.isOut ? "true" : "false");
                         aXML.setProperty("isRef",argInfo.isRef ? "true" : "false");
 
@@ -730,6 +751,8 @@ namespace ShineEngine
         {
             switch(projectType)
             {
+                case Project_Shine:
+                    return "";
                 case Project_Common:
                     return "Assets/src/commonGame/control/GameFactoryControl.cs";
                 case Project_Game:
@@ -741,17 +764,9 @@ namespace ShineEngine
             return "";
         }
 
-        private static void doOneGenerate(string xmlPath,string controlClsPath,string adapterOutPath,int projectType)
+        private static XML preDoOneGenerate(string xmlPath)
         {
-            clearGenerate();
-
-            _isShine=projectType==0;
-
-            //TODO:根据类型取父factory
-
             XML xml=FileUtils.readFileForXML(xmlPath);
-
-            int aLen="Assets/".Length;
 
             //处理屏蔽
             foreach(XML xl in xml.getChildrenByName("ignoreMethod"))
@@ -771,6 +786,79 @@ namespace ShineEngine
                 dd.addAll(methods);
                 _clsAllowMethods.put(xl.getProperty("cls"),dd);
             }
+
+            foreach(XML xl in xml.getChildrenByName("namespace"))
+            {
+                _allowNameSpace.add(xl.getProperty("name"));
+            }
+
+            return xml;
+        }
+
+        private static void loadAssembly()
+        {
+            //项目程序集
+            Assembly assembly=typeof(ShineSetup).Assembly;
+
+            Type[] types=assembly.GetTypes();
+
+            foreach(Type vType in types)
+            {
+                string fullName=vType.FullName;
+
+                //内部类不统计
+                if(!fullName.Contains("+"))
+                {
+                    //命名空间允许
+                    if(string.IsNullOrEmpty(vType.Namespace) || _allowNameSpace.contains(vType.Namespace))
+                    {
+                        string vName=vType.Name;
+
+                        int index=vName.IndexOf('`');
+
+                        //去掉泛型标记
+                        if(index>0)
+                        {
+                            vName=vName.Substring(0,index);
+                        }
+
+                        TypeInfo typeInfo=new TypeInfo();
+                        typeInfo.clsName=vName;
+                        typeInfo.clsType=vType;
+
+                        if(_typeDic.contains(vName))
+                        {
+                            // Ctrl.print("类名重复",vName);
+                            continue;
+                        }
+
+                        _typeDic.put(vName,typeInfo);
+                    }
+                }
+            }
+        }
+
+        private static void doOneGenerate(XML xml,string controlClsPath,string adapterOutPath,int projectType)
+        {
+            clearGenerate();
+
+            string[] fileList=FileUtils.getFileList(adapterOutPath,"cs");
+
+            SMap<string,string> fileMap=new SMap<string,string>();
+
+            foreach(string s in fileList)
+            {
+                string fN=FileUtils.getFileNameWithoutEx(s);
+
+                if(fN.EndsWith("Adapter"))
+                {
+                    fileMap.put(fN.Substring(0,fN.Length-7),s);
+                }
+            }
+
+            _isShine=projectType==0;
+
+            int aLen="Assets/".Length;
 
             //先处理包路径
             foreach(XML xl in xml.getChildrenByName("root"))
@@ -850,71 +938,28 @@ namespace ShineEngine
                 }
             }
 
-            //再处理命名空间
-            foreach(XML xl in xml.getChildrenByName("namespace"))
-            {
-                _allowNameSpace.add(xl.getProperty("name"));
-            }
-
-            //项目程序集
-            Assembly assembly=typeof(ShineSetup).Assembly;
-
-            Type[] types=assembly.GetTypes();
-
-            foreach(Type vType in types)
-            {
-                string fullName=vType.FullName;
-
-                //内部类不统计
-                if(!fullName.Contains("+"))
-                {
-                    //命名空间允许
-                    if(string.IsNullOrEmpty(vType.Namespace) || _allowNameSpace.contains(vType.Namespace))
-                    {
-                        string vName=vType.Name;
-
-                        int index=vName.IndexOf('`');
-
-                        //去掉泛型标记
-                        if(index>0)
-                        {
-                            vName=vName.Substring(0,index);
-                        }
-
-                        TypeInfo typeInfo=new TypeInfo();
-                        typeInfo.clsName=vName;
-                        typeInfo.clsType=vType;
-
-                        if(_typeDic.contains(vName))
-                        {
-                            // Ctrl.print("类名重复",vName);
-                            continue;
-                        }
-
-                        _typeDic.put(vName,typeInfo);
-                        //类路径
-                        typeInfo.clsPath=_clsNameToPathDic.get(vName);
-                    }
-                }
-            }
 
             string clsStr=FileUtils.readFileForUTF(controlClsPath);
 
+            string projectMark=getProjectMark(projectType);
             string factoryClsPath=getFactoryClsPath(projectType);
 
-            ClsAnalysis.FactoryClassInfo factoryClass=ClsAnalysis.readFactory(factoryClsPath);
-            string projectMark=getProjectMark(projectType);
+            ClsAnalysis.FactoryClassInfo factoryClass=null;
+            string factoryClsName=null;
 
-            string factoryClsName=FileUtils.getFileFrontName(FileUtils.getFileName(factoryClsPath));
-
-            //遍历父
-            for(int i=projectType-1;i>=Project_Common;i--)
+            if(!_isShine)
             {
-                ClsAnalysis.FactoryClassInfo parentFactoryCls=ClsAnalysis.readFactory(getFactoryClsPath(i));
+                factoryClass=ClsAnalysis.readFactory(factoryClsPath);
+                factoryClsName=FileUtils.getFileFrontName(FileUtils.getFileName(factoryClsPath));
 
-                factoryClass.addParent(parentFactoryCls);
+                //遍历父
+                for(int i=projectType-1;i>=Project_Common;i--)
+                {
+                    ClsAnalysis.FactoryClassInfo parentFactoryCls=ClsAnalysis.readFactory(getFactoryClsPath(i));
+
+                    factoryClass.addParent(parentFactoryCls);
+                }
             }
-
 
             StringBuilder sb=new StringBuilder();
             endClsLine(sb);
@@ -926,13 +971,37 @@ namespace ShineEngine
             }
 
 
-            XML reXMl=new XML();
-            reXMl.name="info";
+            TypeInfo factoryTypeInfo=null;
+            if(!_isShine)
+            {
+                //工厂最后执行
+                factoryTypeInfo =getTypeInfo(factoryClsName);
 
-            //工厂最后执行
-            TypeInfo factoryTypeInfo=getTypeInfo(factoryClsName);
+                _clsNameToPathDic.remove(factoryClsName);
+            }
 
-            _clsNameToPathDic.remove(factoryClsName);
+            //ex
+            foreach(XML xl in xml.getChildrenByName("customClass"))
+            {
+                ILClassInfo cls=new ILClassInfo(xl.getProperty("name"));
+
+                foreach(XML mXml in xl.getChildrenByName("method"))
+                {
+                    string visitTypeStr=mXml.getProperty("visitType");
+                    int visitType=visitTypeStr.isEmpty() ? VisitType.Protected : VisitType.getTypeByName(visitTypeStr);
+
+                    string needBaseCallStr=mXml.getProperty("needBaseCall");
+                    bool needBaseCall=needBaseCallStr.isEmpty() ? true : StringUtils.strToBoolean(needBaseCallStr);
+
+                    string argsStr=mXml.getProperty("args");
+                    string[] args=argsStr.isEmpty() ? ObjectUtils.EmptyStringArr : argsStr.Split(',');
+
+                    cls.addMethod(mXml.getProperty("name"),mXml.getProperty("returnType"),visitType,needBaseCall,args);
+                }
+
+                doOneClass(cls,adapterOutPath,_isShine,sb);
+                fileMap.remove(cls.clsName);
+            }
 
             foreach(string k in _clsNameToPathDic.getSortedMapKeys())
             {
@@ -940,41 +1009,83 @@ namespace ShineEngine
 
                 if(typeInfo==null)
                 {
-                    Ctrl.throwError("不该找不到类型",k);
+                    if(!_isShine)
+                    {
+                        Ctrl.throwError("不该找不到类型",k);
+                    }
                 }
-
-                if(typeInfo.hasHotfixMark || !typeInfo.isEmpty())
+                else
                 {
-                    //需要工厂,并且不是虚类
-                    if(!typeInfo.iCls.isAbstract && (typeInfo.needFactory || _factoryClsDic.contains(k)))
+                    if(typeInfo.hasHotfixMark || !typeInfo.isEmpty())
                     {
-                        ClsAnalysis.FMethod method=factoryClass.addMethod(k,projectMark);
+                        //需要工厂,并且不是虚类
+                        if(!_isShine && !typeInfo.iCls.isAbstract && (typeInfo.needFactory || _factoryClsDic.contains(k)))
+                        {
+                            ClsAnalysis.FMethod method=factoryClass.addMethod(k,projectMark);
+                            //补方法
+                            factoryTypeInfo.iCls.addMethod("create"+method.name,method.returnType,VisitType.Public,true);
+                        }
 
-                        //补方法
-                        factoryTypeInfo.iCls.addMethod("create"+method.name,method.returnType,VisitType.Public,true);
+                        //需要适配器
+                        if(typeInfo.hasHotfixMark || _adapterClsDic.contains(k))
+                        {
+                            doOneClass(typeInfo.iCls,adapterOutPath,_isShine,sb);
+                            fileMap.remove(typeInfo.clsName);
+                        }
                     }
-
-                    //需要适配器
-                    if(typeInfo.hasHotfixMark || _adapterClsDic.contains(k))
-                    {
-                        doOneClass(typeInfo.iCls,adapterOutPath,_isShine,sb);
-                    }
-
-                    // reXMl.appendChild(typeInfo.writeXML());
                 }
             }
 
-            doOneClass(factoryTypeInfo.iCls,adapterOutPath,_isShine,sb);
+            if(!_isShine)
+            {
+                doOneClass(factoryTypeInfo.iCls,adapterOutPath,_isShine,sb);
+                fileMap.remove(factoryTypeInfo.clsName);
+            }
 
             //去掉最后一个tab
             sb.Remove(sb.Length - 1,1);
 
             clsStr=replaceMethod(clsStr,"protected "+(_isShine ? "virtual" : "override")+" void initOtherAdapters(AppDomain appdomain)",sb.ToString());
 
-            factoryClass.writeToPath(factoryClsPath);
+            if(!_isShine)
+            {
+                factoryClass.writeToPath(factoryClsPath);
+            }
+
             FileUtils.writeFileForUTF(controlClsPath,clsStr);
 
-            // FileUtils.writeFileForXML("/Users/sunming/E/temp3/aa.xml",reXMl);
+            if(!fileMap.isEmpty())
+            {
+                fileMap.forEach((k,v)=>
+                {
+                    FileUtils.deleteFile(v);
+                });
+            }
+        }
+
+        private static void doOneClean(string controlClsPath,string adapterOutPath,int projectType)
+        {
+            _isShine=projectType==0;
+
+            string clsStr=FileUtils.readFileForUTF(controlClsPath);
+
+            StringBuilder sb=new StringBuilder();
+            endClsLine(sb);
+
+            if(!_isShine)
+            {
+                sb.Append("base.initOtherAdapters(appdomain);");
+                endClsLine(sb);
+            }
+
+            //去掉最后一个tab
+            sb.Remove(sb.Length - 1,1);
+
+            clsStr=replaceMethod(clsStr,"protected "+(_isShine ? "virtual" : "override")+" void initOtherAdapters(AppDomain appdomain)",sb.ToString());
+
+            FileUtils.writeFileForUTF(controlClsPath,clsStr);
+
+            FileUtils.clearDir(adapterOutPath);
         }
     }
 }

@@ -14,6 +14,8 @@ import com.home.shineTool.global.ShineToolSetting;
 /** 数据定义类(类型枚举类) */
 public class DataDefineTool
 {
+	public int group;
+	
 	/** 路径 */
 	private String _path;
 	/** 偏移 */
@@ -89,29 +91,49 @@ public class DataDefineTool
 		
 		_countValue=Integer.parseInt(_mainCount.defaultValue);
 		
+		if(_countValue<_offSet || _countValue>(_offSet+_len))
+		{
+			Ctrl.warnLog("类型定义count超出范围，已修正",_cls.clsName);
+			
+			_mainCount.defaultValue=String.valueOf(_offSet);
+			_countValue=_offSet;
+		}
+		
 		if(_isMain)
 		{
-			if(ShineToolSetting.isDataDefineReUsed)
+			for(String k:_cls.getFieldNameList().clone())
 			{
-				for(String k:_cls.getFieldNameList())
+				if(!k.equals("off") && !k.equals("count"))
 				{
-					if(!k.equals("off") && !k.equals("count"))
+					FieldInfo field=_cls.getField(k);
+					
+					int v=Integer.parseInt(field.defaultValue);
+					
+					int index=v - _offSet;
+					
+					//已溢出
+					if(index<0 || index>=_len)
 					{
-						FieldInfo field=_cls.getField(k);
-						
-						int v=Integer.parseInt(field.defaultValue);
-						
-						int index=v - _offSet;
-						
-						if(index>=_usedList.size())
+						Ctrl.warnLog("类型定义超出范围，已移除",_cls.clsName,field.name,v);
+						_cls.removeField(field.name);
+					}
+					else
+					{
+						if(ShineToolSetting.isDataDefineReUsed)
 						{
-							_usedList.setLength(index+1);
+							if(index>=_usedList.size())
+							{
+								_usedList.setLength(index+1);
+							}
+							
+							_usedList.set(index,1);
 						}
-						
-						_usedList.set(index,1);
 					}
 				}
-				
+			}
+			
+			if(ShineToolSetting.isDataDefineReUsed)
+			{
 				_nextIndex=_offSet;
 				
 				if(!_usedList.isEmpty())
@@ -201,7 +223,7 @@ public class DataDefineTool
 			}
 		}
 		
-		//主就读
+		//主
 		if(_isMain)
 		{
 			if(ShineToolSetting.isDataDefineReUsed)
@@ -320,7 +342,7 @@ public class DataDefineTool
 			{
 				int num=Integer.parseInt(_mainCount.defaultValue) - _offSet;
 				
-				if(num >= _len)
+				if(num > _len)
 				{
 					Ctrl.throwError(_cls.clsName+"超出范围!");
 				}

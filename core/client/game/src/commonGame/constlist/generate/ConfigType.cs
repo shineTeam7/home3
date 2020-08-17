@@ -660,4 +660,9 @@ public class ConfigType
 	/// </summary>
 	public const int PushTopicType=129;
 	
+	/// <summary>
+	/// 单位组表
+	/// </summary>
+	public const int UnitGroup=130;
+	
 }

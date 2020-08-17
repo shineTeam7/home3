@@ -139,4 +139,16 @@ public class FuncTool
 	// {
 	//
 	// }
+
+	/** 警告日志 */
+	public void warnLog(String str)
+	{
+		Ctrl.warnLog(str);
+	}
+
+	/** 警告日志 */
+	public void warnLog(params object[] args)
+	{
+		Ctrl.warnLog(args);
+	}
 }

@@ -30,13 +30,10 @@ public class GameApp extends BaseGameApp
 	}
 	
 	@Override
-	protected void messageRegist()
+	protected void initBaseFactory()
 	{
-		super.messageRegist();
-		
-		//关注点 基础支持的一些功能协议注册
-		BytesControl.addMessageConst(GameRequestType.class,true,false);
-		BytesControl.addMessageConst(GameResponseType.class,false,false);
+		if(BaseC.factory==null || !CommonSetting.useSceneServer)
+			BaseC.factory=createBaseFactoryControl();
 	}
 	
 	@Override
@@ -81,7 +78,6 @@ public class GameApp extends BaseGameApp
 		{
 			//再构建一次
 			WatchControl.instance=_factory.createWatchControl();
-			BaseC.factory=createBaseFactoryControl();
 		}
 		
 		_server=GameC.server=factory.createServer();
@@ -123,23 +119,10 @@ public class GameApp extends BaseGameApp
 		ExternMethod.init();
 	}
 	
-	/** 取到初始化数据 */
-	public void onGetInitData(GameInitServerData initData)
-	{
-		CommonSetting.isOfficial=initData.isOfficial;
-		
-		GameC.main.setClientVersion(initData.clientVersion);
-		GameC.server.setInfos(initData);
-		
-		GameC.main.afterSetInfos();
-	}
-	
 	/** 初始化下一阶段(取到center数据后) */
 	public void initNext(GameLoginData data)
 	{
 		_loginData=data;
-		
-		GameC.clientGM.setCenterCmdSet(data.clientGMSet);
 		
 		if(_initNext)
 		{

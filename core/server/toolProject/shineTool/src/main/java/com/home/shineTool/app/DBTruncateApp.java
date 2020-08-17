@@ -7,6 +7,7 @@ import com.home.shine.support.collection.SSet;
 import com.home.shine.utils.FileUtils;
 import com.home.shineTool.ShineToolSetup;
 import com.home.shineTool.global.ShineToolGlobal;
+import com.home.shineTool.utils.ToolFileUtils;
 
 /** 清空数据库 */
 public class DBTruncateApp
@@ -20,9 +21,10 @@ public class DBTruncateApp
 		ServerConfig.init();
 		
 		String centerURL=ServerConfig.getCenterConfig().mysql;
+		String centerDBName=ToolFileUtils.getDBNameByURL(centerURL);
 		
 		Ctrl.print("center:");
-		DBExportApp.executeQuery(centerURL,ShineToolGlobal.serverSqlPath + "/truncateCenter.sql");
+		DBExportApp.executeQuery(centerURL,ShineGlobal.serverSqlPath + "/truncate_"+centerDBName+".sql");
 		
 		SSet<String> gameMysqlSet=new SSet<>();
 		
@@ -31,11 +33,12 @@ public class DBTruncateApp
 			if(!v.isAssist)
 			{
 				String gameURL=v.mysql;
+				String gameDBName=ToolFileUtils.getDBNameByURL(gameURL);
 				
-				if(gameMysqlSet.add(gameURL))
+				if(gameMysqlSet.add(gameDBName))
 				{
 					Ctrl.print("game_"+v.id+":");
-					DBExportApp.executeQuery(gameURL,ShineToolGlobal.serverSqlPath + "/truncateGame.sql");
+					DBExportApp.executeQuery(gameURL,ShineGlobal.serverSqlPath + "/truncate_"+gameDBName+".sql");
 				}
 			}
 		});

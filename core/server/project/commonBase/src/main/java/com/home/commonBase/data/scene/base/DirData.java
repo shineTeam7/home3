@@ -150,8 +150,8 @@ public class DirData extends BaseData
 		super.beforeWrite();
 		
 		float scale;
-		idirection=(int)(direction*(scale=Global.directionSendScale));
-		idirectionX=(int)(directionX * scale);
+		idirection=Math.round(direction*(scale=Global.directionSendScale));
+		idirectionX=Math.round(directionX * scale);
 	}
 	
 	@Override

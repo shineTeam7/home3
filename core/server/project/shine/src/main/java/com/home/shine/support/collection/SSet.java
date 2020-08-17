@@ -4,6 +4,8 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.ICreateArray;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -15,7 +17,7 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 	
 	public SSet()
 	{
-	
+		init(_minSize);
 	}
 	
 	public SSet(int capacity)
@@ -26,6 +28,7 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 	public SSet(ICreateArray<K> createKArrFunc)
 	{
 		_createKArrFunc=createKArrFunc;
+		init(_minSize);
 	}
 	
 	public SSet(ICreateArray<K> createKArrFunc,int capacity)
@@ -34,18 +37,9 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 		init(countCapacity(capacity));
 	}
 	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
-	}
-	
 	/** 获取表 */
 	public K[] getKeys()
 	{
-		checkInit();
 		return _set;
 	}
 	
@@ -57,10 +51,11 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 		
 		return ((K[])(new Object[length]));
 	}
-
-	private void init(int capacity)
+	
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 
 		_set=createVArray(capacity<<1);
 	}
@@ -73,8 +68,6 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 			return false;
 		}
 		
-		checkInit();
-
 		K[] keys=_set;
 		int capacityMask;
 		int index;
@@ -325,24 +318,6 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 		justClearSize();
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>(_set.length))
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	/** 添加一组 */
 	public void addAll(SList<? extends K> list)
 	{
@@ -386,6 +361,31 @@ public class SSet<K> extends BaseHash implements Iterable<K>
 		{
 			add(k);
 		}
+	}
+	
+	/** 转化为原生集合 */
+	public HashSet<K> toNatureSet()
+	{
+		HashSet<K> re=new HashSet<>(size());
+		
+		K[] set=_set;
+		K key;
+		
+		for(int i=set.length - 1;i >= 0;--i)
+		{
+			if((key=set[i])!=null)
+			{
+				re.add(key);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Collection<K> collection)
+	{
+		ensureCapacity(collection.size());
+		collection.forEach(this::add);
 	}
 	
 	/** 获取排序好的List */

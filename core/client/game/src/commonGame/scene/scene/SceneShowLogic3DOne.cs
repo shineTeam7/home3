@@ -8,11 +8,11 @@ using UnityEngine.UI;
 /// </summary>
 public class SceneShowLogic3DOne:SceneShowLogic
 {
-	private ObjectPool<DamageNumShow> _damagePool=new ObjectPool<DamageNumShow>(()=>new DamageNumShow());
+	protected ObjectPool<DamageNumShow> _damagePool=new ObjectPool<DamageNumShow>(()=>new DamageNumShow());
 
 	private int _damageResourceID;
 
-	private int _damageInstanceID=0;
+	protected int _damageInstanceID=0;
 
 	private IntObjectMap<DamageNumShow> _damageShows=new IntObjectMap<DamageNumShow>();
 
@@ -69,13 +69,13 @@ public class SceneShowLogic3DOne:SceneShowLogic
 		}
 	}
 
-	/** 在屏幕指定位置显示伤害数字 */
-	protected void showDamageAt(Vector3 pos,int damageType,int damageValue)
+	protected DamageNumShow createDamageNumShow(int damageType,int damageValue)
 	{
 		DamageNumShow show=_damagePool.getOne();
 		GameObject gameObject=AssetPoolControl.getAssetAndIncrease(AssetPoolType.SceneFrontUI,_damageResourceID);
 		show.instanceID=++_damageInstanceID;
 		show.parent=this;
+		show.gameObject=gameObject;
 		gameObject.SetActive(true);
 		gameObject.transform.SetParent(_scene.show.getFrontUIRoot());
 
@@ -83,7 +83,14 @@ public class SceneShowLogic3DOne:SceneShowLogic
 
 		makeDamageNum(gameObject,damageType,damageValue);
 
-		show.show(gameObject,pos);
+		return show;
+	}
+
+	/** 在屏幕指定位置显示伤害数字 */
+	protected void showDamageAt(Vector3 pos,int damageType,int damageValue)
+	{
+		DamageNumShow show=createDamageNumShow(damageType,damageValue);
+		show.show(pos);
 	}
 
 	protected void makeDamageNum(GameObject obj,int damageType,int damageValue)
@@ -135,19 +142,18 @@ public class SceneShowLogic3DOne:SceneShowLogic
 
 		public int tweenIndex=-1;
 
-		public void show(GameObject obj,Vector3 vec)
+		public void show(Vector3 vec)
 		{
-			gameObject=obj;
 
 			vec.x=MathUtils.randomOffSetF(vec.x,parent._damageNumRandomX);
 			vec.y=MathUtils.randomOffSetF(vec.y,parent._damageNumRandomY);
 
-			obj.transform.position=vec;
+			gameObject.transform.position=vec;
 
 			Vector3 end=vec;
 			end.y+=parent._damageNumFlyHeight;
 
-			tweenIndex=Tween.vector3.create(vec,end,parent._damageNumLastTime,v=>{ obj.transform.position=v; },()=>
+			tweenIndex=Tween.vector3.create(vec,end,parent._damageNumLastTime,v=>{ gameObject.transform.position=v; },()=>
 			{
 				dispose();
 

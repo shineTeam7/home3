@@ -11,15 +11,9 @@ public class TRankTool extends RankTool
 	}
 
 	@Override
-	protected void reMakeData()
-	{
-
-	}
-	
-	@Override
 	protected RankData toCreateRankData()
 	{
-		return null;
+		return new RankData();
 	}
 	
 	@Override

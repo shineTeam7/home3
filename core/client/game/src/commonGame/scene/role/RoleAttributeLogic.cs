@@ -15,7 +15,7 @@ public class RoleAttributeLogic:RoleLogicBase
 	{
 		base.construct();
 
-		_aTool=new RoleAttributeDataLogic(this);
+		(_aTool=new RoleAttributeDataLogic()).setParent(this);
 	}
 
 	public override void init()

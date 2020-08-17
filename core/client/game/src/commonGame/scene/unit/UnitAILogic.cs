@@ -408,10 +408,7 @@ public class UnitAILogic:UnitLogicBase
 				{
 					_isWandering=false;
 
-					_fightState=UnitAIFightStateType.Pursue;
-					setPursueUnit(target);
-					selectPursueSkill();
-					continuePursue();
+					startPursue(target,true);
 				}
 				else
 				{
@@ -596,12 +593,18 @@ public class UnitAILogic:UnitLogicBase
 	}
 
 	/** 开始追击 */
-	protected void startPursue(Unit target)
+	protected void startPursue(Unit target,bool isInitiative)
 	{
 		_fightState=UnitAIFightStateType.Move;
 		setPursueUnit(target);
 		selectPursueSkill();
 		continuePursue();
+
+		//主动，怪物唤醒
+		if(isInitiative && _unit.identity.isMonster())
+		{
+			monsterWakeUpAround(target);
+		}
 	}
 
 	/** 设置追击技能 */
@@ -1054,7 +1057,60 @@ public class UnitAILogic:UnitLogicBase
 		if(!_unit.fight.checkIsEnemy(attacker))
 			return;
 
-		startPursue(attacker);
+		//在徘徊中,并且是敌对
+		if(isIdle())
+		{
+			beAttackOnWander(attacker,true);
+		}
+	}
+
+	protected void monsterWakeUpAround(Unit target)
+	{
+		if(_fightUnitConfig.wakeUpCompanionAttackRadius>0)
+		{
+			float sq=_fightUnitConfig.wakeUpCompanionAttackRadiusT;
+
+			Unit[] values;
+			Unit v;
+
+			for(int i=(values=_scene.getFightUnitDic().getValues()).Length-1;i>=0;--i)
+			{
+				if((v=values[i])!=null)
+				{
+					//不是自己
+					if(v!=_unit)
+					{
+						//怪物,徘徊中
+						if(v.identity.isMonster() && v.ai.isIdle())
+						{
+							if(_scene.pos.calculatePosDistanceSq2D(v.pos.getPos(),_unit.pos.getPos())<sq)
+							{
+								v.ai.beAttackOnWander(target,false);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected void beAttackOnWander(Unit attacker,bool isInitiative)
+	{
+		if(!_unit.fight.checkIsEnemy(attacker))
+			return;
+
+		if(!_commandLogic.isCommandCanSearchTarget())
+			return;
+
+		//超出被动追击半径
+		if(_fightUnitConfig.passiveAttackRadius>0 && _scene.pos.calculatePosDistanceSq2D(attacker.pos.getPos(),_unit.pos.getPos())<_fightUnitConfig.passiveAttackRadiusT)
+		{
+			startPursue(attacker,isInitiative);
+		}
+		else
+		{
+			//TODO:要不要就近徘徊躲避一下
+		}
 	}
 
 	/** 根据指令目标，设置追击 */

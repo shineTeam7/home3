@@ -35,6 +35,7 @@ public class JavaCodeInfo extends CodeInfo
 		this.Float="float";
 		this.Double="double";
 		this.String="String";
+		this.Char="char";
 		this.List="List";
 		this.Set="Set";
 		this.Map="Map";
@@ -56,7 +57,7 @@ public class JavaCodeInfo extends CodeInfo
 		this.FloatG="Float";
 		this.DoubleG="Double";
 		this.StringG="String";
-		
+		this.CharG="Char";
 		
 	}
 	

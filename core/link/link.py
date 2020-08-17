@@ -11,6 +11,7 @@ createDic = ['/server/toolProject/shine8/src/main/java']
 pathDic = {
 	'/server/toolProject/shine8/src/main/java/com': '/server/project/shine/src/main/java/com',
 	'/server/testProject/commonBase8/src': '/server/project/commonBase/src',
+	'/server/testProject/commonSceneBase8/src': '/server/project/commonSceneBase/src',
 	'/server/testProject/commonGame8/src': '/server/project/commonGame/src',
 	'/server/testProject/commonCenter8/src': '/server/project/commonCenter/src'
 }

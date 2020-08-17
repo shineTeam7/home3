@@ -3,8 +3,6 @@ file(GLOB SOURCES src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp)
 
 add_library(commonGame STATIC ${SOURCES})
 
-#add_library(projectC::commonGame ALIAS commonGame)
-
 set(CommonGame_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 target_include_directories(commonGame PUBLIC

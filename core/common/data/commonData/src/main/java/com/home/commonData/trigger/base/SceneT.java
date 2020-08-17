@@ -3,7 +3,11 @@ package com.home.commonData.trigger.base;
 import com.home.commonData.trigger.type.DirT;
 import com.home.commonData.trigger.type.PosT;
 import com.home.commonData.trigger.type.UnitT;
+import com.home.shineData.support.TriggerClass;
+import com.home.shineData.support.TriggerType;
 
+@TriggerType("场景")
+@TriggerClass("com.home.commonBase.trigger.SceneTriggerExecutor")
 public abstract class SceneT extends BaseT
 {
 	//--condition--//

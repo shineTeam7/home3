@@ -19,6 +19,9 @@ public class GameInitServerDO
 	/** 全部游戏服简版信息 */
 	@MapKeyInValue("id")
 	Map<Integer,GameServerSimpleInfoDO> gameServerDic;
+	/** 全部场景服简版信息 */
+	@MapKeyInValue("id")
+	Map<Integer,ServerSimpleInfoDO> sceneServerDic;
 	/** 登陆服id组 */
 	int[] loginList;
 	/** 客户端版本 */

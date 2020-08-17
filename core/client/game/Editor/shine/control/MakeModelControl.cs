@@ -36,7 +36,12 @@ namespace ShineEditor
 				element.name=tf.gameObject.name;
 				element.type=UIElementType.Element;
 				element.style = "";
-				
+
+				if(tf.gameObject.tag.Equals("G"))
+				{
+					element.style="G";
+				}
+
 				makeNode(element,tf);
 
 				_uiElementDic.put(element.name,element);
@@ -58,6 +63,11 @@ namespace ShineEditor
 				element.name=tf.gameObject.name;
 				element.type = UIElementType.Model;
 				element.style = "";
+
+				if(tf.gameObject.tag.Equals("G"))
+				{
+					element.style="G";
+				}
 
 				makeNode(element,tf);
 
@@ -207,16 +217,17 @@ namespace ShineEditor
 					{
 						data.type = UIElementType.ImageFrameContainer;
 					}
+                    else if (tf.GetComponent<SScrollViewFake3D>() != null)
+                    {
+                        data.type = UIElementType.SScrollViewFake3D;
+                        SScrollViewFake3D sScrollView = tf.GetComponent<SScrollViewFake3D>();
+                        data.strArgs = new string[1];
+                        data.strArgs[0] = sScrollView.gridElement;
+                    }
 					else if(tf.GetComponent<SScrollView>() != null)
 					{
 						data.type = UIElementType.SScrollView;
 						SScrollView sScrollView = tf.GetComponent<SScrollView>();
-						data.strArgs = new string[1];
-						data.strArgs[0] = sScrollView.gridElement;
-					}else if(tf.GetComponent<SCustomScrollView>() != null)
-					{
-						data.type = UIElementType.SCustomScrollView;
-						SCustomScrollView sScrollView = tf.GetComponent<SCustomScrollView>();
 						data.strArgs = new string[1];
 						data.strArgs[0] = sScrollView.gridElement;
 					}

@@ -9,4 +9,6 @@ public:
 	static bool needError;
 	/** 是否需要字节读写超限的时候报错 */
 	static bool needBytesLenLimitError;
+	/** 字节流序列化是否启动bitBoolean */
+	static bool bytesUseBitBoolean;
 };

@@ -8,7 +8,7 @@ public class AttributeDataLogic:AttributeTool
 {
 	private UnitFightDataLogic _parent;
 
-	public AttributeDataLogic(UnitFightDataLogic parent)
+	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
 		setInfo(AttributeControl.attribute);
@@ -136,8 +136,11 @@ public class AttributeDataLogic:AttributeTool
 	/** 补满血蓝 */
 	public void fillHpMp()
 	{
-		setOneAttribute(AttributeType.Hp,getHpMax());
-		setOneAttribute(AttributeType.Mp,getMpMax());
+		if(getHp()<getHpMax())
+			setOneAttribute(AttributeType.Hp,getHpMax());
+
+		if(getMp()<getMpMax())
+			setOneAttribute(AttributeType.Mp,getMpMax());
 	}
 
 	/** 添加生命百分比 */

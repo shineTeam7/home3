@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ShineEngine.scene
+namespace ShineEngine
 {
 	public class JoystickComponent:MonoBehaviour,IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
 	{

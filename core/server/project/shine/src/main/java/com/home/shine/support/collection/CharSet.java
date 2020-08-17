@@ -4,7 +4,6 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.ICharConsumer;
 import com.home.shine.utils.MathUtils;
 import com.home.shine.utils.ObjectUtils;
-import com.koloboke.collect.impl.CharArrays;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -18,20 +17,12 @@ public class CharSet extends BaseHash implements Iterable<Character>
 	
 	public CharSet()
 	{
-	
+		init(_minSize);
 	}
 	
 	public CharSet(int capacity)
 	{
 		init(countCapacity(capacity));
-	}
-	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
 	}
 	
 	public final char getFreeValue()
@@ -41,14 +32,13 @@ public class CharSet extends BaseHash implements Iterable<Character>
 	
 	public final char[] getKeys()
 	{
-		checkInit();
-		
 		return _set;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_set=new char[capacity<<1];
 		
@@ -61,7 +51,17 @@ public class CharSet extends BaseHash implements Iterable<Character>
 	private char changeFree()
 	{
 		char newFree=findNewFreeOrRemoved();
-		CharArrays.replaceAll(_set,_freeValue,newFree);
+		
+		char free=_freeValue;
+		char[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -180,8 +180,6 @@ public class CharSet extends BaseHash implements Iterable<Character>
 	
 	public boolean add(char key)
 	{
-		checkInit();
-		
 		char free;
 		if(key==(free=_freeValue))
 		{
@@ -305,24 +303,6 @@ public class CharSet extends BaseHash implements Iterable<Character>
 		justClearSize();
 		
 		Arrays.fill(_set,_freeValue);
-	}
-	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
 	}
 	
 	/** 转换数组(带排序) */

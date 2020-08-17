@@ -225,4 +225,20 @@ public class ToolFileUtils
 	{
 		return project+ShineToolSetting.javaCodeFront+project;
 	}
+	
+	public static String getDBNameByURL(String url)
+	{
+		String last=url.substring(url.lastIndexOf("/") + 1,url.length());
+		
+		String aa=last.substring(0,last.indexOf(","));
+		
+		int wIndex;
+		
+		if((wIndex=aa.indexOf("?"))!=-1)
+		{
+			aa=aa.substring(0,wIndex);
+		}
+		
+		return aa.toLowerCase();//全小写
+	}
 }

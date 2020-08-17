@@ -1,7 +1,7 @@
 package com.home.shineTool.tool.export;
 
 import com.home.shine.ctrl.Ctrl;
-import com.home.shine.global.ShineSetting;
+import com.home.shine.data.DIntData;
 import com.home.shine.support.collection.SMap;
 import com.home.shine.support.func.ObjectCall;
 import com.home.shine.support.func.ObjectCall2;
@@ -11,7 +11,7 @@ import com.home.shine.utils.FileUtils;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.constlist.CodeType;
 import com.home.shineTool.constlist.DataGroupType;
-import com.home.shineTool.constlist.ProjectType;
+import com.home.shineTool.constlist.DataSectionType;
 import com.home.shineTool.constlist.VisitType;
 import com.home.shineTool.reflect.FieldInfo;
 import com.home.shineTool.reflect.MethodArgInfo;
@@ -49,14 +49,16 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 	public static final int ServerLogin=3;
 	public static final int ServerGame=4;
 	public static final int ServerManager=5;
-	public static final int ServerRobot=7;
+	public static final int ServerRobot=6;
+	public static final int ServerSceneBase=7;
+	public static final int ServerScene=8;
 	
-	public static final int GMClient=6;//目前也用java做客户端
-	public static final int ClientGame=8;
-	public static final int ClientHotfix=9;
+	public static final int GMClient=10;//目前也用java做客户端
+	public static final int ClientGame=11;
+	public static final int ClientHotfix=12;
 	
 	/** 客户端信息 */
-	public static final int ClientMessage=10;
+	public static final int ClientMessage=13;
 	
 	public static final int typeSize=20;
 	
@@ -65,30 +67,6 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 	
 	/** 数据工程根 */
 	protected String _dataProjectRoot;
-	
-	//indexStarts
-	
-	protected int _start;
-	
-	protected int _gameDataLen;
-	protected int _hotfixDataLen;
-	
-	protected int _gameMessageLen;
-	protected int _centerMessageLen;
-	protected int _hotfixMessageLen;
-	protected int _managerHttpMessageLen;
-	protected int _loginHttpMessageLen;
-	protected int _serverMessageLen;
-	
-	protected int _listLen;
-	protected int _centerGlobalPartLen;
-	
-	/** centerPlayer已做法,但是目前预留100在此 */
-	protected int _centerPlayerPartLen;
-	protected int _gameGlobalPartLen;
-	protected int _playerPartLen;
-	
-	private int _nowStart;
 	
 	/** common工程对象 */
 	protected NormalDataExportTool _commonExport;
@@ -110,23 +88,6 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 	{
 		//unity
 		_clientCodeType=ShineToolSetting.getClientCodeType();
-		
-		//默认值
-		_gameDataLen=500;
-		_hotfixDataLen=300;
-		
-		_gameMessageLen=1000;
-		_hotfixMessageLen=500;
-		_centerMessageLen=300;
-		_managerHttpMessageLen=200;
-		_loginHttpMessageLen=100;
-		_serverMessageLen=1000;
-		
-		_listLen=1;//实际就1个
-		_centerGlobalPartLen=100;
-		_centerPlayerPartLen=100;
-		_gameGlobalPartLen=100;
-		_playerPartLen=200;
 		
 		for(int i=versionStrs.length-1;i>=0;--i)
 		{
@@ -154,8 +115,8 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 				return "robot";
 			case ServerManager:
 				return "manager";
-			//case GMClient:
-			//	return "gmClient";
+			case ServerScene:
+				return "scene";
 			default:
 			{
 				Ctrl.throwError("有未配置的类型");
@@ -163,18 +124,6 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		}
 		
 		return "";
-	}
-	
-	/** 设置start */
-	public void setStart(int value)
-	{
-		_start=value;
-	}
-	
-	/** 获取结束值 */
-	public int getEnd()
-	{
-		return _nowStart;
 	}
 	
 	/** 设置common */
@@ -209,8 +158,6 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 	@Override
 	public void toExecute()
 	{
-		_nowStart=_start;
-		
 		initILRuntime();
 		
 		makeDatas(true);
@@ -288,10 +235,7 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 	/** 数据部分(needExecute:是否是执行,否则就是注册包信息) */
 	private void makeDatas(boolean needExecute)
 	{
-		//Ctrl.print("dataStart",_nowStart);
-		
-		DataExportTool gameData=makeOneData("gameData",_front + "Base",false,_dataProjectRoot + "/data",projectRoots[ServerBase],projectRoots[ClientGame],null,_nowStart,_gameDataLen,true,null,null);
-		_nowStart+=_gameDataLen;
+		DataExportTool gameData=makeOneData("gameData",_front + "Base",false,_dataProjectRoot + "/data",projectRoots[ServerBase],projectRoots[ClientGame],null,DataSectionType.Data,null,null);
 		
 		if(needExecute)
 			gameData.executeAll();
@@ -301,49 +245,61 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		//hotfix
 		if(ShineToolSetting.needHotfix && !_isCommon)
 		{
-			DataExportTool hData=makeOneData("hotfixData","Hotfix",true,_dataProjectRoot + "/hData",projectRoots[ServerBase],projectRoots[ClientHotfix],null,_nowStart,_hotfixDataLen,false,null,gameData);
-			_nowStart+=_hotfixDataLen;
+			DataExportTool hData=makeOneData("hotfixData","Hotfix",true,_dataProjectRoot + "/hData",projectRoots[ServerBase],projectRoots[ClientHotfix],null,DataSectionType.HotfixData,null,gameData);
 			
 			if(needExecute)
 				hData.executeAll();
 			else
 				hData.recordGroupPackage();
 		}
-		
-		//Ctrl.print("dataEnd",_nowStart);
 	}
 	
 	/** 客户端socket通信部分 */
 	private void makeClientMessages()
 	{
 		//game
-		DataExportTool gameRequest=makeOneRequest("",_front + "Game",false,_dataProjectRoot + "/message/game/request",projectRoots[ServerGame],projectRoots[ClientGame],projectRoots[ServerRobot],_nowStart,_gameMessageLen,true,null);
-		_nowStart+=_gameMessageLen;
+		DataExportTool gameRequest=makeOneRequest("",_front + "Game",false,_dataProjectRoot + "/message/game/request",projectRoots[ServerGame],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.GameRequest,null);
 		
-		DataExportTool gameResponse=makeOneResponse("",_front + "Game",false,_dataProjectRoot + "/message/game/response",projectRoots[ServerGame],projectRoots[ClientGame],projectRoots[ServerRobot],_nowStart,_gameMessageLen,gameRequest,null);
-		_nowStart+=_gameMessageLen;
-
-		//game
-		DataExportTool centerRequest=makeOneRequest("center",_front + "Center",false,_dataProjectRoot + "/message/center/request",projectRoots[ServerCenter],projectRoots[ClientGame],projectRoots[ServerRobot],_nowStart,_centerMessageLen,true,null);
-		_nowStart+=_centerMessageLen;
+		DataExportTool gameResponse=makeOneResponse("",_front + "Game",false,_dataProjectRoot + "/message/game/response",projectRoots[ServerGame],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.GameResponse,gameRequest,null);
 		
-		DataExportTool centerResponse=makeOneResponse("center",_front + "Center",false,_dataProjectRoot + "/message/center/response",projectRoots[ServerCenter],projectRoots[ClientGame],projectRoots[ServerRobot],_nowStart,_centerMessageLen,centerRequest,null);
-		_nowStart+=_centerMessageLen;
+		boolean needScene=_isCommon || ShineToolSetting.needScene;
+		
+		//sceneBase
+		DataExportTool sceneBaseRequest=needScene ? makeOneRequest("sceneBase",_front + "SceneBase",false,_dataProjectRoot + "/message/sceneBase/request",projectRoots[ServerSceneBase],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.SceneBaseRequest,null) : null;
+		
+		DataExportTool sceneBaseResponse=needScene ? makeOneResponse("sceneBase",_front + "SceneBase",false,_dataProjectRoot + "/message/sceneBase/response",projectRoots[ServerSceneBase],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.SceneBaseResponse,sceneBaseRequest,null) : null;
+		
+		//scene
+		DataExportTool sceneRequest=needScene ? makeOneRequest("scene",_front + "Scene",false,_dataProjectRoot + "/message/scene/request",projectRoots[ServerScene],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.SceneRequest,null) : null;
+		
+		DataExportTool sceneResponse=needScene ? makeOneResponse("scene",_front + "Scene",false,_dataProjectRoot + "/message/scene/response",projectRoots[ServerScene],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.SceneResponse,sceneRequest,null) : null;
+		
+		//center
+		DataExportTool centerRequest=makeOneRequest("center",_front + "Center",false,_dataProjectRoot + "/message/center/request",projectRoots[ServerCenter],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.CenterRequest,null);
+		
+		DataExportTool centerResponse=makeOneResponse("center",_front + "Center",false,_dataProjectRoot + "/message/center/response",projectRoots[ServerCenter],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.CenterResponse,centerRequest,null);
 		
 		//hotfix
 		if(ShineToolSetting.needHotfix && !_isCommon)
 		{
-			DataExportTool hGameRequest=makeOneRequest("h","HGame",true,_dataProjectRoot + "/message/game/hRequest",projectRoots[ServerGame],projectRoots[ClientHotfix],projectRoots[ServerRobot],_nowStart,_hotfixMessageLen,false,gameRequest);
-			_nowStart+=_hotfixMessageLen;
+			DataExportTool hGameRequest=makeOneRequest("h","HGame",true,_dataProjectRoot + "/message/game/hRequest",projectRoots[ServerGame],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixGameRequest,gameRequest);
 			
-			makeOneResponse("h","HGame",true,_dataProjectRoot + "/message/game/hResponse",projectRoots[ServerGame],projectRoots[ClientHotfix],projectRoots[ServerRobot],_nowStart,_hotfixMessageLen,hGameRequest,gameResponse);
-			_nowStart+=_hotfixMessageLen;
+			makeOneResponse("h","HGame",true,_dataProjectRoot + "/message/game/hResponse",projectRoots[ServerGame],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixGameResponse,hGameRequest,gameResponse);
 			
-			DataExportTool hCenterRequest=makeOneRequest("hCenter","HCenter",true,_dataProjectRoot + "/message/center/hRequest",projectRoots[ServerCenter],projectRoots[ClientHotfix],projectRoots[ServerRobot],_nowStart,_centerMessageLen,false,centerRequest);
-			_nowStart+=_centerMessageLen;
+			if(needScene)
+			{
+				DataExportTool hSceneBaseRequest=makeOneRequest("hSceneBase","HSceneBase",true,_dataProjectRoot + "/message/scene/hRequest",projectRoots[ServerSceneBase],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixSceneBaseRequest,sceneBaseRequest);
+				
+				makeOneResponse("hSceneBase","HSceneBase",true,_dataProjectRoot + "/message/scene/hResponse",projectRoots[ServerSceneBase],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixSceneBaseResponse,hSceneBaseRequest,sceneBaseResponse);
+				
+				DataExportTool hSceneRequest=makeOneRequest("hScene","HScene",true,_dataProjectRoot + "/message/scene/hRequest",projectRoots[ServerScene],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixSceneRequest,sceneRequest);
+				
+				makeOneResponse("hScene","HScene",true,_dataProjectRoot + "/message/scene/hResponse",projectRoots[ServerScene],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixSceneResponse,hSceneRequest,sceneResponse);
+			}
 			
-			makeOneResponse("hCenter","HCenter",true,_dataProjectRoot + "/message/center/hResponse",projectRoots[ServerCenter],projectRoots[ClientHotfix],projectRoots[ServerRobot],_nowStart,_centerMessageLen,hCenterRequest,centerResponse);
-			_nowStart+=_centerMessageLen;
+			DataExportTool hCenterRequest=makeOneRequest("hCenter","HCenter",true,_dataProjectRoot + "/message/center/hRequest",projectRoots[ServerCenter],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixCenterRequest,centerRequest);
+			
+			makeOneResponse("hCenter","HCenter",true,_dataProjectRoot + "/message/center/hResponse",projectRoots[ServerCenter],projectRoots[ClientHotfix],projectRoots[ServerRobot],DataSectionType.HotfixCenterResponse,hCenterRequest,centerResponse);
 		}
 		
 		////common和game都统计
@@ -365,40 +321,41 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		HttpResponseResultExportTool resultTool;
 		
 		//loginResult
-		resultTool=makeOneHttpResponseResult("loginHttp",_front + "Login",_dataProjectRoot + "/message/login/httpResponseResult",projectRoots[ServerLogin],projectRoots[ClientGame],projectRoots[ServerRobot],_nowStart,_loginHttpMessageLen,true);
-		_nowStart+=_loginHttpMessageLen;
+		resultTool=makeOneHttpResponseResult("loginHttp",_front + "Login",_dataProjectRoot + "/message/login/httpResponseResult",projectRoots[ServerLogin],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.ClientLoginResult,true);
 		
 		//loginResponse
 		
-		makeOneHttpResponse("loginHttp",_front + "Login",_dataProjectRoot + "/message/login/httpResponse",projectRoots[ServerLogin],projectRoots[ClientGame],projectRoots[ServerRobot],_nowStart,_loginHttpMessageLen,true,resultTool);
-		_nowStart+=_loginHttpMessageLen;
+		makeOneHttpResponse("loginHttp",_front + "Login",_dataProjectRoot + "/message/login/httpResponse",projectRoots[ServerLogin],projectRoots[ClientGame],projectRoots[ServerRobot],DataSectionType.ClientLoginHttp,true,resultTool);
 		
 		
 		//manager
-		resultTool=makeOneHttpResponseResult("managerHttp",_front + "Manager",_dataProjectRoot + "/message/manager/httpResponseResult",projectRoots[ServerManager],null,projectRoots[GMClient],_nowStart,_managerHttpMessageLen,false);
-		_nowStart+=_managerHttpMessageLen;
+		resultTool=makeOneHttpResponseResult("managerHttp",_front + "Manager",_dataProjectRoot + "/message/manager/httpResponseResult",projectRoots[ServerManager],null,projectRoots[GMClient],DataSectionType.ManegeHttpResult,false);
 		
 		
-		makeOneHttpResponse("managerHttp",_front + "Manager",_dataProjectRoot + "/message/manager/httpResponse",projectRoots[ServerManager],null,projectRoots[GMClient],_nowStart,_managerHttpMessageLen,false,resultTool);
-		_nowStart+=_managerHttpMessageLen;
+		makeOneHttpResponse("managerHttp",_front + "Manager",_dataProjectRoot + "/message/manager/httpResponse",projectRoots[ServerManager],null,projectRoots[GMClient],DataSectionType.ManegeHttp,false,resultTool);
 	}
 	
 	/** 服务器通信部分 */
 	private void makeServerMessages()
 	{
-		DataDefineTool define=new DataDefineTool(projectRoots[ServerBase] + "/constlist/generate/" + _front + "ServerMessageType." + _serverExName,_nowStart,_serverMessageLen,true);
-		_nowStart+=_serverMessageLen;
+		DataSection section=getSection(DataSectionType.SererMessage);
+		
+		DataDefineTool define=new DataDefineTool(projectRoots[ServerBase] + "/constlist/generate/" + _front + "ServerMessageType." + _serverExName,section.from,section.len,true);
+		
+		boolean needScene=_isCommon || ShineToolSetting.needScene;
 		
 		//gameRequest
 		DataMakerTool centerRequestMaker=new DataMakerTool(projectRoots[ServerCenter] + "/tool/generate/" + _front + "CenterServerRequestMaker." + _serverExName,define);
 		DataMakerTool gameRequestMaker=new DataMakerTool(projectRoots[ServerGame] + "/tool/generate/" + _front + "GameServerRequestMaker." + _serverExName,define);
 		DataMakerTool loginRequestMaker=new DataMakerTool(projectRoots[ServerLogin] + "/tool/generate/" + _front + "LoginServerRequestMaker." + _serverExName,define);
 		DataMakerTool managerRequestMaker=new DataMakerTool(projectRoots[ServerManager] + "/tool/generate/" + _front + "ManagerServerRequestMaker." + _serverExName,define);
+		DataMakerTool sceneRequestMaker=needScene ? new DataMakerTool(projectRoots[ServerScene] + "/tool/generate/" + _front + "SceneServerRequestMaker." + _serverExName,define) : null;
 		
 		DataMakerTool centerResponseMaker=new DataMakerTool(projectRoots[ServerCenter] + "/tool/generate/" + _front + "CenterServerResponseMaker." + _serverExName,define);
 		DataMakerTool gameResponseMaker=new DataMakerTool(projectRoots[ServerGame] + "/tool/generate/" + _front + "GameServerResponseMaker." + _serverExName,define);
 		DataMakerTool loginResponseMaker=new DataMakerTool(projectRoots[ServerLogin] + "/tool/generate/" + _front + "LoginServerResponseMaker." + _serverExName,define);
 		DataMakerTool managerResponseMaker=new DataMakerTool(projectRoots[ServerManager] + "/tool/generate/" + _front + "ManagerServerResponseMaker." + _serverExName,define);
+		DataMakerTool sceneResponseMaker=needScene ? new DataMakerTool(projectRoots[ServerScene] + "/tool/generate/" + _front + "SceneServerResponseMaker." + _serverExName,define) : null;
 		
 		ObjectFunc2<DataMakerTool,Integer> getRequestMaker=k->
 		{
@@ -412,6 +369,8 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 					return gameRequestMaker;
 				case ServerManager:
 					return managerRequestMaker;
+				case ServerScene:
+					return sceneRequestMaker;
 				default:
 				{
 					Ctrl.throwError("不该找不到maker");
@@ -434,6 +393,8 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 					return gameResponseMaker;
 				case ServerManager:
 					return managerResponseMaker;
+				case ServerScene:
+					return sceneResponseMaker;
 				default:
 				{
 					Ctrl.throwError("不该找不到maker");
@@ -443,8 +404,6 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 			
 			return null;
 		};
-		
-		
 		
 		/** b为是否使用基类定义 */
 		ObjectCall3<Integer,Integer,Boolean> makeOne=(k,v,b)->
@@ -481,33 +440,56 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 			export.execute();
 		};
 		
+		//ObjectCall3<Integer,Integer,Boolean> makeTwo=(k,v,b)->
+		//{
+		//	makeOne.apply(k,v,b);
+		//	makeOne.apply(v,k,b);
+		//};
+		
+		ObjectCall2<Integer,Integer> makeS=(k,v)->
+		{
+			if(k!=v)
+			{
+				makeOne.apply(k,v,false);
+				makeOne.apply(v,k,false);
+			}
+			else
+			{
+				makeOne.apply(k,v,false);
+			}
+		};
+		
 		//TODO:这里现在还有个问题，就是生成的非base基类，的基类是最继承的BaseRequest而不是对应server的基类
 		
 		//login<->manager
-		makeOne.apply(ServerLogin,ServerManager,false);
-		makeOne.apply(ServerManager,ServerLogin,false);
+		makeS.apply(ServerLogin,ServerManager);
 		
 		//center<->manager
-		makeOne.apply(ServerCenter,ServerManager,false);
-		makeOne.apply(ServerManager,ServerCenter,false);
+		makeS.apply(ServerCenter,ServerManager);
 		
 		//game<->manager
-		makeOne.apply(ServerGame,ServerManager,false);
-		makeOne.apply(ServerManager,ServerGame,false);
+		makeS.apply(ServerGame,ServerManager);
+		
+		//scene<->manager
+		if(needScene)
+			makeS.apply(ServerScene,ServerManager);
 		
 		//center<->game
-		makeOne.apply(ServerCenter,ServerGame,false);
-		makeOne.apply(ServerGame,ServerCenter,false);
+		makeS.apply(ServerCenter,ServerGame);
 		
 		//login<->game
-		makeOne.apply(ServerLogin,ServerGame,false);
-		makeOne.apply(ServerGame,ServerLogin,false);
+		makeS.apply(ServerLogin,ServerGame);
+		
+		//scene<->game
+		if(needScene)
+			makeS.apply(ServerScene,ServerGame);
 		
 		//game<->game
-		makeOne.apply(ServerGame,ServerGame,false);
+		makeS.apply(ServerGame,ServerGame);
 		
 		//login<->login
-		makeOne.apply(ServerLogin,ServerLogin,false);
+		makeS.apply(ServerLogin,ServerLogin);
+		
 		
 		define.write();
 		
@@ -516,13 +498,19 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		loginRequestMaker.write();
 		managerRequestMaker.write();
 		
+		if(needScene)
+			sceneRequestMaker.write();
+		
 		centerResponseMaker.write();
 		gameResponseMaker.write();
 		loginResponseMaker.write();
 		managerResponseMaker.write();
+		
+		if(needScene)
+			sceneResponseMaker.write();
 	}
 	
-	private void makeOneListDatas(String front,boolean isH,int len,int dataServerType,int partServerType,boolean needCountServer,boolean needClient,ObjectCall2<ClassInfo,Boolean> mainExCall,ObjectCall3<ClassInfo,Boolean,Boolean> partExCall)
+	private void makeOneListDatas(String front,boolean isH,int partSec,int listSec,int clientPartSec,int clientListSec,int dataServerType,int partServerType,boolean needCountServer,boolean needClient,ObjectCall2<ClassInfo,Boolean> mainExCall,ObjectCall3<ClassInfo,Boolean,Boolean> partExCall)
 	{
 		String nFront=front;
 		
@@ -555,8 +543,8 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		
 		//serverData
 		
-		define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "PartDataType." + _serverExName,_nowStart,len,true);
-		_nowStart+=len;
+		DataSection partS=getSection(partSec);
+		define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "PartDataType." + _serverExName,partS.from,partS.len,true);
 		
 		maker0=new DataMakerTool(dataServerRootPath + "/tool/generate/" + ff + "PartDataMaker." + _serverExName,define0);
 		
@@ -603,9 +591,10 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		
 		if(needClient)
 		{
-			define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "PartClientDataType." + _serverExName,_nowStart,len,true);
-			define1=new DataDefineTool(clientRoot + "/constlist/generate/" + ff + "PartDataType." + _clientExName,_nowStart,len,false);
-			_nowStart+=len;
+			DataSection clientPartS=getSection(clientPartSec);
+			
+			define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "PartClientDataType." + _serverExName,clientPartS.from,clientPartS.len,true);
+			define1=new DataDefineTool(clientRoot + "/constlist/generate/" + ff + "PartDataType." + _clientExName,clientPartS.from,clientPartS.len,false);
 			
 			maker0=new DataMakerTool(dataServerRootPath + "/tool/generate/" + ff + "PartClientDataMaker." + _serverExName,define0);
 			maker1=new DataMakerTool(clientRoot + "/tool/generate/" + ff + "PartDataMaker." + _clientExName,define1);
@@ -637,12 +626,8 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		}
 		
 		//list
-		len=_listLen;
 		
-		//list
-		
-		define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "ListDataType." + _serverExName,_nowStart,len,true);
-		_nowStart+=len;
+		define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "ListDataType." + _serverExName,getSection(listSec).from,1,true);
 		
 		maker0=new DataMakerTool(dataServerRootPath + "/tool/generate/" + ff + "ListDataMaker." + _serverExName,define0);
 		
@@ -715,11 +700,11 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 			
 			_clientPartListToolDic.put(nFront,clientListTool);
 			
+			DataSection clientListS=getSection(clientListSec);
 			
-			define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "ListClientDataType." + _serverExName,_nowStart,len,true);
-			define1=new DataDefineTool(clientRoot + "/constlist/generate/" + ff + "ListDataType." + _clientExName,_nowStart,len,false);
+			define0=new DataDefineTool(dataServerRootPath + "/constlist/generate/" + ff + "ListClientDataType." + _serverExName,clientListS.from,1,true);
+			define1=new DataDefineTool(clientRoot + "/constlist/generate/" + ff + "ListDataType." + _clientExName,clientListS.from,1,false);
 			//define2=new DataDefineTool(projectRoots[ServerRobot] + "/constlist/generate/" + ff + "ListDataType." + _serverExName,_nowStart,len,false);
-			_nowStart+=len;
 			
 			maker0=new DataMakerTool(dataServerRootPath + "/tool/generate/" + ff + "ListClientDataMaker." + _serverExName,define0);
 			maker1=new DataMakerTool(clientRoot + "/tool/generate/" + ff + "ListDataMaker." + _clientExName,define1);
@@ -843,17 +828,17 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		
 		setPartMethods();
 		
-		makeOneListDatas("CenterGlobal",false,_centerGlobalPartLen,ServerBase,ServerCenter,true,false,this::globalCenterMainEx,this::globalCenterPartEx);
+		makeOneListDatas("CenterGlobal",false,DataSectionType.CenterGlobalPart,DataSectionType.CenterGlobalList,0,0,ServerBase,ServerCenter,true,false,this::globalCenterMainEx,this::globalCenterPartEx);
 		//makeOneListDatas("CenterPlayer",_centerPlayerPartLen,ServerBase,ServerCenter,false,false,false,this::centerPlayerMainEx,this::centerPlayerPartEx);
-		_nowStart+=_centerPlayerPartLen;
-		_nowStart+=_listLen;
+		//_nowStart+=_centerPlayerPartLen;
+		//_nowStart+=_listLen;
 		
-		makeOneListDatas("GameGlobal",false,_gameGlobalPartLen,ServerBase,ServerGame,true,false,this::globalGameMainEx,this::globalGamePartEx);
-		makeOneListDatas("Player",false,_playerPartLen,ServerBase,ServerGame,true,true,this::playerMainEx,this::playerPartEx);
+		makeOneListDatas("GameGlobal",false,DataSectionType.GameGlobalPart,DataSectionType.GameGlobalList,0,0,ServerBase,ServerGame,true,false,this::globalGameMainEx,this::globalGamePartEx);
+		makeOneListDatas("Player",false,DataSectionType.PlayerPart,DataSectionType.PlayerList,DataSectionType.ClientPlayerPart,DataSectionType.ClientPlayerList,ServerBase,ServerGame,true,true,this::playerMainEx,this::playerPartEx);
 		
 		if(ShineToolSetting.needHotfix &&!_isCommon)
 		{
-			makeOneListDatas("HPlayer",true,_playerPartLen,ServerBase,ServerGame,true,true,this::playerMainEx,this::playerPartEx);
+			makeOneListDatas("HPlayer",true,DataSectionType.HotfixPlayerPart,DataSectionType.HotfixPlayerList,DataSectionType.HotfixClientPlayerPart,DataSectionType.HotfixClientPlayerList,ServerBase,ServerGame,true,true,this::playerMainEx,this::playerPartEx);
 		}
 		
 		if(ShineToolSetting.outlineWorkUseTable)
@@ -1281,4 +1266,6 @@ public abstract class NormalDataExportTool extends BaseDataExportTool
 		
 		public ObjectCall<CodeWriter> exFunc;
 	}
+	
+	
 }

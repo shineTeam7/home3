@@ -1,14 +1,12 @@
 package com.home.commonGame.scene.unit;
 
 import com.home.commonBase.constlist.generate.TaskType;
-import com.home.commonBase.data.scene.base.PosDirData;
 import com.home.commonBase.scene.base.Region;
-import com.home.commonBase.scene.unit.UnitPosLogic;
-import com.home.commonGame.net.request.scene.unit.UnitSetPosDirRequest;
 import com.home.commonGame.part.player.Player;
 import com.home.commonGame.scene.base.GameUnit;
+import com.home.commonSceneBase.scene.unit.BUnitPosLogic;
 
-public class GameUnitPosLogic extends UnitPosLogic
+public class GameUnitPosLogic extends BUnitPosLogic
 {
 	@Override
 	public void onEnterRegion(Region region)
@@ -24,11 +22,5 @@ public class GameUnitPosLogic extends UnitPosLogic
 				player.quest.taskEvent(TaskType.EnterRegion,_scene.getConfig().id,region.instanceID);
 			}
 		}
-	}
-	
-	@Override
-	protected void sendSetPosDir(PosDirData posDir)
-	{
-		_unit.radioMessage(UnitSetPosDirRequest.create(_unit.instanceID,posDir),true);
 	}
 }

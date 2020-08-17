@@ -10,7 +10,7 @@ namespace ShineEngine
 
 	public class GridContainer:MonoBehaviour
 	{
-		[SElementAttrubute]
+		[SElement]
 		public string gridElement;
 
 		[SerializeField]
@@ -99,6 +99,16 @@ namespace ShineEngine
 		public RectTransform[] gridList
 		{
 			get {return _gridList;}
+		}
+
+		public float getGridCoverWidth()
+		{
+			return _gridCoverWidth;
+		}
+		
+		public float getGridCoverHeight()
+		{
+			return _gridCoverHeight;
 		}
 
 		/// <summary>
@@ -303,8 +313,8 @@ namespace ShineEngine
 
 			Vector2 rSize=rectTransform.sizeDelta;
 
-			_width=rSize.x<0 ? rSize.x + realScreenWidth : rSize.x;
-			_height=rSize.y<0 ? rSize.y + realScreenHeight : rSize.y;
+			_width=rSize.x<=0 ? rSize.x + realScreenWidth : rSize.x;
+			_height=rSize.y<=0 ? rSize.y + realScreenHeight : rSize.y;
 			
 			doPreInitGrid(_scrollType==SScrollType.Vertical);
 		}

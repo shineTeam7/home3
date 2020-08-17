@@ -1,5 +1,12 @@
 package com.home.commonData.trigger.base;
 
+import com.home.shineData.support.OnlyC;
+import com.home.shineData.support.TriggerClass;
+import com.home.shineData.support.TriggerType;
+
+@OnlyC
+@TriggerType("引导")
+@TriggerClass("com.home.commonGame.trigger.GuideTriggerExecutor")
 public abstract class GuideT extends BaseT
 {
 	//--function--//

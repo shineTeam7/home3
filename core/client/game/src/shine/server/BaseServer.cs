@@ -3,7 +3,6 @@
 /// <summary>
 /// 服务连接基类
 /// </summary>
-[Hotfix]
 public class BaseServer
 {
 	private bool _inited=false;

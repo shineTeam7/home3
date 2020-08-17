@@ -3,9 +3,7 @@ package com.home.commonGame.scene.scene;
 import com.home.commonBase.config.game.FightUnitConfig;
 import com.home.commonBase.config.game.enumT.SceneInstanceTypeConfig;
 import com.home.commonBase.constlist.generate.SceneForceType;
-import com.home.commonBase.constlist.generate.UnitType;
 import com.home.commonBase.constlist.scene.SceneAOIType;
-import com.home.commonBase.data.role.MUnitCacheData;
 import com.home.commonBase.data.role.RoleShowData;
 import com.home.commonBase.data.scene.base.PosDirData;
 import com.home.commonBase.data.scene.role.SceneRoleData;
@@ -23,18 +21,18 @@ import com.home.commonBase.global.Global;
 import com.home.commonBase.scene.base.Role;
 import com.home.commonBase.scene.base.Scene;
 import com.home.commonBase.scene.base.Unit;
-import com.home.commonBase.scene.scene.SceneInOutLogic;
 import com.home.commonGame.logic.team.PlayerTeam;
 import com.home.commonGame.logic.unit.CharacterUseLogic;
 import com.home.commonGame.logic.unit.MUnitFightDataLogic;
 import com.home.commonGame.logic.unit.MUnitUseLogic;
-import com.home.commonGame.net.request.scene.scene.EnterSceneRequest;
-import com.home.commonGame.net.request.scene.scene.LeaveSceneRequest;
-import com.home.commonGame.net.request.scene.scene.PreEnterSceneNextRequest;
-import com.home.commonGame.net.request.scene.scene.PreEnterSceneRequest;
+import com.home.commonGame.net.request.scene.EnterSceneRequest;
+import com.home.commonGame.net.request.scene.LeaveSceneRequest;
+import com.home.commonGame.net.request.scene.PreEnterSceneNextRequest;
+import com.home.commonGame.net.request.scene.PreEnterSceneRequest;
 import com.home.commonGame.part.player.Player;
 import com.home.commonGame.scene.base.GameScene;
-import com.home.commonGame.scene.unit.CharacterIdentityLogic;
+import com.home.commonGame.scene.unit.GameCharacterIdentityLogic;
+import com.home.commonSceneBase.scene.scene.BSceneInoutLogic;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.IntSet;
@@ -44,12 +42,12 @@ import com.home.shine.support.collection.inter.IObjectConsumer;
 import com.home.shine.utils.ObjectUtils;
 
 /** 场景进出逻辑 */
-public class GameSceneInOutLogic extends SceneInOutLogic
+public class GameSceneInOutLogic extends BSceneInoutLogic
 {
 	protected GameScene _gameScene;
 	
 	/** 玩家字典(当前实际存在的玩家) */
-	protected LongObjectMap<Player> _playerDic=new LongObjectMap<>();
+	protected LongObjectMap<Player> _playerDic=new LongObjectMap<>(Player[]::new);
 	
 	/** 保留时间tick */
 	private int _keepTimeTick=-1;
@@ -94,7 +92,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 		//当前场景的再清理一次
 		_scene.getCharacterDic().forEachValueS(v->
 		{
-			Player player=((CharacterIdentityLogic)v.identity).getPlayer();
+			Player player=((GameCharacterIdentityLogic)v.identity).getPlayer();
 			
 			if(player!=null)
 			{
@@ -381,7 +379,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 			return;
 		}
 		
-		if(!_gameScene.gamePlay.checkCanEnter(player))
+		if(!_gameScene.gameMethod.checkCanEnter(player))
 		{
 			player.log("场景不可进入pre,forPlay");
 			player.scene.sceneMiss();
@@ -411,8 +409,6 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 	/** 玩家预备进入(重连登录) */
 	public void playerPreEnterForReconnect(Player player)
 	{
-		player.debugLog("B1");
-		
 		player.scene.setPreScene(_gameScene);
 		
 		//当前有场景,标记重连进入
@@ -529,7 +525,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 			//连接暂停
 			unit.identity.socketReady=false;
 			
-			CharacterIdentityLogic cIdentity=(CharacterIdentityLogic)unit.identity;
+			GameCharacterIdentityLogic cIdentity=(GameCharacterIdentityLogic)unit.identity;
 			
 			//角色身份逻辑绑定单位
 			cIdentity.setPlayer(player);
@@ -565,7 +561,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 		
 		onPlayerEnter(player,unit);
 		
-		_gameScene.gamePlay.onPlayerEnter(player,unit);
+		_gameScene.gameMethod.onPlayerEnter(player,unit);
 	}
 	
 	/** 玩家进入场景(重连进入) */
@@ -580,7 +576,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 			return;
 		}
 		
-		IntSet controlUnits=((CharacterIdentityLogic)unit.identity).getControlUnits();
+		IntSet controlUnits=((GameCharacterIdentityLogic)unit.identity).getControlUnits();
 		//所有控制单位
 		controlUnits.forEachA(v->
 		{
@@ -604,9 +600,10 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 		Ctrl.log("进入场景",player.role.name, player.role.playerID,  _gameScene.getConfig().id, "位置:", player.scene.getCurrentEnterArg().posID, " 场景实例ID:",_gameScene.instanceID);
 
 		//推客户端
-		SceneEnterData enterData=_gameScene.gamePlay.createSceneEnterData();
+		SceneEnterData enterData=_gameScene.gameMethod.createSceneEnterData();
 		
-		_gameScene.gamePlay.makeSceneEnterData(player,enterData);
+		_gameScene.battle.makeSceneEnterData(enterData);
+		_gameScene.gameMethod.makeSceneEnterData(player,enterData);
 		
 		//完整场景
 		boolean isSimple=_scene.isSimple();
@@ -770,6 +767,8 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 			}
 		}
 		
+		_gameScene.gameMethod.onPlayerLeave(player,unit);
+		
 		//移除玩家组
 		_playerDic.remove(player.role.playerID);
 		
@@ -795,7 +794,6 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 			}
 		}
 		
-		_gameScene.gamePlay.onPlayerLeave(player,unit);
 		
 		if(unit!=null)
 		{
@@ -842,14 +840,14 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 			{
 				int posID=player!=null ? player.scene.getCurrentEnterArg().posID : -1;
 				
-				_gameScene.gamePlay.makeScenePosData(data,posID);
+				_gameScene.gameMethod.makeScenePosData(data,posID);
 			}
 		}
 		
 		//机器人不处理
 		if(player!=null)
 		{
-			_gameScene.gamePlay.makeCharacterData(player,data);
+			_gameScene.gameMethod.makeCharacterData(player,data);
 		}
 	}
 	
@@ -949,7 +947,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 	{
 		_signedPlayerIDList=playerIDs;
 		
-		((GameScenePlayLogic)_scene.play).endSigned();
+		((GameSceneMethodLogic)_scene.method).endSigned();
 	}
 	
 	/** 设置绑定角色逻辑组(客户端机器人AI用)(包括自己) */
@@ -1023,6 +1021,7 @@ public class GameSceneInOutLogic extends SceneInOutLogic
 	}
 	
 	/** 玩家是否都进入完毕() */
+	@Override
 	public boolean isPlayerAllExist()
 	{
 		if(_signedPlayerIDList!=null)

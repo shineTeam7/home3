@@ -22,6 +22,12 @@ public class PushNotifyConfig extends BaseConfig
 	/** 用户标签 */
 	public int topicType;
 	
+	/** 描述 */
+	public String describe2="";
+	
+	/** 本地还是远程推送 */
+	public int pushType;
+	
 	/** 文字 */
 	public String text="";
 	
@@ -77,6 +83,10 @@ public class PushNotifyConfig extends BaseConfig
 		
 		this.topicType=stream.readInt();
 		
+		this.pushType=stream.readInt();
+		
+		this.describe2=stream.readUTF();
+		
 	}
 	
 	/** 读完所有表后处理 */
@@ -114,6 +124,10 @@ public class PushNotifyConfig extends BaseConfig
 		stream.writeUTF(this.text);
 		
 		stream.writeInt(this.topicType);
+		
+		stream.writeInt(this.pushType);
+		
+		stream.writeUTF(this.describe2);
 		
 	}
 	

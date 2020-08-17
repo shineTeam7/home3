@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace ShineEditor
 {
-	[CustomPropertyDrawer(typeof(SElementAttrubute))]
-	public class SElementsDropDownDrawerBase:SDropDownDrawerBase<SElementAttrubute>
+	[CustomPropertyDrawer(typeof(SElementAttribute))]
+	public class SElementsDropDownDrawerBase:SDropDownDrawerBase<SElementAttribute>
 	{
-		protected override void populateMenu(GenericMenu menu,SerializedProperty property,SElementAttrubute attribute)
+		protected override void populateMenu(GenericMenu menu,SerializedProperty property,SElementAttribute attribute)
 		{
 			string[] files=FileUtils.getDeepFileList(ToolFileUtils.getAssetsPath(ShineToolGlobal.uiElementsPath),"prefab");
 			for (int i = 0; i < files.Length; i++)

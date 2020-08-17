@@ -14,6 +14,8 @@ public class AttributeCalculateInfo
 	public int[] currentToIndex;
 	/** 当前属性默认满组 */
 	public bool[] currentDefaultFullSet;
+	/** 当前属性是否可超过上限 */
+	public bool[] currentCanOverMax;
 	/** 当前属性和上限的对应组(max->current) */
 	public int[] maxToCurrentMap;
 	/** 当前属性对上限的对应组(current->max) */
@@ -53,6 +55,7 @@ public class AttributeCalculateInfo
 		this.size=size;
 		currentToIndex=new int[size];
 		currentDefaultFullSet=new bool[size];
+		currentCanOverMax=new bool[size];
 		maxToCurrentMap=new int[size];
 		currentToMaxMap=new int[size];
 		formulaTypeDic=new int[size][];
@@ -92,6 +95,11 @@ public class AttributeCalculateInfo
 				if(v.isCurrentDefaultFull)
 				{
 					currentDefaultFullSet[type]=true;
+				}
+
+				if(v.isCurrentCanOverMax)
+				{
+					currentCanOverMax[type]=true;
 				}
 			}
 

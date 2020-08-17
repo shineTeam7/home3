@@ -11,10 +11,9 @@ public class AttributeDataLogic extends AttributeTool
 {
 	private UnitFightDataLogic _parent;
 	
-	public AttributeDataLogic(UnitFightDataLogic parent)
+	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
-		
 		setInfo(AttributeControl.attribute);
 	}
 	
@@ -31,11 +30,11 @@ public class AttributeDataLogic extends AttributeTool
 	}
 	
 	@Override
-	protected void toDispatchAttribute(int[] changeList,int num,boolean[] changeSet,int[] lastAttributes)
+	protected void toDispatchAttribute(int[] changeList,int num,boolean[] changeSet)
 	{
 		//先buff
-		_parent.buff.onAttributeChange(changeList,num,changeSet,lastAttributes);
-		_parent.dispatchAttribute(changeList,num,changeSet,lastAttributes);
+		_parent.buff.onAttributeChange(changeList,num,changeSet);
+		_parent.dispatchAttribute(changeList,num,changeSet);
 	}
 	
 	//快捷方式
@@ -121,8 +120,11 @@ public class AttributeDataLogic extends AttributeTool
 	/** 补满血蓝 */
 	public void fillHpMp()
 	{
-		setOneAttribute(AttributeType.Hp,getHpMax());
-		setOneAttribute(AttributeType.Mp,getMpMax());
+		if(getHp()<getHpMax())
+			setOneAttribute(AttributeType.Hp,getHpMax());
+		
+		if(getMp()<getMpMax())
+			setOneAttribute(AttributeType.Mp,getMpMax());
 	}
 	
 	/** 添加生命百分比 */

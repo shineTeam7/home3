@@ -97,15 +97,12 @@ public class BuffDataLogic
 	/** 忽略buff组字典字典 */
 	private IntIntMap _ignoreBuffGroupDic=new IntIntMap();
 	
-	public BuffDataLogic()
-	{
-		_buffDataPool.setEnable(CommonSetting.sceneLogicUsePool);
-		_buffIntervalActionDataPool.setEnable(CommonSetting.sceneLogicUsePool);
-	}
-	
 	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
+		
+		_buffDataPool.setEnable(CommonSetting.sceneLogicUsePool);
+		_buffIntervalActionDataPool.setEnable(CommonSetting.sceneLogicUsePool);
 	}
 	
 	/** 设置数据 */
@@ -1136,7 +1133,7 @@ public class BuffDataLogic
 	}
 	
 	/** 属性变化接口 */
-	public void onAttributeChange(int[] changeList,int length,boolean[] changeSet,int[] lastAttributes)
+	public void onAttributeChange(int[] changeList,int length,boolean[] changeSet)
 	{
 		IntIntMap vSet;
 		
@@ -1315,8 +1312,6 @@ public class BuffDataLogic
 				
 				if(!isFull)
 					return;
-				
-				//Ctrl.print("AA",_parent.getUnit().instanceID,isAdd,isAdd ? args[2] : -args[2]);
 				
 				_parent.attribute.addOneAttribute(args[1],isAdd ? args[2] : -args[2]);
 			}

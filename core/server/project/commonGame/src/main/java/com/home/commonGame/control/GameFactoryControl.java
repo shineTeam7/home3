@@ -1,7 +1,6 @@
 package com.home.commonGame.control;
 
 import com.home.commonBase.control.FactoryControl;
-import com.home.commonBase.tool.DataRegister;
 import com.home.commonGame.logic.team.PlayerTeamTool;
 import com.home.commonGame.logic.team.TeamTool;
 import com.home.commonGame.logic.union.PlayerUnionTool;
@@ -12,7 +11,8 @@ import com.home.commonGame.part.gameGlobal.GameGlobal;
 import com.home.commonGame.part.player.Player;
 import com.home.commonGame.scene.base.GameScene;
 import com.home.commonGame.server.GameServer;
-import com.home.commonGame.tool.GameDataRegister;
+import com.home.commonGame.tool.func.GameSubsectionPageShowTool;
+import com.home.commonGame.tool.func.GameToCenterPlayerSubsectionRankTool;
 import com.home.commonGame.tool.func.PlayerEquipContainerTool;
 import com.home.shine.control.WatchControl;
 
@@ -20,12 +20,6 @@ import com.home.shine.control.WatchControl;
 public class GameFactoryControl extends FactoryControl
 {
 	//--control组--//
-	
-	@Override
-	public DataRegister createDataRegister()
-	{
-		return new GameDataRegister();
-	}
 	
 	@Override
 	public WatchControl createWatchControl()
@@ -172,7 +166,19 @@ public class GameFactoryControl extends FactoryControl
 	{
 		return new PlayerEquipContainerTool(funcId);
 	}
-	
+
+	/** 分组排行工具 */
+	public GameToCenterPlayerSubsectionRankTool createGameToCenterPlayerSubsectionRankTool(int funcID, int maxNum, long valueMin)
+	{
+		return new GameToCenterPlayerSubsectionRankTool(funcID,maxNum,valueMin);
+	}
+
+	/** 分组排行翻页工具 */
+	public GameSubsectionPageShowTool createGameSubsectionPageShowTool(int funcID, int showMaxNum, int eachPageShowNum)
+	{
+		return new GameSubsectionPageShowTool(funcID,showMaxNum,eachPageShowNum);
+	}
+
 	/** 创建主单位数据逻辑 */
 	public MUnitFightDataLogic createMUnitFightDataLogic()
 	{

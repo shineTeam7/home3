@@ -314,7 +314,7 @@ public class GlobalReadData:BaseData
 	/// <summary>
 	/// 场景AOI灯塔尺寸
 	/// </summary>
-	public int aoiTowerSize;
+	public float aoiTowerSize;
 	
 	/// <summary>
 	/// aoi可视单位上限
@@ -330,6 +330,11 @@ public class GlobalReadData:BaseData
 	/// 自增属性计算间隔(ms)
 	/// </summary>
 	public int increaseAttributeDelay;
+	
+	/// <summary>
+	/// 场景AOI灯塔延长尺寸(过渡区为2倍 该值)
+	/// </summary>
+	public float aoiTowerExpandSize;
 	
 	/// <summary>
 	/// 摄像机最近距离(与目标距离)
@@ -619,7 +624,9 @@ public class GlobalReadData:BaseData
 		
 		this.matchWaitTime=stream.readInt();
 		
-		this.aoiTowerSize=stream.readInt();
+		this.aoiTowerSize=stream.readFloat();
+		
+		this.aoiTowerExpandSize=stream.readFloat();
 		
 		this.aoiSeeMax=stream.readInt();
 		

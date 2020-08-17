@@ -84,6 +84,7 @@ public class MainApp:App
 	protected override void makeControls()
 	{
 		MainFactoryControl factory=GameC.mainFactory=createFactoryControl();
+
 		//先注册基础数据类型
 		BytesControl.addDataMaker(new BaseDataMaker());
 

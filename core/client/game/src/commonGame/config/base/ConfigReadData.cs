@@ -580,6 +580,11 @@ public class ConfigReadData
 	public PushTopicTypeConfig[] pushTopicTypeDic;
 	
 	/// <summary>
+	/// 单位组表字典
+	/// </summary>
+	public IntObjectMap<UnitGroupConfig> unitGroupDic;
+	
+	/// <summary>
 	/// 从流读取
 	/// </summary>
 	public void readBytes(BytesReadStream stream)
@@ -1205,6 +1210,11 @@ public class ConfigReadData
 				UILogicConfig.setDic(uiLogicDic);
 			}
 				break;
+			case ConfigType.UnitGroup:
+			{
+				UnitGroupConfig.setDic(unitGroupDic);
+			}
+				break;
 			case ConfigType.UnitModelSlotType:
 			{
 				UnitModelSlotTypeConfig.setDic(unitModelSlotTypeDic);
@@ -1778,6 +1788,11 @@ public class ConfigReadData
 			case ConfigType.UILogic:
 			{
 				UILogicConfig.afterReadConfigAll();
+			}
+				break;
+			case ConfigType.UnitGroup:
+			{
+				UnitGroupConfig.afterReadConfigAll();
 			}
 				break;
 			case ConfigType.UnitModelSlotType:
@@ -2355,6 +2370,11 @@ public class ConfigReadData
 				readUILogic(stream);
 			}
 				break;
+			case ConfigType.UnitGroup:
+			{
+				readUnitGroup(stream);
+			}
+				break;
 			case ConfigType.UnitModelSlotType:
 			{
 				readUnitModelSlotType(stream);
@@ -2918,6 +2938,11 @@ public class ConfigReadData
 			case ConfigType.UILogic:
 			{
 				refreshUILogic();
+			}
+				break;
+			case ConfigType.UnitGroup:
+			{
+				refreshUnitGroup();
 			}
 				break;
 			case ConfigType.UnitModelSlotType:
@@ -6499,6 +6524,11 @@ public class ConfigReadData
 				UILogicConfig.addDic(uiLogicDic);
 			}
 				break;
+			case ConfigType.UnitGroup:
+			{
+				UnitGroupConfig.addDic(unitGroupDic);
+			}
+				break;
 			case ConfigType.UnitModelSlotType:
 			{
 				UnitModelSlotTypeConfig.addDic(unitModelSlotTypeDic);
@@ -7091,6 +7121,39 @@ public class ConfigReadData
 			PushTopicTypeConfig config=pushTopicTypeDic[configI];
 			if(config!=null)
 				config.refresh();
+		}
+	}
+	
+	/// <summary>
+	/// 读取单位组表
+	/// </summary>
+	protected virtual void readUnitGroup(BytesReadStream stream)
+	{
+		UnitGroupConfig config;
+		int len=stream.readLen();
+		unitGroupDic=new IntObjectMap<UnitGroupConfig>(len);
+		for(int i=0;i<len;++i)
+		{
+			config=new UnitGroupConfig();
+			config.readBytesSimple(stream);
+			unitGroupDic.put(config.id,config);
+		}
+	}
+	
+	/** 刷新单位组表 */
+	private void refreshUnitGroup()
+	{
+		if(!unitGroupDic.isEmpty())
+		{
+			UnitGroupConfig[] configValues=unitGroupDic.getValues();
+			for(int configI=configValues.Length-1;configI>=0;--configI)
+			{
+				UnitGroupConfig config=configValues[configI];
+				if(config!=null)
+				{
+					config.refresh();
+				}
+			}
 		}
 	}
 	

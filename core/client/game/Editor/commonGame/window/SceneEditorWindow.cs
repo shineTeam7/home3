@@ -865,7 +865,7 @@ public class SceneEditorWindow:BaseWindow
 			}
 
 			BytesWriteStream clientStream=new BytesWriteStream();
-			BaseC.config.writeConfigVersion(clientStream);
+			BaseC.config.writeSplitConfigVersion(clientStream);
 
 			clientStream.writeInt(config.id);
 
@@ -884,8 +884,9 @@ public class SceneEditorWindow:BaseWindow
 			FileUtils.writeFileForBytesWriteStream(ShineToolGlobal.sourceCommonConfigDirPath + "/scenePlaceEditor/" + config.id + ".bin",clientStream);
 		}
 
-		// FileUtils.writeFileForBytesWriteStream(ShineToolGlobal.serverSavePath+"/config/scenePlaceEditor.bin",stream);
-		FileUtils.writeFileForBytesWriteStream(ShineToolGlobal.clientSavePath+"/config/scenePlaceEditor.bin",stream);
+		//只写服务器，不写客户端
+		FileUtils.writeFileForBytesWriteStream(ShineToolGlobal.serverSavePath+"/config/scenePlaceEditor.bin",stream);
+		// FileUtils.writeFileForBytesWriteStream(ShineToolGlobal.clientSavePath+"/config/scenePlaceEditor.bin",stream);
 
 		//调用configExport
 		ToolFileUtils.executeServerTool("configExport");
@@ -1112,8 +1113,6 @@ public class SceneEditorWindow:BaseWindow
 			{
 				//更新位置
 				Transform tt=data.gameObject.transform;
-
-				Ctrl.print("看",_tempPosDir.pos);
 
 				_tempPosDir.pos.setByVector(tt.position);
 				_tempPosDir.dir.setByQuaternion(tt.rotation);
@@ -1643,7 +1642,7 @@ public class SceneEditorWindow:BaseWindow
 				if(CommonSetting.clientMapNeedGrid)
 				{
 					BytesWriteStream clientStream=new BytesWriteStream();
-					BaseC.config.writeConfigVersion(clientStream);
+					BaseC.config.writeSplitConfigVersion(clientStream);
 					clientStream.writeInt(config.id);
 
 					if(bytes!=null)

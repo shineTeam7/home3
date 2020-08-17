@@ -392,6 +392,7 @@ public class AudioControl
 			AudioClip audioClip=LoadControl.getUnityObjectByType<AudioClip>(id);
 			AudioSource audioSource=_soundGameObjectPool.getOne();
 
+			audioSource.gameObject.SetActive(true);
 			audioSource.clip=audioClip;
 			audioSource.Play();
 			_soundList.add(audioSource);
@@ -429,6 +430,7 @@ public class AudioControl
 
 	private void removeSound(AudioSource audioSource)
 	{
+		audioSource.gameObject.SetActive(false);
 		_soundGameObjectPool.back(audioSource);
 	}
 

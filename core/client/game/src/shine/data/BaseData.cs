@@ -5,16 +5,14 @@ namespace ShineEngine
 	/// <summary>
 	/// 基础数据
 	/// </summary>
+	[Hotfix(needChildren = false)]
 	public class BaseData:PoolObject
 	{
 		/** 数据类型ID */
 		protected int _dataID=-1;
 
-		/** 是否是空读出来的(BytesStream为0继续读的) */
-		private bool _isEmptyRead=false;
-
-		/** 回收链表尾 */
-		public BaseData releaseLinkTail;
+		// /** 是否是空读出来的(BytesStream为0继续读的) */
+		// private bool _isEmptyRead=false;
 
 		public BaseData()
 		{
@@ -35,11 +33,11 @@ namespace ShineEngine
 			return _dataID==data._dataID;
 		}
 
-		/** 是否空读出 */
-		public bool isEmptyRead()
-		{
-			return _isEmptyRead;
-		}
+		// /** 是否空读出 */
+		// public bool isEmptyRead()
+		// {
+		// 	return _isEmptyRead;
+		// }
 
 		/// <summary>
 		/// 读取字节流(完整版,为DB)
@@ -47,7 +45,7 @@ namespace ShineEngine
 		public void readBytesFull(BytesReadStream stream)
 		{
 			//空读标记
-			_isEmptyRead=stream.isEmpty();
+			// _isEmptyRead=stream.isEmpty();
 
 			stream.startReadObj();
 
@@ -105,6 +103,9 @@ namespace ShineEngine
 		/// </summary>
 		public void readBytesFullWithoutLen(BytesReadStream stream)
 		{
+			//空读标记
+			// _isEmptyRead=stream.isEmpty();
+
 			try
 			{
 				toReadBytesFull(stream);

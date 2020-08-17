@@ -45,21 +45,8 @@ public class UnitIdentityLogic extends UnitLogicBase
 		{
 			FightUnitIdentityData fData=(FightUnitIdentityData)identity;
 			
-			//有控制单位
-			if((controlPlayerID=fData.controlPlayerID)!=-1)
-			{
-				//控主分离
-				if(fData.playerID!=controlPlayerID)
-				{
-					_isCUnitNotM=true;
-				}
-				else
-				{
-					_isCUnitNotM=!BaseC.constlist.unit_isMUnit(_unit.getType());
-				}
-			}
+			setControlPlayerID(fData.controlPlayerID);
 		}
-		
 	}
 	
 	@Override
@@ -190,5 +177,25 @@ public class UnitIdentityLogic extends UnitLogicBase
 	public Role getRole()
 	{
 		return _scene.role.getRole(playerID);
+	}
+	
+	public void setControlPlayerID(long playerID)
+	{
+		if((controlPlayerID=playerID)!=-1)
+		{
+			//控主分离
+			if(_data.identity.playerID!=controlPlayerID)
+			{
+				_isCUnitNotM=true;
+			}
+			else
+			{
+				_isCUnitNotM=!BaseC.constlist.unit_isMUnit(_unit.getType());
+			}
+		}
+		else
+		{
+			_isCUnitNotM=false;
+		}
 	}
 }

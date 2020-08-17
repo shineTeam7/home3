@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Mono.Cecil;
+using ILRuntime.Mono.Cecil;
 using System.Reflection;
-using Mono.Cecil.Cil;
+using ILRuntime.Mono.Cecil.Cil;
 
 using ILRuntime.CLR.TypeSystem;
 using ILRuntime.CLR.Method;
@@ -18,6 +18,7 @@ namespace ILRuntime.Runtime.Enviorment
 {
     public unsafe delegate StackObject* CLRRedirectionDelegate(ILIntepreter intp, StackObject* esp, IList<object> mStack, CLRMethod method, bool isNewObj);
     public delegate object CLRFieldGetterDelegate(ref object target);
+    public unsafe delegate StackObject* CLRFieldBindingDelegate(ref object target, ILIntepreter __intp, StackObject* __esp, IList<object> __mStack);
     public delegate void CLRFieldSetterDelegate(ref object target, object value);
     public delegate object CLRMemberwiseCloneDelegate(ref object target);
     public delegate object CLRCreateDefaultInstanceDelegate();
@@ -44,6 +45,7 @@ namespace ILRuntime.Runtime.Enviorment
         Dictionary<System.Reflection.MethodBase, CLRRedirectionDelegate> redirectMap = new Dictionary<System.Reflection.MethodBase, CLRRedirectionDelegate>();
         Dictionary<System.Reflection.FieldInfo, CLRFieldGetterDelegate> fieldGetterMap = new Dictionary<System.Reflection.FieldInfo, CLRFieldGetterDelegate>();
         Dictionary<System.Reflection.FieldInfo, CLRFieldSetterDelegate> fieldSetterMap = new Dictionary<System.Reflection.FieldInfo, CLRFieldSetterDelegate>();
+        Dictionary<System.Reflection.FieldInfo, KeyValuePair<CLRFieldBindingDelegate, CLRFieldBindingDelegate>> fieldBindingMap = new Dictionary<FieldInfo, KeyValuePair<CLRFieldBindingDelegate, CLRFieldBindingDelegate>>();
         Dictionary<Type, CLRMemberwiseCloneDelegate> memberwiseCloneMap = new Dictionary<Type, CLRMemberwiseCloneDelegate>(new ByReferenceKeyComparer<Type>());
         Dictionary<Type, CLRCreateDefaultInstanceDelegate> createDefaultInstanceMap = new Dictionary<Type, CLRCreateDefaultInstanceDelegate>(new ByReferenceKeyComparer<Type>());
         Dictionary<Type, CLRCreateArrayInstanceDelegate> createArrayInstanceMap = new Dictionary<Type, CLRCreateArrayInstanceDelegate>(new ByReferenceKeyComparer<Type>());
@@ -142,6 +144,12 @@ namespace ILRuntime.Runtime.Enviorment
                 {
                     RegisterCLRMethodRedirection(i, CLRRedirections.EnumGetName);
                 }
+#if NET_4_6 || NET_STANDARD_2_0
+                if(i.Name == "HasFlag")
+                {
+                    RegisterCLRMethodRedirection(i, CLRRedirections.EnumHasFlag);
+                }
+#endif
                 if (i.Name == "ToObject" && i.GetParameters()[1].ParameterType == typeof(int))
                 {
                     RegisterCLRMethodRedirection(i, CLRRedirections.EnumToObject);
@@ -177,6 +185,7 @@ namespace ILRuntime.Runtime.Enviorment
         internal Dictionary<MethodBase, CLRRedirectionDelegate> RedirectMap { get { return redirectMap; } }
         internal Dictionary<FieldInfo, CLRFieldGetterDelegate> FieldGetterMap { get { return fieldGetterMap; } }
         internal Dictionary<FieldInfo, CLRFieldSetterDelegate> FieldSetterMap { get { return fieldSetterMap; } }
+        internal Dictionary<FieldInfo, KeyValuePair<CLRFieldBindingDelegate, CLRFieldBindingDelegate>> FieldBindingMap { get { return fieldBindingMap; } }
         internal Dictionary<Type, CLRMemberwiseCloneDelegate> MemberwiseCloneMap { get { return memberwiseCloneMap; } }
         internal Dictionary<Type, CLRCreateDefaultInstanceDelegate> CreateDefaultInstanceMap { get { return createDefaultInstanceMap; } }
         internal Dictionary<Type, CLRCreateArrayInstanceDelegate> CreateArrayInstanceMap { get { return createArrayInstanceMap; } }
@@ -368,6 +377,7 @@ namespace ILRuntime.Runtime.Enviorment
         /// <param name="stream">Assembly Stream</param>
         /// <param name="symbol">symbol Stream</param>
         /// <param name="symbolReader">symbol 读取器</param>
+        /// <param name="inMemory">是否完整读入内存</param>
         public void LoadAssembly(System.IO.Stream stream, System.IO.Stream symbol, ISymbolReaderProvider symbolReader)
         {
             var module = ModuleDefinition.ReadModule(stream); //从MONO中加载模块
@@ -413,7 +423,6 @@ namespace ILRuntime.Runtime.Enviorment
                 doubleType = GetType("System.Double");
                 objectType = GetType("System.Object");
             }
-            module.AssemblyResolver.ResolveFailure += AssemblyResolver_ResolveFailure;
 #if DEBUG && !DISABLE_ILRUNTIME_DEBUG
             debugService.NotifyModuleLoaded(module.Name);
 #endif
@@ -427,20 +436,6 @@ namespace ILRuntime.Runtime.Enviorment
         public void AddReferenceBytes(string name, byte[] content)
         {
             references[name] = content;
-        }
-
-        private AssemblyDefinition AssemblyResolver_ResolveFailure(object sender, AssemblyNameReference reference)
-        {
-            byte[] content;
-            if (references.TryGetValue(reference.Name, out content))
-            {
-                using (System.IO.MemoryStream ms = new System.IO.MemoryStream(content))
-                {
-                    return AssemblyDefinition.ReadAssembly(ms);
-                }
-            }
-            else
-                return null;
         }
 
         public void RegisterCLRMethodRedirection(MethodBase mi, CLRRedirectionDelegate func)
@@ -461,6 +456,12 @@ namespace ILRuntime.Runtime.Enviorment
         {
             if (!fieldSetterMap.ContainsKey(f))
                 fieldSetterMap[f] = setter;
+        }
+
+        public void RegisterCLRFieldBinding(FieldInfo f, CLRFieldBindingDelegate copyToStack, CLRFieldBindingDelegate assignFromStack)
+        {
+            if (!fieldBindingMap.ContainsKey(f))
+                fieldBindingMap[f] = new KeyValuePair<CLRFieldBindingDelegate, CLRFieldBindingDelegate>(copyToStack, assignFromStack);
         }
 
         public void RegisterCLRMemberwiseClone(Type t, CLRMemberwiseCloneDelegate memberwiseClone)
@@ -736,11 +737,16 @@ namespace ILRuntime.Runtime.Enviorment
                     {
                         t = ((ILMethod)contextMethod).FindGenericArgument(_ref.Name);
                     }
+                    if (t != null)
+                    {
+                        mapTypeToken[t.GetHashCode()] = t;
+                        mapType[t.FullName] = t;
+                    }
                     return t;
                 }
                 if (_ref.IsByReference)
                 {
-                    var et = _ref.GetElementType();
+                    var et = ((ByReferenceType)_ref).ElementType;
                     bool valid = !et.ContainsGenericParameter;
                     var t = GetType(et, contextType, contextMethod);
                     if (t != null)
@@ -764,7 +770,7 @@ namespace ILRuntime.Runtime.Enviorment
                 if (_ref.IsArray)
                 {
                     ArrayType at = (ArrayType)_ref;
-                    var t = GetType(_ref.GetElementType(), contextType, contextMethod);
+                    var t = GetType(at.ElementType, contextType, contextMethod);
                     if (t != null)
                     {
                         res = t.MakeArrayType(at.Rank);
@@ -1276,7 +1282,7 @@ namespace ILRuntime.Runtime.Enviorment
 
         internal long CacheString(object token)
         {
-            long oriHash = token.GetHashCode();
+            long oriHash = token.GetHashCode() & 0xFFFFFFFF;
             long hashCode = oriHash;
             string str = (string)token;
             lock (mapString)

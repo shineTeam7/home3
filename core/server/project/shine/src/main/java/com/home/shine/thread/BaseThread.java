@@ -10,9 +10,6 @@ public class BaseThread extends CThread
 //public class BaseThread extends SThread
 //public class BaseThread extends SThread2
 {
-	//固定调用部分(系统用)
-	private Runnable[] _tickCalls;
-	
 	private int _watchCheckIndex=1000;
 	
 	public BaseThread(String name,int type,int index)
@@ -25,21 +22,6 @@ public class BaseThread extends CThread
 	{
 		super.tick(delay);
 		
-		if(_tickCalls!=null)
-		{
-			for(Runnable run:_tickCalls)
-			{
-				try
-				{
-					run.run();
-				}
-				catch(Exception e)
-				{
-					Ctrl.errorLog(e);
-				}
-			}
-		}
-		
 		if((--_watchCheckIndex)==0)
 		{
 			_watchCheckIndex=1000;
@@ -48,31 +30,4 @@ public class BaseThread extends CThread
 		}
 	}
 	
-	/** 添加tick调用 */
-	public void addTickCall(Runnable func)
-	{
-		if(_tickCalls==null)
-		{
-			_tickCalls=new Runnable[]{func};
-		}
-		else
-		{
-			int length=_tickCalls.length;
-			
-			Runnable[] arr=new Runnable[length+1];
-			System.arraycopy(_tickCalls,0,arr,0,length);
-			arr[length]=func;
-			_tickCalls=arr;
-		}
-	}
-	
-	@Override
-	public void copy(AbstractThread thread)
-	{
-		super.copy(thread);
-		
-		BaseThread thd=(BaseThread)thread;
-		
-		_tickCalls=thd._tickCalls;
-	}
 }

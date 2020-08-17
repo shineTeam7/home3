@@ -9,6 +9,8 @@ using UnityEngine.AI;
 public class ScenePosLogic3DOne:ScenePosLogic
 {
 	private NavMeshPath _navMeshPath=new NavMeshPath();
+	
+	private Vector3[] _corners=new Vector3[1024];
 
 	public override void findRayPos(int moveType,PosData re,PosData from,float direction,float length)
 	{
@@ -33,13 +35,15 @@ public class ScenePosLogic3DOne:ScenePosLogic
 		//有路径
 		if(NavMesh.CalculatePath(from.getVector(),target.getVector(),BaseC.constlist.mapMoveType_getMask(moveType),_navMeshPath))
 		{
-			Vector3[] corners=_navMeshPath.corners;
+			Vector3[] corners = _corners;
+			var len = _navMeshPath.GetCornersNonAlloc(corners);
+			
 			PosData p;
 
-			if(corners.Length>0)
+			if(len>0)
 			{
 				//跳过起始点
-				for(int i=1;i<corners.Length;i++)
+				for(int i=1;i<len;i++)
 				{
 					p=new PosData();
 					p.setByVector(corners[i]);

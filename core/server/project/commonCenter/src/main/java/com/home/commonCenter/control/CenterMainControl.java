@@ -4,6 +4,7 @@ package com.home.commonCenter.control;
 import com.home.commonBase.constlist.generate.InfoCodeType;
 import com.home.commonBase.constlist.system.WorkSenderType;
 import com.home.commonBase.constlist.system.WorkType;
+import com.home.commonBase.data.login.CenterInitServerData;
 import com.home.commonBase.data.login.GameLoginData;
 import com.home.commonBase.data.system.AreaGlobalWorkData;
 import com.home.commonBase.data.system.CenterGlobalWorkData;
@@ -104,10 +105,17 @@ public class CenterMainControl
 	
 	//方法
 	
-	/** 设置区服字典 */
-	public void setAreaDic(IntIntMap dic)
+	/** 设置初始化数据 */
+	public void setInitData(CenterInitServerData initData)
 	{
-		_areaDic=dic;
+		_areaDic=initData.areaDic;
+		CenterC.server.setSelfInfo(initData.info);
+	}
+	
+	/** 热更服务器配置后 */
+	public void onReloadServerConfig()
+	{
+	
 	}
 	
 	/** 获取当前区服ID */
@@ -459,4 +467,6 @@ public class CenterMainControl
 	{
 		CenterC.global.system.executeCenterWork(data);
 	}
+	
+	
 }

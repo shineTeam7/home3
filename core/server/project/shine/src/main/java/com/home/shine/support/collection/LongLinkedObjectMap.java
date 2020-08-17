@@ -31,9 +31,10 @@ public class LongLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		init(countCapacity(capacity));
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_values=new Node[capacity<<1];
 	}
@@ -236,8 +237,33 @@ public class LongLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		}
 	}
 	
+	/** 添加或移动到末尾 */
+	public void putOrMoveToTail(long key,V value)
+	{
+		int index=insert(key,value);
+		
+		if(index<0)
+		{
+			return;
+		}
+		else
+		{
+			Node<V> node=_values[index];
+			node.value=value;
+			
+			//不是末尾
+			if(node!=_tail)
+			{
+				removeFromList(node);
+				addToList(node);
+			}
+			
+			return;
+		}
+	}
+	
 	/** 是否存在 */
-	public boolean contains(int key)
+	public boolean contains(long key)
 	{
 		if(_size==0)
 			return false;
@@ -254,6 +280,31 @@ public class LongLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		if(index >= 0)
 		{
 			return _values[index].value;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public V getAndMoveToTail(long key)
+	{
+		if(_size==0)
+			return null;
+		
+		int index=index(key);
+		if(index >= 0)
+		{
+			Node<V> node=_values[index];
+			
+			//不是末尾
+			if(node!=_tail)
+			{
+				removeFromList(node);
+				addToList(node);
+			}
+			
+			return node.value;
 		}
 		else
 		{
@@ -364,6 +415,24 @@ public class LongLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		return re;
 	}
 	
+	/** 将某key的值移到末尾 */
+	public void moveToTail(long key)
+	{
+		int index=index(key);
+		
+		if(index >= 0)
+		{
+			Node<V> node=_values[index];
+			
+			//不是末尾
+			if(node!=_tail)
+			{
+				removeFromList(node);
+				addToList(node);
+			}
+		}
+	}
+	
 	/** 清空 */
 	public void clear()
 	{
@@ -380,24 +449,6 @@ public class LongLinkedObjectMap<V> extends BaseHash implements Iterable<V>
 		{
 			deleteOne(values[i]);
 			values[i]=null;
-		}
-	}
-	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_values==null)
-			{
-				init(t);
-			}
-			else if(t>_values.length)
-			{
-				rehash(t);
-			}
 		}
 	}
 	

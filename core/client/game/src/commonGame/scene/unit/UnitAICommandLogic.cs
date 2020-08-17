@@ -27,6 +27,8 @@ public class UnitAICommandLogic:UnitLogicBase
 	private PosData _commandPos=new PosData();
 	/** 目标朝向 */
 	private DirData _commandDir=new DirData();
+	/** 目标距离 */
+	private float _commandDistance=0f;
 	/** 指令移动类型 */
 	private int _commandMoveType=UnitMoveType.Run;
 	/** 技能数据 */
@@ -243,6 +245,25 @@ public class UnitAICommandLogic:UnitLogicBase
 				{
 					_commandPassTime=0;
 					doMoveDirOnce();
+				}
+			}
+				break;
+			case UnitAICommandType.MoveToUnit:
+			{
+				//没有移动中
+				if(!_unit.move.isMoving())
+				{
+					Unit unit=_commandUnit.getUnit();
+
+					if(unit!=null)
+					{
+						//向目标移动
+						_unit.move.moveToUnit(unit,_commandDistance);
+					}
+					else
+					{
+						commandFailed();
+					}
 				}
 			}
 				break;
@@ -485,6 +506,19 @@ public class UnitAICommandLogic:UnitLogicBase
 				}
 			}
 				break;
+			case UnitAICommandType.MoveToUnit:
+			{
+				_aiLogic.setFightState(UnitAIFightStateType.Move);
+
+				Unit unit=_commandUnit.getUnit();
+
+				if(unit!=null)
+				{
+					//向目标移动
+					_unit.move.moveToUnit(unit,_commandDistance);
+				}
+			}
+				break;
 			case UnitAICommandType.SkillTo:
 			{
 				_aiLogic.clearFightAI();
@@ -652,6 +686,26 @@ public class UnitAICommandLogic:UnitLogicBase
 
 		_commandType=UnitAICommandType.MoveTo;
 		_commandPos.copyPos(pos);
+		_commandOver=func;
+		_commandMoveType=moveType;
+
+		runCommand();
+	}
+
+	/** 移动到 */
+	public void moveTo(Unit unit,float radius,Action func=null)
+	{
+		moveTo(unit,UnitMoveType.Run,radius,func);
+	}
+
+	/** 移动到 */
+	public void moveTo(Unit unit,int moveType,float radius,Action func)
+	{
+		clearCurrentCommand();
+
+		_commandType=UnitAICommandType.MoveToUnit;
+		_commandUnit.setUnit(unit);
+		_commandDistance=radius;
 		_commandOver=func;
 		_commandMoveType=moveType;
 

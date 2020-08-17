@@ -362,6 +362,12 @@ public class StringUtils
 		return str.trim();
 	}
 	
+	/** 去掉首尾各一个字符 */
+	public static String cutOutsideOne(String str)
+	{
+		return str.substring(1,str.length()-1);
+	}
+	
 	/** 去除全部空格 */
 	public static String cutAllSpace(String str)
 	{

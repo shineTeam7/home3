@@ -22,5 +22,7 @@
         <module>commonGame</module>
         <module>commonLogin</module>
         <module>commonManager</module>
+        <module>commonSceneBase</module>
+        <module>commonScene</module>
     </modules>
 </project>

@@ -22,7 +22,7 @@ public class GamePoolControl
 	public ObjectPool<UnitEffect> unitEffectPool;
 
 	/** buff数据池 */
-	public ObjectPool<BuffData> buffDataPool=new ObjectPool<BuffData>(()=>new BuffData());
+	public ObjectPool<BuffData> buffDataPool=new ObjectPool<BuffData>(()=>GameC.factory.createBuffData());
 	/** buff间隔动作池 */
 	public ObjectPool<BuffIntervalActionData> buffIntervalActionDataPool=new ObjectPool<BuffIntervalActionData>(()=>new BuffIntervalActionData());
 

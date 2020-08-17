@@ -42,8 +42,8 @@ public class GameWatchControl extends WatchControl
 		
 		if((mData=(GameMainWatchData)data.getData(ThreadType.Main))!=null)
 		{
-			info.put("mainFPS",mData.fps);
-			info.put("mainFuncNum",mData.maxFuncNum);
+			info.put("mainPer",mData.percent);
+			info.put("mainFNum",mData.funcNum);
 			info.put("useMemory",mData.useMemory);
 			info.put("totalMemory",mData.totalMemory);
 			info.put("playerOnlineNum",mData.playerOnlineNum);
@@ -61,8 +61,8 @@ public class GameWatchControl extends WatchControl
 			{
 				if((pData=(GamePoolWatchData)data.getData(ThreadType.Pool,i))!=null)
 				{
-					info.put("lineFPS"+i,pData.fps);
-					info.put("lineFuncNum"+i,pData.maxFuncNum);
+					info.put("linePer"+i,pData.percent);
+					info.put("lineFNum"+i,pData.funcNum);
 					info.put("linePlayerNum"+i,pData.playerNum);
 					info.put("lineSceneNum"+i,pData.sceneNum);
 				}
@@ -78,8 +78,8 @@ public class GameWatchControl extends WatchControl
 			{
 				if((tData=data.getData(ThreadType.IO,i))!=null)
 				{
-					info.put("ioFPS"+i,tData.fps);
-					info.put("ioFuncNum"+i,tData.maxFuncNum);
+					info.put("ioPer"+i,tData.percent);
+					info.put("ioFNum"+i,tData.funcNum);
 				}
 				else
 				{

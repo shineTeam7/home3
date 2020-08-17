@@ -1,5 +1,6 @@
 package com.home.shine.global;
 
+import com.home.shine.agent.AgentControl;
 import com.home.shine.constlist.ServerOSType;
 
 import java.io.File;
@@ -7,6 +8,9 @@ import java.io.File;
 /** 全局信息(各种路径相关) */
 public class ShineGlobal
 {
+	/** 当前是否IDEA环境运行 */
+	public static boolean isInIDEA=false;
+	
 	/** 进程名(需要赋值) */
 	public static String processName="game";
 	/** 主路径(bin目录) */
@@ -88,6 +92,9 @@ public class ShineGlobal
 				if(!binFile.exists())
 				{
 					binPath=file.getParent() + "/bin";
+					
+					isInIDEA=true;
+					AgentControl.initForIDEA();
 				}
 			}
 		}

@@ -57,7 +57,7 @@ public class BeLoginToGameServerResponse extends LoginToGameServerResponse
 	protected void execute()
 	{
 		GameC.server.getSocketInfo(SocketType.Login).registerSocket(id,socket);
-		socket.send(ReBeLoginToGameServerRequest.create(GameC.main.getAreaDatas()));
+		socket.send(ReBeLoginToGameServerRequest.create(GameC.main.getAreaDatas(),GameC.main.isCurrentGameFull()));
 	}
 	
 	/** 回池 */

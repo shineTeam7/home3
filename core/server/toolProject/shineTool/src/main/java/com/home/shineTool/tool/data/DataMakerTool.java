@@ -1,6 +1,7 @@
 package com.home.shineTool.tool.data;
 
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.support.collection.SMap;
 import com.home.shine.utils.ObjectUtils;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.constlist.CodeType;
@@ -42,6 +43,8 @@ public class DataMakerTool
 	
 	private static Pattern _reg=Pattern.compile("list\\[(.+?)\\.(.+?)\\-.*?offSet\\]=.*?create(.+?);");
 	
+	private SMap<String,MethodInfo> _oldMethodDic=new SMap<>();
+	
 	public DataMakerTool(String path,DataDefineTool define)
 	{
 		_path=path;
@@ -62,6 +65,14 @@ public class DataMakerTool
 		{
 			((CSClassInfo)_cls).addUsing("System");
 		}
+		
+		_cls.getMethodDic().forEachValue(v->
+		{
+			if(isMakeFunc(v))
+			{
+				_oldMethodDic.put(v.name,v);
+			}
+		});
 		
 		//main
 		
@@ -98,17 +109,10 @@ public class DataMakerTool
 		_mainWriter.writeVarSet(_cls.getFieldWrap("list"),_code.createNewArray(getFuncName(),defineClsName + ".count-"+_cls.getFieldWrap("offSet")));
 	}
 	
-	//private static Pattern getReg(ClassInfo cls)
-	//{
-	//	if(cls.getCodeType()==CodeType.TS)
-	//	{
-	//		return Pattern.compile("this\\.list\\[(.+?)\\.(.+?)\\-this\\.offSet\\]=.*?create(.+?);");
-	//	}
-	//	else
-	//	{
-	//		return Pattern.compile("list\\[(.+?)\\.(.+?)\\-offSet\\]=.*?create(.+?);");
-	//	}
-	//}
+	protected boolean isMakeFunc(MethodInfo methodInfo)
+	{
+		return methodInfo.name.startsWith("create");
+	}
 	
 	/** 定义插件 */
 	public DataDefineTool getDefine()
@@ -208,7 +212,17 @@ public class DataMakerTool
 			writer.writeEnd();
 			method.content=writer.toString();
 			
+			_oldMethodDic.remove(method.name);
+			
 			_cls.addMethod(method);
+		}
+		
+		if(!_oldMethodDic.isEmpty())
+		{
+			_oldMethodDic.forEachValue(v->
+			{
+				_cls.removeMethod(v);
+			});
 		}
 		
 		_mainWriter.writeEnd();

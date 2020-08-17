@@ -21,9 +21,6 @@ public class DBPoolThread extends BaseThread
 	public DBPoolThread(int index)
 	{
 		super("dbPoolThread-"+index,ThreadType.DBPool,index);
-		
-		//1秒50转就好
-		setSleepTime(20);
 	}
 	
 	@Override

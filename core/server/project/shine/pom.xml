@@ -60,7 +60,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <version>8.0.11</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.42.Final</version>
+            <version>4.1.32.Final</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -83,11 +83,6 @@
             <version>1.4</version>
         </dependency>
         <dependency>
-            <groupId>com.koloboke</groupId>
-            <artifactId>koloboke-impl-common-jdk8</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
             <version>2.5.0</version>
@@ -98,6 +93,15 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 </project>

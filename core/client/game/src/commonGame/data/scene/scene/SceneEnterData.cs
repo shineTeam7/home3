@@ -31,6 +31,11 @@ public class SceneEnterData:BaseData
 	public IntObjectMap<UnitSimpleData> bindVisionUnits;
 	
 	/// <summary>
+	/// 副本数据
+	/// </summary>
+	public BattleSceneData battleData;
+	
+	/// <summary>
 	/// 单位数据
 	/// </summary>
 	public SList<UnitData> units;
@@ -163,6 +168,15 @@ public class SceneEnterData:BaseData
 		else
 		{
 			this.bindVisionUnits=null;
+		}
+		
+		if(stream.readBoolean())
+		{
+			this.battleData=(BattleSceneData)stream.readDataSimpleNotNull();
+		}
+		else
+		{
+			this.battleData=null;
 		}
 		
 	}
@@ -304,6 +318,16 @@ public class SceneEnterData:BaseData
 			stream.writeBoolean(false);
 		}
 		
+		if(this.battleData!=null)
+		{
+			stream.writeBoolean(true);
+			stream.writeDataSimpleNotNull(this.battleData);
+		}
+		else
+		{
+			stream.writeBoolean(false);
+		}
+		
 	}
 	
 	/// <summary>
@@ -321,6 +345,7 @@ public class SceneEnterData:BaseData
 		this.roles=mData.roles;
 		this.selfBindFieldItemBags=mData.selfBindFieldItemBags;
 		this.bindVisionUnits=mData.bindVisionUnits;
+		this.battleData=mData.battleData;
 	}
 	
 	/// <summary>
@@ -513,6 +538,15 @@ public class SceneEnterData:BaseData
 			this.bindVisionUnits=null;
 		}
 		
+		if(mData.battleData!=null)
+		{
+			this.battleData=(BattleSceneData)mData.battleData.clone();
+		}
+		else
+		{
+			this.battleData=null;
+		}
+		
 	}
 	
 	/// <summary>
@@ -691,6 +725,19 @@ public class SceneEnterData:BaseData
 		else
 		{
 			if(this.bindVisionUnits!=null)
+				return false;
+		}
+		
+		if(mData.battleData!=null)
+		{
+			if(this.battleData==null)
+				return false;
+			if(!this.battleData.dataEquals(mData.battleData))
+				return false;
+		}
+		else
+		{
+			if(this.battleData!=null)
 				return false;
 		}
 		
@@ -899,6 +946,19 @@ public class SceneEnterData:BaseData
 		else
 		{
 			writer.sb.Append("=null");
+		}
+		
+		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.Append("battleData");
+		writer.sb.Append(':');
+		if(this.battleData!=null)
+		{
+			this.battleData.writeDataString(writer);
+		}
+		else
+		{
+			writer.sb.Append("BattleSceneData=null");
 		}
 		
 		writer.writeEnter();
@@ -1140,6 +1200,35 @@ public class SceneEnterData:BaseData
 			this.bindVisionUnits=null;
 		}
 		
+		if(stream.readBoolean())
+		{
+			BaseData battleDataT=stream.readDataFullNotNull();
+			if(battleDataT!=null)
+			{
+				if(battleDataT is BattleSceneData)
+				{
+					this.battleData=(BattleSceneData)battleDataT;
+				}
+				else
+				{
+					this.battleData=new BattleSceneData();
+					if(!(battleDataT.GetType().IsAssignableFrom(typeof(BattleSceneData))))
+					{
+						stream.throwTypeReadError(typeof(BattleSceneData),battleDataT.GetType());
+					}
+					this.battleData.shadowCopy(battleDataT);
+				}
+			}
+			else
+			{
+				this.battleData=null;
+			}
+		}
+		else
+		{
+			this.battleData=null;
+		}
+		
 		stream.endReadObj();
 	}
 	
@@ -1282,6 +1371,16 @@ public class SceneEnterData:BaseData
 			stream.writeBoolean(false);
 		}
 		
+		if(this.battleData!=null)
+		{
+			stream.writeBoolean(true);
+			stream.writeDataFullNotNull(this.battleData);
+		}
+		else
+		{
+			stream.writeBoolean(false);
+		}
+		
 		stream.endWriteObj();
 	}
 	
@@ -1295,6 +1394,7 @@ public class SceneEnterData:BaseData
 		this.roles=null;
 		this.selfBindFieldItemBags=null;
 		this.bindVisionUnits=null;
+		this.battleData=null;
 	}
 	
 }

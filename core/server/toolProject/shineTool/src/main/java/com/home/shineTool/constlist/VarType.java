@@ -22,16 +22,19 @@ public class VarType
 	public static final int Float=9;
 	public static final int Double=10;
 	public static final int String=11;
+	public static final int Char=12;
 	
 	//集合类型
-	public static final int Array=12;
-	public static final int List=13;
-	public static final int Set=14;
-	public static final int Map=15;
-	public static final int Queue=16;
+	public static final int Array=13;
+	public static final int List=14;
+	public static final int Set=15;
+	public static final int Map=16;
+	public static final int Queue=17;
 	
 	/** 自定义对象 */
-	public static final int CustomObject=17;
+	public static final int CustomObject=18;
+	
+	public static final int size=20;
 	
 	private static int[] _upgrateArr=new int[]{Byte,Short,Int,Long};
 	

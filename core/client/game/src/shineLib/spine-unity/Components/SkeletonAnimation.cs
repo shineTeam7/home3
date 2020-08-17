@@ -131,13 +131,14 @@ namespace Spine.Unity {
 		public static SkeletonAnimation NewSkeletonAnimationGameObject (SkeletonDataAsset skeletonDataAsset) {
 			return SkeletonRenderer.NewSpineGameObject<SkeletonAnimation>(skeletonDataAsset);
 		}
-		#endregion
+        #endregion
 
 		/// <summary>
 		/// Clears the previously generated mesh, resets the skeleton's pose, and clears all previously active animations.</summary>
 		public override void ClearState () {
 			base.ClearState();
-			if (state != null) state.ClearTracks();
+            updateCount = 0;
+            if (state != null) state.ClearTracks();
 		}
 
 		/// <summary>
@@ -146,8 +147,8 @@ namespace Spine.Unity {
 		public override void Initialize (bool overwrite) {
 			if (valid && !overwrite)
 				return;
-
-			base.Initialize(overwrite);
+            updateCount = 0;
+            base.Initialize(overwrite);
 
 			if (!valid)
 				return;
@@ -205,6 +206,30 @@ namespace Spine.Unity {
 			}
 		}
 
-	}
+        public bool isStatic = false;
+
+        public int updateCount = 0;
+
+        public void RefreshStatic()
+        {
+            updateCount = 0;
+        }
+
+        public override void LateUpdate()
+        {
+            if (!loop)
+            {
+                if ((isStatic && updateCount > 1))
+                {
+                    return;
+                }
+                if (isStatic)
+                {
+                    updateCount++;
+                }
+            }
+            base.LateUpdate();
+        }
+    }
 
 }

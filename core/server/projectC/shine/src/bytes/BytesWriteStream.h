@@ -6,7 +6,8 @@
 #include "BytesReadStream.h"
 #include "../utils/BytesUtils.h"
 #include "../global/ShineSetting.h"
-#include<cstring>
+#include "../support/collection/SList.h"
+#include <cstring>
 
 using namespace std;
 
@@ -26,6 +27,11 @@ private:
 	bool _canGrow = true;
 	/** 写入长度限制(防溢出) */
 	int _writeLenLimit = 0;
+
+	int _booleanBufPos = -1;
+	int _booleanBitIndex = 0;
+
+	SList<int> _writeStack;
 
 public:
 	BytesWriteStream() :BytesWriteStream(8)
@@ -72,9 +78,6 @@ public:
 
 	/** 设置长度(只可增) */
 	void setLength(int len);
-
-	/** 遇到文件尾 */
-	void tailError();
 
 
 	/** 获取字节 */
@@ -171,16 +174,21 @@ public:
 		_writeLenLimit = value;
 	}
 
+	/** 写入内存 */
+	void writeMem(void* ptr, int len);
+
+	void clearBooleanPos();
+
 	//--len--//
 
 	/** 获取长度尺寸 */
 	static int getLenSize(int value);
 
 	/** 开始写对象 */
-	int startWriteObj();
+	void startWriteObj();
 
 	/** 结束写对象 */
-	void endWriteObj(int position);
+	void endWriteObj();
 
 	//--data--//
 
@@ -365,5 +373,6 @@ private:
 	/** 确认可写 */
 	bool ensureCanWrite(int len);
 
-
+	/** 遇到文件尾 */
+	void tailError();
 };

@@ -4,6 +4,7 @@ import com.home.shine.data.BaseData;
 import com.home.shine.net.request.AckPingRequest;
 import com.home.shine.net.request.PingRequest;
 import com.home.shine.net.request.RePingRequest;
+import com.home.shine.net.request.SocketCloseRequest;
 import com.home.shine.net.request.SocketConnectSuccessRequest;
 import com.home.shine.net.request.SocketReconnectFailedRequest;
 import com.home.shine.net.request.SocketReconnectRequest;
@@ -25,6 +26,7 @@ public class ShineRequestMaker extends DataMaker
 		list[ShineRequestType.SocketReconnectSuccess-offSet]=this::createSocketReconnectSuccessRequest;
 		list[ShineRequestType.AckPing-offSet]=this::createAckPingRequest;
 		list[ShineRequestType.SocketReconnectFailed-offSet]=this::createSocketReconnectFailedRequest;
+		list[ShineRequestType.SocketClose-offSet]=this::createSocketCloseRequest;
 	}
 	
 	private BaseData createPingRequest()
@@ -60,6 +62,11 @@ public class ShineRequestMaker extends DataMaker
 	private BaseData createSocketReconnectFailedRequest()
 	{
 		return new SocketReconnectFailedRequest();
+	}
+	
+	private BaseData createSocketCloseRequest()
+	{
+		return new SocketCloseRequest();
 	}
 	
 }

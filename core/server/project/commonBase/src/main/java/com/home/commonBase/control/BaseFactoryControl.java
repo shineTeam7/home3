@@ -25,10 +25,13 @@ import com.home.commonBase.data.role.PetSaveData;
 import com.home.commonBase.data.role.PetUseData;
 import com.home.commonBase.data.role.RoleShowData;
 import com.home.commonBase.data.role.RoleSimpleShowData;
+import com.home.commonBase.data.scene.match.MatchSceneData;
 import com.home.commonBase.data.scene.match.PlayerMatchData;
 import com.home.commonBase.data.scene.role.SceneRoleData;
+import com.home.commonBase.data.scene.scene.BattleSceneData;
 import com.home.commonBase.data.scene.scene.CreateSceneData;
 import com.home.commonBase.data.scene.scene.SceneEnterArgData;
+import com.home.commonBase.data.scene.scene.SceneServerEnterData;
 import com.home.commonBase.data.scene.unit.UnitData;
 import com.home.commonBase.data.scene.unit.UnitSimpleData;
 import com.home.commonBase.data.scene.unit.identity.BuildingIdentityData;
@@ -470,6 +473,12 @@ public class BaseFactoryControl
 		return new CreateSceneData();
 	}
 	
+	/** 创建匹配后场景数据 */
+	public MatchSceneData createMatchSceneData()
+	{
+		return new MatchSceneData();
+	}
+	
 	/** 创建装备容器数据 */
 	public EquipContainerData createEquipContainerData()
 	{
@@ -491,6 +500,16 @@ public class BaseFactoryControl
 	public SceneEnterArgData createSceneEnterArgData()
 	{
 		return new SceneEnterArgData();
+	}
+	
+	public BattleSceneData createBattleSceneData()
+	{
+		return new BattleSceneData();
+	}
+	
+	public SceneServerEnterData createSceneServerEnterData()
+	{
+		return new SceneServerEnterData();
 	}
 	
 	//--逻辑组--//

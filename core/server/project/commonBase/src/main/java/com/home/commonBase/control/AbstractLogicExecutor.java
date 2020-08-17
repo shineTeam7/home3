@@ -4,6 +4,7 @@ import com.home.commonBase.global.CommonSetting;
 import com.home.shine.control.DateControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.global.ShineSetting;
 import com.home.shine.thread.CoreThread;
 import com.home.shine.timer.TimeDriver;
 
@@ -20,6 +21,8 @@ public class AbstractLogicExecutor
 	private long _timeMillis;
 	
 	private int _secondTick=0;
+	
+	private int _tenTimeTick=0;
 	
 	public AbstractLogicExecutor(int index)
 	{
@@ -42,14 +45,7 @@ public class AbstractLogicExecutor
 	protected void initTick()
 	{
 		_fixedTimer=Ctrl.getFixedTimer();
-		_thread.addTickCall(this::onThreadTick);
 		_thread.getTimeDriver().setInterval(this::onFrame,CommonSetting.logicFrameDelay);
-	}
-	
-	/** 线程tick时 */
-	protected void onThreadTick()
-	{
-	
 	}
 	
 	protected void onFrame(int delay)
@@ -62,10 +58,23 @@ public class AbstractLogicExecutor
 			onSecond(_secondTick);
 			_secondTick=0;
 		}
+		
+		int time;
+		if((time=(_tenTimeTick+=delay))>= ShineSetting.pieceTime)
+		{
+			_tenTimeTick=0;
+			onPiece(time);
+		}
 	}
 	
 	/** 每秒执行 */
 	protected void onSecond(int delay)
+	{
+	
+	}
+	
+	/** 每份时间 */
+	protected void onPiece(int delay)
 	{
 	
 	}

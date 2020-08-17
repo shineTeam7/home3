@@ -16,6 +16,9 @@ public class RankData extends KeyData
 	/** 排行值(如以后一个值不够用,再补,理论上应该是够的) */
 	public long value;
 	
+	/** 排行值刷新时间 */
+	public long valueRefreshTime;
+	
 	/** 排名(从1开始) */
 	public int rank;
 	
@@ -36,6 +39,8 @@ public class RankData extends KeyData
 		
 		this.value=stream.readLong();
 		
+		this.valueRefreshTime=stream.readLong();
+		
 		stream.endReadObj();
 	}
 	
@@ -51,6 +56,8 @@ public class RankData extends KeyData
 		
 		stream.writeLong(this.value);
 		
+		stream.writeLong(this.valueRefreshTime);
+		
 		stream.endWriteObj();
 	}
 	
@@ -64,6 +71,8 @@ public class RankData extends KeyData
 		
 		this.value=stream.readLong();
 		
+		this.valueRefreshTime=stream.readLong();
+		
 	}
 	
 	/** 写入字节流(简版) */
@@ -75,6 +84,8 @@ public class RankData extends KeyData
 		stream.writeInt(this.rank);
 		
 		stream.writeLong(this.value);
+		
+		stream.writeLong(this.valueRefreshTime);
 		
 	}
 	
@@ -91,6 +102,7 @@ public class RankData extends KeyData
 		
 		this.rank=mData.rank;
 		this.value=mData.value;
+		this.valueRefreshTime=mData.valueRefreshTime;
 	}
 	
 	/** 复制(深拷贝) */
@@ -108,6 +120,8 @@ public class RankData extends KeyData
 		
 		this.value=mData.value;
 		
+		this.valueRefreshTime=mData.valueRefreshTime;
+		
 	}
 	
 	/** 是否数据一致 */
@@ -122,6 +136,9 @@ public class RankData extends KeyData
 			return false;
 		
 		if(this.value!=mData.value)
+			return false;
+		
+		if(this.valueRefreshTime!=mData.valueRefreshTime)
 			return false;
 		
 		return true;
@@ -152,6 +169,12 @@ public class RankData extends KeyData
 		writer.sb.append(this.value);
 		
 		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.append("valueRefreshTime");
+		writer.sb.append(':');
+		writer.sb.append(this.valueRefreshTime);
+		
+		writer.writeEnter();
 	}
 	
 	/** 初始化初值 */
@@ -170,6 +193,7 @@ public class RankData extends KeyData
 		
 		this.rank=0;
 		this.value=0L;
+		this.valueRefreshTime=0L;
 	}
 	
 }

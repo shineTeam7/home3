@@ -20,6 +20,8 @@ public class Ctrl
 	private static int _stackStrLength=2000;
 	/** 固定系统时间 */
 	private static volatile long _fixedTimer=System.currentTimeMillis();
+	/** 固定系统时间(s) */
+	private static volatile long _fixedSecondTimer=System.currentTimeMillis()/1000;
 	
 	private static Runtime _runTime=Runtime.getRuntime();
 	
@@ -50,10 +52,17 @@ public class Ctrl
 		return _fixedTimer;
 	}
 	
+	/** 获取每帧固定的系统时间(s) */
+	public static long getFixedSecondTimer()
+	{
+		return _fixedSecondTimer;
+	}
+	
 	/** 使缓存失效 */
 	public static void makeFixDirty()
 	{
 		_fixedTimer=System.currentTimeMillis();
+		_fixedSecondTimer=_fixedTimer/1000L;
 	}
 	
 	/** 获取当前使用堆内存 */

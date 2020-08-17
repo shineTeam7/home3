@@ -3,6 +3,7 @@
 	/// <summary>
 	/// 字节http消息
 	/// </summary>
+	[Hotfix(needChildren = false)]
 	public abstract class BytesHttpRequest:BaseHttpRequest
 	{
 		/** -1:io问题,0:成功,>0:逻辑问题 */

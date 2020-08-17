@@ -17,6 +17,7 @@
     <modules>
         <module>shine</module>
         <module>commonBase</module>
+        <module>commonSceneBase</module>
         <module>commonCenter</module>
         <module>commonGame</module>
         <module>commonTest</module>

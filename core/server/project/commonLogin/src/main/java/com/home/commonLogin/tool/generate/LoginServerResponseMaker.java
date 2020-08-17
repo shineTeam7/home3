@@ -2,6 +2,7 @@ package com.home.commonLogin.tool.generate;
 import com.home.commonBase.constlist.generate.ServerMessageType;
 import com.home.commonLogin.net.serverResponse.game.login.ClientApplyBindPlatformToLoginServerResponse;
 import com.home.commonLogin.net.serverResponse.game.login.ReUserLoginToLoginServerResponse;
+import com.home.commonLogin.net.serverResponse.game.login.RefreshGameLoginLimitToLoginServerResponse;
 import com.home.commonLogin.net.serverResponse.game.system.LimitAreaToLoginServerResponse;
 import com.home.commonLogin.net.serverResponse.game.system.ReBeLoginToGameServerResponse;
 import com.home.commonLogin.net.serverResponse.game.system.SendUserWorkToLoginServerResponse;
@@ -10,11 +11,12 @@ import com.home.commonLogin.net.serverResponse.login.login.ReClientLoginErrorSer
 import com.home.commonLogin.net.serverResponse.login.login.ReClientLoginTransferServerResponse;
 import com.home.commonLogin.net.serverResponse.login.system.BeLoginToLoginServerResponse;
 import com.home.commonLogin.net.serverResponse.login.system.ReBeLoginToLoginServerResponse;
-import com.home.commonLogin.net.serverResponse.manager.login.HotfixToLoginServerResponse;
-import com.home.commonLogin.net.serverResponse.manager.system.LoginExitServerResponse;
-import com.home.commonLogin.net.serverResponse.manager.system.ManagerToLoginCommandServerResponse;
-import com.home.commonLogin.net.serverResponse.manager.system.ReBeLoginToManagerServerResponse;
-import com.home.commonLogin.net.serverResponse.manager.system.SendServerOpenToLoginServerResponse;
+import com.home.commonLogin.net.serverResponse.manager.HotfixToLoginServerResponse;
+import com.home.commonLogin.net.serverResponse.manager.LoginExitServerResponse;
+import com.home.commonLogin.net.serverResponse.manager.ManagerToLoginCommandServerResponse;
+import com.home.commonLogin.net.serverResponse.manager.ReBeLoginToManagerServerResponse;
+import com.home.commonLogin.net.serverResponse.manager.ReloadServerConfigToLoginServerResponse;
+import com.home.commonLogin.net.serverResponse.manager.SendServerOpenToLoginServerResponse;
 import com.home.shine.data.BaseData;
 import com.home.shine.tool.CreateDataFunc;
 import com.home.shine.tool.DataMaker;
@@ -26,21 +28,23 @@ public class LoginServerResponseMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
+		list[ServerMessageType.HotfixToLogin-offSet]=this::createHotfixToLoginServerResponse;
+		list[ServerMessageType.LoginExit-offSet]=this::createLoginExitServerResponse;
+		list[ServerMessageType.ManagerToLoginCommand-offSet]=this::createManagerToLoginCommandServerResponse;
+		list[ServerMessageType.ReBeLoginToManager-offSet]=this::createReBeLoginToManagerServerResponse;
+		list[ServerMessageType.ReloadServerConfigToLogin-offSet]=this::createReloadServerConfigToLoginServerResponse;
+		list[ServerMessageType.SendServerOpenToLogin-offSet]=this::createSendServerOpenToLoginServerResponse;
 		list[ServerMessageType.ClientApplyBindPlatformToLogin-offSet]=this::createClientApplyBindPlatformToLoginServerResponse;
 		list[ServerMessageType.LimitAreaToLogin-offSet]=this::createLimitAreaToLoginServerResponse;
 		list[ServerMessageType.ReBeLoginToGame-offSet]=this::createReBeLoginToGameServerResponse;
+		list[ServerMessageType.ReUserLoginToLogin-offSet]=this::createReUserLoginToLoginServerResponse;
+		list[ServerMessageType.RefreshGameLoginLimitToLogin-offSet]=this::createRefreshGameLoginLimitToLoginServerResponse;
+		list[ServerMessageType.SendUserWorkToLogin-offSet]=this::createSendUserWorkToLoginServerResponse;
 		list[ServerMessageType.BeLoginToLogin-offSet]=this::createBeLoginToLoginServerResponse;
 		list[ServerMessageType.ClientLoginTransfer-offSet]=this::createClientLoginTransferServerResponse;
 		list[ServerMessageType.ReBeLoginToLogin-offSet]=this::createReBeLoginToLoginServerResponse;
 		list[ServerMessageType.ReClientLoginError-offSet]=this::createReClientLoginErrorServerResponse;
 		list[ServerMessageType.ReClientLoginTransfer-offSet]=this::createReClientLoginTransferServerResponse;
-		list[ServerMessageType.SendUserWorkToLogin-offSet]=this::createSendUserWorkToLoginServerResponse;
-		list[ServerMessageType.ReUserLoginToLogin-offSet]=this::createReUserLoginToLoginServerResponse;
-		list[ServerMessageType.ReBeLoginToManager-offSet]=this::createReBeLoginToManagerServerResponse;
-		list[ServerMessageType.HotfixToLogin-offSet]=this::createHotfixToLoginServerResponse;
-		list[ServerMessageType.LoginExit-offSet]=this::createLoginExitServerResponse;
-		list[ServerMessageType.SendServerOpenToLogin-offSet]=this::createSendServerOpenToLoginServerResponse;
-		list[ServerMessageType.ManagerToLoginCommand-offSet]=this::createManagerToLoginCommandServerResponse;
 	}
 	
 	private BaseData createReBeLoginToGameServerResponse()
@@ -116,6 +120,16 @@ public class LoginServerResponseMaker extends DataMaker
 	private BaseData createManagerToLoginCommandServerResponse()
 	{
 		return new ManagerToLoginCommandServerResponse();
+	}
+	
+	private BaseData createRefreshGameLoginLimitToLoginServerResponse()
+	{
+		return new RefreshGameLoginLimitToLoginServerResponse();
+	}
+	
+	private BaseData createReloadServerConfigToLoginServerResponse()
+	{
+		return new ReloadServerConfigToLoginServerResponse();
 	}
 	
 }

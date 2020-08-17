@@ -1,5 +1,6 @@
 package com.home.commonBase.global;
 import com.home.commonBase.config.other.RecastSettingConfig;
+import com.home.commonBase.constlist.system.GameAreaDivideType;
 import com.home.commonBase.global.GlobalReadData;
 import com.home.shine.ctrl.Ctrl;
 
@@ -14,9 +15,6 @@ public class Global
 	
 	/** 每个game服设计承载人数(在线) */
 	public static int gameDesignBearNum;
-	
-	/** 每个区最大注册人数 */
-	public static int areaMaxRegistNum;
 	
 	/** 每个区服设计注册人数 */
 	public static int areaDesignRegistNum;
@@ -208,7 +206,10 @@ public class Global
 	public static int bornTownPosID;
 	
 	/** 场景AOI灯塔尺寸 */
-	public static int aoiTowerSize;
+	public static float aoiTowerSize;
+	
+	/** 场景AOI灯塔延长尺寸(过渡区为2倍 该值) */
+	public static float aoiTowerExpandSize;
 	
 	/** aoi可视单位上限 */
 	public static int aoiSeeMax;
@@ -352,7 +353,6 @@ public class Global
 		gameDesignBearNum=data.gameDesignBearNum;
 		gameMaxBearNum=data.gameMaxBearNum;
 		areaDesignRegistNum=data.areaDesignRegistNum;
-		areaMaxRegistNum=data.areaMaxRegistNum;
 		playerNameLength=data.playerNameLength;
 		isNameUseAreaIDAsFront=data.isNameUseAreaIDAsFront;
 		canPlayerNameRepeat=data.canPlayerNameRepeat;
@@ -416,6 +416,7 @@ public class Global
 		bornTownPosID=data.bornTownPosID;
 		matchWaitTime=data.matchWaitTime;
 		aoiTowerSize=data.aoiTowerSize;
+		aoiTowerExpandSize=data.aoiTowerExpandSize;
 		aoiSeeMax=data.aoiSeeMax;
 		pickUpRadius=data.pickUpRadius;
 		autoLinedSceneCapacity=data.autoLinedSceneCapacity;
@@ -477,6 +478,16 @@ public class Global
 		if (Global.clientRandomSeedNum == 0)
 		{
 			Ctrl.throwError("Global.clientRandomSeedNum不能为0");
+		}
+		
+		if(Global.areaDesignRegistNum<=0)
+		{
+			Global.areaDesignRegistNum=CommonSetting.areaRegistAllow;
+		}
+		
+		if(CommonSetting.areaDivideType==GameAreaDivideType.AutoEnterGame)
+		{
+			Global.areaDesignRegistNum=CommonSetting.areaRegistAllow;
 		}
 	}
 	

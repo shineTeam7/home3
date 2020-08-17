@@ -7,6 +7,7 @@ public class ShineProjectPath
 	//组合path
 	public static String commonDataDirPath;
 	public static String dataDirPath;
+	public static String serverShineDirPath;
 	public static String serverCommonBaseDirPath;
 	public static String serverBaseDirPath;
 	public static String serverCommonGameDirPath;
@@ -15,6 +16,10 @@ public class ShineProjectPath
 	public static String serverLoginDirPath;
 	public static String serverCommonCenterDirPath;
 	public static String serverCenterDirPath;
+	public static String serverCommonSceneBaseDirPath;
+	public static String serverSceneBaseDirPath;
+	public static String serverCommonSceneDirPath;
+	public static String serverSceneDirPath;
 	public static String serverCommonRobotDirPath;
 	public static String serverRobotDirPath;
 	public static String serverCommonManagerDirPath;
@@ -32,6 +37,7 @@ public class ShineProjectPath
 	{
 		commonDataDirPath=ShineToolGlobal.dataPath+"/"+ToolFileUtils.getJavaCodePath("commonData");
 		dataDirPath=ShineToolGlobal.dataPath+"/"+ToolFileUtils.getJavaCodePath("gameData");
+		serverShineDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("shine");
 		serverCommonBaseDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonBase");
 		serverBaseDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("base");
 		serverCommonGameDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonGame");
@@ -40,6 +46,10 @@ public class ShineProjectPath
 		serverLoginDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("login");
 		serverCommonCenterDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonCenter");
 		serverCenterDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("center");
+		serverCommonSceneBaseDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonSceneBase");
+		serverSceneBaseDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("sceneBase");
+		serverCommonSceneDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonScene");
+		serverSceneDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("scene");
 		serverCommonRobotDirPath=ShineToolGlobal.robotProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonClient");
 		serverRobotDirPath=ShineToolGlobal.robotProjectPath+"/"+ToolFileUtils.getJavaCodePath("client");
 		serverCommonManagerDirPath=ShineToolGlobal.serverProjectPath+"/"+ToolFileUtils.getJavaCodePath("commonManager");

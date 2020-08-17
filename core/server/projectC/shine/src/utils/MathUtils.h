@@ -1,9 +1,11 @@
 #pragma once
 #include "../SInclude.h"
+#include <math.h>
 
 
 class MathUtils
 {
+	static const float epsilon;
 public:
 	/** 获取该数字的2次幂(re>=n) */
 	static int getPowerOf2(int n)
@@ -47,7 +49,7 @@ public:
 		return n;
 	}
 
-	static float clampf(float value, float min, float max)
+	inline static float clampf(float value, float min, float max)
 	{
 		if (value < min)
 			return min;
@@ -58,9 +60,14 @@ public:
 		return value;
 	}
 
-	static float maxf(float v0, float v1)
+	inline static bool floatEquals(float v0, float v1)
 	{
-		return v0 > v1 ? v0 : v1;
+		return fabs(v0 - v1) < epsilon;
+	}
+
+	inline static float lerpf(float from, float to, float t)
+	{
+		return to * t + from * (1.0f - t);
 	}
 
 private:

@@ -38,29 +38,29 @@ public class TestIntObjectMapForEach
 	//	});
 	//}
 	//
-	@Benchmark
-	public void testLambdaS()
-	{
-		_dic.forEachValueS(v->
-		{
-			_re=v;
-		});
-	}
-	//
 	//@Benchmark
-	//public void testFor1()
+	//public void testLambdaS()
 	//{
-	//	DIntData[] values;
-	//	DIntData v;
-	//
-	//	for(int i=(values=_dic.getValues()).length-1;i>=0;--i)
+	//	_dic.forEachValueS(v->
 	//	{
-	//		if((v=values[i])!=null)
-	//		{
-	//			_re=v;
-	//		}
-	//	}
+	//		_re=v;
+	//	});
 	//}
+	
+	@Benchmark
+	public void testFor1()
+	{
+		DIntData[] values;
+		DIntData v;
+
+		for(int i=(values=_dic.getValues()).length-1;i>=0;--i)
+		{
+			if((v=values[i])!=null)
+			{
+				_re=v;
+			}
+		}
+	}
 	
 	//@Benchmark
 	//public void testForSafe1()
@@ -87,69 +87,69 @@ public class TestIntObjectMapForEach
 	//	}
 	//}
 	
-	@Benchmark
-	public void testForSafe2()
-	{
-		int free=_dic.getFreeValue();
-		int[] keys=_dic.getKeys();
-		DIntData[] vals=_dic.getValues();
-		int key;
-		
-		int safeIndex=_dic.getLastFreeIndex();
-		
-		for(int i=safeIndex-1;i>=0;--i)
-		{
-			if((key=keys[i])!=free)
-			{
-				_re=vals[i];
-				
-				if(key!=keys[i])
-				{
-					++i;
-				}
-			}
-		}
-		
-		for(int i=keys.length-1;i>safeIndex;--i)
-		{
-			if((key=keys[i])!=free)
-			{
-				_re=vals[i];
-				
-				if(key!=keys[i])
-				{
-					++i;
-				}
-			}
-		}
-	}
-	
-	@Benchmark
-	public void testForSafe3()
-	{
-		int free=_dic.getFreeValue();
-		int[] keys=_dic.getKeys();
-		DIntData[] vals=_dic.getValues();
-		int key;
-		int safeIndex=_dic.getLastFreeIndex();
-		
-		for(int i=safeIndex-1;i != safeIndex;--i)
-		{
-			if(i<0)
-			{
-				i=keys.length;
-			}
-			else if((key=keys[i])!=free)
-			{
-				_re=vals[i];
-				
-				if(key!=keys[i])
-				{
-					++i;
-				}
-			}
-		}
-	}
+	//@Benchmark
+	//public void testForSafe2()
+	//{
+	//	int free=_dic.getFreeValue();
+	//	int[] keys=_dic.getKeys();
+	//	DIntData[] vals=_dic.getValues();
+	//	int key;
+	//
+	//	int safeIndex=_dic.getLastFreeIndex();
+	//
+	//	for(int i=safeIndex-1;i>=0;--i)
+	//	{
+	//		if((key=keys[i])!=free)
+	//		{
+	//			_re=vals[i];
+	//
+	//			if(key!=keys[i])
+	//			{
+	//				++i;
+	//			}
+	//		}
+	//	}
+	//
+	//	for(int i=keys.length-1;i>safeIndex;--i)
+	//	{
+	//		if((key=keys[i])!=free)
+	//		{
+	//			_re=vals[i];
+	//
+	//			if(key!=keys[i])
+	//			{
+	//				++i;
+	//			}
+	//		}
+	//	}
+	//}
+	//
+	//@Benchmark
+	//public void testForSafe3()
+	//{
+	//	int free=_dic.getFreeValue();
+	//	int[] keys=_dic.getKeys();
+	//	DIntData[] vals=_dic.getValues();
+	//	int key;
+	//	int safeIndex=_dic.getLastFreeIndex();
+	//
+	//	for(int i=safeIndex-1;i != safeIndex;--i)
+	//	{
+	//		if(i<0)
+	//		{
+	//			i=keys.length;
+	//		}
+	//		else if((key=keys[i])!=free)
+	//		{
+	//			_re=vals[i];
+	//
+	//			if(key!=keys[i])
+	//			{
+	//				++i;
+	//			}
+	//		}
+	//	}
+	//}
 	
 	//@Benchmark
 	//public void testForSafeStrong()
@@ -169,17 +169,17 @@ public class TestIntObjectMapForEach
 	//	});
 	//}
 	//
-	//@Benchmark
-	//public void testLinked()
-	//{
-	//	IntLinkedObjectMap.Node<DIntData> node=_linkedDic.getHead();
-	//
-	//	while(node!=null)
-	//	{
-	//		_re=node.value;
-	//		node=node.next;
-	//	}
-	//}
+	@Benchmark
+	public void testLinked()
+	{
+		IntLinkedObjectMap.Node<DIntData> node=_linkedDic.getHead();
+
+		while(node!=null)
+		{
+			_re=node.value;
+			node=node.next;
+		}
+	}
 	//
 	//@Benchmark
 	//public void testLinkedS()

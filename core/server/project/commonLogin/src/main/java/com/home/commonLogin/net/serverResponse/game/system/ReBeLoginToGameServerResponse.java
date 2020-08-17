@@ -16,6 +16,9 @@ public class ReBeLoginToGameServerResponse extends GameToLoginServerResponse
 	/** 承载区服列表 */
 	public IntObjectMap<AreaServerData> areas;
 	
+	/** 该game服是否已达在线满人 */
+	public boolean isGameFull;
+	
 	/** 数据类型ID */
 	public static final int dataID=ServerMessageType.ReBeLoginToGame;
 	
@@ -36,7 +39,7 @@ public class ReBeLoginToGameServerResponse extends GameToLoginServerResponse
 	protected void execute()
 	{
 		LoginC.server.reBack(SocketType.Game,((SendSocket)socket).sendID);
-		LoginC.main.addAreaServerDic(areas,fromGameID);
+		LoginC.main.addAreaServerDic(areas,fromGameID,isGameFull);
 		LoginC.server.checkNext();
 	}
 	
@@ -65,6 +68,8 @@ public class ReBeLoginToGameServerResponse extends GameToLoginServerResponse
 			
 			areasT.put(areasV.areaID,areasV);
 		}
+		
+		this.isGameFull=stream.readBoolean();
 		
 	}
 	
@@ -121,6 +126,12 @@ public class ReBeLoginToGameServerResponse extends GameToLoginServerResponse
 		}
 		
 		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.append("isGameFull");
+		writer.sb.append(':');
+		writer.sb.append(this.isGameFull);
+		
+		writer.writeEnter();
 	}
 	
 	/** 回池 */
@@ -130,6 +141,7 @@ public class ReBeLoginToGameServerResponse extends GameToLoginServerResponse
 		super.toRelease(pool);
 		
 		this.areas=null;
+		this.isGameFull=false;
 	}
 	
 }

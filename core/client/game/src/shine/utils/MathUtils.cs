@@ -386,5 +386,17 @@ namespace ShineEngine
 		{
 			return (a<0 && b<0) || (a>=0 && b>=0);
 		}
+
+		public static bool doubleIsFinite(double d)
+		{
+			return (BitConverter.DoubleToInt64Bits(d) & long.MaxValue) < 9218868437227405312L;
+		}
+
+		public static unsafe bool floatIsFinite(float d)
+		{
+			int a=*(int*)&d;
+
+			return (a & int.MaxValue) < 2139095040;
+		}
 	}
 }

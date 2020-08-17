@@ -13,7 +13,6 @@ public class StatusDataLogic extends StatusTool
 	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
-		
 		setInfo(AttributeControl.status);
 	}
 	

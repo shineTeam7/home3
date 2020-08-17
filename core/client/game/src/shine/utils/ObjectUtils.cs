@@ -22,6 +22,8 @@ namespace ShineEngine
 		public static long[] EmptyLongArr=new long[0];
 		/** 空obj数组 */
 		public static object[] EmptyObjectArr=new object[0];
+		/** 空string数组 */
+		public static string[] EmptyStringArr=new string[0];
 
 		//方法添加
 
@@ -342,6 +344,11 @@ namespace ShineEngine
 					source[i]=v;
 				}
 			}
+		}
+
+		public static T arrayGetOrDefault<T>(T[] arr,int index,T defaultV)
+		{
+			return index<arr.Length ? arr[index] : defaultV;
 		}
 	}
 }

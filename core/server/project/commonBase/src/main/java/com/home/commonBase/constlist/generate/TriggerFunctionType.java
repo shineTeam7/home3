@@ -7,12 +7,12 @@ public class TriggerFunctionType
 	public static final int off=1;
 	
 	/** 计数 */
-	public static final int count=148;
+	public static final int count=159;
 	
 	/** 如果 */
 	public static final int If=1;
 	
-	/** 循环 */
+	/** while循环 */
 	public static final int While=2;
 	
 	/** 获取字符串key自定义对象 */
@@ -33,7 +33,7 @@ public class TriggerFunctionType
 	/** 或者 */
 	public static final int Or=8;
 	
-	/** 或者2 */
+	/** 或者2(3元) */
 	public static final int Or2=9;
 	
 	/** 判断相等 */
@@ -51,401 +51,436 @@ public class TriggerFunctionType
 	/** 判断string相等 */
 	public static final int EqualsString=14;
 	
+	/** 是否为空 */
+	public static final int IsNull=15;
+	
+	/** 是否不为空 */
+	public static final int NotNull=16;
+	
+	/** 比较int,type:CompareType */
+	public static final int CompareInt=17;
+	
+	/** 比较Float,type:CompareType */
+	public static final int CompareFloat=18;
+	
+	/** 比较long,type:CompareType */
+	public static final int CompareLong=19;
+	
 	/** 大于int */
-	public static final int GreaterThanInt=15;
+	public static final int GreaterThanInt=20;
 	
 	/** 大于等于int */
-	public static final int GreaterThanOrEqualInt=16;
+	public static final int GreaterThanOrEqualInt=21;
 	
 	/** 小于int */
-	public static final int LessThanInt=17;
+	public static final int LessThanInt=22;
 	
 	/** 小于等于int */
-	public static final int LessThanOrEqualInt=18;
+	public static final int LessThanOrEqualInt=23;
 	
 	/** 大于float */
-	public static final int GreaterThanFloat=19;
+	public static final int GreaterThanFloat=24;
 	
 	/** 大于等于float */
-	public static final int GreaterThanOrEqualFloat=20;
+	public static final int GreaterThanOrEqualFloat=25;
 	
 	/** 小于float */
-	public static final int LessThanFloat=21;
+	public static final int LessThanFloat=26;
 	
 	/** 小于等于float */
-	public static final int LessThanOrEqualFloat=22;
+	public static final int LessThanOrEqualFloat=27;
 	
 	/** 大于long */
-	public static final int GreaterThanLong=23;
+	public static final int GreaterThanLong=28;
 	
 	/** 大于等于long */
-	public static final int GreaterThanOrEqualLong=24;
+	public static final int GreaterThanOrEqualLong=29;
 	
 	/** 小于long */
-	public static final int LessThanLong=25;
+	public static final int LessThanLong=30;
 	
 	/** 小于等于long */
-	public static final int LessThanOrEqualLong=26;
+	public static final int LessThanOrEqualLong=31;
 	
 	/** 获取字符串key boolean */
-	public static final int GetSBoolean=27;
+	public static final int GetSBoolean=32;
 	
-	/** 删除自定义字符串key变量 */
-	public static final int RemoveSVar=28;
+	/** 获取局部字符串key boolean */
+	public static final int GetLocalBoolean=33;
 	
 	/** random一个bool值 */
-	public static final int RandomBoolean=29;
+	public static final int RandomBoolean=34;
+	
+	/** 该毫秒值是否为过去时间 */
+	public static final int IsTimeMillisPass=35;
 	
 	/** int加法 */
-	public static final int AddInt=30;
+	public static final int AddInt=36;
 	
 	/** int减法 */
-	public static final int SubInt=31;
+	public static final int SubInt=37;
 	
 	/** int乘法 */
-	public static final int MulInt=32;
+	public static final int MulInt=38;
 	
 	/** int除法 */
-	public static final int DivInt=33;
+	public static final int DivInt=39;
 	
 	/** int取反 */
-	public static final int InvertInt=34;
+	public static final int InvertInt=40;
 	
 	/** int求余 */
-	public static final int RestInt=35;
+	public static final int RestInt=41;
 	
 	/** int绝对值 */
-	public static final int AbsInt=36;
+	public static final int AbsInt=42;
 	
 	/** int自增 */
-	public static final int Add1Int=37;
+	public static final int Add1Int=43;
 	
 	/** int自减 */
-	public static final int Sub1Int=38;
+	public static final int Sub1Int=44;
 	
 	/** float转int */
-	public static final int ConvertFloat2Int=39;
+	public static final int ConvertFloat2Int=45;
 	
 	/** long转int */
-	public static final int ConvertLong2Int=40;
+	public static final int ConvertLong2Int=46;
 	
 	/** 获取字符串key int */
-	public static final int GetSInt=41;
+	public static final int GetSInt=47;
+	
+	/** 获取局部字符串key int */
+	public static final int GetLocalInt=48;
 	
 	/** 获取全局变量int */
-	public static final int GetCurrentLoopIndex=42;
+	public static final int GetCurrentLoopIndex=49;
 	
 	/** 获取当前list遍历元素 */
-	public static final int GetCurrentListElement=43;
+	public static final int GetCurrentListElement=50;
 	
 	/** 随一整形(0<=value<range) */
-	public static final int RandomInt=44;
+	public static final int RandomInt=51;
 	
 	/** 随一整形(start<=value<end) */
-	public static final int RandomRange=45;
+	public static final int RandomRange=52;
 	
 	/** 获取triggerGM指令str变量 */
-	public static final int GetTriggerGMCommandIntArg=46;
+	public static final int GetTriggerGMCommandIntArg=53;
 	
 	/** float加法 */
-	public static final int AddFloat=47;
+	public static final int AddFloat=54;
 	
 	/** float减法 */
-	public static final int SubFloat=48;
+	public static final int SubFloat=55;
 	
 	/** float乘法 */
-	public static final int MulFloat=49;
+	public static final int MulFloat=56;
 	
 	/** float除法 */
-	public static final int DivFloat=50;
+	public static final int DivFloat=57;
 	
 	/** float取反 */
-	public static final int InvertFloat=51;
+	public static final int InvertFloat=58;
 	
 	/** float绝对值 */
-	public static final int AbsFloat=52;
+	public static final int AbsFloat=59;
 	
 	/** 获取字符串key变量float */
-	public static final int GetSFloat=53;
+	public static final int GetSFloat=60;
 	
-	/** 获取全局变量float */
-	public static final int ConvertInt2Float=54;
+	/** 获取局部字符串key变量float */
+	public static final int GetLocalFloat=61;
+	
+	/** long转float */
+	public static final int ConvertInt2Float=62;
 	
 	/** float转float */
-	public static final int ConvertLong2Float=55;
+	public static final int ConvertLong2Float=63;
 	
 	/** long加法 */
-	public static final int AddLong=56;
+	public static final int AddLong=64;
 	
 	/** long减法 */
-	public static final int SubLong=57;
+	public static final int SubLong=65;
 	
 	/** long乘法 */
-	public static final int MulLong=58;
+	public static final int MulLong=66;
 	
 	/** long除法 */
-	public static final int DivLong=59;
+	public static final int DivLong=67;
 	
 	/** long取反 */
-	public static final int InvertLong=60;
+	public static final int InvertLong=68;
 	
 	/** long绝对值 */
-	public static final int AbsLong=61;
+	public static final int AbsLong=69;
 	
 	/** int转long */
-	public static final int ConvertInt2Long=62;
+	public static final int ConvertInt2Long=70;
 	
 	/** float转long */
-	public static final int ConvertFloat2Long=63;
+	public static final int ConvertFloat2Long=71;
 	
 	/** 获取字符串key变量long */
-	public static final int GetSLong=64;
+	public static final int GetSLong=72;
 	
-	/** 获取全局变量long */
-	public static final int GetTimeMillis=65;
+	/** 获取局部字符串key变量long */
+	public static final int GetLocalLong=73;
+	
+	/** 获取当前时间戳 */
+	public static final int GetTimeMillis=74;
 	
 	/** string相加 */
-	public static final int AddStr=66;
+	public static final int AddStr=75;
 	
 	/** int转string */
-	public static final int ConvertInt2Str=67;
+	public static final int ConvertInt2Str=76;
 	
 	/** float转string */
-	public static final int ConvertFloat2Str=68;
+	public static final int ConvertFloat2Str=77;
 	
 	/** long转string */
-	public static final int ConvertLong2Str=69;
+	public static final int ConvertLong2Str=78;
 	
 	/** bool转string */
-	public static final int ConvertBool2Str=70;
+	public static final int ConvertBool2Str=79;
 	
 	/** 获取字符串key变量string */
-	public static final int GetSString=71;
+	public static final int GetSString=80;
 	
-	/** 获取全局变量string */
-	public static final int AsList=72;
+	/** 获取局部字符串key变量string */
+	public static final int GetLocalString=81;
+	
+	/** 当做List */
+	public static final int AsList=82;
 	
 	/** 创建空List */
-	public static final int CreateList=73;
+	public static final int CreateList=83;
 	
 	/** 获取list长度 */
-	public static final int GetListSize=74;
+	public static final int GetListSize=84;
 	
 	/** list添加 */
-	public static final int ListAdd=75;
+	public static final int ListAdd=85;
 	
 	/** list删除 */
-	public static final int ListRemove=76;
+	public static final int ListRemove=86;
 	
 	/** list删除元素 */
-	public static final int ListRemoveObj=77;
+	public static final int ListRemoveObj=87;
 	
 	/** list清空 */
-	public static final int ListClear=78;
+	public static final int ListClear=88;
 	
 	/** list查询 */
-	public static final int ListIndexOf=79;
+	public static final int ListIndexOf=89;
 	
 	/** list查询 */
-	public static final int ListContains=80;
+	public static final int ListContains=90;
 	
 	/** 遍历list */
-	public static final int ForeachList=81;
+	public static final int ForeachList=91;
 	
 	/** list是否为空 */
-	public static final int ListIsEmpty=82;
+	public static final int ListIsEmpty=92;
 	
-	public static final int AsMap=83;
+	/** 当做Map */
+	public static final int AsMap=93;
 	
 	/** 创建空Map */
-	public static final int CreateMap=84;
+	public static final int CreateMap=94;
 	
 	/** 获取Map长度 */
-	public static final int GetMapSize=85;
+	public static final int GetMapSize=95;
 	
 	/** map添加 */
-	public static final int MapPut=86;
+	public static final int MapPut=96;
 	
 	/** Map删除 */
-	public static final int MapRemove=87;
+	public static final int MapRemove=97;
 	
 	/** Map清空 */
-	public static final int MapClear=88;
+	public static final int MapClear=98;
 	
 	/** Map包含 */
-	public static final int MapContains=89;
+	public static final int MapContains=99;
 	
 	/** map是否为空 */
-	public static final int MapIsEmpty=90;
+	public static final int MapIsEmpty=100;
 	
-	public static final int AsSet=91;
+	/** 当做Set */
+	public static final int AsSet=101;
 	
 	/** 创建空Set */
-	public static final int CreateSet=92;
+	public static final int CreateSet=102;
 	
 	/** 获取Set长度 */
-	public static final int GetSetSize=93;
+	public static final int GetSetSize=103;
 	
 	/** Set添加 */
-	public static final int SetAdd=94;
+	public static final int SetAdd=104;
 	
 	/** Set删除 */
-	public static final int SetRemove=95;
+	public static final int SetRemove=105;
 	
 	/** Set清空 */
-	public static final int SetClear=96;
+	public static final int SetClear=106;
 	
 	/** Set包含 */
-	public static final int SetContains=97;
+	public static final int SetContains=107;
 	
 	/** Set是否为空 */
-	public static final int SetIsEmpty=98;
+	public static final int SetIsEmpty=108;
 	
 	/** trigger初始化好 */
-	public static final int OnInit=99;
+	public static final int OnInit=109;
 	
 	/** 间隔执行 */
-	public static final int OnInterval=100;
+	public static final int OnInterval=110;
 	
 	/** triggerGM指令 */
-	public static final int OnTriggerGMCommand=101;
+	public static final int OnTriggerGMCommand=111;
 	
 	/** 开启trigger */
-	public static final int OpenTrigger=102;
+	public static final int OpenTrigger=112;
 	
 	/** 关闭trigger */
-	public static final int CloseTrigger=103;
+	public static final int CloseTrigger=113;
 	
 	/** 执行trigger(需要检查环境) */
-	public static final int RunTrigger=104;
+	public static final int RunTrigger=114;
 	
 	/** 执行trigger(不检查环境) */
-	public static final int RunTriggerAbs=105;
+	public static final int RunTriggerAbs=115;
 	
 	/** 等待(ms) */
-	public static final int Wait=106;
+	public static final int Wait=116;
 	
 	/** 等待某条件成立(checkDelay:检查间隔(ms)) */
-	public static final int WaitUtil=107;
+	public static final int WaitUtil=117;
 	
 	/** 输出字符串 */
-	public static final int Print=108;
+	public static final int Print=118;
 	
 	/** 循环loop次(i从0到loop-1) */
-	public static final int ForLoop=109;
+	public static final int ForLoop=119;
 	
 	/** 结束当前trigger执行动作 */
-	public static final int BreakTrigger=110;
+	public static final int BreakTrigger=120;
 	
 	/** 结束当前循环(对while有效) */
-	public static final int BreakLoop=111;
+	public static final int BreakLoop=121;
 	
 	/** 跳过剩余脚本，继续执行循环(对while有效) */
-	public static final int ContinueLoop=112;
+	public static final int ContinueLoop=122;
 	
 	/** 设置自定义字符串key变量 */
-	public static final int SetSVar=113;
+	public static final int SetSVar=123;
+	
+	/** 删除自定义字符串key变量 */
+	public static final int RemoveSVar=124;
 	
 	/** 设置局部字符串key变量 */
-	public static final int SetLocalVar=114;
+	public static final int SetLocalVar=125;
 	
-	/** 设置全局变量boolean */
-	public static final int GetEventIntArgs=115;
+	/** 获取event int参数 */
+	public static final int GetEventIntArgs=126;
 	
 	/** 获取event bool参数 */
-	public static final int GetEventBoolArgs=116;
+	public static final int GetEventBoolArgs=127;
 	
 	/** 获取event string参数 */
-	public static final int GetEventStringArgs=117;
+	public static final int GetEventStringArgs=128;
 	
 	/** 获取主引导步 */
-	public static final int GetGuideMainStep=118;
+	public static final int GetGuideMainStep=129;
 	
 	/** 游戏开始 */
-	public static final int OnGameStart=119;
+	public static final int OnGameStart=130;
 	
 	/** 设置主引导步 */
-	public static final int SetGuideMainStep=120;
+	public static final int SetGuideMainStep=131;
 	
 	/** 显示UI(key:UI表主键) */
-	public static final int ShowUI=121;
+	public static final int ShowUI=132;
 	
 	/** 隐藏UI(key:UI表主键) */
-	public static final int HideUI=122;
+	public static final int HideUI=133;
 	
 	/** c单位是否存活 */
-	public static final int UnitIsAlive=123;
+	public static final int UnitIsAlive=134;
 	
 	/** 对于某单位来说，点是否可走 */
-	public static final int IsPosEnabled=124;
+	public static final int IsPosEnabled=135;
 	
 	/** 当前触发单位 */
-	public static final int TriggerUnit=125;
+	public static final int TriggerUnit=136;
 	
 	/** e场景开始时 */
-	public static final int OnSceneStart=126;
+	public static final int OnSceneStart=137;
 	
 	/** 单位发生移动 */
-	public static final int OnUnitMove=127;
+	public static final int OnUnitMove=138;
 	
 	/** 单位受到伤害时 */
-	public static final int OnUnitBeDamage=128;
+	public static final int OnUnitBeDamage=139;
 	
 	/** 计算点距离 */
-	public static final int PosDistance=129;
+	public static final int PosDistance=140;
 	
 	/** 获取单位的战斗单位id */
-	public static final int GetUnitFightUnitID=130;
+	public static final int GetUnitFightUnitID=141;
 	
 	/** 通过实例id获取单位 */
-	public static final int GetUnit=131;
+	public static final int GetUnit=142;
 	
 	/** 强制类型转化为单位 */
-	public static final int AsUnit=132;
+	public static final int AsUnit=143;
 	
 	/** 创建并添加傀儡 */
-	public static final int CreateAddPuppet=133;
+	public static final int CreateAddPuppet=144;
 	
 	/** 强制类型转化为点 */
-	public static final int AsPos=134;
+	public static final int AsPos=145;
 	
 	/** 获取单位位置 */
-	public static final int GetUnitPos=135;
+	public static final int GetUnitPos=146;
 	
 	/** 获取场景排放配置位置 */
-	public static final int GetScenePlacePos=136;
+	public static final int GetScenePlacePos=147;
 	
 	/** 极坐标取点 */
-	public static final int PosPolar=137;
+	public static final int PosPolar=148;
 	
 	/** 点相加 */
-	public static final int AddPos=138;
+	public static final int AddPos=149;
 	
 	/** 强制类型转化为朝向 */
-	public static final int AsDir=139;
+	public static final int AsDir=150;
 	
 	/** 获取单位朝向 */
-	public static final int GetUnitDir=140;
+	public static final int GetUnitDir=151;
 	
 	/** 朝向 相加 */
-	public static final int AddDir=141;
+	public static final int AddDir=152;
 	
 	/** 朝向 相加 */
-	public static final int AddDirFloat=142;
+	public static final int AddDirFloat=153;
 	
 	/** 强制击杀单位 */
-	public static final int KillUnit=143;
+	public static final int KillUnit=154;
 	
 	/** 移除单位 */
-	public static final int RemoveUnit=144;
+	public static final int RemoveUnit=155;
 	
 	/** 移动到目标单位 */
-	public static final int MoveToUnit=145;
+	public static final int MoveToUnit=156;
 	
 	/** 单位添加属性 */
-	public static final int UnitAddAttribute=146;
+	public static final int UnitAddAttribute=157;
 	
 	/** 单位治疗生命千分比 */
-	public static final int UnitAddHpPercent=147;
+	public static final int UnitAddHpPercent=158;
 	
 }

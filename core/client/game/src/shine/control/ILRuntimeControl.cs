@@ -66,14 +66,16 @@ namespace ShineEngine
 		{
 			appdomain.RegisterCrossBindingAdaptor(new MonoBehaviourAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new BaseDataAdapter());
+			appdomain.RegisterCrossBindingAdaptor(new BaseHttpRequestAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new BaseRequestAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new BaseResponseAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new BytesHttpRequestAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new DataMakerAdapter());
+			appdomain.RegisterCrossBindingAdaptor(new MessageBindToolAdapter());
+			appdomain.RegisterCrossBindingAdaptor(new PoolObjectAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new UIContainerAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new UIElementAdapter());
 			appdomain.RegisterCrossBindingAdaptor(new UIModelAdapter());
-			appdomain.RegisterCrossBindingAdaptor(new PoolObjectAdapter());
 		}
 		
 		protected virtual void initConfigAdapters(AppDomain appdomain)
@@ -133,6 +135,7 @@ namespace ShineEngine
 		{
 			//TODO:回头弄好ILRuntime
 			// CLRBindings.Initialize(appdomain);
+			
 			initGenerateAdapters(appdomain);
 			initOtherAdapters(appdomain);
 			initConfigAdapters(appdomain);

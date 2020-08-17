@@ -29,6 +29,11 @@ public class MotionConfig:BaseConfig
 	public string describe;
 	
 	/// <summary>
+	/// 默认持续时间(ms)
+	/// </summary>
+	public int defaultMotionTime;
+	
+	/// <summary>
 	/// 找不到动作的转化ID
 	/// </summary>
 	public int backID;
@@ -82,6 +87,8 @@ public class MotionConfig:BaseConfig
 		
 		this.backID=stream.readInt();
 		
+		this.defaultMotionTime=stream.readInt();
+		
 	}
 	
 	/// <summary>
@@ -108,6 +115,8 @@ public class MotionConfig:BaseConfig
 		stream.writeUTF(this.useName);
 		
 		stream.writeInt(this.backID);
+		
+		stream.writeInt(this.defaultMotionTime);
 		
 	}
 	

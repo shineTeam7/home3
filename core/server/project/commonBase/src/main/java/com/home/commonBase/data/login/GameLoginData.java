@@ -32,9 +32,6 @@ public class GameLoginData extends BaseData
 	/** 中心服运行序号 */
 	public int serverRunIndex;
 	
-	/** 客户端gm指令组 */
-	public SSet<String> clientGMSet;
-	
 	public GameLoginData()
 	{
 		_dataID=BaseDataType.GameLogin;
@@ -173,33 +170,6 @@ public class GameLoginData extends BaseData
 		
 		this.serverBornCode=stream.readInt();
 		
-		if(stream.readBoolean())
-		{
-			int clientGMSetLen=stream.readLen();
-			if(this.clientGMSet!=null)
-			{
-				this.clientGMSet.clear();
-				this.clientGMSet.ensureCapacity(clientGMSetLen);
-			}
-			else
-			{
-				this.clientGMSet=new SSet<String>(String[]::new,clientGMSetLen);
-			}
-			
-			SSet<String> clientGMSetT=this.clientGMSet;
-			for(int clientGMSetI=clientGMSetLen-1;clientGMSetI>=0;--clientGMSetI)
-			{
-				String clientGMSetV;
-				clientGMSetV=stream.readUTF();
-				
-				clientGMSetT.add(clientGMSetV);
-			}
-		}
-		else
-		{
-			this.clientGMSet=null;
-		}
-		
 		this.serverRunIndex=stream.readInt();
 		
 		stream.endReadObj();
@@ -306,29 +276,6 @@ public class GameLoginData extends BaseData
 		
 		stream.writeInt(this.serverBornCode);
 		
-		if(this.clientGMSet!=null)
-		{
-			stream.writeBoolean(true);
-			stream.writeLen(this.clientGMSet.size());
-			if(!this.clientGMSet.isEmpty())
-			{
-				Object[] clientGMSetVKeys=this.clientGMSet.getKeys();
-				for(int clientGMSetVI=clientGMSetVKeys.length-1;clientGMSetVI>=0;--clientGMSetVI)
-				{
-					if(clientGMSetVKeys[clientGMSetVI]!=null)
-					{
-						String clientGMSetV=(String)clientGMSetVKeys[clientGMSetVI];
-						stream.writeUTF(clientGMSetV);
-						
-					}
-				}
-			}
-		}
-		else
-		{
-			stream.writeBoolean(false);
-		}
-		
 		stream.writeInt(this.serverRunIndex);
 		
 		stream.endWriteObj();
@@ -417,33 +364,6 @@ public class GameLoginData extends BaseData
 		}
 		
 		this.serverBornCode=stream.readInt();
-		
-		if(stream.readBoolean())
-		{
-			int clientGMSetLen=stream.readLen();
-			if(this.clientGMSet!=null)
-			{
-				this.clientGMSet.clear();
-				this.clientGMSet.ensureCapacity(clientGMSetLen);
-			}
-			else
-			{
-				this.clientGMSet=new SSet<String>(String[]::new,clientGMSetLen);
-			}
-			
-			SSet<String> clientGMSetT=this.clientGMSet;
-			for(int clientGMSetI=clientGMSetLen-1;clientGMSetI>=0;--clientGMSetI)
-			{
-				String clientGMSetV;
-				clientGMSetV=stream.readUTF();
-				
-				clientGMSetT.add(clientGMSetV);
-			}
-		}
-		else
-		{
-			this.clientGMSet=null;
-		}
 		
 		this.serverRunIndex=stream.readInt();
 		
@@ -548,29 +468,6 @@ public class GameLoginData extends BaseData
 		
 		stream.writeInt(this.serverBornCode);
 		
-		if(this.clientGMSet!=null)
-		{
-			stream.writeBoolean(true);
-			stream.writeLen(this.clientGMSet.size());
-			if(!this.clientGMSet.isEmpty())
-			{
-				Object[] clientGMSetVKeys=this.clientGMSet.getKeys();
-				for(int clientGMSetVI=clientGMSetVKeys.length-1;clientGMSetVI>=0;--clientGMSetVI)
-				{
-					if(clientGMSetVKeys[clientGMSetVI]!=null)
-					{
-						String clientGMSetV=(String)clientGMSetVKeys[clientGMSetVI];
-						stream.writeUTF(clientGMSetV);
-						
-					}
-				}
-			}
-		}
-		else
-		{
-			stream.writeBoolean(false);
-		}
-		
 		stream.writeInt(this.serverRunIndex);
 		
 	}
@@ -588,7 +485,6 @@ public class GameLoginData extends BaseData
 		this.funcTools=mData.funcTools;
 		this.activities=mData.activities;
 		this.serverBornCode=mData.serverBornCode;
-		this.clientGMSet=mData.clientGMSet;
 		this.serverRunIndex=mData.serverRunIndex;
 	}
 	
@@ -724,40 +620,6 @@ public class GameLoginData extends BaseData
 		
 		this.serverBornCode=mData.serverBornCode;
 		
-		if(mData.clientGMSet!=null)
-		{
-			if(this.clientGMSet!=null)
-			{
-				this.clientGMSet.clear();
-				this.clientGMSet.ensureCapacity(mData.clientGMSet.size());
-			}
-			else
-			{
-				this.clientGMSet=new SSet<String>(String[]::new,mData.clientGMSet.size());
-			}
-			
-			SSet<String> clientGMSetT=this.clientGMSet;
-			if(!mData.clientGMSet.isEmpty())
-			{
-				Object[] clientGMSetVKeys=mData.clientGMSet.getKeys();
-				for(int clientGMSetVI=clientGMSetVKeys.length-1;clientGMSetVI>=0;--clientGMSetVI)
-				{
-					if(clientGMSetVKeys[clientGMSetVI]!=null)
-					{
-						String clientGMSetV=(String)clientGMSetVKeys[clientGMSetVI];
-						String clientGMSetU;
-						clientGMSetU=clientGMSetV;
-						
-						clientGMSetT.add(clientGMSetU);
-					}
-				}
-			}
-		}
-		else
-		{
-			this.clientGMSet=null;
-		}
-		
 		this.serverRunIndex=mData.serverRunIndex;
 		
 	}
@@ -885,33 +747,6 @@ public class GameLoginData extends BaseData
 		
 		if(this.serverBornCode!=mData.serverBornCode)
 			return false;
-		
-		if(mData.clientGMSet!=null)
-		{
-			if(this.clientGMSet==null)
-				return false;
-			if(this.clientGMSet.size()!=mData.clientGMSet.size())
-				return false;
-			SSet<String> clientGMSetR=mData.clientGMSet;
-			if(!this.clientGMSet.isEmpty())
-			{
-				Object[] clientGMSetVKeys=this.clientGMSet.getKeys();
-				for(int clientGMSetVI=clientGMSetVKeys.length-1;clientGMSetVI>=0;--clientGMSetVI)
-				{
-					if(clientGMSetVKeys[clientGMSetVI]!=null)
-					{
-						String clientGMSetV=(String)clientGMSetVKeys[clientGMSetVI];
-						if(!clientGMSetR.contains(clientGMSetV))
-							return false;
-					}
-				}
-			}
-		}
-		else
-		{
-			if(this.clientGMSet!=null)
-				return false;
-		}
 		
 		if(this.serverRunIndex!=mData.serverRunIndex)
 			return false;
@@ -1064,40 +899,6 @@ public class GameLoginData extends BaseData
 		
 		writer.writeEnter();
 		writer.writeTabs();
-		writer.sb.append("clientGMSet");
-		writer.sb.append(':');
-		writer.sb.append("Set<String>");
-		if(this.clientGMSet!=null)
-		{
-			writer.sb.append('(');
-			writer.sb.append(this.clientGMSet.size());
-			writer.sb.append(')');
-			writer.writeEnter();
-			writer.writeLeftBrace();
-			if(!this.clientGMSet.isEmpty())
-			{
-				Object[] clientGMSetVKeys=this.clientGMSet.getKeys();
-				for(int clientGMSetVI=clientGMSetVKeys.length-1;clientGMSetVI>=0;--clientGMSetVI)
-				{
-					if(clientGMSetVKeys[clientGMSetVI]!=null)
-					{
-						String clientGMSetV=(String)clientGMSetVKeys[clientGMSetVI];
-						writer.writeTabs();
-						writer.sb.append(clientGMSetV);
-						
-						writer.writeEnter();
-					}
-				}
-			}
-			writer.writeRightBrace();
-		}
-		else
-		{
-			writer.sb.append("=null");
-		}
-		
-		writer.writeEnter();
-		writer.writeTabs();
 		writer.sb.append("serverRunIndex");
 		writer.sb.append(':');
 		writer.sb.append(this.serverRunIndex);
@@ -1120,7 +921,6 @@ public class GameLoginData extends BaseData
 		this.funcTools=null;
 		this.activities=null;
 		this.serverBornCode=0;
-		this.clientGMSet=null;
 		this.serverRunIndex=0;
 	}
 	

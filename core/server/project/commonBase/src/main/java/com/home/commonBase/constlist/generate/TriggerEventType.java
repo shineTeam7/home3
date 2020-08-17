@@ -7,27 +7,27 @@ public class TriggerEventType
 	public static final int off=1;
 	
 	/** 计数 */
-	public static final int count=129;
+	public static final int count=140;
 	
 	/** trigger初始化好 */
-	public static final int OnInit=99;
+	public static final int OnInit=109;
 	
 	/** 间隔执行 */
-	public static final int OnInterval=100;
+	public static final int OnInterval=110;
 	
 	/** triggerGM指令 */
-	public static final int OnTriggerGMCommand=101;
+	public static final int OnTriggerGMCommand=111;
 	
 	/** 游戏开始 */
-	public static final int OnGameStart=119;
+	public static final int OnGameStart=130;
 	
 	/** e场景开始时 */
-	public static final int OnSceneStart=126;
+	public static final int OnSceneStart=137;
 	
 	/** 单位发生移动 */
-	public static final int OnUnitMove=127;
+	public static final int OnUnitMove=138;
 	
 	/** 单位受到伤害时 */
-	public static final int OnUnitBeDamage=128;
+	public static final int OnUnitBeDamage=139;
 	
 }

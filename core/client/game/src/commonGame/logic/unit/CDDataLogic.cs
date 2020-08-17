@@ -20,7 +20,7 @@ public class CDDataLogic
 	/** 组CD改变值组 */
 	private IntIntMap _groupCDChangeValues=new IntIntMap();
 
-	public CDDataLogic(UnitFightDataLogic parent)
+	public void setParent(UnitFightDataLogic parent)
 	{
 		_parent=parent;
 	}

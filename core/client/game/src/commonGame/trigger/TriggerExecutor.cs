@@ -10,6 +10,8 @@ public class TriggerExecutor:LogicEntity
 	private int _groupType;
 	private int _groupID;
 
+	protected TriggerFuncMaker _funcMaker;
+
 	/** trigger配置总组 */
 	private IntObjectMap<TriggerConfigData> _configDic;
 
@@ -38,7 +40,7 @@ public class TriggerExecutor:LogicEntity
 	private SSet<TriggerActionRunner> _timerRunnerDic=new SSet<TriggerActionRunner>();
 
 	/** strKey变量字典 */
-	private SMap<String,Object> _sVarDic=new SMap<String,Object>();
+	public SMap<String,Object> sVarDic=new SMap<String,Object>();
 
 	private static CustomComparer<TriggerEventRegistData> _comparer=new CustomComparer<TriggerEventRegistData>();
 
@@ -67,6 +69,8 @@ public class TriggerExecutor:LogicEntity
 		_instancePool.setEnable(CommonSetting.triggerUsePool);
 		_intervalPool.setEnable(CommonSetting.triggerUsePool);
 		_actionRunnerPool.setEnable(CommonSetting.triggerUsePool);
+
+		_funcMaker=GameC.trigger.getFuncMaker();
 	}
 
 	/** 通过组初始化 */
@@ -633,7 +637,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 开启trigger */
-	protected void openTrigger(int id)
+	public void openTrigger(int id)
 	{
 		TriggerConfigData config=_configDic.get(id);
 
@@ -684,7 +688,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 关闭trigger */
-	protected void closeTrigger(int id)
+	public void closeTrigger(int id)
 	{
 		TriggerConfigData config=_openDic.remove(id);
 
@@ -772,7 +776,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 获取对象值 */
-	protected object getObj(TriggerObjData obj,TriggerArg arg)
+	public object getObj(TriggerObjData obj,TriggerArg arg)
 	{
 		try
 		{
@@ -830,7 +834,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 获取boolean值 */
-	protected bool getBoolean(TriggerObjData obj,TriggerArg arg)
+	public bool getBoolean(TriggerObjData obj,TriggerArg arg)
 	{
 		if(obj.getDataID()==TriggerBooleanData.dataID)
 		{
@@ -846,7 +850,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 获取int值 */
-	protected int getInt(TriggerObjData obj,TriggerArg arg)
+	public int getInt(TriggerObjData obj,TriggerArg arg)
 	{
 		if(obj.getDataID()==TriggerIntData.dataID)
 		{
@@ -862,7 +866,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 获取float值 */
-	protected float getFloat(TriggerObjData obj,TriggerArg arg)
+	public float getFloat(TriggerObjData obj,TriggerArg arg)
 	{
 		if(obj.getDataID()==TriggerFloatData.dataID)
 		{
@@ -878,7 +882,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 获取float值 */
-	protected long getLong(TriggerObjData obj,TriggerArg arg)
+	public long getLong(TriggerObjData obj,TriggerArg arg)
 	{
 		if(obj.getDataID()==TriggerLongData.dataID)
 		{
@@ -894,7 +898,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 获取String值 */
-	protected String getString(TriggerObjData obj,TriggerArg arg)
+	public String getString(TriggerObjData obj,TriggerArg arg)
 	{
 		if(obj.getDataID()==TriggerStringData.dataID)
 		{
@@ -905,44 +909,26 @@ public class TriggerExecutor:LogicEntity
 			return getStringFuncValue((TriggerFuncData)obj,arg);
 		}
 
-		throwError("不支持的数据类型,int",obj.getDataClassName());
+		throwError("不支持的数据类型,String",obj.getDataClassName());
 		return "";
 	}
 
 	/** 获取List值 */
-	protected SList<object> getList(TriggerObjData obj,TriggerArg arg)
+	public SList<object> getList(TriggerObjData obj,TriggerArg arg)
 	{
-		if(obj.getDataID()==TriggerFuncData.dataID)
-		{
-			return getListFuncValue((TriggerFuncData)obj,arg);
-		}
-
-		throwError("不支持的数据类型,List",obj.getDataClassName());
-		return null;
+		return (SList<object>)getObj(obj,arg);
 	}
 
 	/** 获取Map值 */
-	protected SMap<object,object> getMap(TriggerObjData obj,TriggerArg arg)
+	public SMap<object,object> getMap(TriggerObjData obj,TriggerArg arg)
 	{
-		if(obj.getDataID()==TriggerFuncData.dataID)
-		{
-			return getMapFuncValue((TriggerFuncData)obj,arg);
-		}
-
-		throwError("不支持的数据类型,Map",obj.getDataClassName());
-		return null;
+		return (SMap<object,object>)getObj(obj,arg);
 	}
 
 	/** 获取Set值 */
-	protected SSet<object> getSet(TriggerObjData obj,TriggerArg arg)
+	public SSet<object> getSet(TriggerObjData obj,TriggerArg arg)
 	{
-		if(obj.getDataID()==TriggerFuncData.dataID)
-		{
-			return getSetFuncValue((TriggerFuncData)obj,arg);
-		}
-
-		throwError("不支持的数据类型,Set",obj.getDataClassName());
-		return null;
+		return (SSet<object>)getObj(obj,arg);
 	}
 
 	/** 执行action行为 */
@@ -961,7 +947,7 @@ public class TriggerExecutor:LogicEntity
 	//--create--//
 
 	/** 创建事件(只创建) */
-	protected TriggerEvent toCreateEvent()
+	protected virtual TriggerEvent toCreateEvent()
 	{
 		return new TriggerEvent();
 	}
@@ -979,7 +965,7 @@ public class TriggerExecutor:LogicEntity
 	}
 
 	/** 初始化当前event环境 */
-	protected void initEvent(TriggerEvent evt)
+	protected virtual void initEvent(TriggerEvent evt)
 	{
 
 	}
@@ -1063,7 +1049,15 @@ public class TriggerExecutor:LogicEntity
 					{
 						TriggerFuncListData listFunc=(TriggerFuncListData)func.args[2];
 
-						runChildActions(TriggerChildRunnerType.If,listFunc.funcList,arg.runner);
+						if(listFunc.funcList.Length>0)
+						{
+							runChildActions(TriggerChildRunnerType.If,listFunc.funcList,arg.runner);
+						}
+						else
+						{
+							//直接下一个
+							runNextAction(arg.runner);
+						}
 					}
 					else
 					{
@@ -1226,78 +1220,17 @@ public class TriggerExecutor:LogicEntity
 	/** 执行同步方法 */
 	protected virtual void toDoActionFunc(TriggerFuncData func,TriggerArg arg)
 	{
-		switch(func.id)
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		if(entry==null)
 		{
-			case TriggerFunctionType.OpenTrigger:
-			{
-				openTrigger(getInt(func.args[0],arg));
-			}
-				break;
-			case TriggerFunctionType.CloseTrigger:
-			{
-				closeTrigger(getInt(func.args[0],arg));
-			}
-				break;
-			case TriggerFunctionType.Print:
-			{
-				print(getString(func.args[0],arg));
-			}
-				break;
-			case TriggerFunctionType.SetSVar:
-			{
-				_sVarDic.put(getString(func.args[0],arg),getObj(func.args[1],arg));
-			}
-				break;
-			case TriggerFunctionType.SetLocalVar:
-			{
-				arg.runner.setLocalVar(getString(func.args[0],arg),getObj(func.args[1],arg));
-			}
-				break;
-			case TriggerFunctionType.ListAdd:
-			{
-				getList(func.args[0],arg).add(getObj(func.args[1],arg));
-			}
-				break;
-			case TriggerFunctionType.ListRemove:
-			{
-				getList(func.args[0],arg).remove(getInt(func.args[1],arg));
-			}
-				break;
-			case TriggerFunctionType.ListRemoveObj:
-			{
-				getList(func.args[0],arg).removeObj(getObj(func.args[1],arg));
-			}
-				break;
-			case TriggerFunctionType.ListClear:
-			{
-				getList(func.args[0],arg).clear();
-			}
-				break;
-			case TriggerFunctionType.MapPut:
-			{
-				getMap(func.args[0],arg).put(getObj(func.args[1],arg),getObj(func.args[2],arg));
-			}
-				break;
-			case TriggerFunctionType.MapClear:
-			{
-				getMap(func.args[0],arg).clear();
-			}
-				break;
-			case TriggerFunctionType.SetAdd:
-			{
-				getSet(func.args[0],arg).add(getObj(func.args[1],arg));
-			}
-				break;
-			case TriggerFunctionType.SetClear:
-			{
-				getSet(func.args[0],arg).clear();
-			}
-				break;
-			default:
-			{
-				throwError("未找到action:",func.id);
-			}
-				break;
+			throwError("未找到的方法类型,void",func.id);
+			return;
+		}
+
+		if(!entry.doEver(this,func,arg))
+		{
+			throwError("未找到的方法类型,void",func.id);
+			return;
 		}
 	}
 
@@ -1321,32 +1254,15 @@ public class TriggerExecutor:LogicEntity
 	/** 获取Object方法返回值 */
 	protected virtual object toGetObjectFuncValue(TriggerFuncData func,TriggerArg arg)
 	{
-		switch(func.id)
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		Func<TriggerExecutor,TriggerFuncData,TriggerArg,object> f;
+		if(entry==null || (f=entry.objectFunc)==null)
 		{
-			case TriggerFunctionType.GetSVar:
-				return _sVarDic.get(getString(func.args[0],arg));
-			case TriggerFunctionType.GetLocalVar:
-				return arg.runner.getLocalVar(getString(func.args[0],arg));
-			case TriggerFunctionType.AsList:
-			case TriggerFunctionType.AsMap:
-			case TriggerFunctionType.AsSet:
-				return getObj(func.args[0],arg);
-			case TriggerFunctionType.GetCurrentListElement:
-			{
-				TriggerActionRunner p;
-				if((p=arg.runner.parent)!=null)
-					return p.foreachList.get(p.loop);
-				else
-					return null;
-			}
-			default:
-			{
-				throwError("未找到的方法类型,Object",func.id);
-			}
-				break;
+			throwError("未找到的方法类型,Object",func.id);
+			return null;
 		}
 
-		return null;
+		return f(this,func,arg);
 	}
 
 	/** 获取boolean方法返回值 */
@@ -1371,85 +1287,51 @@ public class TriggerExecutor:LogicEntity
 	{
 		switch(func.id)
 		{
-			case TriggerFunctionType.Not:
-				return !getBoolean(func.args[0],arg);
 			case TriggerFunctionType.And:
-				return getBoolean(func.args[0],arg) && getBoolean(func.args[1],arg);
+			{
+				if(!getBoolean(func.args[0],arg))
+					return false;
+
+				return getBoolean(func.args[1],arg);
+			}
 			case TriggerFunctionType.And2:
-				return getBoolean(func.args[0],arg) && getBoolean(func.args[1],arg) && getBoolean(func.args[2],arg);
+			{
+				if(!getBoolean(func.args[0],arg))
+					return false;
+
+				if(!getBoolean(func.args[1],arg))
+					return false;
+
+				return getBoolean(func.args[2],arg);
+			}
 			case TriggerFunctionType.Or:
-				return getBoolean(func.args[0],arg) || getBoolean(func.args[1],arg);
+			{
+				if(getBoolean(func.args[0],arg))
+					return true;
+
+				return getBoolean(func.args[1],arg);
+			}
 			case TriggerFunctionType.Or2:
-				return getBoolean(func.args[0],arg) || getBoolean(func.args[1],arg) || getBoolean(func.args[2],arg);
-			case TriggerFunctionType.Equals:
-				return object.Equals(getObj(func.args[0],arg),getObj(func.args[1],arg));
-			case TriggerFunctionType.EqualsInt:
-				return getInt(func.args[0],arg)==getInt(func.args[1],arg);
-			case TriggerFunctionType.EqualsFloat:
-				return getFloat(func.args[0],arg)==getFloat(func.args[1],arg);
-			case TriggerFunctionType.EqualsLong:
-				return getLong(func.args[0],arg)==getLong(func.args[1],arg);
-			case TriggerFunctionType.EqualsString:
-				return string.Equals(getString(func.args[0],arg),getString(func.args[1],arg));
-			case TriggerFunctionType.GreaterThanInt:
-				return getInt(func.args[0],arg)>getInt(func.args[1],arg);
-			case TriggerFunctionType.GreaterThanOrEqualInt:
-				return getInt(func.args[0],arg)>=getInt(func.args[1],arg);
-			case TriggerFunctionType.LessThanInt:
-				return getInt(func.args[0],arg)<getInt(func.args[1],arg);
-			case TriggerFunctionType.LessThanOrEqualInt:
-				return getInt(func.args[0],arg)<=getInt(func.args[1],arg);
-			case TriggerFunctionType.GreaterThanFloat:
-				return getFloat(func.args[0],arg)>getFloat(func.args[1],arg);
-			case TriggerFunctionType.GreaterThanOrEqualFloat:
-				return getFloat(func.args[0],arg)>=getFloat(func.args[1],arg);
-			case TriggerFunctionType.LessThanFloat:
-				return getFloat(func.args[0],arg)<getFloat(func.args[1],arg);
-			case TriggerFunctionType.LessThanOrEqualFloat:
-				return getFloat(func.args[0],arg)<=getFloat(func.args[1],arg);
-			case TriggerFunctionType.GreaterThanLong:
-				return getLong(func.args[0],arg)>getLong(func.args[1],arg);
-			case TriggerFunctionType.GreaterThanOrEqualLong:
-				return getLong(func.args[0],arg)>=getLong(func.args[1],arg);
-			case TriggerFunctionType.LessThanLong:
-				return getLong(func.args[0],arg)<getLong(func.args[1],arg);
-			case TriggerFunctionType.LessThanOrEqualLong:
-				return getLong(func.args[0],arg)<=getLong(func.args[1],arg);
-			case TriggerFunctionType.GetSBoolean:
 			{
-				Object obj=_sVarDic.get(getString(func.args[0],arg));
-				return obj!=null ? (bool)obj : false;
+				if(getBoolean(func.args[0],arg))
+					return true;
+
+				if(getBoolean(func.args[1],arg))
+					return true;
+
+				return getBoolean(func.args[2],arg);
 			}
-			case TriggerFunctionType.RandomBoolean:
-				return MathUtils.randomBoolean();
-			case TriggerFunctionType.ListContains:
-				return getList(func.args[0],arg).indexOf(getObj(func.args[1],arg))!=-1;
-			case TriggerFunctionType.ListIsEmpty:
-				return getList(func.args[0],arg).isEmpty();
-			case TriggerFunctionType.MapRemove:
-				return getMap(func.args[0],arg).remove(getObj(func.args[1],arg))!=null;
-			case TriggerFunctionType.MapContains:
-				return getMap(func.args[0],arg).contains(getObj(func.args[1],arg));
-			case TriggerFunctionType.MapIsEmpty:
-				return getMap(func.args[0],arg).isEmpty();
-			case TriggerFunctionType.SetRemove:
-				return getSet(func.args[0],arg).remove(getObj(func.args[1],arg));
-			case TriggerFunctionType.SetContains:
-				return getSet(func.args[0],arg).contains(getObj(func.args[1],arg));
-			case TriggerFunctionType.SetIsEmpty:
-				return getSet(func.args[0],arg).isEmpty();
-			case TriggerFunctionType.RemoveSVar:
-				return _sVarDic.remove(getString(func.args[0],arg))!=null;
-			case TriggerFunctionType.GetEventBoolArgs:
-				return (bool)arg.evt.args[getInt(func.args[0],arg)];
-			default:
-			{
-				throwError("未找到的方法类型,boolean",func.id);
-			}
-				break;
 		}
 
-		return false;
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		Func<TriggerExecutor,TriggerFuncData,TriggerArg,bool> f;
+		if(entry==null || (f=entry.boolFunc)==null)
+		{
+			throwError("未找到的方法类型,Boolean",func.id);
+			return false;
+		}
+
+		return f(this,func,arg);
 	}
 
 	/** 获取int值 */
@@ -1472,70 +1354,15 @@ public class TriggerExecutor:LogicEntity
 	/** 获取int值 */
 	protected virtual int toGetIntFuncValue(TriggerFuncData func,TriggerArg arg)
 	{
-		switch(func.id)
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		Func<TriggerExecutor,TriggerFuncData,TriggerArg,int> f;
+		if(entry==null || (f=entry.intFunc)==null)
 		{
-			case TriggerFunctionType.AddInt:
-				return getInt(func.args[0],arg)+getInt(func.args[1],arg);
-			case TriggerFunctionType.SubInt:
-				return getInt(func.args[0],arg)-getInt(func.args[1],arg);
-			case TriggerFunctionType.MulInt:
-				return getInt(func.args[0],arg)*getInt(func.args[1],arg);
-			case TriggerFunctionType.DivInt:
-				return getInt(func.args[0],arg)/getInt(func.args[1],arg);
-			case TriggerFunctionType.InvertInt:
-				return -getInt(func.args[0],arg);
-			case TriggerFunctionType.RestInt:
-				return getInt(func.args[0],arg)%getInt(func.args[1],arg);
-			case TriggerFunctionType.AbsInt:
-				return Math.Abs(getInt(func.args[0],arg));
-			case TriggerFunctionType.Add1Int:
-				return getInt(func.args[0],arg)+1;
-			case TriggerFunctionType.Sub1Int:
-				return getInt(func.args[0],arg)-1;
-			case TriggerFunctionType.ConvertFloat2Int:
-				return (int)getFloat(func.args[0],arg);
-			case TriggerFunctionType.ConvertLong2Int:
-				return (int)getFloat(func.args[0],arg);
-			case TriggerFunctionType.GetCurrentLoopIndex:
-			{
-				TriggerActionRunner p;
-				if((p=arg.runner.parent)!=null)
-					return p.loop;
-				else
-					return 0;
-			}
-			case TriggerFunctionType.GetSInt:
-			{
-				object obj=_sVarDic.get(getString(func.args[0],arg));
-				return obj!=null ? (int)obj : 0;
-			}
-			case TriggerFunctionType.RandomInt:
-				return MathUtils.randomInt(getInt(func.args[0],arg));
-			case TriggerFunctionType.RandomRange:
-				return MathUtils.randomRange(getInt(func.args[0],arg),getInt(func.args[1],arg));
-			case TriggerFunctionType.GetTriggerGMCommandIntArg:
-			{
-				//int anInt=getInt(func.args[0],arg);
-				return (int)arg.evt.args[getInt(func.args[0],arg)];
-			}
-			case TriggerFunctionType.GetListSize:
-				return getList(func.args[0],arg).size();
-			case TriggerFunctionType.GetMapSize:
-				return getMap(func.args[0],arg).size();
-			case TriggerFunctionType.GetSetSize:
-				return getSet(func.args[0],arg).size();
-			case TriggerFunctionType.ListIndexOf:
-				return getList(func.args[0],arg).indexOf(getObj(func.args[1],arg));
-			case TriggerFunctionType.GetEventBoolArgs:
-				return (int)arg.evt.args[getInt(func.args[0],arg)];
-			default:
-			{
-				throwError("未找到的方法类型,int",func.id);
-			}
-				break;
+			throwError("未找到的方法类型,Int",func.id);
+			return 0;
 		}
 
-		return 0;
+		return f(this,func,arg);
 	}
 
 	/** 获取float值 */
@@ -1558,37 +1385,15 @@ public class TriggerExecutor:LogicEntity
 	/** 获取float值 */
 	protected virtual float toGetFloatFuncValue(TriggerFuncData func,TriggerArg arg)
 	{
-		switch(func.id)
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		Func<TriggerExecutor,TriggerFuncData,TriggerArg,float> f;
+		if(entry==null || (f=entry.floatFunc)==null)
 		{
-			case TriggerFunctionType.AddFloat:
-				return getFloat(func.args[0],arg)+getFloat(func.args[1],arg);
-			case TriggerFunctionType.SubFloat:
-				return getFloat(func.args[0],arg)-getFloat(func.args[1],arg);
-			case TriggerFunctionType.MulFloat:
-				return getFloat(func.args[0],arg)*getFloat(func.args[1],arg);
-			case TriggerFunctionType.DivFloat:
-				return getFloat(func.args[0],arg)/getFloat(func.args[1],arg);
-			case TriggerFunctionType.InvertFloat:
-				return -getFloat(func.args[0],arg);
-			case TriggerFunctionType.AbsFloat:
-				return Math.Abs(getFloat(func.args[0],arg));
-			case TriggerFunctionType.ConvertInt2Float:
-				return (float)getInt(func.args[0],arg);
-			case TriggerFunctionType.ConvertLong2Float:
-				return (float)getLong(func.args[0],arg);
-			case TriggerFunctionType.GetSFloat:
-			{
-				Object obj=_sVarDic.get(getString(func.args[0],arg));
-				return obj!=null ? (float)obj : 0f;
-			}
-			default:
-			{
-				throwError("未找到的方法类型,float",func.id);
-			}
-				break;
+			throwError("未找到的方法类型,Float",func.id);
+			return 0;
 		}
 
-		return 0f;
+		return f(this,func,arg);
 	}
 
 	/** 获取long值 */
@@ -1611,39 +1416,15 @@ public class TriggerExecutor:LogicEntity
 	/** 获取long值 */
 	protected virtual long toGetLongFuncValue(TriggerFuncData func,TriggerArg arg)
 	{
-		switch(func.id)
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		Func<TriggerExecutor,TriggerFuncData,TriggerArg,long> f;
+		if(entry==null || (f=entry.longFunc)==null)
 		{
-			case TriggerFunctionType.AddLong:
-				return getLong(func.args[0],arg)+getLong(func.args[1],arg);
-			case TriggerFunctionType.SubLong:
-				return getLong(func.args[0],arg)-getLong(func.args[1],arg);
-			case TriggerFunctionType.MulLong:
-				return getLong(func.args[0],arg)*getLong(func.args[1],arg);
-			case TriggerFunctionType.DivLong:
-				return getLong(func.args[0],arg)/getLong(func.args[1],arg);
-			case TriggerFunctionType.InvertLong:
-				return -getLong(func.args[0],arg);
-			case TriggerFunctionType.AbsLong:
-				return Math.Abs(getLong(func.args[0],arg));
-			case TriggerFunctionType.ConvertInt2Long:
-				return (long)getInt(func.args[0],arg);
-			case TriggerFunctionType.ConvertFloat2Long:
-				return (long)getFloat(func.args[0],arg);
-			case TriggerFunctionType.GetSLong:
-			{
-				Object obj=_sVarDic.get(getString(func.args[0],arg));
-				return obj!=null ? (long)obj : 0l;
-			}
-			case TriggerFunctionType.GetTimeMillis:
-				return getTimeMillis();
-			default:
-			{
-				throwError("未找到的方法类型,long",func.id);
-			}
-				break;
+			throwError("未找到的方法类型,Long",func.id);
+			return 0;
 		}
 
-		return 0L;
+		return f(this,func,arg);
 	}
 
 	/** 获取string值 */
@@ -1666,84 +1447,15 @@ public class TriggerExecutor:LogicEntity
 	/** 获取string值 */
 	protected virtual string toGetStringFuncValue(TriggerFuncData func,TriggerArg arg)
 	{
-		switch(func.id)
+		TriggerFuncEntry entry=_funcMaker.get(func.id);
+		Func<TriggerExecutor,TriggerFuncData,TriggerArg,string> f;
+		if(entry==null || (f=entry.stringFunc)==null)
 		{
-			case TriggerFunctionType.AddStr:
-				return getString(func.args[0],arg)+getString(func.args[1],arg);
-			case TriggerFunctionType.ConvertInt2Str:
-				return getInt(func.args[0],arg).ToString();
-			case TriggerFunctionType.ConvertFloat2Str:
-				return getFloat(func.args[0],arg).ToString();
-			case TriggerFunctionType.ConvertLong2Str:
-				return getLong(func.args[0],arg).ToString();
-			case TriggerFunctionType.ConvertBool2Str:
-				return getBoolean(func.args[0],arg).ToString();
-			case TriggerFunctionType.GetSString:
-			{
-				object obj=_sVarDic.get(getString(func.args[0],arg));
-				return obj!=null ? (String)obj : "";
-			}
-			case TriggerFunctionType.GetEventStringArgs:
-				return (string)arg.evt.args[getInt(func.args[0],arg)];
-			default:
-			{
-				throwError("未找到的方法类型,String",func.id);
-			}
-				break;
+			throwError("未找到的方法类型,String",func.id);
+			return "";
 		}
 
-		return "";
-	}
-
-	/** 获取List值 */
-	protected SList<object> getListFuncValue(TriggerFuncData func,TriggerArg arg)
-	{
-		switch(func.id)
-		{
-			case TriggerFunctionType.AsList:
-				return (SList<object>)getObj(func.args[0],arg);
-			case TriggerFunctionType.CreateList:
-				return new SList<object>();
-			default:
-			{
-				throwError("未找到的方法类型,List",func.id);
-				return null;
-			}
-		}
-	}
-
-	/** 获取Map值 */
-	protected SMap<object,object> getMapFuncValue(TriggerFuncData func,TriggerArg arg)
-	{
-		switch(func.id)
-		{
-			case TriggerFunctionType.AsMap:
-				return (SMap<object,object>)getObj(func.args[0],arg);
-			case TriggerFunctionType.CreateMap:
-				return new SMap<object,object>();
-			default:
-			{
-				throwError("未找到的方法类型,Map",func.id);
-				return null;
-			}
-		}
-	}
-
-	/** 获取Set值 */
-	protected SSet<object> getSetFuncValue(TriggerFuncData func,TriggerArg arg)
-	{
-		switch(func.id)
-		{
-			case TriggerFunctionType.AsSet:
-				return (SSet<object>)getObj(func.args[0],arg);
-			case TriggerFunctionType.CreateSet:
-				return new SSet<object>();
-			default:
-			{
-				throwError("未找到的方法类型,Set",func.id);
-				return null;
-			}
-		}
+		return f(this,func,arg);
 	}
 
 	//--functions--//
@@ -1751,7 +1463,7 @@ public class TriggerExecutor:LogicEntity
 
 
 	/** 输出文字 */
-	protected void print(String str)
+	public void print(String str)
 	{
 		log(str);
 	}

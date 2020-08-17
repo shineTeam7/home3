@@ -96,409 +96,424 @@ public class GameEventType
 	public const int MUnitCDChange=24;
 	
 	/// <summary>
-	/// 主角单位buff组更新(add/remove/refresh)
+	/// 主角单位buff添加(arg0:index,arg1:instanceID)
 	/// </summary>
-	public const int MUnitBuffChange=25;
+	public const int MUnitBuffAdd=25;
+	
+	/// <summary>
+	/// 主角单位buff删除(arg0:index,arg1:instanceID)
+	/// </summary>
+	public const int MUnitBuffRemove=26;
+	
+	/// <summary>
+	/// 主角单位buff刷新(arg0:index,arg1:instanceID)
+	/// </summary>
+	public const int MUnitBuffRefresh=27;
 	
 	/// <summary>
 	/// 主角造型模型变化
 	/// </summary>
-	public const int MUnitAvatarModelChange=26;
+	public const int MUnitAvatarModelChange=28;
 	
 	/// <summary>
 	/// 主角造型部件变化
 	/// </summary>
-	public const int MUnitAvatarPartChange=27;
+	public const int MUnitAvatarPartChange=29;
 	
 	/// <summary>
 	/// 主角单位技能组更新(add/remove/refresh)
 	/// </summary>
-	public const int MUnitSkillChange=28;
+	public const int MUnitSkillChange=30;
 	
 	/// <summary>
 	/// 主角色属性变化(arg1:changeSet)
 	/// </summary>
-	public const int MRoleAttributeChange=29;
+	public const int MRoleAttributeChange=31;
 	
 	/// <summary>
 	/// 单位驾驶状态改变
 	/// </summary>
-	public const int OnUnitDriveChange=30;
+	public const int OnUnitDriveChange=32;
 	
 	/// <summary>
 	/// 载具驾驶状态改变
 	/// </summary>
-	public const int OnVehicleDriveChange=31;
+	public const int OnVehicleDriveChange=33;
 	
 	/// <summary>
 	/// 功能开启(data:functionID)
 	/// </summary>
-	public const int FunctionOpen=35;
+	public const int FunctionOpen=37;
 	
 	/// <summary>
 	/// 功能关闭(data:functionID)
 	/// </summary>
-	public const int FunctionClose=36;
+	public const int FunctionClose=38;
 	
 	/// <summary>
 	/// 活动开启(data:activityID)
 	/// </summary>
-	public const int ActivityOpen=37;
+	public const int ActivityOpen=39;
 	
 	/// <summary>
 	/// 活动关闭(data:activityID)
 	/// </summary>
-	public const int ActivityClose=38;
+	public const int ActivityClose=40;
 	
 	/// <summary>
 	/// 活动重置(data:activityID)
 	/// </summary>
-	public const int ActivityReset=39;
+	public const int ActivityReset=41;
 	
 	/// <summary>
 	/// 活动可见(data:activityID)
 	/// </summary>
-	public const int ActivitySee=40;
+	public const int ActivitySee=42;
 	
 	/// <summary>
 	/// 活动不可见(data:activityID)
 	/// </summary>
-	public const int ActivityCantSee=41;
+	public const int ActivityCantSee=43;
 	
 	/// <summary>
 	/// 活动完成一次(data:activityID)
 	/// </summary>
-	public const int ActivityCompleteOnce=42;
+	public const int ActivityCompleteOnce=44;
 	
 	/// <summary>
 	/// 副本状态更新
 	/// </summary>
-	public const int BattleStateChange=45;
+	public const int BattleStateChange=47;
 	
 	/// <summary>
 	/// 开始匹配消息
 	/// </summary>
-	public const int StartMatch=48;
+	public const int StartMatch=50;
 	
 	/// <summary>
 	/// 其他人同意匹配消息(playerID)
 	/// </summary>
-	public const int PlayerAcceptMatch=49;
+	public const int PlayerAcceptMatch=51;
 	
 	/// <summary>
 	/// 取消匹配消息
 	/// </summary>
-	public const int CancelMatch=50;
+	public const int CancelMatch=52;
 	
 	/// <summary>
 	/// 结束匹配消息
 	/// </summary>
-	public const int MatchOver=51;
+	public const int MatchOver=53;
 	
 	/// <summary>
 	/// 翻页插件数据更新(data:[funcID,page])
 	/// </summary>
-	public const int FuncRefreshPageShow=54;
+	public const int FuncRefreshPageShow=56;
 	
 	/// <summary>
 	/// 排行插件数据更新(data:funcID)
 	/// </summary>
-	public const int FuncRefreshRank=55;
+	public const int FuncRefreshRank=57;
 	
 	/// <summary>
 	/// 排行插件数据重置(data:funcID)
 	/// </summary>
-	public const int FuncResetRank=56;
+	public const int FuncResetRank=58;
 	
 	/// <summary>
 	/// 分段翻页插件数据更新(data:[subsectionIndex,subsectionSubIndex,funcID,page])
 	/// </summary>
-	public const int FuncRefreshSubsectionPageShow=57;
+	public const int FuncRefreshSubsectionPageShow=59;
+	
+	/// <summary>
+	/// 分段排行插件数据更新(data:funcID)
+	/// </summary>
+	public const int FuncRefreshSubsectionRank=60;
 	
 	/// <summary>
 	/// 背包容器更新单格(data:[funcID,index])
 	/// </summary>
-	public const int FuncItemContainerRefreshGrid=61;
+	public const int FuncItemContainerRefreshGrid=63;
 	
 	/// <summary>
 	/// 背包容器全刷(整理)(data:funcID)
 	/// </summary>
-	public const int FuncItemContainerRefreshAll=62;
+	public const int FuncItemContainerRefreshAll=64;
 	
 	/// <summary>
 	/// 背包容器变化(data:funcID)
 	/// </summary>
-	public const int FuncItemContainerChange=63;
+	public const int FuncItemContainerChange=65;
 	
 	/// <summary>
 	/// 主背包容器更新单格(data:index)
 	/// </summary>
-	public const int MainBagRefreshGrid=64;
+	public const int MainBagRefreshGrid=66;
 	
 	/// <summary>
 	/// 主背包容器全更新(整理)
 	/// </summary>
-	public const int MainBagRefreshAll=65;
+	public const int MainBagRefreshAll=67;
 	
 	/// <summary>
 	/// 主背包容器变化
 	/// </summary>
-	public const int MainBagChange=66;
+	public const int MainBagChange=68;
 	
 	/// <summary>
 	/// 主背包某物品Id变化(data:itemID)
 	/// </summary>
-	public const int MainBagItemChange=67;
+	public const int MainBagItemChange=69;
 	
 	/// <summary>
 	/// 获得道具提示(data:List<ItemData>)
 	/// </summary>
-	public const int AddItemNotice=68;
+	public const int AddItemNotice=70;
 	
 	/// <summary>
 	/// 获得奖励(data:RewardShowData)
 	/// </summary>
-	public const int AddReward=69;
+	public const int AddReward=71;
 	
 	/// <summary>
 	/// 装备容器更新(data:[funcID,slot])
 	/// </summary>
-	public const int FuncEquipContainerRefreshGrid=72;
+	public const int FuncEquipContainerRefreshGrid=74;
 	
 	/// <summary>
 	/// 更新语言(国际化)
 	/// </summary>
-	public const int RefreshLanguage=75;
+	public const int RefreshLanguage=77;
 	
 	/// <summary>
 	/// 刷新全部邮件内容
 	/// </summary>
-	public const int RefreshAllMails=78;
+	public const int RefreshAllMails=80;
 	
 	/// <summary>
 	/// 添加新邮件(data:index)
 	/// </summary>
-	public const int AddNewMail=79;
+	public const int AddNewMail=81;
 	
 	/// <summary>
 	/// 刷新新邮件数目
 	/// </summary>
-	public const int RefreshNewMailNum=80;
+	public const int RefreshNewMailNum=82;
 	
 	/// <summary>
 	/// 更新一封邮件(data:index)
 	/// </summary>
-	public const int RefreshOneMail=81;
+	public const int RefreshOneMail=83;
 	
 	/// <summary>
 	/// 删除一封邮件(data:index)
 	/// </summary>
-	public const int DeleteOneMail=82;
+	public const int DeleteOneMail=84;
 	
 	/// <summary>
 	/// 领取一封邮件(data:index)
 	/// </summary>
-	public const int RewardOneMail=83;
+	public const int RewardOneMail=85;
 	
 	/// <summary>
 	/// 刷新全部任务
 	/// </summary>
-	public const int RefreshAllQuest=86;
+	public const int RefreshAllQuest=88;
 	
 	/// <summary>
 	/// 刷新单个任务显示
 	/// </summary>
-	public const int RefreshOneQuest=87;
+	public const int RefreshOneQuest=89;
 	
 	/// <summary>
 	/// 刷新可接任务列表
 	/// </summary>
-	public const int RefreshCanAcceptQuests=88;
+	public const int RefreshCanAcceptQuests=90;
 	
 	/// <summary>
 	/// 刷新可视任务列表
 	/// </summary>
-	public const int RefreshCanSeeQuests=89;
+	public const int RefreshCanSeeQuests=91;
 	
 	/// <summary>
 	/// 接收任务(data:id)
 	/// </summary>
-	public const int AcceptQuest=90;
+	public const int AcceptQuest=92;
 	
 	/// <summary>
 	/// 提交任务(任务完成)(data:id)
 	/// </summary>
-	public const int CommitQuest=91;
+	public const int CommitQuest=93;
 	
 	/// <summary>
 	/// 任务失败(data:id)
 	/// </summary>
-	public const int QuestFaied=92;
+	public const int QuestFaied=94;
 	
 	/// <summary>
 	/// 放弃任务(data:id)
 	/// </summary>
-	public const int GiveUpQuest=93;
+	public const int GiveUpQuest=95;
 	
 	/// <summary>
 	/// 移除已接任务(data:id)
 	/// </summary>
-	public const int RemoveAcceptQuest=94;
+	public const int RemoveAcceptQuest=96;
 	
 	/// <summary>
 	/// 刷新成就显示(data:id)
 	/// </summary>
-	public const int RefreshAchievement=97;
+	public const int RefreshAchievement=99;
 	
 	/// <summary>
 	/// 完成成就(data:id)
 	/// </summary>
-	public const int CompleteAchievement=98;
+	public const int CompleteAchievement=100;
 	
 	/// <summary>
 	/// 领取成就奖励成功(data:id)
 	/// </summary>
-	public const int GetAchievementReward=99;
+	public const int GetAchievementReward=101;
 	
 	/// <summary>
 	/// 社交数据更新
 	/// </summary>
-	public const int UpdateSocialData=103;
+	public const int UpdateSocialData=105;
 	
 	/// <summary>
 	/// 收到聊天消息(data:NormalEvt,int0=channel,long0=key)
 	/// </summary>
-	public const int ReceiveChat=104;
+	public const int ReceiveChat=106;
 	
 	/// <summary>
 	/// 添加好友(data:playerID)
 	/// </summary>
-	public const int AddFriend=107;
+	public const int AddFriend=109;
 	
 	/// <summary>
 	/// 移除好友(data:playerID)
 	/// </summary>
-	public const int RemoveFriend=108;
+	public const int RemoveFriend=110;
 	
 	/// <summary>
 	/// 收到好友申请(data:playerID)
 	/// </summary>
-	public const int ReceiveApplyFriend=109;
+	public const int ReceiveApplyFriend=111;
 	
 	/// <summary>
 	/// 好友申请列表更新
 	/// </summary>
-	public const int RefreshApplyFriendList=110;
+	public const int RefreshApplyFriendList=112;
 	
 	/// <summary>
 	/// 添加好友黑名单(data:playerID)
 	/// </summary>
-	public const int AddFriendBlackList=111;
+	public const int AddFriendBlackList=113;
 	
 	/// <summary>
 	/// 移除好友黑名单(data:playerID)
 	/// </summary>
-	public const int RemoveFriendBlackList=112;
+	public const int RemoveFriendBlackList=114;
 	
 	/// <summary>
 	/// 加入玩家群(data:RoleGroupEvt->groupID,type)
 	/// </summary>
-	public const int JoinRoleGroup=115;
+	public const int JoinRoleGroup=117;
 	
 	/// <summary>
 	/// 离开玩家群(data:RoleGroupEvt->groupID,type)
 	/// </summary>
-	public const int LeaveRoleGroup=116;
+	public const int LeaveRoleGroup=118;
 	
 	/// <summary>
 	/// 添加玩家群成员(data:RoleGroupEvt->groupID,targetID,type)
 	/// </summary>
-	public const int AddRoleGroupMember=117;
+	public const int AddRoleGroupMember=119;
 	
 	/// <summary>
 	/// 移除玩家群成员(data:RoleGroupEvt->groupID,targetID,type)
 	/// </summary>
-	public const int RemoveRoleGroupMember=118;
+	public const int RemoveRoleGroupMember=120;
 	
 	/// <summary>
 	/// 更新玩家群职位(data:RoleGroupEvt->groupID,targetID,oldTitle,newTitle)
 	/// </summary>
-	public const int RefreshRoleGroupTitle=119;
+	public const int RefreshRoleGroupTitle=121;
 	
 	/// <summary>
 	/// 改变玩家群群主(data:RoleGroupEvt->groupID,targetID)
 	/// </summary>
-	public const int ChangeRoleGroupLeader=120;
+	public const int ChangeRoleGroupLeader=122;
 	
 	/// <summary>
 	/// 改变玩家群数据(data:RoleGroupEvt->groupID,changeData)
 	/// </summary>
-	public const int ChangeRoleGroupData=121;
+	public const int ChangeRoleGroupData=123;
 	
 	/// <summary>
 	/// 改变玩家群成员数据(data:RoleGroupEvt->groupID,targetID,changeData)
 	/// </summary>
-	public const int ChangeRoleGroupMemberData=122;
+	public const int ChangeRoleGroupMemberData=124;
 	
 	/// <summary>
 	/// 收到邀请进入玩家群(data:InviteRoleGroupTempData)
 	/// </summary>
-	public const int ReceiveInviteRoleGroup=123;
+	public const int ReceiveInviteRoleGroup=125;
 	
 	/// <summary>
 	/// 玩家群收到新的申请(data:RoleGroupEvt->groupID,applyData)
 	/// </summary>
-	public const int RoleGroupReceiveApply=124;
+	public const int RoleGroupReceiveApply=126;
 	
 	/// <summary>
 	/// 玩家群申请信息变化(data:RoleGroupEvt->groupID,applyData)
 	/// </summary>
-	public const int RoleGroupApplyChange=125;
+	public const int RoleGroupApplyChange=127;
 	
 	/// <summary>
 	/// 玩家群自身申请信息变化(data:RoleGroupEvt->groupID)
 	/// </summary>
-	public const int RoleGroupSelfApplyChange=126;
+	public const int RoleGroupSelfApplyChange=128;
 	
 	/// <summary>
 	/// 玩家群自身申请信息结果(data:RoleGroupEvt->groupID)
 	/// </summary>
-	public const int RoleGroupSelfApplyResult=127;
+	public const int RoleGroupSelfApplyResult=129;
 	
 	/// <summary>
 	/// 玩家群邀请结果(data:RoleGroupEvt->groupID,roleShowData,result)
 	/// </summary>
-	public const int RoleGroupInviteResult=128;
+	public const int RoleGroupInviteResult=130;
 	
 	/// <summary>
 	/// 玩家群更新信息日志(data:RoleGroupEvt->groupID)
 	/// </summary>
-	public const int RoleGroupRefreshInfoLog=129;
+	public const int RoleGroupRefreshInfoLog=131;
 	
 	/// <summary>
 	/// 更新玩家群附加数据(data:RoleGroupEvt->groupID)
 	/// </summary>
-	public const int RefreshRoleGroupEx=130;
+	public const int RefreshRoleGroupEx=132;
 	
 	/// <summary>
 	/// 改变玩家群成员角色显示数据(data:RoleGroupEvt->groupID,targetID,type)
 	/// </summary>
-	public const int ChangeRoleGroupMemberRoleShowData=131;
+	public const int ChangeRoleGroupMemberRoleShowData=133;
 	
 	/// <summary>
 	/// 添加宠物(data:mIndex)
 	/// </summary>
-	public const int AddPet=135;
+	public const int AddPet=137;
 	
 	/// <summary>
 	/// 删除宠物(data:mIndex)
 	/// </summary>
-	public const int RemovePet=136;
+	public const int RemovePet=138;
 	
 	/// <summary>
 	/// 宠物出战状态变化(data:mIndex)
 	/// </summary>
-	public const int PetIsWorkingChange=137;
+	public const int PetIsWorkingChange=139;
 	
 	/// <summary>
 	/// 长度

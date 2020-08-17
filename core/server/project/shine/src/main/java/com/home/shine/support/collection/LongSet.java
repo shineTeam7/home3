@@ -3,11 +3,14 @@ package com.home.shine.support.collection;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.ILongConsumer;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.LongArrays;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 public class LongSet extends BaseHash implements Iterable<Long>
 {
@@ -17,20 +20,12 @@ public class LongSet extends BaseHash implements Iterable<Long>
 	
 	public LongSet()
 	{
-	
+		init(_minSize);
 	}
 	
 	public LongSet(int capacity)
 	{
 		init(countCapacity(capacity));
-	}
-	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
 	}
 	
 	public final long getFreeValue()
@@ -40,13 +35,13 @@ public class LongSet extends BaseHash implements Iterable<Long>
 
 	public final long[] getKeys()
 	{
-		checkInit();
 		return _set;
 	}
-
-	private void init(int capacity)
+	
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 
 		_set=new long[capacity<<1];
 		
@@ -59,7 +54,17 @@ public class LongSet extends BaseHash implements Iterable<Long>
 	private long changeFree()
 	{
 		long newFree=findNewFreeOrRemoved();
-		LongArrays.replaceAll(_set,_freeValue,newFree);
+		
+		long free=_freeValue;
+		long[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -178,8 +183,6 @@ public class LongSet extends BaseHash implements Iterable<Long>
 	
 	public boolean add(long key)
 	{
-		checkInit();
-		
 		long free;
 		if(key==(free=_freeValue))
 		{
@@ -318,24 +321,6 @@ public class LongSet extends BaseHash implements Iterable<Long>
 		return re;
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	/** 遍历 */
 	public void forEachA(ILongConsumer consumer)
 	{
@@ -423,6 +408,32 @@ public class LongSet extends BaseHash implements Iterable<Long>
 		}
 		
 		justClearSize();
+	}
+	
+	/** 转化为原生集合 */
+	public HashSet<Long> toNatureSet()
+	{
+		HashSet<Long> re=new HashSet<>(size());
+		
+		long[] keys=_set;
+		long fv=_freeValue;
+		long k;
+		
+		for(int i=keys.length-1;i>=0;--i)
+		{
+			if((k=keys[i])!=fv)
+			{
+				re.add(k);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Collection<Long> collection)
+	{
+		ensureCapacity(collection.size());
+		collection.forEach(this::add);
 	}
 	
 	@Override

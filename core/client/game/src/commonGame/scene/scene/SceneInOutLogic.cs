@@ -133,10 +133,11 @@ public class SceneInOutLogic:SceneLogicBase
 
 		if(!_scene.isSimple())
 		{
-			_scene.play.makeScenePosData(data);
+			_scene.battle.makeScenePosData(data);
+			_scene.method.makeScenePosData(data);
 		}
 
-		_scene.play.makeCharacterData(data);
+		_scene.method.makeCharacterData(data);
 	}
 
 

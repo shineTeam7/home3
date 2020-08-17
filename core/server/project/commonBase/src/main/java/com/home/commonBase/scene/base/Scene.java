@@ -19,9 +19,10 @@ import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.logic.LogicEntity;
 import com.home.commonBase.logic.unit.UnitFightDataLogic;
 import com.home.commonBase.scene.scene.SceneAOILogic;
+import com.home.commonBase.scene.scene.SceneBattleLogic;
 import com.home.commonBase.scene.scene.SceneFightLogic;
 import com.home.commonBase.scene.scene.SceneInOutLogic;
-import com.home.commonBase.scene.scene.ScenePlayLogic;
+import com.home.commonBase.scene.scene.SceneMethodLogic;
 import com.home.commonBase.scene.scene.ScenePosLogic;
 import com.home.commonBase.scene.scene.SceneRoleLogic;
 import com.home.commonBase.scene.scene.SceneTriggerLogic;
@@ -62,7 +63,7 @@ public class Scene extends LogicEntity implements ILogic
 	protected int _lineID=-1;
 	
 	/** 逻辑体组 */
-	private SList<SceneLogicBase> _logics=new SList<>(SceneLogicBase[]::new);
+	protected SList<SceneLogicBase> _logics=new SList<>(SceneLogicBase[]::new);
 	
 	/** 是否初始化过 */
 	protected boolean _inited=false;
@@ -110,10 +111,12 @@ public class Scene extends LogicEntity implements ILogic
 	public ScenePosLogic pos;
 	/** 战斗逻辑 */
 	public SceneFightLogic fight;
-	/** 场景玩法逻辑 */
-	public ScenePlayLogic play;
+	/** 场景副本类玩法逻辑 */
+	public SceneBattleLogic battle;
 	/** 场景触发器逻辑 */
 	public SceneTriggerLogic trigger;
+	/** 场景方法逻辑 */
+	public SceneMethodLogic method;
 	
 	//策略参数
 	
@@ -186,8 +189,6 @@ public class Scene extends LogicEntity implements ILogic
 		endPos.x=originPos.x+sizePos.x;
 		endPos.y=originPos.y+sizePos.y;
 		endPos.z=originPos.z+sizePos.z;
-		
-		play.onSetConfig();
 	}
 	
 	/** 获取场景配置 */
@@ -337,8 +338,10 @@ public class Scene extends LogicEntity implements ILogic
 			addLogic(fight);
 		
 		addLogic(trigger=createTriggerLogic());
+		
+		addLogic(battle=createBattleLogic());
 		//play最后
-		addLogic(play=createPlayLogic());
+		addLogic(method=createMethodLogic());
 	}
 	
 	/** 构造 */
@@ -382,7 +385,7 @@ public class Scene extends LogicEntity implements ILogic
 		{
 			if((logic=values[i]).enabled)
 			{
-   				logic.afterInit();
+				logic.afterInit();
 			}
 		}
 		
@@ -398,12 +401,15 @@ public class Scene extends LogicEntity implements ILogic
 		
 		if(fight!=null)
 			fight.enabled=!simple;
+		
+		if(battle!=null)
+			battle.preInit();
 	}
 	
 	/** 场景开始 */
 	protected void start()
 	{
-		play.onSceneStart();
+		method.onSceneStart();
 		trigger.triggerEvent(TriggerEventType.OnSceneStart);
 	}
 	
@@ -500,7 +506,7 @@ public class Scene extends LogicEntity implements ILogic
 		
 		if(_isFrameSync)
 		{
-			play.onFrame(delay);
+			method.onFrame(delay);
 		}
 		else
 		{
@@ -654,10 +660,16 @@ public class Scene extends LogicEntity implements ILogic
 		return new SceneFightLogic();
 	}
 	
-	/** 创建玩法逻辑 */
-	protected ScenePlayLogic createPlayLogic()
+	/** 创建方法逻辑 */
+	protected SceneMethodLogic createMethodLogic()
 	{
-		return new ScenePlayLogic();
+		return new SceneMethodLogic();
+	}
+	
+	/** 创建副本玩法逻辑 */
+	protected SceneBattleLogic createBattleLogic()
+	{
+		return new SceneBattleLogic();
 	}
 	
 	/** 创建触发器逻辑 */
@@ -1133,5 +1145,10 @@ public class Scene extends LogicEntity implements ILogic
 	protected void sendWarnLog(String str)
 	{
 	
+	}
+	
+	public void removeScene()
+	{
+		Ctrl.throwError("should be override");
 	}
 }

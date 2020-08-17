@@ -309,7 +309,27 @@ public class ActivityPart:PlayerBasePart
 	/// </summary>
 	public bool checkEnable(ActivityConfig config)
 	{
+		if(config.enableConditions.Length==0)
+			return true;
+		
 		foreach(int[] arr in config.enableConditions)
+		{
+			if(!checkOneEnable(arr))
+				return false;
+		}
+
+		return true;
+	}
+	
+	/// <summary>
+	/// 检查活动是否失效
+	/// </summary>
+	public bool checkInvalid(ActivityConfig config)
+	{
+		if(config.invalidConditions.Length==0)
+			return false;
+		
+		foreach(int[] arr in config.invalidConditions)
 		{
 			if(!checkOneEnable(arr))
 				return false;
@@ -474,8 +494,8 @@ public class ActivityPart:PlayerBasePart
 	/// </summary>
 	public void doActivityOpen(ActivityData data,long lastTurnTime,long nextTurnTime,bool atTIme)
 	{
-		//不启用的
-		if(!checkEnable(data.config))
+		//不启用的或者失效的
+		if(!checkEnable(data.config) || checkInvalid(data.config))
 			return;
 
 		data.isRunning=true;

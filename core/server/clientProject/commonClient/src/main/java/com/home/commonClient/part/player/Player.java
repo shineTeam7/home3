@@ -47,7 +47,7 @@ import com.home.commonClient.part.player.part.SocialPart;
 import com.home.commonClient.part.player.part.SystemPart;
 import com.home.commonClient.part.player.part.TeamPart;
 import com.home.commonClient.part.player.part.UnionPart;
-import com.home.commonClient.server.ClientServer;
+import com.home.commonClient.server.GameServer;
 import com.home.shine.control.DateControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
@@ -490,9 +490,9 @@ public class Player extends LogicEntity
 	}
 	
 	/** 创建server */
-	public ClientServer createClientServer()
+	public GameServer createClientServer()
 	{
-		return new ClientServer(this);
+		return new GameServer(this);
 	}
 	
 	/** 获取连接 */

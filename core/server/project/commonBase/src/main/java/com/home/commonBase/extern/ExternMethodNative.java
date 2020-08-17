@@ -15,4 +15,10 @@ public class ExternMethodNative
 	public static native boolean raycast(long scenePtr,float[] fArr,int[] iArr,int areaMask);
 	
 	public static native boolean calculatePath(long scenePtr,float[] fArr,int[] iArr,int areaMask);
+	
+	public static native long addCylinderObstacle(long scenePtr,float[] fArr);
+	
+	public static native long addBoxObstacle(long scenePtr,float[] fArr);
+	
+	public static native long removeObstacle(long scenePtr,long ptr);
 }

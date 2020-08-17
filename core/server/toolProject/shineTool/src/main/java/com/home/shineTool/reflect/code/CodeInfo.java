@@ -67,6 +67,7 @@ public abstract class CodeInfo
 	public String Float;
 	public String Double;
 	public String String;
+	public String Char;
 	public String Array;
 	public String List;
 	public String Set;
@@ -83,6 +84,7 @@ public abstract class CodeInfo
 	public String FloatG;
 	public String DoubleG;
 	public String StringG;
+	public String CharG;
 	
 	//默认值
 	public String BooleanDefaultValue="false";
@@ -93,6 +95,7 @@ public abstract class CodeInfo
 	public String FloatDefaultValue="0f";
 	public String DoubleDefaultValue="0.0";
 	public String StringDefaultValue="\"\"";
+	public String CharDefaultValue="0";
 	
 	//辅助类型
 	
@@ -176,6 +179,7 @@ public abstract class CodeInfo
 		_strToTypeDic.put(Float,VarType.Float);
 		_strToTypeDic.put(Double,VarType.Double);
 		_strToTypeDic.put(String,VarType.String);
+		_strToTypeDic.put(Char,VarType.Char);
 		
 		_strToTypeDic.put(BooleanG,VarType.Boolean);
 		_strToTypeDic.put(ByteG,VarType.Byte);
@@ -185,6 +189,7 @@ public abstract class CodeInfo
 		_strToTypeDic.put(FloatG,VarType.Float);
 		_strToTypeDic.put(DoubleG,VarType.Double);
 		_strToTypeDic.put(StringG,VarType.String);
+		_strToTypeDic.put(CharG,VarType.Char);
 		
 		_baseTypeInputStrDic.put(VarType.Boolean,Boolean);
 		_baseTypeInputStrDic.put(VarType.Byte,Byte);
@@ -196,6 +201,7 @@ public abstract class CodeInfo
 		_baseTypeInputStrDic.put(VarType.Float,Float);
 		_baseTypeInputStrDic.put(VarType.Double,Double);
 		_baseTypeInputStrDic.put(VarType.String,String);
+		_baseTypeInputStrDic.put(VarType.Char,Char);
 		
 		_baseTypeInputGStrDic.put(VarType.Boolean,BooleanG);
 		_baseTypeInputGStrDic.put(VarType.Byte,ByteG);
@@ -207,9 +213,9 @@ public abstract class CodeInfo
 		_baseTypeInputGStrDic.put(VarType.Float,FloatG);
 		_baseTypeInputGStrDic.put(VarType.Double,DoubleG);
 		_baseTypeInputGStrDic.put(VarType.String,StringG);
+		_baseTypeInputGStrDic.put(VarType.Char,CharG);
 		
 		_typeStrDic.put(VarType.Boolean,Boolean);
-		
 		_typeStrDic.put(VarType.Byte,ShineToolSetting.useIntInsteadByte ? Int : Byte);
 		_typeStrDic.put(VarType.UByte,Int);
 		_typeStrDic.put(VarType.Short,Int);
@@ -219,9 +225,9 @@ public abstract class CodeInfo
 		_typeStrDic.put(VarType.Float,Float);
 		_typeStrDic.put(VarType.Double,Double);
 		_typeStrDic.put(VarType.String,String);
+		_typeStrDic.put(VarType.Char,Char);
 		
 		_typeGStrDic.put(VarType.Boolean,BooleanG);
-		
 		_typeGStrDic.put(VarType.Byte,ShineToolSetting.useIntInsteadByte ? IntG : ByteG);
 		_typeGStrDic.put(VarType.UByte,IntG);
 		_typeGStrDic.put(VarType.Short,IntG);
@@ -231,6 +237,7 @@ public abstract class CodeInfo
 		_typeGStrDic.put(VarType.Float,FloatG);
 		_typeGStrDic.put(VarType.Double,DoubleG);
 		_typeGStrDic.put(VarType.String,StringG);
+		_typeGStrDic.put(VarType.Char,CharG);
 		
 		_typeDefaultValueDic.put(VarType.Boolean,BooleanDefaultValue);
 		_typeDefaultValueDic.put(VarType.Byte,ByteDefaultValue);
@@ -242,6 +249,7 @@ public abstract class CodeInfo
 		_typeDefaultValueDic.put(VarType.Float,FloatDefaultValue);
 		_typeDefaultValueDic.put(VarType.Double,DoubleDefaultValue);
 		_typeDefaultValueDic.put(VarType.String,StringDefaultValue);
+		_typeDefaultValueDic.put(VarType.Char,CharDefaultValue);
 	}
 	
 	/** 获取基础类型(取不到返回-1) */

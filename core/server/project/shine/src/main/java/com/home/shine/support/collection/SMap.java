@@ -4,7 +4,9 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.IObjectConsumer;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -17,7 +19,7 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 	
 	public SMap()
 	{
-	
+		init(_minSize);
 	}
 	
 	public SMap(int capacity)
@@ -36,14 +38,13 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 	/** 获取表 */
 	public final Object[] getTable()
 	{
-		checkInit();
-		
 		return _table;
 	}
 
+	@Override
 	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 
 		_table=new Object[capacity << 2];
 	}
@@ -55,8 +56,6 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 			Ctrl.throwError("key不能为空");
 			return;
 		}
-		
-		checkInit();
 		
 		int index=insert(key,value);
 		
@@ -331,10 +330,10 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 			{
 				break;
 			}
-			K castedKeyToShift=((K)(keyToShift));
-			if(((hashObj(castedKeyToShift) - indexToShift) & capacityMask) >= shiftDistance)
+			
+			if(((hashObj(keyToShift) - indexToShift) & capacityMask) >= shiftDistance)
 			{
-				tab[indexToRemove]=castedKeyToShift;
+				tab[indexToRemove]=keyToShift;
 				tab[(indexToRemove + 1)]=((V)(tab[(indexToShift + 1)]));
 				indexToRemove=indexToShift;
 				shiftDistance=2;
@@ -361,24 +360,6 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 		Arrays.fill(_table,null);
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_table==null)
-			{
-				init(t);
-			}
-			else if(t>(_table.length >> 1))
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	public SMap<K,V> clone()
 	{
 		if(_size==0)
@@ -399,8 +380,6 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 			Ctrl.throwError("key不能为空");
 			return null;
 		}
-		
-		checkInit();
 		
 		int index=insert(key,value);
 		
@@ -427,8 +406,6 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 			Ctrl.throwError("key不能为空");
 			return null;
 		}
-		
-		checkInit();
 		
 		Object[] tab;
 		int index;
@@ -536,6 +513,31 @@ public class SMap<K,V> extends BaseHash implements Iterable<V>
 		list.sort();
 		
 		return list;
+	}
+	
+	/** 转化为原生集合 */
+	public HashMap<K,V> toNatureMap()
+	{
+		HashMap<K,V> re=new HashMap<>(size());
+		
+		Object[] table=_table;
+		Object key;
+		
+		for(int i=table.length - 2;i >= 0;i-=2)
+		{
+			if((key=table[i])!=null)
+			{
+				re.put((K)key,(V)table[i + 1]);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Map<K,V> map)
+	{
+		ensureCapacity(map.size());
+		map.forEach(this::put);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -4,6 +4,7 @@ import com.home.commonBase.dataEx.role.AttributeCalculateInfo;
 import com.home.commonBase.dataEx.role.StatusCalculateInfo;
 import com.home.commonBase.global.BaseC;
 import com.home.commonBase.tool.AttributeTool;
+import com.home.commonBase.tool.IAttributeTool;
 
 /** 属性控制类 */
 public class AttributeControl
@@ -22,7 +23,7 @@ public class AttributeControl
 		attribute=new AttributeCalculateInfo()
 		{
 			@Override
-			public int calculateAttribute(AttributeTool tool,int[] formula)
+			public int calculateAttribute(IAttributeTool tool,int[] formula)
 			{
 				return BaseC.logic.calculateAttribute(tool,formula);
 			}
@@ -33,7 +34,7 @@ public class AttributeControl
 		roleAttribute=new AttributeCalculateInfo()
 		{
 			@Override
-			public int calculateAttribute(AttributeTool tool,int[] formula)
+			public int calculateAttribute(IAttributeTool tool,int[] formula)
 			{
 				return BaseC.logic.calculateAttribute(tool,formula);
 			}

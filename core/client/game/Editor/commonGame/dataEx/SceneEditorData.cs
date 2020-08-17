@@ -54,7 +54,8 @@ public class SceneEditorData
 
 		foreach(int k in elements.getSortedKeyList())
 		{
-			elements.get(k).config.writeBytesSimple(_stream);
+			ScenePlaceElementConfig scenePlaceElementConfig = elements.get(k).config;
+			scenePlaceElementConfig.writeBytesSimple(_stream);
 		}
 
 		string path=SceneEditorWindow.getScenePlaceFilePath(config.id);

@@ -17,6 +17,7 @@ public class ShineResponseMaker:DataMaker
 		list[ShineResponseType.SocketReconnectSuccess-offSet]=createSocketReconnectSuccessResponse;
 		list[ShineResponseType.AckPing-offSet]=createAckPingResponse;
 		list[ShineResponseType.SocketReconnectFailed-offSet]=createSocketReconnectFailedResponse;
+		list[ShineResponseType.SocketClose-offSet]=createSocketCloseResponse;
 	}
 	
 	private BaseData createPingResponse()
@@ -52,6 +53,11 @@ public class ShineResponseMaker:DataMaker
 	private BaseData createSocketReconnectFailedResponse()
 	{
 		return new SocketReconnectFailedResponse();
+	}
+	
+	private BaseData createSocketCloseResponse()
+	{
+		return new SocketCloseResponse();
 	}
 	
 }

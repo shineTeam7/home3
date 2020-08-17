@@ -9,6 +9,7 @@ import com.home.commonBase.constlist.generate.AttributeFormulaType;
 import com.home.commonBase.constlist.generate.ItemType;
 import com.home.commonBase.constlist.generate.MailType;
 import com.home.commonBase.constlist.generate.RewardLevelFormulaType;
+import com.home.commonBase.constlist.generate.SkillVarFormulaType;
 import com.home.commonBase.constlist.generate.SkillVarSourceType;
 import com.home.commonBase.data.item.ItemData;
 import com.home.commonBase.data.item.ItemIdentityData;
@@ -20,13 +21,14 @@ import com.home.commonBase.global.BaseC;
 import com.home.commonBase.global.CommonSetting;
 import com.home.commonBase.logic.LogicEntity;
 import com.home.commonBase.logic.unit.UnitFightDataLogic;
-import com.home.commonBase.tool.AttributeTool;
+import com.home.commonBase.tool.IAttributeTool;
 import com.home.commonBase.utils.BaseGameUtils;
 import com.home.shine.constlist.SLogType;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.DIntData;
 import com.home.shine.dataEx.LogInfo;
 import com.home.shine.support.collection.SList;
+import com.home.shine.support.collection.SSet;
 import com.home.shine.timer.ITimeEntity;
 
 /** base逻辑控制 */
@@ -172,7 +174,7 @@ public class BaseLogicControl
 	}
 	
 	/** 计算属性公式 */
-	public int calculateAttribute(AttributeTool tool,int[] args)
+	public int calculateAttribute(IAttributeTool tool,int[] args)
 	{
 		switch(args[0])
 		{
@@ -206,29 +208,29 @@ public class BaseLogicControl
 	{
 		switch(formulaType)
 		{
-			case AttributeFormulaType.Single:
+			case SkillVarFormulaType.Single:
 			{
 				return getOneSVar(args,0,self,target,selfValues,start);
 			}
-			case AttributeFormulaType.Normal2:
+			case SkillVarFormulaType.Normal2:
 			{
 				return (int)(getOneSVar(args,0,self,target,selfValues,start)*
 						getOneSVarAddRatio(args,1,self,target,selfValues,start));
 			}
-			case AttributeFormulaType.Normal3:
+			case SkillVarFormulaType.Normal3:
 			{
 				return (int)(getOneSVar(args,0,self,target,selfValues,start)*
 						getOneSVarAddRatio(args,1,self,target,selfValues,start)+
 						getOneSVar(args,2,self,target,selfValues,start));
 			}
-			case AttributeFormulaType.Normal4:
+			case SkillVarFormulaType.Normal4:
 			{
 				return (int)((getOneSVar(args,0,self,target,selfValues,start)*
 						getOneSVarAddRatio(args,1,self,target,selfValues,start)+
 						getOneSVar(args,2,self,target,selfValues,start))*
 						getOneSVarAddRatio(args,3,self,target,selfValues,start));
 			}
-			case AttributeFormulaType.TwoPlus:
+			case SkillVarFormulaType.TwoPlus:
 			{
 				return getOneSVar(args,0,self,target,selfValues,start)+
 						getOneSVar(args,1,self,target,selfValues,start);
@@ -257,7 +259,7 @@ public class BaseLogicControl
 		
 		boolean isTarget;
 		
-		if((isTarget=BaseC.constlist.skillVarSource_isTarget(arr[index])) || selfValues==null)
+		if((isTarget=BaseC.constlist.skillVarSource_isTarget(arr[0])) || selfValues==null)
 		{
 			if(isTarget)
 			{

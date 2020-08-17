@@ -5,7 +5,6 @@ import com.home.shine.support.collection.SList;
 import com.home.shine.support.collection.SMap;
 import com.home.shine.support.collection.SSet;
 import com.home.shine.support.func.ObjectCall;
-import com.home.shine.support.func.ObjectCall3;
 import com.home.shine.utils.FileUtils;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.constlist.CodeType;
@@ -104,7 +103,7 @@ public class HConfigExportTool extends ConfigExportToolBase
 	//}
 	
 	@Override
-	protected int addOneDefine(String cName,String des)
+	protected int addOneDefine(String cName,String des,String qName)
 	{
 		String useName=_makeTool.upperNameToUseName(cName);
 		
@@ -113,7 +112,7 @@ public class HConfigExportTool extends ConfigExportToolBase
 		//存在,才写
 		if(_makeTool.getHAllNewFilesSet().contains(useName) || _makeTool.getCustomDescribes().contains(useName))
 		{
-			re=super.addOneDefine(cName,des);
+			re=super.addOneDefine(cName,des,qName);
 			_makeTool.getConfigKeyDic().put(useName,re);
 			_makeTool.getConfigProjectTypeDic().put(useName,_makeTool.getProjectType());
 		}
@@ -318,7 +317,7 @@ public class HConfigExportTool extends ConfigExportToolBase
 		{
 			if(_parentTool==null)
 			{
-				addOneDefine(_makeTool.useNameToUpperName(v),customDescribes.get(v));
+				addOneDefine(_makeTool.useNameToUpperName(v),customDescribes.get(v), null);
 				_newListAll.add(v);
 			}
 		}

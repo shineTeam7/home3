@@ -218,6 +218,23 @@ public class XML
 		_children.clear();
 	}
 	
+	public XML clone()
+	{
+		XML re=new XML();
+		re.setName(_name);
+		re.setValue(_value);
+		re._propertys=_propertys.clone();
+		
+		re._children.ensureCapacity(_children.size());
+		
+		for(XML child : _children)
+		{
+			re._children.add(child.clone());
+		}
+		
+		return re;
+	}
+	
 	/** 转String */
 	@Override
 	public String toString()

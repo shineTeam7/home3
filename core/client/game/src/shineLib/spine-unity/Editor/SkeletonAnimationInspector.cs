@@ -37,17 +37,18 @@ namespace Spine.Unity.Editor {
 	[CustomEditor(typeof(SkeletonAnimation))]
 	[CanEditMultipleObjects]
 	public class SkeletonAnimationInspector : SkeletonRendererInspector {
-		protected SerializedProperty animationName, loop, timeScale, autoReset;
+		protected SerializedProperty animationName, loop, timeScale, autoReset,isStatic;
 		protected bool wasAnimationNameChanged;
 		protected bool requireRepaint;
 		readonly GUIContent LoopLabel = new GUIContent("Loop", "Whether or not .AnimationName should loop. This only applies to the initial animation specified in the inspector, or any subsequent Animations played through .AnimationName. Animations set through state.SetAnimation are unaffected.");
 		readonly GUIContent TimeScaleLabel = new GUIContent("Time Scale", "The rate at which animations progress over time. 1 means normal speed. 0.5 means 50% speed.");
-
-		protected override void OnEnable () {
+        readonly GUIContent IsStaticLable = new GUIContent("IsStatic", "is static (build)");
+        protected override void OnEnable () {
 			base.OnEnable();
 			animationName = serializedObject.FindProperty("_animationName");
 			loop = serializedObject.FindProperty("loop");
-			timeScale = serializedObject.FindProperty("timeScale");
+            isStatic = serializedObject.FindProperty("isStatic");
+            timeScale = serializedObject.FindProperty("timeScale");
 		}
 
 		protected override void DrawInspectorGUI (bool multi) {
@@ -73,7 +74,8 @@ namespace Spine.Unity.Editor {
 				}
 				EditorGUILayout.PropertyField(loop);
 				EditorGUILayout.PropertyField(timeScale);
-				foreach (var o in targets) {
+                EditorGUILayout.PropertyField(isStatic);
+                foreach (var o in targets) {
 					var component = o as SkeletonAnimation;
 					component.timeScale = Mathf.Max(component.timeScale, 0);
 				}
@@ -86,7 +88,8 @@ namespace Spine.Unity.Editor {
 				wasAnimationNameChanged |= EditorGUI.EndChangeCheck(); // Value used in the next update.
 				EditorGUILayout.PropertyField(loop, LoopLabel);
 				EditorGUILayout.PropertyField(timeScale, TimeScaleLabel);
-				var component = (SkeletonAnimation)target;
+                EditorGUILayout.PropertyField(isStatic, IsStaticLable);
+                var component = (SkeletonAnimation)target;
 				component.timeScale = Mathf.Max(component.timeScale, 0);
 				EditorGUILayout.Space();
 			}

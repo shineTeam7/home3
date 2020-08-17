@@ -4,7 +4,9 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.ILongConsumer;
 import com.home.shine.utils.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class LongList extends BaseList
 {
@@ -12,7 +14,7 @@ public class LongList extends BaseList
 	
 	public LongList()
 	{
-		_values=ObjectUtils.EmptyLongArr;
+		init(0);
 	}
 	
 	public LongList(int capacity)
@@ -20,29 +22,29 @@ public class LongList extends BaseList
 		init(countCapacity(capacity));
 	}
 	
-	public int capacity()
-	{
-		return _values.length;
-	}
-	
 	public final long[] getValues()
 	{
 		return _values;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_values=new long[capacity];
+		_capacity=capacity;
 		
-		_size=0;
+		if(capacity==0)
+			_values=ObjectUtils.EmptyLongArr;
+		else
+			_values=new long[capacity];
 	}
 	
-	private void remake(int capacity)
+	protected void remake(int capacity)
 	{
-		long[] n=new long[capacity];
-		if(_values.length>0)
-			System.arraycopy(_values,0,n,0,_size);
-		_values=n;
+		long[] oldValues=_values;
+		init(capacity);
+		
+		if(oldValues.length>0 && _size>0)
+			System.arraycopy(oldValues,0,_values,0,_size);
 	}
 
 	public void set(int index,long value)
@@ -58,10 +60,7 @@ public class LongList extends BaseList
 	/** 添加 */
 	public void add(long value)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		_values[_size++]=value;
 	}
@@ -69,10 +68,7 @@ public class LongList extends BaseList
 	/** 添加2个 */
 	public void add2(long v1,long v2)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size + 2>(_values.length))
-			remake(_values.length<<1);
+		addCapacity(2);
 		
 		_values[_size++]=v1;
 		_values[_size++]=v2;
@@ -95,10 +91,7 @@ public class LongList extends BaseList
 	/** 添加元素到头 */
 	public void unshift(long value)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		if(_size>0)
 			System.arraycopy(_values,0,_values,1,_size);
@@ -236,6 +229,7 @@ public class LongList extends BaseList
 			
 			n[offset]=value;
 			_values=n;
+			_capacity=n.length;
 		}
 		else
 		{
@@ -266,6 +260,7 @@ public class LongList extends BaseList
 			n[offset]=value;
 			n[offset+1]=value2;
 			_values=n;
+			_capacity=n.length;
 		}
 		else
 		{
@@ -283,15 +278,6 @@ public class LongList extends BaseList
 		_size=0;
 	}
 	
-	/** 扩容 */
-	public void ensureCapacity(int capacity)
-	{
-		if(capacity>_values.length)
-		{
-			remake(countCapacity(capacity));
-		}
-	}
-	
 	/** 转换数组 */
 	public long[] toArray()
 	{
@@ -305,6 +291,27 @@ public class LongList extends BaseList
 		System.arraycopy(_values,0,re,0,_size);
 		
 		return re;
+	}
+	
+	/** 转化为原生集合 */
+	public ArrayList<Long> toNatureList()
+	{
+		ArrayList<Long> re=new ArrayList<>(size());
+		
+		long[] values=_values;
+		
+		for(int i=0, len=_size;i<len;++i)
+		{
+			re.add(values[i]);
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Collection<Integer> collection)
+	{
+		ensureCapacity(collection.size());
+		collection.forEach(this::add);
 	}
 	
 	public void forEach(ILongConsumer consumer)

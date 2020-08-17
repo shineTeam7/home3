@@ -43,8 +43,6 @@ public class ShineToolGlobal
 	public static String serverSavePath;
 	/** 服务器temp目录 */
 	public static String serverTempPath;
-	/** 服务器sql存放目录 */
-	public static String serverSqlPath;
 	/** 服务器db数据版本记录路径 */
 	public static String serverDBRecordPath;
 	/** 配置表版本记录路径 */
@@ -153,7 +151,6 @@ public class ShineToolGlobal
 		serverBinPath=serverPath + "/bin";
 		serverSavePath=serverPath + "/save";
 		serverTempPath=serverPath + "/temp";
-		serverSqlPath=serverBinPath + "/sql";
 		serverDBRecordPath=serverSavePath+"/dbRecord.bin";
 		serverConfigRecordPath=serverSavePath+"/configRecord.bin";
 		serverConfigPath=serverBinPath + "/config";

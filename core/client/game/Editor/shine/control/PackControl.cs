@@ -497,7 +497,11 @@ namespace ShineEditor
 				for(int i=0;i<dependencies.Length;i++)
 				{
 					string name=dependencies[i];
-					bundleInfoExData.depends.add(_resourceInfoExDataCache[name].id);
+
+					if (_resourceInfoExDataCache[name] != null)
+					{
+						bundleInfoExData.depends.add(_resourceInfoExDataCache[name].id);	
+					}
 				}
 				
 				EditorUtility.DisplayProgressBar("请耐心等待","正在检测bundle依赖...",(float)++curNum / progressNum);

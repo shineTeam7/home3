@@ -20,7 +20,6 @@ import com.home.commonClient.constlist.system.LoginFlowType;
 import com.home.commonClient.control.LogicExecutor;
 import com.home.commonClient.global.ClientC;
 import com.home.commonClient.global.ClientGlobal;
-import com.home.commonClient.net.base.GameResponse;
 import com.home.commonClient.net.httpRequest.ClientLoginHttpRequest;
 import com.home.commonClient.net.httpRequest.ClientLoginSelectHttpRequest;
 import com.home.commonClient.net.request.login.CreatePlayerRequest;
@@ -32,11 +31,12 @@ import com.home.commonClient.net.request.system.SaveIntRequest;
 import com.home.commonClient.net.request.system.SaveStringRequest;
 import com.home.commonClient.net.response.login.InitClientResponse;
 import com.home.commonClient.part.player.base.PlayerBasePart;
-import com.home.commonClient.server.ClientServer;
+import com.home.commonClient.server.GameServer;
 import com.home.shine.control.DateControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.BaseData;
 import com.home.shine.dataEx.AffairTimeOut;
+import com.home.shine.net.base.BaseResponse;
 import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.support.collection.SList;
 import com.home.shine.timer.TimeDriver;
@@ -66,7 +66,7 @@ public class SystemPart extends PlayerBasePart
 	/** 是否是切换中(否则就是登陆中) */
 	private boolean _isSwitching=false;
 	
-	private ClientServer _server;
+	private GameServer _server;
 	
 	private TimeDriver _timeDriver=new TimeDriver();
 	
@@ -90,7 +90,7 @@ public class SystemPart extends PlayerBasePart
 	
 	private AffairTimeOut _testLoginTimeOut=new AffairTimeOut(this::testLoginTimeOut,20);
 	
-	private SList<GameResponse> _responseList=new SList<>(GameResponse[]::new);
+	private SList<BaseResponse> _responseList=new SList<>(BaseResponse[]::new);
 	
 	@Override
 	public void setData(BaseData data)
@@ -647,7 +647,7 @@ public class SystemPart extends PlayerBasePart
 		return new SystemClientPartData();
 	}
 	
-	public void recordResponse(GameResponse response)
+	public void recordResponse(BaseResponse response)
 	{
 		if(response instanceof InitClientResponse)
 		{

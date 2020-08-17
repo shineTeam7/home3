@@ -13,7 +13,7 @@ public class CharList extends BaseList implements Iterable<Character>
 	
 	public CharList()
 	{
-		_values=ObjectUtils.EmptyCharArr;
+		init(0);
 	}
 	
 	public CharList(int capacity)
@@ -21,29 +21,30 @@ public class CharList extends BaseList implements Iterable<Character>
 		init(countCapacity(capacity));
 	}
 	
-	public int capacity()
-	{
-		return _values.length;
-	}
-	
 	public final char[] getValues()
 	{
 		return _values;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_values=new char[capacity];
+		_capacity=capacity;
 		
-		_size=0;
+		if(capacity==0)
+			_values=ObjectUtils.EmptyCharArr;
+		else
+			_values=new char[capacity];
 	}
 	
-	private void remake(int capacity)
+	@Override
+	protected void remake(int capacity)
 	{
-		char[] n=new char[capacity];
-		if(_values.length>0)
-			System.arraycopy(_values,0,n,0,_size);
-		_values=n;
+		char[] oldValues=_values;
+		init(capacity);
+		
+		if(oldValues.length>0 && _size>0)
+			System.arraycopy(oldValues,0,_values,0,_size);
 	}
 	
 	/** 直接设置 */
@@ -59,10 +60,7 @@ public class CharList extends BaseList implements Iterable<Character>
 	/** 添加 */
 	public void add(char value)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		_values[_size++]=value;
 	}
@@ -70,10 +68,7 @@ public class CharList extends BaseList implements Iterable<Character>
 	/** 添加2个 */
 	public void add2(char v1,char v2)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size + 2>(_values.length))
-			remake(_values.length<<1);
+		addCapacity(2);
 		
 		_values[_size++]=v1;
 		_values[_size++]=v2;
@@ -82,10 +77,7 @@ public class CharList extends BaseList implements Iterable<Character>
 	/** 添加3个 */
 	public void add3(char v1,char v2,char v3)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size + 3>(_values.length))
-			remake(_values.length<<1);
+		addCapacity(3);
 		
 		_values[_size++]=v1;
 		_values[_size++]=v2;
@@ -109,10 +101,7 @@ public class CharList extends BaseList implements Iterable<Character>
 	/** 添加元素到头 */
 	public void unshift(char value)
 	{
-		if(_values.length==0)
-			init(_minSize);
-		else if(_size==_values.length)
-			remake(_values.length<<1);
+		addCapacity();
 		
 		if(_size>0)
 			System.arraycopy(_values,0,_values,1,_size);
@@ -222,6 +211,7 @@ public class CharList extends BaseList implements Iterable<Character>
 			
 			n[offset]=value;
 			_values=n;
+			_capacity=n.length;
 		}
 		else
 		{
@@ -231,20 +221,6 @@ public class CharList extends BaseList implements Iterable<Character>
 		}
 		
 		++_size;
-	}
-	
-	public void clear()
-	{
-		_size=0;
-	}
-	
-	/** 扩容 */
-	public void ensureCapacity(int capacity)
-	{
-		if(capacity>_values.length)
-		{
-			remake(countCapacity(capacity));
-		}
 	}
 	
 	/** 转换数组 */

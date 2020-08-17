@@ -2,6 +2,7 @@ package com.home.shineTool.tool.export;
 
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.SList;
+import com.home.shine.support.func.ObjectFunc2;
 import com.home.shine.utils.StringUtils;
 import com.home.shineTool.constlist.CodeType;
 import com.home.shineTool.constlist.DataGroupType;
@@ -106,6 +107,9 @@ public class DataDataExportTool extends DataExportTool
 	@Override
 	protected boolean checkNeedDoCurrent()
 	{
+		if(!super.checkNeedDoCurrent())
+			return false;
+		
 		boolean need=true;
 		
 		if(_outputInfo.isClientOrRobot())

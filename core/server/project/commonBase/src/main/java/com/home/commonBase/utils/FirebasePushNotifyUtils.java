@@ -26,7 +26,7 @@ public class FirebasePushNotifyUtils extends PushNotifyBaseUtils
 		{
 			FirebaseOptions options = new FirebaseOptions.Builder()
 					.setCredentials(GoogleCredentials.fromStream(FileUtils.readFileForInputStream(ShineGlobal.serverConfigRoot+"/firebase.json")))
-					.setDatabaseUrl("https://dream-islang.firebaseio.com")
+					.setDatabaseUrl(CommonSetting.firebaseDatabaseUrl)
 					.build();
 			FirebaseApp.initializeApp(options);
 			inited=true;

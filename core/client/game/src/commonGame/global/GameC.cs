@@ -135,4 +135,9 @@ public class GameC
 	/// 引导控制
 	/// </summary>
 	public static GuideControl guide;
+
+	/// <summary>
+	/// server
+	/// </summary>
+	public static SceneServer sceneServer;
 }

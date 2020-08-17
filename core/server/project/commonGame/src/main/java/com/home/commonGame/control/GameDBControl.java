@@ -19,6 +19,7 @@ import com.home.commonGame.part.player.Player;
 import com.home.commonGame.tool.func.GameRoleGroupTool;
 import com.home.shine.bytes.BytesReadStream;
 import com.home.shine.bytes.BytesWriteStream;
+import com.home.shine.constlist.TableStateType;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.DateData;
@@ -33,6 +34,8 @@ import com.home.shine.support.func.ObjectCall;
 import com.home.shine.table.BaseTable;
 import com.home.shine.table.DBConnect;
 import com.home.shine.utils.BytesUtils;
+import com.home.shine.utils.ObjectUtils;
+import io.netty.util.internal.ObjectUtil;
 
 import java.sql.Connection;
 
@@ -84,16 +87,24 @@ public class GameDBControl extends BaseGameDBControl
 	@Override
 	protected void toInit()
 	{
-		//辅助服不需要gameDB
-		if(!GameC.main.isAssist())
-		{
-			_tempPlayerTable=BaseC.factory.createPlayerTable();
-			_tempData=toCreateDBWriteTempData();
-			
-			super.toInit();
-		}
+		_tempPlayerTable=BaseC.factory.createPlayerTable();
+		_tempData=toCreateDBWriteTempData();
+		
+		super.toInit();
 		
 		_centerConnect=new DBConnect(_centerURL);
+	}
+	
+	@Override
+	protected void toDispose()
+	{
+		super.toDispose();
+		
+		if(_centerConnect!=null)
+		{
+			_centerConnect.close();
+			_centerConnect=null;
+		}
 	}
 	
 	/** 获取中心服数据库连接 */
@@ -1088,15 +1099,19 @@ public class GameDBControl extends BaseGameDBControl
 		{
 			rTable=values1[i].table;
 			
+			if(rTable.tableState==TableStateType.NeedInsert)
+				rTable.setNormal();
+			
 			if(rTable.needRemove())
-			{
 				removeRoleGroupTable(rTable);
-			}
 		}
 	}
 	
 	protected void afterWriteOnePlayerTable(PlayerTable table)
 	{
+		if(table.tableState==TableStateType.NeedInsert)
+			table.setNormal();
+		
 		if(table.needRemove())
 		{
 			removePlayerTable(table);
@@ -1122,7 +1137,7 @@ public class GameDBControl extends BaseGameDBControl
 			}
 		}
 	}
-	
+
 	/** db写入临时数据 */
 	protected class DBWriteTempData extends BaseDBWriteTempData
 	{

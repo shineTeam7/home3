@@ -148,8 +148,8 @@ public class SceneMapConfig:BaseConfig
 	/// </summary>
 	protected override void generateRefresh()
 	{
-		sourceT=LoadControl.getResourceIDByName(source);
 		sourceExListT=LoadControl.getResourceIDsByNames(sourceExList);
+		sourceT=LoadControl.getResourceIDByName(source);
 		musicT=LoadControl.getResourceIDByName(music);
 	}
 	

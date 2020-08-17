@@ -3,13 +3,9 @@ package com.home.shine.support.collection;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.ICharObjectConsumer;
 import com.home.shine.support.collection.inter.ICreateArray;
-import com.home.shine.support.collection.inter.IIntObjectConsumer;
 import com.home.shine.support.collection.inter.IObjectConsumer;
 import com.home.shine.support.func.ObjectIntFunc;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.CharArrays;
-import com.koloboke.collect.impl.IntArrays;
-import com.koloboke.collect.impl.hash.LHash;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -29,7 +25,7 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 	
 	public CharObjectMap()
 	{
-	
+		init(_minSize);
 	}
 	
 	public CharObjectMap(int capacity)
@@ -40,20 +36,13 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 	public CharObjectMap(ICreateArray<V> createVArrFunc)
 	{
 		_createVArrFunc=createVArrFunc;
+		init(_minSize);
 	}
 	
 	public CharObjectMap(ICreateArray<V> createVArrFunc,int capacity)
 	{
 		_createVArrFunc=createVArrFunc;
 		init(countCapacity(capacity));
-	}
-	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
 	}
 	
 	public final char getFreeValue()
@@ -63,13 +52,11 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 	
 	public final char[] getKeys()
 	{
-		checkInit();
 		return _set;
 	}
 	
 	public final V[] getValues()
 	{
-		checkInit();
 		return _values;
 	}
 	
@@ -83,9 +70,10 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 		return ((V[])(new Object[length]));
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_set=new char[capacity<<1];
 		
@@ -96,8 +84,6 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 		
 		_values=createVArray(capacity<<1);
 	}
-	
-	
 	
 	private int index(char key)
 	{
@@ -159,7 +145,17 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 	private char changeFree()
 	{
 		char newFree=findNewFreeOrRemoved();
-		CharArrays.replaceAll(_set,_freeValue,newFree);
+		
+		char free=_freeValue;
+		char[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -260,7 +256,6 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 	
 	public void put(char key,V value)
 	{
-		checkInit();
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -410,28 +405,9 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 		}
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
 	
 	public V putIfAbsent(char key,V value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -446,8 +422,6 @@ public class CharObjectMap<V>  extends BaseHash implements Iterable<V>
 	
 	public V computeIfAbsent(char key,ObjectIntFunc<? extends V> mappingFunction)
 	{
-		checkInit();
-		
 		if(mappingFunction==null)
 		{
 			throw new NullPointerException();

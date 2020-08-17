@@ -26,7 +26,7 @@ public class ThreadWatcher extends BaseThread
 	{
 		super("watcher",ThreadType.Watcher,0);
 		
-		setSleepTime(100);
+		setTickDelay(100);
 	}
 	
 	@SuppressWarnings("deprecation")

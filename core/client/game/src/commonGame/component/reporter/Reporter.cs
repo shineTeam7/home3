@@ -242,6 +242,7 @@ public class Reporter : MonoBehaviour
 	//自定义
 	GUIContent resetContent;
 	GUIContent testAdContent;
+	GUIContent spectorContent;
 
 	GUIContent buildFromContent;
 	GUIContent systemInfoContent;
@@ -366,8 +367,9 @@ public class Reporter : MonoBehaviour
 		dateContent = new GUIContent("", images.dateImage, "Date");
 		showFpsContent = new GUIContent("", images.showFpsImage, "Show Hide fps");
 		infoContent = new GUIContent("", images.infoImage, "Information about application");
-		resetContent = new GUIContent("reset", null, "reset");
-		testAdContent = new GUIContent("Ad", null, "showTestAd");
+		resetContent = new GUIContent("resetUser", null, "resetUser");
+		testAdContent = new GUIContent("AdDebug", null, "AdDebug");
+		spectorContent = new GUIContent("inspector", null, "inspector");
 		searchContent = new GUIContent("", images.searchImage, "Search for logs");
 		closeContent = new GUIContent("", images.closeImage, "Hide logs");
 		userContent = new GUIContent("", images.userImage, "User");
@@ -1055,6 +1057,10 @@ public class Reporter : MonoBehaviour
 
 		if (GUILayout.Button(testAdContent, barStyle, GUILayout.Width(size.x * 2), GUILayout.Height(size.y * 2))) {
 			GameC.ui.repoterAction(2);
+		}
+		
+		if (GUILayout.Button(spectorContent, barStyle, GUILayout.Width(size.x * 2), GUILayout.Height(size.y * 2))) {
+			GameC.ui.repoterAction(3);
 		}
 		
 		GUILayout.FlexibleSpace();

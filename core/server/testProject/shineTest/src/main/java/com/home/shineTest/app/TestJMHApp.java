@@ -6,7 +6,9 @@ import com.home.shineTest.jmh.TestBytesRawInt;
 import com.home.shineTest.jmh.TestCheckCast;
 import com.home.shineTest.jmh.TestCount;
 import com.home.shineTest.jmh.TestFloatAndInt;
+import com.home.shineTest.jmh.collection.TestArrayAndLinked;
 import com.home.shineTest.jmh.collection.TestArrayAndMap;
+import com.home.shineTest.jmh.collection.TestInnerLoop;
 import com.home.shineTest.jmh.collection.TestIntObjectMapAdd;
 import com.home.shineTest.jmh.collection.TestIntObjectMapForEach;
 
@@ -31,7 +33,8 @@ public class TestJMHApp
 //		testCls(TestMoveMethod.class);
 //		testCls(TestLocalVar.class);
 //		testCls(TestRankTool.class);
-//		testCls(TestArrayAndLinked.class);
+//		TestControl.testCls(TestIntObjectMapForEach.class);
+		TestControl.testCls(TestInnerLoop.class);
 //		TestControl.testCls(TestBytesRawInt.class);
 		
 		//TestControl.testCls(TestArrayAndMap.class);

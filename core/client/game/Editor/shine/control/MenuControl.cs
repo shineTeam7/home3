@@ -134,7 +134,6 @@ namespace ShineEditor
 			foreach(string v in sceneList)
 			{
 				string sceneName=ToolFileUtils.getAssetsPath(v);
-				Ctrl.print("看添加:",sceneName);
 				newSettings[i++]=new EditorBuildSettingsScene(sceneName,true);
 			}
 
@@ -155,10 +154,16 @@ namespace ShineEditor
 			Ctrl.print("OK");
 		}
 
-		[MenuItem(ShineToolGlobal.menuRoot+"/ILRuntime/Generate Adapter",false,80)]
+		[MenuItem(ShineToolGlobal.menuRoot+"/ILRuntime/Generate Adapter(Main)",false,80)]
 		static void GenerateAdapter()
 		{
 			ILRuntimeCLRBinding.GenerateAll();
+		}
+
+		[MenuItem(ShineToolGlobal.menuRoot+"/ILRuntime/Clean Adapter",false,90)]
+		static void CleanAdapter()
+		{
+			ILRuntimeCLRBinding.cleanAll();
 		}
 
 		// [MenuItem(ShineToolGlobal.menuRoot+"/ILRuntime/Generate Common",false,80)]
@@ -225,12 +230,15 @@ namespace ShineEditor
 		{
 			EditorUIControl.CreateSScrollViewGameObject();
 		}
-		
-		[MenuItem("GameObject/ShineUI/SCustomScrollView",false,50)]
-		static void CreateSCustomScrollViewGameObject()
+
+		[MenuItem("GameObject/ShineUI/SScrollViewFake3D",false,41)]
+		static void CreateSScrollViewFake3DGameObject()
 		{
-			EditorUIControl.CreateSCustomScrollViewGameObject();
+			EditorUIControl.CreateSScrollViewFake3DGameObject();
 		}
+		
+		//50
+		
 
 		[MenuItem("GameObject/ShineUI/SPageView",false,60)]
 		static void CreateSPageViewGameObject()

@@ -1,5 +1,6 @@
 package com.home.shineTool;
 
+import com.home.shine.control.BytesControl;
 import com.home.shine.global.ShineSetting;
 import com.home.shineTool.global.ShineToolGlobal;
 import com.home.shineTool.global.ShineToolSetting;
@@ -26,5 +27,8 @@ public class ShineToolSetup
 			//报错退出
 			ShineSetting.needExitAfterError=true;
 		}
+		
+		//数据管理
+		BytesControl.init();
 	}
 }

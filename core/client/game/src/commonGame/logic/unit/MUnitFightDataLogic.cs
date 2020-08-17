@@ -17,6 +17,7 @@ public class MUnitFightDataLogic:UnitFightDataLogic
 	//消息相关
 
 	private MUnitAttributesChangeEventObj _attributeEventObj=new MUnitAttributesChangeEventObj();
+	private MUnitBuffChangeEventObj _buffEventObj=new MUnitBuffChangeEventObj();
 
 	public MUnitFightDataLogic()
 	{
@@ -120,21 +121,27 @@ public class MUnitFightDataLogic:UnitFightDataLogic
 	{
 		base.onAddBuff(data);
 
-		_me.dispatch(GameEventType.MUnitBuffChange,index);
+		_buffEventObj.index=index;
+		_buffEventObj.instanceID=data.instanceID;
+		_me.dispatch(GameEventType.MUnitBuffAdd,_buffEventObj);
 	}
 
 	public override void onRemoveBuff(BuffData data)
 	{
 		base.onRemoveBuff(data);
 
-		_me.dispatch(GameEventType.MUnitBuffChange,index);
+		_buffEventObj.index=index;
+		_buffEventObj.instanceID=data.instanceID;
+		_me.dispatch(GameEventType.MUnitBuffRemove,_buffEventObj);
 	}
 
 	public override void onRefreshBuff(BuffData data)
 	{
 		base.onRefreshBuff(data);
 
-		_me.dispatch(GameEventType.MUnitBuffChange,index);
+		_buffEventObj.index=index;
+		_buffEventObj.instanceID=data.instanceID;
+		_me.dispatch(GameEventType.MUnitBuffRefresh,_buffEventObj);
 	}
 	
 	/** 造型改变 */

@@ -88,6 +88,8 @@ namespace ShineEngine
 		/** 心跳时间经过(秒) */
 		private int _pingTimePass=0;
 
+		/** 已发送ping包 */
+		protected bool _pingSending=false;
 		/** ping序号 */
 		protected int _pingIndex=0;
 		/** 发送ping时间 */
@@ -269,7 +271,8 @@ namespace ShineEngine
 			_reconnecting=false;
 			_reconnectLastTime=0;
 			_pingTimePass=0;
-
+			_ping=-1;
+			_pingSending=false;
 
 			_receiveID=-1;
 			_receiveToken=-1;
@@ -373,7 +376,7 @@ namespace ShineEngine
 		/** 连接 */
 		public void connect(string host,int port)
 		{
-			//连接尝试2次
+			//连接尝试3次
 			_tryCountMax=3;
 			preConnect(host,port);
 		}
@@ -706,6 +709,7 @@ namespace ShineEngine
 		/// </summary>
 		public void close()
 		{
+			sendAbs(SocketCloseRequest.create());
 			closeForIO(Close_Initiative);
 			clearAddress();
 			stopConnect();
@@ -912,8 +916,7 @@ namespace ShineEngine
 			if(ShineSetting.useKCP)
 			{
 				_kcpThread=new BaseThread("kcpThread");
-				_kcpThread.setTickFunc(kcpLoop);
-				_kcpThread.setSleepTime(ShineSetting.ioThreadFrameDelay);
+				_kcpThread.setRunCall(kcpLoop);
 				ThreadControl.addThread(_kcpThread);
 				_kcpThread.start();
 			}
@@ -922,12 +925,11 @@ namespace ShineEngine
 				return;
 
 			_sendThread=new BaseThread("ioSendThread");
-			_sendThread.setTickFunc(sendLoop);
-			_sendThread.setSleepTime(ShineSetting.ioThreadFrameDelay);
+			_sendThread.setRunCall(sendLoop);
 			ThreadControl.addThread(_sendThread);
 
 			_receiveThread=new BaseThread("ioReceiveThread");
-			_receiveThread.setTickFunc(receiveLoop);
+			_receiveThread.setRunCall(receiveLoop);
 			_receiveThread.setSleepTime(1);
 			ThreadControl.addThread(_receiveThread);
 
@@ -978,6 +980,11 @@ namespace ShineEngine
 			_pingTimePass=0;
 		}
 
+		public void notifySendThread()
+		{
+			_sendThread.notifyFunc();
+		}
+
 		private void toSendOne(BaseRequest request)
 		{
 			if(request.released || request.sendMsgIndex==-1)
@@ -1003,6 +1010,18 @@ namespace ShineEngine
 			{
 				request.sendMsgIndex=index;
 				_sendQueue.add(request);
+
+				if(ShineSetting.needThreadNotify)
+				{
+					if(ShineSetting.useKCP)
+					{
+						_kcpThread.notifyFunc();
+					}
+					else
+					{
+						_sendThread.notifyFunc();
+					}
+				}
 			}
 		}
 
@@ -1097,7 +1116,7 @@ namespace ShineEngine
 			Ctrl.log("socket重连成功:");
 		}
 
-		private void kcpLoop(int delay)
+		private void kcpLoop()
 		{
 			if(_disposed)
 				return;
@@ -1112,7 +1131,7 @@ namespace ShineEngine
 
 		}
 
-		private void sendLoop(int delay)
+		private void sendLoop()
 		{
 			if(_disposed)
 				return;
@@ -1133,7 +1152,7 @@ namespace ShineEngine
 			}
 		}
 
-		/** 读线程或kcp线程 */
+		/** 发线程或kcp线程 */
 		public void runSendQueue()
 		{
 			BaseSocketContent content=_content;
@@ -1153,7 +1172,7 @@ namespace ShineEngine
 		}
 
 		/** 接收循环(io线程) */
-		private void receiveLoop(int delay)
+		private void receiveLoop()
 		{
 			if(_disposed)
 				return;
@@ -1195,6 +1214,12 @@ namespace ShineEngine
 		/// </summary>
 		private void sendPingRequest()
 		{
+			if(_pingSending)
+			{
+				_ping=-1;
+			}
+
+			_pingSending=true;
 			_sendPingTime=Ctrl.getTimer();
 			sendAbs(PingRequest.create(++_pingIndex));
 		}
@@ -1426,10 +1451,13 @@ namespace ShineEngine
 		{
 			refreshPingTime();
 
+			_pingSending=false;
+
 			//相同
 			if(_pingIndex==index)
 			{
 				_ping=(int)(Ctrl.getTimer()-_sendPingTime);
+				// Ctrl.print("看ping",_ping);
 			}
 			else
 			{

@@ -78,7 +78,6 @@ namespace ShineEngine
             {
                 _onButtonClick = value;
                 getPointer().onClick = onButtonClick;
-
                 bindGrid();
             }
         }

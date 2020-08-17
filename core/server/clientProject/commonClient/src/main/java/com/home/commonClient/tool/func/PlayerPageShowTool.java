@@ -124,37 +124,26 @@ public class PlayerPageShowTool extends PlayerFuncTool
 	{
 		IntSet needSendSet=_needSendSet;
 		IntIntMap dic=_lockDic;
-		int fv=dic.getFreeValue();
 		
-		long[] tab=dic.getTable();
-		long entry;
-		int value;
-		for(int i=(tab.length) - 1;i >= 0;--i)
+		dic.forEach((key,value)->
 		{
-			int key;
-			if((key=((int)(entry=tab[i])))!=fv)
+			dic.put(key,--value);
+			
+			if(value==0)
 			{
-				if((value=(int)(entry >>> 32))>0)
+				if(needSendSet.contains(key))
 				{
-					dic.put(key,--value);
+					needSendSet.remove(key);
 					
-					if(value==0)
+					//是当前页才发送
+					if(_currentPage==key)
 					{
-						if(needSendSet.contains(key))
-						{
-							needSendSet.remove(key);
-							
-							//是当前页才发送
-							if(_currentPage==key)
-							{
-								dic.put(key,Global.pageToolShowCD);
-								sendGet(key);
-							}
-						}
+						dic.put(key,Global.pageToolShowCD);
+						sendGet(key);
 					}
 				}
 			}
-		}
+		});
 	}
 	
 	/** 推送获取 */

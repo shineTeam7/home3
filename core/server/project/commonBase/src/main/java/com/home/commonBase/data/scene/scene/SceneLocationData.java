@@ -18,8 +18,8 @@ public class SceneLocationData extends BaseData
 	/** 线ID */
 	public int lineID=-1;
 	
-	/** 所在游戏服ID */
-	public int gameID=-1;
+	/** 所在服(游戏服或场景服)ID */
+	public int serverID=-1;
 	
 	/** 执行器号 */
 	public int executorIndex=-1;
@@ -49,7 +49,7 @@ public class SceneLocationData extends BaseData
 		
 		this.lineID=stream.readInt();
 		
-		this.gameID=stream.readInt();
+		this.serverID=stream.readInt();
 		
 		this.executorIndex=stream.readInt();
 		
@@ -68,7 +68,7 @@ public class SceneLocationData extends BaseData
 		
 		stream.writeInt(this.lineID);
 		
-		stream.writeInt(this.gameID);
+		stream.writeInt(this.serverID);
 		
 		stream.writeInt(this.executorIndex);
 		
@@ -85,7 +85,7 @@ public class SceneLocationData extends BaseData
 		
 		this.lineID=stream.readInt();
 		
-		this.gameID=stream.readInt();
+		this.serverID=stream.readInt();
 		
 		this.executorIndex=stream.readInt();
 		
@@ -101,7 +101,7 @@ public class SceneLocationData extends BaseData
 		
 		stream.writeInt(this.lineID);
 		
-		stream.writeInt(this.gameID);
+		stream.writeInt(this.serverID);
 		
 		stream.writeInt(this.executorIndex);
 		
@@ -120,7 +120,7 @@ public class SceneLocationData extends BaseData
 		
 		this.sceneID=mData.sceneID;
 		this.lineID=mData.lineID;
-		this.gameID=mData.gameID;
+		this.serverID=mData.serverID;
 		this.executorIndex=mData.executorIndex;
 		this.instanceID=mData.instanceID;
 	}
@@ -138,7 +138,7 @@ public class SceneLocationData extends BaseData
 		
 		this.lineID=mData.lineID;
 		
-		this.gameID=mData.gameID;
+		this.serverID=mData.serverID;
 		
 		this.executorIndex=mData.executorIndex;
 		
@@ -157,7 +157,7 @@ public class SceneLocationData extends BaseData
 		if(this.lineID!=mData.lineID)
 			return false;
 		
-		if(this.gameID!=mData.gameID)
+		if(this.serverID!=mData.serverID)
 			return false;
 		
 		if(this.executorIndex!=mData.executorIndex)
@@ -186,9 +186,9 @@ public class SceneLocationData extends BaseData
 		
 		writer.writeEnter();
 		writer.writeTabs();
-		writer.sb.append("gameID");
+		writer.sb.append("serverID");
 		writer.sb.append(':');
-		writer.sb.append(this.gameID);
+		writer.sb.append(this.serverID);
 		
 		writer.writeEnter();
 		writer.writeTabs();
@@ -218,9 +218,24 @@ public class SceneLocationData extends BaseData
 	{
 		this.sceneID=0;
 		this.lineID=0;
-		this.gameID=0;
+		this.serverID=0;
 		this.executorIndex=0;
 		this.instanceID=0;
+	}
+	
+	/** 3项相等 */
+	public boolean equalsThree(SceneLocationData data)
+	{
+		if(sceneID!=data.sceneID)
+			return false;
+		
+		if(serverID!=data.serverID)
+			return false;
+		
+		if(instanceID!=data.instanceID)
+			return false;
+		
+		return true;
 	}
 	
 }

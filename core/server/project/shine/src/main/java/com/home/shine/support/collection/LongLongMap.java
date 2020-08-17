@@ -1,14 +1,14 @@
 package com.home.shine.support.collection;
 
 import com.home.shine.ctrl.Ctrl;
-import com.home.shine.support.collection.inter.ILongIntConsumer;
 import com.home.shine.support.collection.inter.ILongLongConsumer;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.LongArrays;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class LongLongMap extends BaseHash
 {
@@ -22,20 +22,12 @@ public class LongLongMap extends BaseHash
 	
 	public LongLongMap()
 	{
-	
+		init(_minSize);
 	}
 	
 	public LongLongMap(int capacity)
 	{
 		init(countCapacity(capacity));
-	}
-	
-	private void checkInit()
-	{
-		if(_set!=null)
-			return;
-		
-		init(_minSize);
 	}
 	
 	public final long getFreeValue()
@@ -45,19 +37,18 @@ public class LongLongMap extends BaseHash
 	
 	public final long[] getKeys()
 	{
-		checkInit();
 		return _set;
 	}
 	
 	public final long[] getValues()
 	{
-		checkInit();
 		return _values;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_set=new long[capacity<<1];
 		
@@ -129,7 +120,17 @@ public class LongLongMap extends BaseHash
 	private long changeFree()
 	{
 		long newFree=findNewFreeOrRemoved();
-		LongArrays.replaceAll(_set,_freeValue,newFree);
+		
+		long free=_freeValue;
+		long[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -230,8 +231,6 @@ public class LongLongMap extends BaseHash
 	
 	public void put(long key,long value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		if(index<0)
 		{
@@ -382,8 +381,6 @@ public class LongLongMap extends BaseHash
 	/** 增加值 */
 	public long addValue(long key,long value)
 	{
-		checkInit();
-		
 		++_version;
 		
 		int index=insert(key,value);
@@ -398,29 +395,9 @@ public class LongLongMap extends BaseHash
 		}
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	/** 没有就赋值(成功添加返回0,否则返回原值) */
 	public long putIfAbsent(long key,long value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -436,8 +413,6 @@ public class LongLongMap extends BaseHash
 	/** 没有就赋值(成功添加返回true,否则返回false) */
 	public boolean putIfAbsent3(long key,long value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -525,6 +500,32 @@ public class LongLongMap extends BaseHash
 				}
 			}
 		}
+	}
+	
+	/** 转化为原生集合 */
+	public HashMap<Long,Long> toNatureMap()
+	{
+		HashMap<Long,Long> re=new HashMap<>(size());
+		
+		long free=_freeValue;
+		long[] keys=_set;
+		long[] vals=_values;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			long key;
+			if((key=keys[i])!=free)
+			{
+				re.put(key,vals[i]);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Map<Long,Integer> map)
+	{
+		ensureCapacity(map.size());
+		map.forEach(this::put);
 	}
 	
 	public EntrySet entrySet()

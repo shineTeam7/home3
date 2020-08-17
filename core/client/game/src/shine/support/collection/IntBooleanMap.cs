@@ -19,20 +19,12 @@ namespace ShineEngine
 
 		public IntBooleanMap()
 		{
-
+			init(_minSize);
 		}
 
 		public IntBooleanMap(int capacity)
 		{
 			init(countCapacity(capacity));
-		}
-
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
 		}
 
 		public int getFreeValue()
@@ -42,19 +34,17 @@ namespace ShineEngine
 
 		public int[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
 		public bool[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new int[capacity<<1];
 
@@ -153,6 +143,8 @@ namespace ShineEngine
 
 		protected override void rehash(int newCapacity)
 		{
+			base.rehash(newCapacity);
+
 			++_version;
 			int free=_freeValue;
 			int[] keys=_set;
@@ -225,7 +217,6 @@ namespace ShineEngine
 
 		public void put(int key,bool value)
 		{
-			checkInit();
 			int index=insert(key,value);
 
 			if(index<0)
@@ -377,28 +368,9 @@ namespace ShineEngine
 			}
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
 
 		public bool putIfAbsent(int key,bool value)
 		{
-			checkInit();
-
 			int index=insert(key,value);
 
 			if(index<0)
@@ -472,6 +444,36 @@ namespace ShineEngine
 						++i;
 					}
 				}
+			}
+		}
+
+		/** 转化为原生集合 */
+		public Dictionary<int,bool> toNatureMap()
+		{
+			Dictionary<int,bool> re=new Dictionary<int,bool>(size());
+
+			int free=_freeValue;
+			int[] keys=_set;
+			bool[] vals=_values;
+			for(int i=(keys.Length) - 1;i >= 0;--i)
+			{
+				int key;
+				if((key=keys[i])!=free)
+				{
+					re.Add(key,vals[i]);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(Dictionary<int,bool> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(KeyValuePair<int,bool> kv in map)
+			{
+				this.put(kv.Key,kv.Value);
 			}
 		}
 

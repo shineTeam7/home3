@@ -284,8 +284,8 @@ public class GameSocialPart extends GameGlobalBasePart
 		}
 	}
 	
-	/** 刷新角色外显数据(本服)(在线的) */
-	public void refreshRoleSocialDataOnline(long playerID,RoleShowChangeData data)
+	/** 刷新角色外显数据 */
+	public void refreshRoleSocialData(long playerID,RoleShowChangeData data)
 	{
 		RoleSocialData rData=getRoleSocialData(playerID);
 		
@@ -515,4 +515,5 @@ public class GameSocialPart extends GameGlobalBasePart
 			}
 		}
 	}
+	
 }

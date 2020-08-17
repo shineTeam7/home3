@@ -2,7 +2,9 @@ package com.home.commonData.player.server;
 
 import com.home.commonData.data.role.MUnitCacheDO;
 import com.home.commonData.data.scene.base.PosDirDO;
+import com.home.commonData.data.scene.match.MatchSceneDO;
 import com.home.commonData.data.scene.scene.SceneEnterArgDO;
+import com.home.commonData.data.scene.scene.SceneLocationDO;
 import com.home.shineData.support.MaybeNull;
 
 /** 场景模块 */
@@ -25,4 +27,7 @@ public class SceneSPO
 	/** 主城角色保存数据 */
 	@MaybeNull
 	MUnitCacheDO lastTownSaveData;
+	/** 匹配后的场景数据 */
+	@MaybeNull
+	MatchSceneDO matchSceneData;
 }

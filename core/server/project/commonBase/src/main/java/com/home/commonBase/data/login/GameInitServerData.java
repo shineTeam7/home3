@@ -25,6 +25,9 @@ public class GameInitServerData extends BaseData
 	/** 服务器信息(自身) */
 	public GameServerInfoData info;
 	
+	/** 全部场景服简版信息 */
+	public IntObjectMap<ServerSimpleInfoData> sceneServerDic;
+	
 	/** 全部游戏服简版信息 */
 	public IntObjectMap<GameServerSimpleInfoData> gameServerDic;
 	
@@ -139,6 +142,46 @@ public class GameInitServerData extends BaseData
 			gameServerDicT.put(gameServerDicV.id,gameServerDicV);
 		}
 		
+		int sceneServerDicLen=stream.readLen();
+		if(this.sceneServerDic!=null)
+		{
+			this.sceneServerDic.clear();
+			this.sceneServerDic.ensureCapacity(sceneServerDicLen);
+		}
+		else
+		{
+			this.sceneServerDic=new IntObjectMap<ServerSimpleInfoData>(ServerSimpleInfoData[]::new,sceneServerDicLen);
+		}
+		
+		IntObjectMap<ServerSimpleInfoData> sceneServerDicT=this.sceneServerDic;
+		for(int sceneServerDicI=sceneServerDicLen-1;sceneServerDicI>=0;--sceneServerDicI)
+		{
+			ServerSimpleInfoData sceneServerDicV;
+			BaseData sceneServerDicVT=stream.readDataFullNotNull();
+			if(sceneServerDicVT!=null)
+			{
+				if(sceneServerDicVT instanceof ServerSimpleInfoData)
+				{
+					sceneServerDicV=(ServerSimpleInfoData)sceneServerDicVT;
+				}
+				else
+				{
+					sceneServerDicV=new ServerSimpleInfoData();
+					if(!(sceneServerDicVT.getClass().isAssignableFrom(ServerSimpleInfoData.class)))
+					{
+						stream.throwTypeReadError(ServerSimpleInfoData.class,sceneServerDicVT.getClass());
+					}
+					sceneServerDicV.shadowCopy(sceneServerDicVT);
+				}
+			}
+			else
+			{
+				sceneServerDicV=null;
+			}
+			
+			sceneServerDicT.put(sceneServerDicV.id,sceneServerDicV);
+		}
+		
 		int loginListLen=stream.readLen();
 		if(this.loginList==null || this.loginList.length!=loginListLen)
 		{
@@ -232,6 +275,35 @@ public class GameInitServerData extends BaseData
 			nullObjError("gameServerDic");
 		}
 		
+		if(this.sceneServerDic!=null)
+		{
+			stream.writeLen(this.sceneServerDic.size());
+			if(!this.sceneServerDic.isEmpty())
+			{
+				Object[] sceneServerDicVValues=this.sceneServerDic.getValues();
+				for(int sceneServerDicVI=sceneServerDicVValues.length-1;sceneServerDicVI>=0;--sceneServerDicVI)
+				{
+					if(sceneServerDicVValues[sceneServerDicVI]!=null)
+					{
+						ServerSimpleInfoData sceneServerDicV=(ServerSimpleInfoData)sceneServerDicVValues[sceneServerDicVI];
+						if(sceneServerDicV!=null)
+						{
+							stream.writeDataFullNotNull(sceneServerDicV);
+						}
+						else
+						{
+							nullObjError("sceneServerDicV");
+						}
+						
+					}
+				}
+			}
+		}
+		else
+		{
+			nullObjError("sceneServerDic");
+		}
+		
 		if(this.loginList!=null)
 		{
 			int[] loginListT=this.loginList;
@@ -308,6 +380,26 @@ public class GameInitServerData extends BaseData
 			gameServerDicV=(GameServerSimpleInfoData)stream.readDataSimpleNotNull();
 			
 			gameServerDicT.put(gameServerDicV.id,gameServerDicV);
+		}
+		
+		int sceneServerDicLen=stream.readLen();
+		if(this.sceneServerDic!=null)
+		{
+			this.sceneServerDic.clear();
+			this.sceneServerDic.ensureCapacity(sceneServerDicLen);
+		}
+		else
+		{
+			this.sceneServerDic=new IntObjectMap<ServerSimpleInfoData>(ServerSimpleInfoData[]::new,sceneServerDicLen);
+		}
+		
+		IntObjectMap<ServerSimpleInfoData> sceneServerDicT=this.sceneServerDic;
+		for(int sceneServerDicI=sceneServerDicLen-1;sceneServerDicI>=0;--sceneServerDicI)
+		{
+			ServerSimpleInfoData sceneServerDicV;
+			sceneServerDicV=(ServerSimpleInfoData)stream.readDataSimpleNotNull();
+			
+			sceneServerDicT.put(sceneServerDicV.id,sceneServerDicV);
 		}
 		
 		int loginListLen=stream.readLen();
@@ -400,6 +492,35 @@ public class GameInitServerData extends BaseData
 			nullObjError("gameServerDic");
 		}
 		
+		if(this.sceneServerDic!=null)
+		{
+			stream.writeLen(this.sceneServerDic.size());
+			if(!this.sceneServerDic.isEmpty())
+			{
+				Object[] sceneServerDicVValues=this.sceneServerDic.getValues();
+				for(int sceneServerDicVI=sceneServerDicVValues.length-1;sceneServerDicVI>=0;--sceneServerDicVI)
+				{
+					if(sceneServerDicVValues[sceneServerDicVI]!=null)
+					{
+						ServerSimpleInfoData sceneServerDicV=(ServerSimpleInfoData)sceneServerDicVValues[sceneServerDicVI];
+						if(sceneServerDicV!=null)
+						{
+							stream.writeDataSimpleNotNull(sceneServerDicV);
+						}
+						else
+						{
+							nullObjError("sceneServerDicV");
+						}
+						
+					}
+				}
+			}
+		}
+		else
+		{
+			nullObjError("sceneServerDic");
+		}
+		
 		if(this.loginList!=null)
 		{
 			int[] loginListT=this.loginList;
@@ -461,6 +582,7 @@ public class GameInitServerData extends BaseData
 		this.info=mData.info;
 		this.centerInfo=mData.centerInfo;
 		this.gameServerDic=mData.gameServerDic;
+		this.sceneServerDic=mData.sceneServerDic;
 		this.loginList=mData.loginList;
 		this.clientVersion=mData.clientVersion;
 		this.isOfficial=mData.isOfficial;
@@ -536,6 +658,49 @@ public class GameInitServerData extends BaseData
 		{
 			this.gameServerDic=null;
 			nullObjError("gameServerDic");
+		}
+		
+		if(mData.sceneServerDic!=null)
+		{
+			if(this.sceneServerDic!=null)
+			{
+				this.sceneServerDic.clear();
+				this.sceneServerDic.ensureCapacity(mData.sceneServerDic.size());
+			}
+			else
+			{
+				this.sceneServerDic=new IntObjectMap<ServerSimpleInfoData>(ServerSimpleInfoData[]::new,mData.sceneServerDic.size());
+			}
+			
+			IntObjectMap<ServerSimpleInfoData> sceneServerDicT=this.sceneServerDic;
+			if(!mData.sceneServerDic.isEmpty())
+			{
+				Object[] sceneServerDicVValues=mData.sceneServerDic.getValues();
+				for(int sceneServerDicVI=sceneServerDicVValues.length-1;sceneServerDicVI>=0;--sceneServerDicVI)
+				{
+					if(sceneServerDicVValues[sceneServerDicVI]!=null)
+					{
+						ServerSimpleInfoData sceneServerDicV=(ServerSimpleInfoData)sceneServerDicVValues[sceneServerDicVI];
+						ServerSimpleInfoData sceneServerDicU;
+						if(sceneServerDicV!=null)
+						{
+							sceneServerDicU=(ServerSimpleInfoData)sceneServerDicV.clone();
+						}
+						else
+						{
+							sceneServerDicU=null;
+							nullObjError("sceneServerDicU");
+						}
+						
+						sceneServerDicT.put(sceneServerDicU.id,sceneServerDicU);
+					}
+				}
+			}
+		}
+		else
+		{
+			this.sceneServerDic=null;
+			nullObjError("sceneServerDic");
 		}
 		
 		if(mData.loginList!=null)
@@ -672,6 +837,48 @@ public class GameInitServerData extends BaseData
 		else
 		{
 			if(this.gameServerDic!=null)
+				return false;
+		}
+		
+		if(mData.sceneServerDic!=null)
+		{
+			if(this.sceneServerDic==null)
+				return false;
+			if(this.sceneServerDic.size()!=mData.sceneServerDic.size())
+				return false;
+			IntObjectMap<ServerSimpleInfoData> sceneServerDicR=mData.sceneServerDic;
+			if(!this.sceneServerDic.isEmpty())
+			{
+				int sceneServerDicKFreeValue=this.sceneServerDic.getFreeValue();
+				int[] sceneServerDicKKeys=this.sceneServerDic.getKeys();
+				Object[] sceneServerDicVValues=this.sceneServerDic.getValues();
+				for(int sceneServerDicKI=sceneServerDicKKeys.length-1;sceneServerDicKI>=0;--sceneServerDicKI)
+				{
+					int sceneServerDicK=sceneServerDicKKeys[sceneServerDicKI];
+					if(sceneServerDicK!=sceneServerDicKFreeValue)
+					{
+						ServerSimpleInfoData sceneServerDicV=(ServerSimpleInfoData)sceneServerDicVValues[sceneServerDicKI];
+						ServerSimpleInfoData sceneServerDicU=sceneServerDicR.get(sceneServerDicK);
+						if(sceneServerDicU!=null)
+						{
+							if(sceneServerDicV==null)
+								return false;
+							if(!sceneServerDicV.dataEquals(sceneServerDicU))
+								return false;
+						}
+						else
+						{
+							if(sceneServerDicV!=null)
+								return false;
+						}
+						
+					}
+				}
+			}
+		}
+		else
+		{
+			if(this.sceneServerDic!=null)
 				return false;
 		}
 		
@@ -825,6 +1032,53 @@ public class GameInitServerData extends BaseData
 		
 		writer.writeEnter();
 		writer.writeTabs();
+		writer.sb.append("sceneServerDic");
+		writer.sb.append(':');
+		writer.sb.append("Map<int,ServerSimpleInfoData>");
+		if(this.sceneServerDic!=null)
+		{
+			writer.sb.append('(');
+			writer.sb.append(this.sceneServerDic.size());
+			writer.sb.append(')');
+			writer.writeEnter();
+			writer.writeLeftBrace();
+			if(!this.sceneServerDic.isEmpty())
+			{
+				int sceneServerDicKFreeValue=this.sceneServerDic.getFreeValue();
+				int[] sceneServerDicKKeys=this.sceneServerDic.getKeys();
+				Object[] sceneServerDicVValues=this.sceneServerDic.getValues();
+				for(int sceneServerDicKI=sceneServerDicKKeys.length-1;sceneServerDicKI>=0;--sceneServerDicKI)
+				{
+					int sceneServerDicK=sceneServerDicKKeys[sceneServerDicKI];
+					if(sceneServerDicK!=sceneServerDicKFreeValue)
+					{
+						ServerSimpleInfoData sceneServerDicV=(ServerSimpleInfoData)sceneServerDicVValues[sceneServerDicKI];
+						writer.writeTabs();
+						writer.sb.append(sceneServerDicK);
+						
+						writer.sb.append(':');
+						if(sceneServerDicV!=null)
+						{
+							sceneServerDicV.writeDataString(writer);
+						}
+						else
+						{
+							writer.sb.append("ServerSimpleInfoData=null");
+						}
+						
+						writer.writeEnter();
+					}
+				}
+			}
+			writer.writeRightBrace();
+		}
+		else
+		{
+			writer.sb.append("=null");
+		}
+		
+		writer.writeEnter();
+		writer.writeTabs();
 		writer.sb.append("loginList");
 		writer.sb.append(':');
 		writer.sb.append("Array<int>");
@@ -919,6 +1173,7 @@ public class GameInitServerData extends BaseData
 		this.centerInfo=new ServerSimpleInfoData();
 		this.centerInfo.initDefault();
 		this.gameServerDic=new IntObjectMap<GameServerSimpleInfoData>(GameServerSimpleInfoData[]::new);
+		this.sceneServerDic=new IntObjectMap<ServerSimpleInfoData>(ServerSimpleInfoData[]::new);
 		this.loginList=new int[0];
 		this.clientVersion=new IntObjectMap<ClientVersionData>(ClientVersionData[]::new);
 	}
@@ -930,6 +1185,7 @@ public class GameInitServerData extends BaseData
 		this.info=null;
 		this.centerInfo=null;
 		this.gameServerDic=null;
+		this.sceneServerDic=null;
 		this.loginList=null;
 		this.clientVersion=null;
 		this.isOfficial=false;

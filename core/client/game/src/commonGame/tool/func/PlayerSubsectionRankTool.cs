@@ -56,13 +56,24 @@ public class PlayerSubsectionRankTool:PlayerFuncTool
 		}
 	}
 
+	public void onRefreshSubsectionIndex(int subsectionIndex,int subsectionSubIndex)
+	{
+		_subsectionIndex = subsectionIndex;
+		_subsectionSubIndex = subsectionSubIndex;
+		
+		if (_pageShowTool != null)
+		{
+			_pageShowTool.setSubsectionIndex(_subsectionIndex,_subsectionSubIndex);
+		}
+	}
+
 	/** 刷新排行 */
 	public void onRefreshRank(int rank,long value)
 	{
 		_rankData.rank=rank;
 		_rankData.value=value;
 
-		me.dispatch(GameEventType.FuncRefreshRank,_funcID);
+		me.dispatch(GameEventType.FuncRefreshSubsectionRank,_funcID);
 	}
 
 	/** 重置排行榜 */

@@ -44,6 +44,11 @@ public class RoleAttributeConfig:BaseConfig
 	public int currentMaxID;
 	
 	/// <summary>
+	/// 当前属性是否可超过上限值
+	/// </summary>
+	public bool canOverMax;
+	
+	/// <summary>
 	/// 当前属性默认空满
 	/// </summary>
 	public bool isCurrentDefaultFull;
@@ -123,6 +128,8 @@ public class RoleAttributeConfig:BaseConfig
 		
 		this.isCurrentDefaultFull=stream.readBoolean();
 		
+		this.canOverMax=stream.readBoolean();
+		
 		this.sendSelfType=stream.readInt();
 		
 	}
@@ -164,6 +171,8 @@ public class RoleAttributeConfig:BaseConfig
 		
 		stream.writeBoolean(this.isCurrentDefaultFull);
 		
+		stream.writeBoolean(this.canOverMax);
+		
 		stream.writeInt(this.sendSelfType);
 		
 	}
@@ -204,6 +213,7 @@ public class RoleAttributeConfig:BaseConfig
 		re.increaseID=increaseID;
 		re.currentMaxID=currentMaxID;
 		re.isCurrentDefaultFull=isCurrentDefaultFull;
+		re.isCurrentCanOverMax=canOverMax;
 		re.sendSelfType=sendSelfType;
 		return re;
 	}

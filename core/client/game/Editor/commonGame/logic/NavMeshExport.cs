@@ -78,8 +78,8 @@ namespace ShineEditor
 				
 				SceneRecastTerrainData tData=data.terrain=new SceneRecastTerrainData();
 				tData.origin = terrainBounds.min;
-				int rx=tData.resolutionX = terrainData.heightmapWidth;
-				int rz=tData.resolutionZ = terrainData.heightmapHeight;
+				int rx=tData.resolutionX = terrainData.heightmapResolution;
+				int rz=tData.resolutionZ = terrainData.heightmapResolution;
 				Vector3 mapScale=terrainData.heightmapScale;
 				
 				tData.unit = mapScale;
@@ -89,7 +89,7 @@ namespace ShineEditor
 				//terrain
 				
 				short[] heightSamples=tData.heightSamples=new short[tData.resolutionX*tData.resolutionZ];
-				float[,] rawHeights = terrainData.GetHeights(0, 0, terrainData.heightmapWidth, terrainData.heightmapHeight);
+				float[,] rawHeights = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
 
 				int zm=rz - 1;
 				int xm=rx - 1;
@@ -196,11 +196,10 @@ namespace ShineEditor
 			if (mesh == null)
 				return;
 
+			StaticEditorFlags flags = GameObjectUtility.GetStaticEditorFlags(meshFilter.gameObject);
 			//需要Navigation
-			if ((GameObjectUtility.GetStaticEditorFlags(meshFilter.gameObject) & StaticEditorFlags.NavigationStatic) != 0)
+			if ((flags & StaticEditorFlags.NavigationStatic) != 0)
 			{
-				int area=GameObjectUtility.GetNavMeshArea(meshFilter.gameObject);
-
 				int index;
 				if (!data.meshRepeatDic.tryGetValue(mesh, out index))
 				{
@@ -232,9 +231,6 @@ namespace ShineEditor
 
 				SceneRecastObjData objData=new SceneRecastObjData();
 				objData.meshIndex = index;
-				objData.area=area;
-				
-				Ctrl.print("看area",area);
 				
 				objData.x = matrix.GetColumn(0);
 				objData.y = matrix.GetColumn(1);
@@ -244,6 +240,9 @@ namespace ShineEditor
 				Bounds rb = renderer.bounds;
 				objData.min = rb.min;
 				objData.max = rb.max;
+				
+				objData.area=GameObjectUtility.GetNavMeshArea(meshFilter.gameObject);
+				objData.autoOML = ((flags & StaticEditorFlags.OffMeshLinkGeneration) != 0);
 				
 				b.Encapsulate(rb);
 				
@@ -282,6 +281,8 @@ namespace ShineEditor
 		private static void callNative(NavMeshConfig config, SceneRecastData data,int currentMapID)
 		{
 			BytesWriteStream stream=new BytesWriteStream();
+			stream.setUseBitBoolean(false);
+
 			config.write(stream);
 
 			string cStr = ShineToolGlobal.mapInfoPath+"/navConfig.bin";
@@ -330,7 +331,6 @@ namespace ShineEditor
 
 			Ctrl.print("callJar");
 			ToolFileUtils.executeServerTool("exportNav",currentMapID.ToString());
-			
 			Ctrl.print("OK");
 		}
 	}
@@ -340,14 +340,18 @@ namespace ShineEditor
 		//以下是unity参数(cellSize即voxel size)
 		public float agentHeight = 2.0f;
 		public float agentRadius = 0.5f;
-		public float agentMaxClimb = 0.4f;
+		public float agentMaxClimb = 0.5f;
 		public float agentMaxSlope = 45.0f;
+
+		//generateOffMeshLink
+		public float dropHeight = 30f;
+		public float jumpDistance = 2f;
 		
 		public float tileSize = 64;
-		public float cellSize = 0.1f;
+		public float cellSize = 0.2f;
 
 		//下面这些不用动
-		public float regionMinSize = 8;
+		public float regionMinSize = 0;
 		public float edgeMaxError = 1.3f;
 
 		/** 写入流 */
@@ -357,6 +361,9 @@ namespace ShineEditor
 			stream.writeFloat(agentRadius);
 			stream.writeFloat(agentMaxClimb);
 			stream.writeFloat(agentMaxSlope);
+			
+			stream.writeFloat(dropHeight);
+			stream.writeFloat(jumpDistance);
 			
 			stream.writeFloat(tileSize);
 			stream.writeFloat(cellSize);
@@ -495,24 +502,26 @@ namespace ShineEditor
 	public class SceneRecastObjData
 	{
 		public int meshIndex;
-		public int area;
 		public Vector3 x;
 		public Vector3 y;
 		public Vector3 z;
 		public Vector3 w;
 		public Vector3 min;
 		public Vector3 max;
+		public int area;
+		public bool autoOML;
 
 		public void write(BytesWriteStream stream)
 		{
 			stream.writeInt(meshIndex);
-			stream.writeInt(area);
 			stream.writeVector3(x);
 			stream.writeVector3(y);
 			stream.writeVector3(z);
 			stream.writeVector3(w);
 			stream.writeVector3(min);
 			stream.writeVector3(max);
+			stream.writeInt(area);
+			stream.writeBoolean(autoOML);
 		}
 	}
 }

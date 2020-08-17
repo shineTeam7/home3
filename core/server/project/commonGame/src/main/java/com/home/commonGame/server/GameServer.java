@@ -5,35 +5,46 @@ import com.home.commonBase.data.system.GameServerInfoData;
 import com.home.commonBase.data.system.GameServerSimpleInfoData;
 import com.home.commonBase.data.system.ServerSimpleInfoData;
 import com.home.commonBase.global.CommonSetting;
-import com.home.commonBase.server.BaseGameServer;
+import com.home.commonGame.constlist.generate.GameRequestType;
+import com.home.commonGame.constlist.generate.GameResponseType;
 import com.home.commonGame.global.GameC;
 import com.home.commonGame.net.base.GameServerRequest;
 import com.home.commonGame.net.response.system.SendClientLogResponse;
 import com.home.commonGame.net.serverRequest.center.system.BeGameToCenterServerRequest;
 import com.home.commonGame.net.serverRequest.game.system.BeGameToGameServerRequest;
 import com.home.commonGame.net.serverRequest.manager.BeGameToManagerServerRequest;
+import com.home.commonGame.net.serverRequest.scene.system.BeGameToSceneServerRequest;
+import com.home.commonGame.part.player.Player;
+import com.home.commonGame.scene.base.GameScene;
 import com.home.commonGame.tool.generate.GameRequestMaker;
 import com.home.commonGame.tool.generate.GameResponseBindTool;
 import com.home.commonGame.tool.generate.GameResponseMaker;
 import com.home.commonGame.tool.generate.GameServerRequestMaker;
 import com.home.commonGame.tool.generate.GameServerResponseMaker;
+import com.home.commonSceneBase.net.base.SceneBaseResponse;
+import com.home.commonSceneBase.server.SceneBaseServer;
 import com.home.shine.constlist.SocketType;
 import com.home.shine.control.BytesControl;
 import com.home.shine.control.ThreadControl;
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.net.base.BaseResponse;
 import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.net.socket.ReceiveSocket;
 import com.home.shine.net.socket.SendSocket;
+import com.home.shine.support.collection.IntIntMap;
 import com.home.shine.support.collection.IntObjectMap;
 
 /** 逻辑服server */
-public class GameServer extends BaseGameServer
+public class GameServer extends SceneBaseServer
 {
 	/** 信息数据 */
 	private GameServerInfoData _info;
 	
 	/** 全部游戏服简版信息 */
 	private IntObjectMap<GameServerSimpleInfoData> _gameSimpleInfoDic;
+	/** 全部场景服简版信息 */
+	private IntObjectMap<ServerSimpleInfoData> _sceneSimpleInfoDic;
+	
 	/** 逻辑服列表 */
 	private int[] _gameList;
 	/** 登陆服列表 */
@@ -41,9 +52,24 @@ public class GameServer extends BaseGameServer
 	
 	private ServerSimpleInfoData _centerInfo;
 	
-	public GameServer()
+	@Override
+	protected void initMessage()
 	{
-	
+		super.initMessage();
+		
+		
+		BytesControl.addMessageConst(GameRequestType.class,true,false);
+		BytesControl.addMessageConst(GameResponseType.class,false,false);
+		
+		addRequestMaker(new GameRequestMaker());
+		addClientResponseMaker(new GameResponseMaker());
+		addClientResponseBind(new GameResponseBindTool());
+		
+		addRequestMaker(new GameServerRequestMaker());
+		addServerResponseMaker(new GameServerResponseMaker());
+		
+		//忽略log
+		BytesControl.addIgnoreMessage(SendClientLogResponse.dataID);
 	}
 	
 	@Override
@@ -53,30 +79,13 @@ public class GameServer extends BaseGameServer
 	}
 	
 	@Override
-	protected void initMessage()
-	{
-		super.initMessage();
-		
-		//忽略log
-		BytesControl.addIgnoreMessage(SendClientLogResponse.dataID);
-		
-		addRequestMaker(new GameRequestMaker());
-		addClientResponseMaker(new GameResponseMaker());
-		addClientResponseBind(new GameResponseBindTool());
-		
-		addRequestMaker(new GameServerRequestMaker());
-		addServerResponseMaker(new GameServerResponseMaker());
-		
-	}
-	
-	@Override
 	protected void sendGetInfoToManager(SendSocket socket,boolean isFirst)
 	{
 		socket.send(BeGameToManagerServerRequest.create(GameC.app.id,isFirst));
 	}
 	
 	@Override
-	protected void onConnectManagerOver()
+	public void onConnectManagerOver()
 	{
 		GameC.app.startNext();
 		
@@ -85,6 +94,15 @@ public class GameServer extends BaseGameServer
 	
 	/** 初始化后续 */
 	public void initNext()
+	{
+		connectOthers();
+		
+		startServerSocket(_info.serverPort);
+		
+		checkNext();
+	}
+	
+	public void connectOthers()
 	{
 		_gameSimpleInfoDic.forEachValue(v->
 		{
@@ -95,9 +113,13 @@ public class GameServer extends BaseGameServer
 			}
 		});
 		
-		startServerSocket(_info.serverPort);
-		
-		checkNext();
+		if(CommonSetting.useSceneServer)
+		{
+			_sceneSimpleInfoDic.forEachValue(v->
+			{
+				connectServer(v,SocketType.Scene,false);
+			});
+		}
 	}
 	
 	public void checkNext()
@@ -105,15 +127,14 @@ public class GameServer extends BaseGameServer
 		if(GameC.app.isInitLast())
 			return;
 		
-		//if(isServerSendSocketAllReady() && isGameSocketAllReady())
-		if(isGameSocketAllReady())
+		if(isGameSocketAllReady() && isSceneSocketReady())
 		{
 			GameC.app.initLast();
 		}
 	}
 	
 	/** 逻辑服是否全连接好 */
-	public boolean isGameSocketAllReady()
+	protected boolean isGameSocketAllReady()
 	{
 		SocketInfoDic socketInfo=getSocketInfo(SocketType.Game);
 		
@@ -140,11 +161,61 @@ public class GameServer extends BaseGameServer
 		return true;
 	}
 	
-	/** 开启客户端端口 */
-	public void openClient()
+	/** 是否有一个连接好的Scene */
+	protected boolean isSceneSocketReady()
 	{
-		startClientSocket(_info.clientPort,CommonSetting.clientSocketUseWebSocket);
-		setClientReady(true);
+		//不启用
+		if(!CommonSetting.useSceneServer)
+			return true;
+		
+		if(CommonSetting.isAreaSplit())
+		{
+			int sceneServerID=GameC.main.getSelfSceneServerID();
+			
+			if(sceneServerID==-1)
+			{
+				Ctrl.errorLog("找不到自身所属场景服");
+				return true;
+			}
+			
+			BaseSocket socket=getServerSocket(SocketType.Scene,sceneServerID);
+			
+			return socket!=null && socket.isConnect();
+		}
+		else
+		{
+			SocketInfoDic socketInfo=getSocketInfo(SocketType.Scene);
+			
+			BaseSocket socket;
+			
+			ServerSimpleInfoData[] values;
+			ServerSimpleInfoData v;
+			
+			for(int i=(values=_sceneSimpleInfoDic.getValues()).length-1;i>=0;--i)
+			{
+				if((v=values[i])!=null)
+				{
+					//有一条连接就算
+					if(!((socket=socketInfo.getSocket(v.id))!=null && socket.isConnect()))
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+	}
+	
+	@Override
+	protected void onServerSocketClosedOnMain(BaseSocket socket)
+	{
+		//场景服
+		if(socket.type==SocketType.Scene)
+		{
+			//移除
+			GameC.main.setSceneServerPlayerNum(((SendSocket)socket).sendID,-1);
+		}
 	}
 	
 	@Override
@@ -152,13 +223,23 @@ public class GameServer extends BaseGameServer
 	{
 		super.onSendConnectSuccessOnMain(socket,isFirst);
 		
-		if(socket.type==SocketType.Center)
+		switch(socket.type)
 		{
-			socket.send(BeGameToCenterServerRequest.create(GameC.app.id,GameC.app.isInitLast()));
-		}
-		else if(socket.type==SocketType.Game)
-		{
-			BeGameToGameServerRequest.create(GameC.app.id,GameC.global.createLoginToGameData()).sendTo(socket);
+			case SocketType.Center:
+			{
+				socket.send(BeGameToCenterServerRequest.create(GameC.app.id,GameC.app.isInitLast()));
+			}
+				break;
+			case SocketType.Game:
+			{
+				socket.send(BeGameToGameServerRequest.create(GameC.app.id,GameC.global.createLoginToGameData()));
+			}
+				break;
+			case SocketType.Scene:
+			{
+				socket.send(BeGameToSceneServerRequest.create(GameC.app.id));
+			}
+				break;
 		}
 	}
 	
@@ -182,10 +263,12 @@ public class GameServer extends BaseGameServer
 		});
 	}
 	
+	
 	public void setInfos(GameInitServerData initData)
 	{
 		_centerInfo=initData.centerInfo;
 		_gameSimpleInfoDic=initData.gameServerDic;
+		_sceneSimpleInfoDic=initData.sceneServerDic;
 		_gameList=_gameSimpleInfoDic.getSortedKeyList().toArray();
 		_loginList=initData.loginList;
 		GameC.db.setURL(initData.info.mysql);
@@ -247,6 +330,60 @@ public class GameServer extends BaseGameServer
 			{
 				v.send(request);
 			}
+		}
+	}
+	
+	@Override
+	protected void dispatchClientResponse(BaseSocket socket,BaseResponse response)
+	{
+		//场景消息
+		if(response instanceof SceneBaseResponse)
+		{
+			SceneBaseResponse sceneR=(SceneBaseResponse)response;
+			
+			Player player;
+			
+			if((player=((GameReceiveSocket)socket).player)!=null)
+			{
+				GameScene scene=player.scene.getScene();
+				
+				if(scene!=null)
+				{
+					sceneR.setInfo(scene,player.role.playerID);
+					//直接加到执行器
+					scene.getExecutor().addFunc(sceneR);
+				}
+			}
+		}
+		//else if(response instanceof GameResponse)
+		//{
+		//	GameResponse gameR=(GameResponse)response;
+		//
+		//	Player player;
+		//
+		//	if((player=((GameReceiveSocket)socket).player)==null)
+		//	{
+		//		gameR.doPlayerNull();
+		//	}
+		//	else
+		//	{
+		//		gameR.setPlayer(player);
+		//
+		//		if(gameR.getThreadType()==ThreadType.Main)
+		//		{
+		//			//主线程
+		//			player.addMainFunc(gameR);
+		//		}
+		//		else
+		//		{
+		//			//派发
+		//			player.addFunc(response);
+		//		}
+		//	}
+		//}
+		else
+		{
+			response.dispatch();
 		}
 	}
 }

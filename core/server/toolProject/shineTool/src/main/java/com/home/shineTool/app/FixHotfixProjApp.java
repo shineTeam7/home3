@@ -1,8 +1,10 @@
 package com.home.shineTool.app;
 
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.dataEx.VBoolean;
 import com.home.shine.support.XML;
 import com.home.shine.support.collection.SList;
+import com.home.shine.support.collection.SMap;
 import com.home.shine.utils.FileUtils;
 import com.home.shineTool.ShineToolSetup;
 import com.home.shineTool.global.ShineToolGlobal;
@@ -21,50 +23,72 @@ import java.util.Map;
  */
 public class FixHotfixProjApp
 {
-    public void FixCsprojApp()
+    private XML _gameProj;
+    
+    private SList<String> _dirKeys=new SList<>(String[]::new);
+    
+    private SMap<String,String> _dirPathDic=new SMap<>();
+    
+    private SList<XML> _references=new SList<>(XML[]::new);
+    
+    public FixHotfixProjApp()
     {
-
+        _dirKeys.add("Managed");
+        _dirKeys.add("game");
+        _dirKeys.add("iOSSupport");
+        _dirKeys.add("MonoBleedingEdge");
     }
-
+    
     /**
      * 修复csproj中的compile itemGroup
      */
     public void fix()
     {
-        File src = new File(ShineToolGlobal.clientHotfixSrcPath);
+        String hotfixPath=ShineToolGlobal.clientHotfixSrcPath;
+        
+        File src = new File(hotfixPath);
 
         if (!src.exists())
         {
             Ctrl.throwError("hotfix目录不存在！");
             return;
         }
-
-        String logicPath = src.getParent() + File.separator;
+    
+        loadUnityProj();
+        
+        String logicPath = FileUtils.fixPath(src.getParent());
 
         // 创建csproj.user
         createUserCsproj(logicPath);
-
-        String csprojPath = logicPath + "hotfix.csproj";
+    
+        loadReference();
+        
+        String csprojPath = logicPath + "/hotfix.csproj";
 
         XML csproj = FileUtils.readFileForXML(csprojPath);
-
-        SList<XML> itemGroups = csproj.getChildrenByName("ItemGroup");
     
-        boolean has=false;
-
-        for (XML xml : itemGroups)
+        XML reference=getItemGroup(csproj,"Reference");
+        XML newReference=makeReferences();
+        
+        if(reference!=null)
         {
-            if (xml.getChildrenByNameOne("Compile")!=null)
-            {
-                csproj.replaceChild(xml, makeCompiles(src.getPath(), logicPath));
-                has=true;
-                break;
-            }
+            csproj.replaceChild(reference,newReference);
         }
-
-        if(!has)
+        else
         {
-            csproj.appendChild(makeCompiles(src.getPath(), logicPath));
+            csproj.appendChild(newReference);
+        }
+    
+        XML compile=getItemGroup(csproj,"Compile");
+        XML newCompile=makeCompiles(hotfixPath,logicPath);
+        
+        if(compile!=null)
+        {
+            csproj.replaceChild(compile,newCompile);
+        }
+        else
+        {
+            csproj.appendChild(newCompile);
         }
 
         FileUtils.writeFileForXML(csprojPath, csproj);
@@ -72,24 +96,111 @@ public class FixHotfixProjApp
         Ctrl.print("Fix Over, OK!");
     }
 
+    private void loadUnityProj()
+    {
+        File file = new File(ShineToolGlobal.clientPath + "/game/Assembly-CSharp.csproj");
+    
+        if (!file.exists())
+        {
+            Ctrl.throwError("请至少用Unity打开一次game工程，确保game/Assembly-CSharp.csproj文件存在");
+            return;
+        }
+    
+        _gameProj = FileUtils.readFileForXML(file.getPath());
+    
+        _dirKeys.forEach(v->
+        {
+            String onePath=findOnePath(v);
+            
+            if(onePath.isEmpty())
+            {
+               Ctrl.throwError("找不到Key",v);
+            }
+            else
+            {
+                _dirPathDic.put(v,onePath);
+            }
+        });
+    }
+    
+    private String findOnePath(String key)
+    {
+        String useKey="/"+key+"/";
+        for (XML xml : _gameProj.getChildrenByName("ItemGroup"))
+        {
+            SList<XML> references = xml.getChildrenByName("Reference");
+        
+            if (!references.isEmpty())
+            {
+                for (XML reference : references)
+                {
+                    XML hintPath=reference.getChildrenByNameOne("HintPath");
+                
+                    if(hintPath!=null)
+                    {
+                        String value=FileUtils.fixPath(hintPath.getValue());
+    
+                        int index=value.indexOf(useKey);
+                        
+                        if(index>0)
+                        {
+                            return value.substring(0,index+useKey.length()-1);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return "";
+    }
+    
+    private XML getItemGroup(XML root,String childName)
+    {
+        for (XML xml : root.getChildrenByName("ItemGroup"))
+        {
+            if (xml.getChildrenByNameOne(childName)!=null)
+            {
+                return xml;
+            }
+        }
+        
+        return null;
+    }
+    
     private XML makeCompiles(String srcPath, String prePath)
     {
         List<File> csFiles = FileUtils.getDeepFileList(srcPath, "cs");
-
-        StringBuilder content = new StringBuilder("<ItemGroup>");
         // 排个序
         csFiles.sort(Comparator.comparing(File::getPath));
-
+        
+        XML re=new XML();
+        re.setName("ItemGroup");
+        
         for (File f : csFiles)
         {
-            String compile = '"' + f.getPath().replace(prePath, "") + '"';
-
-            content.append("<Compile Include="+ compile +" />");
+            String absolutePath=f.getAbsolutePath();
+            String fPath=FileUtils.fixPath(absolutePath.substring(prePath.length() + 1));
+            
+            XML d=new XML();
+            d.setName("Compile");
+            d.setProperty("Include",fPath);
+            re.appendChild(d);
         }
 
-        content.append("</ItemGroup>");
-
-        return FileUtils.readXML(content.toString());
+        return re;
+    }
+    
+    private XML makeReferences()
+    {
+        XML re=new XML();
+        re.setName("ItemGroup");
+    
+        for(XML reference : _references)
+        {
+            re.appendChild(reference);
+        }
+        
+        return re;
     }
 
     /**
@@ -97,81 +208,94 @@ public class FixHotfixProjApp
      */
     private void createUserCsproj(String logicPath)
     {
-        File userFile = new File(logicPath + "hotfix.csproj.user");
-
-        if (!userFile.exists())
+        String userPath=logicPath +"/hotfix.csproj.user";
+    
+        XML propertyGroup = new XML();
+        propertyGroup.setName("PropertyGroup");
+    
+        Map<String, String> propertys = new HashMap<>();
+        
+        _dirPathDic.forEach((k,v)->
         {
-            XML propertyGroup = new XML();
-            propertyGroup.setName("PropertyGroup");
-
-            Map<String, String> propertys = new HashMap<>();
-            propertys.put("ManagedDir", getUnityDir("Managed"));
-            propertys.put("ClientDir", ShineToolGlobal.clientPath);
-            propertys.put("UnityExtensionsDir", getUnityDir("UnityExtensions"));
-
-            for (Map.Entry<String, String> kvs : propertys.entrySet())
-            {
-                XML xml = new XML();
-                xml.setName(kvs.getKey());
-                xml.setValue(kvs.getValue());
-                propertyGroup.appendChild(xml);
-            }
-
-            XML userCsproj = new XML();
-            userCsproj.setName("Project");
-            userCsproj.setProperty("ToolsVersion", "15.0");
-            userCsproj.setProperty("xmlns", "http://schemas.microsoft.com/developer/msbuild/2003");
-            userCsproj.appendChild(propertyGroup);
-
-            FileUtils.writeFileForXML(userFile.getPath(), userCsproj);
+            propertys.put(k+"Dir", v);
+        });
+        
+        for (Map.Entry<String, String> kvs : propertys.entrySet())
+        {
+            XML xml = new XML();
+            xml.setName(kvs.getKey());
+            xml.setValue(kvs.getValue());
+            propertyGroup.appendChild(xml);
         }
+    
+        XML userCsproj = new XML();
+        userCsproj.setName("Project");
+        userCsproj.setProperty("ToolsVersion", "15.0");
+        userCsproj.setProperty("xmlns", "http://schemas.microsoft.com/developer/msbuild/2003");
+        userCsproj.appendChild(propertyGroup);
+    
+        FileUtils.writeFileForXML(userPath, userCsproj);
     }
-
-    /**
-     * 获取Unity相关路径
-     * 目前从game工程的csproj中获取，也可以通过设置系统环境变量，然后从系统环境变量中取
-     * @return Unity相关路径，取不到返回null
-     */
-    private String getUnityDir(String dir)
+    
+    private void addReference(String assembly,String path)
     {
-        File file = new File(ShineToolGlobal.clientPath + "/game/Assembly-CSharp.csproj");
-
-        if (!file.exists())
-        {
-            Ctrl.throwError("请至少用Unity打开一次game工程，确保game/Assembly-CSharp.csproj文件存在");
-            return null;
-        }
-
-        XML gameProj = FileUtils.readFileForXML(file.getPath());
-
-        SList<XML> itemGroups = gameProj.getChildrenByName("ItemGroup");
-
-        for (XML xml : itemGroups)
+        XML re=new XML();
+        re.setName("Reference");
+        re.setProperty("Include",assembly);
+        
+        XML hintPath=new XML();
+        hintPath.setName("HintPath");
+        hintPath.setValue(path);
+        re.appendChild(hintPath);
+        
+        _references.add(re);
+    }
+    
+    private void loadReference()
+    {
+        addReference("Assembly-CSharp","$(gameDir)/Library/ScriptAssemblies/Assembly-CSharp.dll");
+        
+        VBoolean vb=new VBoolean();
+        
+        for (XML xml : _gameProj.getChildrenByName("ItemGroup"))
         {
             SList<XML> references = xml.getChildrenByName("Reference");
-
+        
             if (!references.isEmpty())
             {
                 for (XML reference : references)
                 {
-                    SList<XML> hintPaths = reference.getChildrenByName("HintPath");
-
-                    for (XML hintPath : hintPaths)
+                    XML hintPath=reference.getChildrenByNameOne("HintPath");
+                
+                    if(hintPath!=null)
                     {
-                        String hitPathStr = hintPath.getValue();
-                        if (hitPathStr != null && hitPathStr.contains(dir))
+                        String value=FileUtils.fixPath(hintPath.getValue());
+    
+                        vb.value=false;
+                        
+                        _dirPathDic.forEach((k,v)->
                         {
-                            return hitPathStr.substring(0, hitPathStr.indexOf(dir) - 1) + File.separator + dir;
+                            if(!vb.value && value.startsWith(v))
+                            {
+                                XML rc=reference.clone();
+                                String newV="$("+k+"Dir)"+value.substring(v.length(),value.length());
+    
+                                XML hintPath2=rc.getChildrenByNameOne("HintPath");
+                                hintPath2.setValue(newV);
+                                
+                                _references.add(rc);
+                                vb.value=true;
+                            }
+                        });
+                        
+                        if(!vb.value)
+                        {
+                            Ctrl.print("未录入的Reference",value);
                         }
                     }
                 }
             }
         }
-
-        // 通过系统环境变量取
-        // return System.getenv(dir);
-        Ctrl.throwError("取不到Unity目录：" + dir + "; 请联系开发者");
-        return null;
     }
 
     public static void main(String[] args)

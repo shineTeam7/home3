@@ -554,10 +554,7 @@ public class UnitAILogic extends UnitLogicBase
 				{
 					_isWandering=false;
 					
-					_fightState=UnitAIFightStateType.Pursue;
-					setPursueUnit(target);
-					selectPursueSkill();
-					continuePursue();
+					startPursue(target,true);
 				}
 				else
 				{
@@ -749,12 +746,18 @@ public class UnitAILogic extends UnitLogicBase
 	}
 	
 	/** 开始追击 */
-	protected void startPursue(Unit target)
+	protected void startPursue(Unit target,boolean isInitiative)
 	{
 		_fightState=UnitAIFightStateType.Pursue;
 		setPursueUnit(target);
 		selectPursueSkill();
 		continuePursue();
+		
+		//主动，怪物唤醒
+		if(isInitiative && _unit.identity.isMonster())
+		{
+			monsterWakeUpAround(target);
+		}
 	}
 	
 	/** 设置追击技能 */
@@ -1266,20 +1269,16 @@ public class UnitAILogic extends UnitLogicBase
 		//在徘徊中,并且是敌对
 		if(isIdle())
 		{
-			beAttackOnWander(attacker);
-			
-			//怪物唤醒
-			if(_unit.identity.isMonster())
-			{
-				beAttackOnMonster(attacker);
-			}
+			beAttackOnWander(attacker,true);
 		}
 	}
 	
-	protected void beAttackOnMonster(Unit attacker)
+	protected void monsterWakeUpAround(Unit target)
 	{
 		if(_fightUnitConfig.wakeUpCompanionAttackRadius>0)
 		{
+			float sq=_fightUnitConfig.wakeUpCompanionAttackRadiusT;
+			
 			_unit.aoi.forEachAroundUnits(v->
 			{
 				//不是自己
@@ -1288,14 +1287,17 @@ public class UnitAILogic extends UnitLogicBase
 					//怪物,徘徊中
 					if(v.identity.isMonster() && v.ai.isIdle())
 					{
-						v.ai.beAttackOnWander(attacker);
+						if(_scene.pos.calculatePosDistanceSq2D(v.pos.getPos(),_unit.pos.getPos())<sq)
+						{
+							v.ai.beAttackOnWander(target,false);
+						}
 					}
 				}
 			});
 		}
 	}
 	
-	protected void beAttackOnWander(Unit attacker)
+	protected void beAttackOnWander(Unit attacker,boolean isInitiative)
 	{
 		if(!_unit.fight.checkIsEnemy(attacker))
 			return;
@@ -1306,7 +1308,7 @@ public class UnitAILogic extends UnitLogicBase
 		//超出被动追击半径
 		if(_fightUnitConfig.passiveAttackRadius>0 && _scene.pos.calculatePosDistanceSq2D(attacker.pos.getPos(),_unit.pos.getPos())<_fightUnitConfig.passiveAttackRadiusT)
 		{
-			startPursue(attacker);
+			startPursue(attacker,isInitiative);
 		}
 		else
 		{

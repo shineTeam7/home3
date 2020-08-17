@@ -5,14 +5,19 @@ import com.home.commonManager.net.serverRequest.center.MAddPlayerWorkToCenterSer
 import com.home.commonManager.net.serverRequest.center.MQueryPlayerWorkToCenterServerRequest;
 import com.home.commonManager.net.serverRequest.center.ManagerToCenterCommandServerRequest;
 import com.home.commonManager.net.serverRequest.center.ReBeCenterToManagerServerRequest;
+import com.home.commonManager.net.serverRequest.center.ReloadServerConfigToCenterServerRequest;
 import com.home.commonManager.net.serverRequest.game.HotfixToGameServerRequest;
 import com.home.commonManager.net.serverRequest.game.ManagerToGameCommandServerRequest;
 import com.home.commonManager.net.serverRequest.game.ReBeGameToManagerServerRequest;
-import com.home.commonManager.net.serverRequest.login.login.HotfixToLoginServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.LoginExitServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.ManagerToLoginCommandServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.ReBeLoginToManagerServerRequest;
-import com.home.commonManager.net.serverRequest.login.system.SendServerOpenToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.game.ReloadServerConfigToGameServerRequest;
+import com.home.commonManager.net.serverRequest.login.HotfixToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.login.LoginExitServerRequest;
+import com.home.commonManager.net.serverRequest.login.ManagerToLoginCommandServerRequest;
+import com.home.commonManager.net.serverRequest.login.ReBeLoginToManagerServerRequest;
+import com.home.commonManager.net.serverRequest.login.ReloadServerConfigToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.login.SendServerOpenToLoginServerRequest;
+import com.home.commonManager.net.serverRequest.scene.ReBeSceneToManagerServerRequest;
+import com.home.commonManager.net.serverRequest.scene.SceneExitServerRequest;
 import com.home.shine.data.BaseData;
 import com.home.shine.tool.CreateDataFunc;
 import com.home.shine.tool.DataMaker;
@@ -24,19 +29,24 @@ public class ManagerServerRequestMaker extends DataMaker
 	{
 		offSet=ServerMessageType.off;
 		list=new CreateDataFunc[ServerMessageType.count-offSet];
-		list[ServerMessageType.MAddPlayerWorkToCenter-offSet]=this::createMAddPlayerWorkToCenterServerRequest;
-		list[ServerMessageType.MQueryPlayerWorkToCenter-offSet]=this::createMQueryPlayerWorkToCenterServerRequest;
-		list[ServerMessageType.ReBeLoginToManager-offSet]=this::createReBeLoginToManagerServerRequest;
-		list[ServerMessageType.ReBeCenterToManager-offSet]=this::createReBeCenterToManagerServerRequest;
-		list[ServerMessageType.ReBeGameToManager-offSet]=this::createReBeGameToManagerServerRequest;
 		list[ServerMessageType.HotfixToLogin-offSet]=this::createHotfixToLoginServerRequest;
 		list[ServerMessageType.LoginExit-offSet]=this::createLoginExitServerRequest;
+		list[ServerMessageType.ManagerToLoginCommand-offSet]=this::createManagerToLoginCommandServerRequest;
+		list[ServerMessageType.ReBeLoginToManager-offSet]=this::createReBeLoginToManagerServerRequest;
+		list[ServerMessageType.ReloadServerConfigToLogin-offSet]=this::createReloadServerConfigToLoginServerRequest;
 		list[ServerMessageType.SendServerOpenToLogin-offSet]=this::createSendServerOpenToLoginServerRequest;
 		list[ServerMessageType.CenterExit-offSet]=this::createCenterExitServerRequest;
-		list[ServerMessageType.ManagerToLoginCommand-offSet]=this::createManagerToLoginCommandServerRequest;
+		list[ServerMessageType.MAddPlayerWorkToCenter-offSet]=this::createMAddPlayerWorkToCenterServerRequest;
+		list[ServerMessageType.MQueryPlayerWorkToCenter-offSet]=this::createMQueryPlayerWorkToCenterServerRequest;
 		list[ServerMessageType.ManagerToCenterCommand-offSet]=this::createManagerToCenterCommandServerRequest;
-		list[ServerMessageType.ManagerToGameCommand-offSet]=this::createManagerToGameCommandServerRequest;
+		list[ServerMessageType.ReBeCenterToManager-offSet]=this::createReBeCenterToManagerServerRequest;
+		list[ServerMessageType.ReloadServerConfigToCenter-offSet]=this::createReloadServerConfigToCenterServerRequest;
 		list[ServerMessageType.HotfixToGame-offSet]=this::createHotfixToGameServerRequest;
+		list[ServerMessageType.ManagerToGameCommand-offSet]=this::createManagerToGameCommandServerRequest;
+		list[ServerMessageType.ReBeGameToManager-offSet]=this::createReBeGameToManagerServerRequest;
+		list[ServerMessageType.ReloadServerConfigToGame-offSet]=this::createReloadServerConfigToGameServerRequest;
+		list[ServerMessageType.ReBeSceneToManager-offSet]=this::createReBeSceneToManagerServerRequest;
+		list[ServerMessageType.SceneExit-offSet]=this::createSceneExitServerRequest;
 	}
 	
 	private BaseData createMAddPlayerWorkToCenterServerRequest()
@@ -102,6 +112,31 @@ public class ManagerServerRequestMaker extends DataMaker
 	private BaseData createHotfixToGameServerRequest()
 	{
 		return new HotfixToGameServerRequest();
+	}
+	
+	private BaseData createReloadServerConfigToLoginServerRequest()
+	{
+		return new ReloadServerConfigToLoginServerRequest();
+	}
+	
+	private BaseData createReloadServerConfigToCenterServerRequest()
+	{
+		return new ReloadServerConfigToCenterServerRequest();
+	}
+	
+	private BaseData createReloadServerConfigToGameServerRequest()
+	{
+		return new ReloadServerConfigToGameServerRequest();
+	}
+	
+	private BaseData createReBeSceneToManagerServerRequest()
+	{
+		return new ReBeSceneToManagerServerRequest();
+	}
+	
+	private BaseData createSceneExitServerRequest()
+	{
+		return new SceneExitServerRequest();
 	}
 	
 }

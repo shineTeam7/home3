@@ -205,7 +205,7 @@ public class DataExportTool extends BaseExportTool
 	protected String getOutClassQNameByGroup(int group, String inQName)
 	{
 		//转一下
-		if(group==DataGroupType.Server2)
+		if(group==DataGroupType.Server2 || group==DataGroupType.ServerScene)
 			group=DataGroupType.Server;
 		
 		//转到正确的客户端和服务器

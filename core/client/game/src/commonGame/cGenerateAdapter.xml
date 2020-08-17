@@ -6,7 +6,7 @@
 		<hotfixPath path="view" needFactory="true"/>
 
 		<hotfixPath path="config/game" needFactory="false"/>
-		<hotfixPath path="player" needFactory="false"/>
+		<hotfixPath path="part" needFactory="false"/>
 
 		<hotfixPath path="net/base" needFactory="false"/>
 		<hotfixPath path="net/centerResponse/func/base" needFactory="false"/>
@@ -21,9 +21,8 @@
 		<ignorePath path="control/CILRuntimeControl.cs"/>
 		<ignorePath path="tool/generate"/>
 		<ignorePath path="tool/func"/>
+
+		<ignorePath path="logic/unit/AttributeDataLogic.cs"/>
 	</root>
-	<namespace name="ShineEngine"/>
 	<allowMethod cls="BaseConfig" methods="toReadBytesSimple,afterReadConfig,generateRefresh,clear"/>
-	<allowMethod cls="BaseRequest" methods="copyData,doWriteToStream,doWriteBytesSimple,toWriteBytesSimple,getDataClassName,toWriteDataString,clear"/>
-	<allowMethod cls="BaseResponse" methods="readFromStream,preExecute,execute,toReadBytesSimple,getDataClassName,toWriteDataString,clear"/>
 </info>

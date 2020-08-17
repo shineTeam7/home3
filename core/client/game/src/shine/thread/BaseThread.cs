@@ -10,12 +10,17 @@ namespace ShineEngine
 	{
 		private string _name;
 
+		/** tick间隔 */
+		protected int _tickDelay=ShineSetting.defaultThreadSleepDelay;
+
 		/** 睡多久(ms) */
 		protected int _sleepTime=ShineSetting.defaultThreadSleepDelay;
+		/** 休息中 */
+		private volatile bool _sleeping=false;
 
 		private SFuncQueue _queue=new SFuncQueue();
 
-		private Action<int> _tickFunc;
+		private Action _runCall;
 
 		/** 线程 */
 		private Thread _thread;
@@ -31,15 +36,14 @@ namespace ShineEngine
 			_thread.IsBackground=true;
 		}
 
-		/** 设置睡眠时间 */
+		public void setRunCall(Action func)
+		{
+			_runCall=func;
+		}
+
 		public void setSleepTime(int time)
 		{
 			_sleepTime=time;
-		}
-
-		public void setTickFunc(Action<int> func)
-		{
-			_tickFunc=func;
 		}
 
 		public void check()
@@ -66,25 +70,53 @@ namespace ShineEngine
 				_running=true;
 
 				long lastTime=Ctrl.getTimer();
-				int delay;
 				long time;
+				int delay;
+				int tickMax=_tickDelay;
+				int tickTime=0;
 
 				while(_running)
 				{
-					//TODO:死循环检测
-
 					time=Ctrl.getTimer();
 					delay=(int)(time - lastTime);
 					lastTime=time;
 
-					//先时间
-					tick(delay);
+					//防止系统时间改小
+					if(delay<0)
+						delay=0;
+
+					if(delay>0)
+					{
+						if((tickTime+=delay)>=tickMax)
+						{
+							try
+							{
+								tick(tickTime);
+							}
+							catch(Exception e)
+							{
+								Ctrl.errorLog("线程tick出错",e);
+							}
+
+							tickTime=0;
+						}
+
+					}
+
+					try
+					{
+						runEx();
+					}
+					catch(Exception e)
+					{
+						Ctrl.errorLog("线程runEx出错",e);
+					}
 
 					//再事务
 					queue.runOnce();
 
 					//最后睡
-					Thread.Sleep(_sleepTime);
+					threadSleep();
 				}
 			}
 			catch(ThreadAbortException)
@@ -96,6 +128,49 @@ namespace ShineEngine
 				Ctrl.printExceptionForIO(e);
 			}
 
+		}
+
+		/** 休息 */
+		protected void threadSleep()
+		{
+			_sleeping=true;
+
+			try
+			{
+				Thread.Sleep(_sleepTime);
+			}
+			catch
+			{
+				Ctrl.print("interrupt");
+			}
+
+			_sleeping=false;
+
+			// int delay=(int)(Ctrl.getTimer()-t);
+			//
+			// if(delay>0)
+			// {
+			// 	_restTime+=delay;
+			// }
+		}
+
+		/** 方法唤醒 */
+		public void notifyFunc()
+		{
+
+			if(!ShineSetting.needThreadNotify)
+				return;
+
+			if(_sleeping)
+			{
+				_thread.Interrupt();
+			}
+		}
+
+		protected virtual void runEx()
+		{
+			if(_runCall!=null)
+				_runCall();
 		}
 
 		/// <summary>
@@ -116,8 +191,7 @@ namespace ShineEngine
 
 		protected virtual void tick(int delay)
 		{
-			if(_tickFunc!=null)
-				_tickFunc(delay);
+
 		}
 
 		/// <summary>

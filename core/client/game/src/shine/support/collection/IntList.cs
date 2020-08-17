@@ -13,7 +13,7 @@ namespace ShineEngine
 
 		public IntList()
 		{
-			_values=ObjectUtils.EmptyIntArr;
+			init(0);
 		}
 
 		public IntList(int capacity)
@@ -21,28 +21,28 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		public int capacity()
-		{
-			return _values.Length;
-		}
-
 		public int[] getValues()
 		{
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_values=new int[capacity];
+			_capacity=capacity;
 
-			_size=0;
+			if(capacity==0)
+				_values=ObjectUtils.EmptyIntArr;
+			else
+				_values=new int[capacity];
 		}
 
-		private void remake(int capacity)
+		protected override void remake(int capacity)
 		{
-			int[] n=new int[capacity];
-			Array.Copy(_values,0,n,0,_size);
-			_values=n;
+			int[] oldValues=_values;
+			init(capacity);
+
+			if(oldValues.Length>0 && _size>0)
+				Array.Copy(oldValues,0,_values,0,_size);
 		}
 
 		public void set(int index,int value)
@@ -58,10 +58,7 @@ namespace ShineEngine
 		/** 添加 */
 		public void add(int value)
 		{
-			if(_values.Length==0)
-				init(_minSize);
-			else if(_size==_values.Length)
-				remake(_values.Length<<1);
+			addCapacity();
 
 			_values[_size++]=value;
 		}
@@ -69,10 +66,7 @@ namespace ShineEngine
 		/** 添加2个 */
 		public void add2(int v1,int v2)
 		{
-			if(_values.Length==0)
-				init(_minSize);
-			else if(_size + 2>_values.Length)
-				remake(_values.Length<<1);
+			addCapacity(2);
 
 			_values[_size++]=v1;
 			_values[_size++]=v2;
@@ -81,10 +75,7 @@ namespace ShineEngine
 		/** 添加3个 */
 		public void add3(int v1,int v2,int v3)
 		{
-			if(_values.Length==0)
-				init(_minSize);
-			else if(_size + 3>_values.Length)
-				remake(_values.Length<<1);
+			addCapacity(3);
 
 			_values[_size++]=v1;
 			_values[_size++]=v2;
@@ -108,10 +99,7 @@ namespace ShineEngine
 		/** 添加元素到头 */
 		public void unshift(int value)
 		{
-			if(_values.Length==0)
-				init(_minSize);
-			else if(_size==_values.Length)
-				remake(_values.Length<<1);
+			addCapacity();
 
 			if(_size>0)
 				Array.Copy(_values,0,_values,1,_size);
@@ -239,6 +227,7 @@ namespace ShineEngine
 
 				n[offset]=value;
 				_values=n;
+				_capacity=n.Length;
 			}
 			else
 			{
@@ -248,20 +237,6 @@ namespace ShineEngine
 			}
 
 			++_size;
-		}
-
-		public void clear()
-		{
-			_size=0;
-		}
-
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_values.Length)
-			{
-				remake(countCapacity(capacity));
-			}
 		}
 
 		/** 设置长度 */
@@ -302,6 +277,31 @@ namespace ShineEngine
 				return;
 
 			Array.Sort(_values,0,_size);
+		}
+
+		/** 转化为原生集合 */
+		public List<int> toNatureList()
+		{
+			List<int> re=new List<int>(size());
+
+			int[] values=_values;
+
+			for(int i=0,len=_size;i<len;++i)
+			{
+				re.Add(values[i]);
+			}
+
+			return re;
+		}
+
+		public void addAll(List<int> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(int v in map)
+			{
+				this.add(v);
+			}
 		}
 
 		public void forEach(Action<int> consumer)

@@ -180,15 +180,13 @@ public class KeepSaveData extends BaseData
 			if(!this.intDic.isEmpty())
 			{
 				int intDicKFreeValue=this.intDic.getFreeValue();
-				long[] intDicKTable=this.intDic.getTable();
-				long intDicKEntry;
-				for(int intDicKI=intDicKTable.length-1;intDicKI>=0;--intDicKI)
+				int[] intDicKTable=this.intDic.getTable();
+				for(int intDicKI=intDicKTable.length-2;intDicKI>=0;intDicKI-=2)
 				{
-					intDicKEntry=intDicKTable[intDicKI];
-					int intDicK=(int)intDicKEntry;
-					if(intDicK!=intDicKFreeValue)
+					if(intDicKTable[intDicKI]!=intDicKFreeValue)
 					{
-						int intDicV=(int)(intDicKEntry>>>32);
+						int intDicK=intDicKTable[intDicKI];
+						int intDicV=intDicKTable[intDicKI+1];
 						stream.writeInt(intDicK);
 						
 						stream.writeInt(intDicV);
@@ -392,15 +390,13 @@ public class KeepSaveData extends BaseData
 			if(!this.intDic.isEmpty())
 			{
 				int intDicKFreeValue=this.intDic.getFreeValue();
-				long[] intDicKTable=this.intDic.getTable();
-				long intDicKEntry;
-				for(int intDicKI=intDicKTable.length-1;intDicKI>=0;--intDicKI)
+				int[] intDicKTable=this.intDic.getTable();
+				for(int intDicKI=intDicKTable.length-2;intDicKI>=0;intDicKI-=2)
 				{
-					intDicKEntry=intDicKTable[intDicKI];
-					int intDicK=(int)intDicKEntry;
-					if(intDicK!=intDicKFreeValue)
+					if(intDicKTable[intDicKI]!=intDicKFreeValue)
 					{
-						int intDicV=(int)(intDicKEntry>>>32);
+						int intDicK=intDicKTable[intDicKI];
+						int intDicV=intDicKTable[intDicKI+1];
 						stream.writeInt(intDicK);
 						
 						stream.writeInt(intDicV);
@@ -549,15 +545,13 @@ public class KeepSaveData extends BaseData
 			if(!mData.intDic.isEmpty())
 			{
 				int intDicKFreeValue=mData.intDic.getFreeValue();
-				long[] intDicKTable=mData.intDic.getTable();
-				long intDicKEntry;
-				for(int intDicKI=intDicKTable.length-1;intDicKI>=0;--intDicKI)
+				int[] intDicKTable=mData.intDic.getTable();
+				for(int intDicKI=intDicKTable.length-2;intDicKI>=0;intDicKI-=2)
 				{
-					intDicKEntry=intDicKTable[intDicKI];
-					int intDicK=(int)intDicKEntry;
-					if(intDicK!=intDicKFreeValue)
+					if(intDicKTable[intDicKI]!=intDicKFreeValue)
 					{
-						int intDicV=(int)(intDicKEntry>>>32);
+						int intDicK=intDicKTable[intDicKI];
+						int intDicV=intDicKTable[intDicKI+1];
 						int intDicW;
 						int intDicU;
 						intDicW=intDicK;
@@ -704,15 +698,13 @@ public class KeepSaveData extends BaseData
 			if(!this.intDic.isEmpty())
 			{
 				int intDicKFreeValue=this.intDic.getFreeValue();
-				long[] intDicKTable=this.intDic.getTable();
-				long intDicKEntry;
-				for(int intDicKI=intDicKTable.length-1;intDicKI>=0;--intDicKI)
+				int[] intDicKTable=this.intDic.getTable();
+				for(int intDicKI=intDicKTable.length-2;intDicKI>=0;intDicKI-=2)
 				{
-					intDicKEntry=intDicKTable[intDicKI];
-					int intDicK=(int)intDicKEntry;
-					if(intDicK!=intDicKFreeValue)
+					if(intDicKTable[intDicKI]!=intDicKFreeValue)
 					{
-						int intDicV=(int)(intDicKEntry>>>32);
+						int intDicK=intDicKTable[intDicKI];
+						int intDicV=intDicKTable[intDicKI+1];
 						int intDicU=intDicR.get(intDicK);
 						if(intDicV!=intDicU)
 							return false;
@@ -850,15 +842,13 @@ public class KeepSaveData extends BaseData
 			if(!this.intDic.isEmpty())
 			{
 				int intDicKFreeValue=this.intDic.getFreeValue();
-				long[] intDicKTable=this.intDic.getTable();
-				long intDicKEntry;
-				for(int intDicKI=intDicKTable.length-1;intDicKI>=0;--intDicKI)
+				int[] intDicKTable=this.intDic.getTable();
+				for(int intDicKI=intDicKTable.length-2;intDicKI>=0;intDicKI-=2)
 				{
-					intDicKEntry=intDicKTable[intDicKI];
-					int intDicK=(int)intDicKEntry;
-					if(intDicK!=intDicKFreeValue)
+					if(intDicKTable[intDicKI]!=intDicKFreeValue)
 					{
-						int intDicV=(int)(intDicKEntry>>>32);
+						int intDicK=intDicKTable[intDicKI];
+						int intDicV=intDicKTable[intDicKI+1];
 						writer.writeTabs();
 						writer.sb.append(intDicK);
 						

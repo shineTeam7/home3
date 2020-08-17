@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using ILRuntime.CLR.Method;
 using ILRuntime.Runtime.Enviorment;
 using ILRuntime.Runtime.Intepreter;
@@ -74,6 +75,30 @@ namespace ShineEngine
 				else
 				{
 					base.init(obj);
+				}
+			}
+			
+			IMethod _m1;
+			bool _g1;
+			bool _b1;
+			protected override void dispose()
+			{
+				if(!_g1)
+				{
+					_m1=instance.Type.GetMethod("dispose",0);
+					_g1=true;
+				}
+				
+				if(_m1!=null && !_b1)
+				{
+					_b1=true;
+					appdomain.Invoke(_m1,instance,null);
+					_b1=false;
+					
+				}
+				else
+				{
+					base.dispose();
 				}
 			}
 			

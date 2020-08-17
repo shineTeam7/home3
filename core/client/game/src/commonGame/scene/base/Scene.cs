@@ -86,8 +86,11 @@ public class Scene:ILogic,ITimeEntity
 	/** 摄像机逻辑 */
 	public SceneCameraLogic camera;
 
+	/** 副本玩法逻辑 */
+	public SceneBattleLogic battle;
+
 	/** 玩法逻辑 */
-	public ScenePlayLogic play;
+	public SceneMethodLogic method;
 
 	//地图部分
 
@@ -144,7 +147,9 @@ public class Scene:ILogic,ITimeEntity
 		endPos.y=originPos.y+sizePos.y;
 		endPos.z=originPos.z+sizePos.z;
 
-		play.onSetConfig();
+		method.onSetConfig();
+
+		preInit();
 	}
 
 	/** 预备信息 */
@@ -231,7 +236,7 @@ public class Scene:ILogic,ITimeEntity
 		get {return _hero;}
 	}
 
-	public virtual Role selfRole
+	public Role selfRole
 	{
 		get {return _selfRole;}
 	}
@@ -281,9 +286,13 @@ public class Scene:ILogic,ITimeEntity
 		//必须存在
 		addLogic(camera=createCameraLogic());
 
+		//添加battle逻辑
+		if((battle=createBattleLogic())!=null)
+			addLogic(battle);
+
 		//添加play逻辑
-		if((play=createPlayLogic())!=null)
-			addLogic(play);
+		if((method=createMethodLogic())!=null)
+			addLogic(method);
 		else
 			Ctrl.throwError("不能没有play");
 	}
@@ -302,8 +311,6 @@ public class Scene:ILogic,ITimeEntity
 	/** 场景资源刚加载好 */
 	public void onSceneLoad()
 	{
-		preInit();
-
 		if(CommonSetting.clientMapNeedGrid)
 		{
 			_mapInfoConfig=MapInfoConfig.getSync(_config.mapID);
@@ -364,6 +371,9 @@ public class Scene:ILogic,ITimeEntity
 
 		if(camera!=null)
 			camera.enabled=!simple;
+
+		if(battle!=null)
+			battle.preInit();
 	}
 
 	/** 析构 */
@@ -428,7 +438,7 @@ public class Scene:ILogic,ITimeEntity
 
 		if(_isFrameSync)
 		{
-			((BattleSceneSyncPlayLogic)play).preFrame(delay);
+			((BattleSceneSyncPlayLogic)method).preFrame(delay);
 		}
 		else
 		{
@@ -644,9 +654,15 @@ public class Scene:ILogic,ITimeEntity
 	}
 
 	/** 创建玩法逻辑 */
-	protected virtual ScenePlayLogic createPlayLogic()
+	protected virtual SceneMethodLogic createMethodLogic()
 	{
-		return new ScenePlayLogic();
+		return new SceneMethodLogic();
+	}
+
+	/** 副本玩法逻辑 */
+	protected virtual SceneBattleLogic createBattleLogic()
+	{
+		return new SceneBattleLogic();
 	}
 
 	//methods
@@ -720,7 +736,8 @@ public class Scene:ILogic,ITimeEntity
 		}
 
 		//后调用play的
-		play.initEnterData(enterData);
+		battle.initEnterData(enterData);
+		method.initEnterData(enterData);
 
 		onStart();
 	}
@@ -1129,12 +1146,6 @@ public class Scene:ILogic,ITimeEntity
 	}
 
 	//--快捷方式--//
-
-	/** 获取副本玩法逻辑 */
-	public BattleScenePlayLogic getBattleScenePlayLogic()
-	{
-		return (BattleScenePlayLogic)play;
-	}
 
 	public long getTimeMillis()
 	{

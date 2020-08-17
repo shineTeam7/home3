@@ -164,6 +164,11 @@ public class BaseRequest extends BaseData
 		return _stream.getByteArray();
 	}
 	
+	public byte[] getWriteBytes()
+	{
+		return _stream.getByteArray();
+	}
+	
 	/** 写到流里(IO线程) */
 	public void writeToStream(BytesWriteStream stream)
 	{

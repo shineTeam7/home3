@@ -8,47 +8,30 @@ import com.home.shine.net.httpRequest.BaseHttpRequest;
 import com.home.shine.net.socket.BaseSocket;
 import com.home.shine.support.collection.SSet;
 import com.home.shine.support.concurrent.collection.NatureConcurrentQueue;
-import com.home.shine.support.pool.DataPool;
 
 /** IO线程(采用SThread) */
-//IOThread每帧至少执行3000+的事务,环至少有8192的长才合适，先采用SThread
 //默认先采用CThread
 public class IOThread extends CThread
 //public class IOThread extends SThread
 {
-	///** 第三方事务队列 */
-	//private MPSCQueue _otherQueue=new MPSCQueue();
-	//默认还是采用CThread实现
-	private NatureConcurrentQueue _otherQueue=new NatureConcurrentQueue();
-	
 	private SSet<BaseSocket> _socketDic=new SSet<>(BaseSocket[]::new);
 	private SSet<HttpReceive> _httpReceiveDic=new SSet<>(HttpReceive[]::new);
 	
 	private SSet<BaseHttpRequest> _httpRequestDic=new SSet<>(BaseHttpRequest[]::new);
 	
 	private int _checkHttpTimePass=0;
-	private int _otherQueueNum=0;
+	
+	//private int _checkHttpTimePass=0;
 	
 	public IOThread(int index)
 	{
 		super("ioThread-"+index,ThreadType.IO,index);
-		
-		setSleepTime(ShineSetting.ioThreadFrameDelay);
 	}
 	
 	@Override
 	protected void tick(int delay)
 	{
 		super.tick(delay);
-		
-		_otherQueue.run();
-		
-		int n=_otherQueue.getExecuteNum();
-		
-		if(n>_otherQueueNum)
-		{
-			_otherQueueNum=n;
-		}
 		
 		SSet<BaseSocket> set;
 		
@@ -60,7 +43,7 @@ public class IOThread extends CThread
 			{
 				if((socket=keys[i])!=null)
 				{
-					socket.onFrame();
+					socket.onFrame(delay);
 				}
 			}
 		}
@@ -68,6 +51,8 @@ public class IOThread extends CThread
 		if((_checkHttpTimePass+=delay)>ShineSetting.httpRequestCheckDelay)
 		{
 			_checkHttpTimePass=0;
+			
+			_socketDic.tryShrink();
 			
 			checkHttpReceive(ShineSetting.httpRequestCheckDelay);
 			checkHttpRequest(ShineSetting.httpRequestCheckDelay);
@@ -106,43 +91,32 @@ public class IOThread extends CThread
 				_httpRequestDic.remove(v);
 			}
 		});
-		
 	}
 	
-	@Override
-	public void addFunc(Runnable func)
-	{
-		if(ShineSetting.openCheck)
-		{
-			if(!(Thread.currentThread() instanceof AbstractThread))
-			{
-				Ctrl.throwError("不是自己的线程");
-			}
-		}
-		
-		super.addFunc(func);
-	}
+	//@Override
+	//public void addFunc(Runnable func)
+	//{
+	//	if(ShineSetting.openCheck)
+	//	{
+	//		if(!(Thread.currentThread() instanceof AbstractThread))
+	//		{
+	//			Ctrl.throwError("不是自己的线程");
+	//		}
+	//	}
+	//
+	//	super.addFunc(func);
+	//}
 	
 	/** 添加其他线程执行 */
 	public void addOtherFunc(Runnable func)
 	{
-		if(ShineSetting.openCheck)
-		{
-			if(Thread.currentThread() instanceof AbstractThread)
-			{
-				Ctrl.throwError("是自己的线程");
-			}
-		}
+		if(func==null)
+			return;
 		
-		_otherQueue.addFunc(func);
-	}
-	
-	@Override
-	protected void stopRunning()
-	{
-		super.stopRunning();
+		toAddFunc(func,null);
 		
-		_otherQueue.setRunning(false);
+		if(_needNotify)
+			notifyFunc();
 	}
 	
 	/** 注册socket(IO线程调用) */
@@ -192,27 +166,12 @@ public class IOThread extends CThread
 	}
 	
 	@Override
-	public int getMaxFuncNum()
-	{
-		return _otherQueueNum+_maxFuncNum;
-	}
-	
-	@Override
-	public void clearCount()
-	{
-		super.clearCount();
-		
-		_otherQueueNum=0;
-	}
-	
-	@Override
 	public void copy(AbstractThread thread)
 	{
 		super.copy(thread);
 		
 		IOThread thd=(IOThread)thread;
 		
-		_otherQueue=thd._otherQueue;
 		_socketDic=thd._socketDic;
 		_httpReceiveDic=thd._httpReceiveDic;
 		_httpRequestDic=thd._httpRequestDic;

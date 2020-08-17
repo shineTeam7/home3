@@ -11,7 +11,7 @@ public class RoleAttributeDataLogic extends AttributeTool
 	/** 父属性逻辑 */
 	private RoleAttributeLogic _parent;
 	
-	public RoleAttributeDataLogic(RoleAttributeLogic parent)
+	public void setParent(RoleAttributeLogic parent)
 	{
 		_parent=parent;
 		
@@ -32,10 +32,10 @@ public class RoleAttributeDataLogic extends AttributeTool
 	}
 	
 	@Override
-	protected void toDispatchAttribute(int[] changeList,int num,boolean[] changeSet,int[] lastAttributes)
+	protected void toDispatchAttribute(int[] changeList,int num,boolean[] changeSet)
 	{
 		//先buff
 		//_parent.buff.onAttributeChange(changeList,num,changeSet,lastAttributes);
-		_parent.onAttributeChange(changeList,num,changeSet,lastAttributes);
+		_parent.onAttributeChange(changeList,num,changeSet);
 	}
 }

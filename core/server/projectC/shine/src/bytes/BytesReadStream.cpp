@@ -92,6 +92,9 @@ void BytesReadStream::clear()
 	_readNum = 0;
 	_readLock = false;
 	_readLenLimit = 0;
+
+	clearBooleanPos();
+	_readStack.clear();
 }
 
 bool BytesReadStream::readByteArr(char* bytes, int len)
@@ -124,12 +127,42 @@ char* BytesReadStream::readByteArr(int len)
 
 bool BytesReadStream::readBoolean()
 {
-	if (!ensureCanRead(1))
+	if (ShineSetting::bytesUseBitBoolean)
 	{
-		return false;
-	}
+		//新的
+		if (_booleanBitIndex == -1)
+		{
+			if (!ensureCanRead(1))
+				return false;
 
-	return _buf[_position++] != 0;
+			_booleanBitValue = _buf[_position++] & 0xff;
+
+			bool re = (_booleanBitValue & 1) != 0;
+			_booleanBitIndex = 1;
+			return re;
+		}
+		else
+		{
+			bool re = (_booleanBitValue & (1 << _booleanBitIndex)) != 0;
+
+			if ((++_booleanBitIndex) == 8)
+			{
+				_booleanBitIndex = -1;
+				_booleanBitValue = 0;
+			}
+
+			return re;
+		}
+	}
+	else
+	{
+		if (!ensureCanRead(1))
+		{
+			return false;
+		}
+
+		return _buf[_position++] != 0;
+	}
 }
 
 int BytesReadStream::readByte()
@@ -487,7 +520,7 @@ int BytesReadStream::readLen()
 	return re;
 }
 
-int BytesReadStream::startReadObj()
+void BytesReadStream::startReadObj()
 {
 	int len = readLen();
 	int pos = _position + len;
@@ -496,16 +529,36 @@ int BytesReadStream::startReadObj()
 	_readNum++;
 	_length = pos;
 
-	return re;
+	if (ShineSetting::bytesUseBitBoolean)
+	{
+		_readStack.add3(re, _booleanBitIndex, _booleanBitValue);
+		clearBooleanPos();
+	}
+	else
+	{
+		_readStack.add(re);
+	}
 }
 
-void BytesReadStream::endReadObj(int len)
+void BytesReadStream::endReadObj()
 {
 	if (_readNum == 0)
 	{
 		throwError("不该出现的");
 		return;
 	}
+
+	//倒序
+	if (ShineSetting::bytesUseBitBoolean)
+	{
+		_booleanBitValue = _readStack.back();
+		_readStack.pop_back();
+		_booleanBitIndex = _readStack.back();
+		_readStack.pop_back();
+	}
+
+	int len = _readStack.back();
+	_readStack.pop_back();
 
 	setPosition(_length);
 
@@ -522,6 +575,16 @@ void BytesReadStream::readMem(void* ptr, int len)
 
 	memcpy(ptr, _buf + _position, len);
 	_position += len;
+}
+
+
+void BytesReadStream::clearBooleanPos()
+{
+	if (!ShineSetting::bytesUseBitBoolean)
+		return;
+
+	_booleanBitIndex = -1;
+	_booleanBitValue = 0;
 }
 
 bool BytesReadStream::checkVersion(int version)

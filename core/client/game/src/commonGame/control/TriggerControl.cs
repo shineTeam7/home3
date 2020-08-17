@@ -15,9 +15,16 @@ public class TriggerControl
 	/// </summary>
 	protected string[] funcNameDic=new string[CommonSetting.triggerFunctionMax];
 	
-	public void init()
+	/// <summary>
+	/// 方法构造
+	/// </summary>
+	protected TriggerFuncMaker _funcMaker=new TriggerFuncMaker();
+	
+	public virtual void init()
 	{
 		registReturnType();
+
+		addFuncMaker(new TriggerRegister());
 	}
 	
 	/// <summary>
@@ -34,6 +41,16 @@ public class TriggerControl
 	public string getFuncName(int type)
 	{
 		return funcNameDic[type];
+	}
+	
+	public void addFuncMaker(TriggerFuncMaker maker)
+	{
+		_funcMaker.addDic(maker);
+	}
+	
+	public TriggerFuncMaker getFuncMaker()
+	{
+		return _funcMaker;
 	}
 	
 	/// <summary>
@@ -69,6 +86,16 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.EqualsLong]="equalsLong";
 		funcReturnTypeDic[TriggerFunctionType.EqualsString]=STriggerObjectType.Boolean;
 		funcNameDic[TriggerFunctionType.EqualsString]="equalsString";
+		funcReturnTypeDic[TriggerFunctionType.IsNull]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.IsNull]="isNull";
+		funcReturnTypeDic[TriggerFunctionType.NotNull]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.NotNull]="notNull";
+		funcReturnTypeDic[TriggerFunctionType.CompareInt]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.CompareInt]="compareInt";
+		funcReturnTypeDic[TriggerFunctionType.CompareFloat]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.CompareFloat]="compareFloat";
+		funcReturnTypeDic[TriggerFunctionType.CompareLong]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.CompareLong]="compareLong";
 		funcReturnTypeDic[TriggerFunctionType.GreaterThanInt]=STriggerObjectType.Boolean;
 		funcNameDic[TriggerFunctionType.GreaterThanInt]="greaterThanInt";
 		funcReturnTypeDic[TriggerFunctionType.GreaterThanOrEqualInt]=STriggerObjectType.Boolean;
@@ -95,10 +122,12 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.LessThanOrEqualLong]="lessThanOrEqualLong";
 		funcReturnTypeDic[TriggerFunctionType.GetSBoolean]=STriggerObjectType.Boolean;
 		funcNameDic[TriggerFunctionType.GetSBoolean]="getSBoolean";
-		funcReturnTypeDic[TriggerFunctionType.RemoveSVar]=STriggerObjectType.Boolean;
-		funcNameDic[TriggerFunctionType.RemoveSVar]="removeSVar";
+		funcReturnTypeDic[TriggerFunctionType.GetLocalBoolean]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.GetLocalBoolean]="getLocalBoolean";
 		funcReturnTypeDic[TriggerFunctionType.RandomBoolean]=STriggerObjectType.Boolean;
 		funcNameDic[TriggerFunctionType.RandomBoolean]="randomBoolean";
+		funcReturnTypeDic[TriggerFunctionType.IsTimeMillisPass]=STriggerObjectType.Boolean;
+		funcNameDic[TriggerFunctionType.IsTimeMillisPass]="isTimeMillisPass";
 		funcReturnTypeDic[TriggerFunctionType.AddInt]=STriggerObjectType.Int;
 		funcNameDic[TriggerFunctionType.AddInt]="addInt";
 		funcReturnTypeDic[TriggerFunctionType.SubInt]=STriggerObjectType.Int;
@@ -123,6 +152,8 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.ConvertLong2Int]="convertLong2Int";
 		funcReturnTypeDic[TriggerFunctionType.GetSInt]=STriggerObjectType.Int;
 		funcNameDic[TriggerFunctionType.GetSInt]="getSInt";
+		funcReturnTypeDic[TriggerFunctionType.GetLocalInt]=STriggerObjectType.Int;
+		funcNameDic[TriggerFunctionType.GetLocalInt]="getLocalInt";
 		funcReturnTypeDic[TriggerFunctionType.GetCurrentLoopIndex]=STriggerObjectType.Int;
 		funcNameDic[TriggerFunctionType.GetCurrentLoopIndex]="getCurrentLoopIndex";
 		funcReturnTypeDic[TriggerFunctionType.GetCurrentListElement]=STriggerObjectType.Object;
@@ -147,6 +178,8 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.AbsFloat]="absFloat";
 		funcReturnTypeDic[TriggerFunctionType.GetSFloat]=STriggerObjectType.Float;
 		funcNameDic[TriggerFunctionType.GetSFloat]="getSFloat";
+		funcReturnTypeDic[TriggerFunctionType.GetLocalFloat]=STriggerObjectType.Float;
+		funcNameDic[TriggerFunctionType.GetLocalFloat]="getLocalFloat";
 		funcReturnTypeDic[TriggerFunctionType.ConvertInt2Float]=STriggerObjectType.Float;
 		funcNameDic[TriggerFunctionType.ConvertInt2Float]="convertInt2Float";
 		funcReturnTypeDic[TriggerFunctionType.ConvertLong2Float]=STriggerObjectType.Float;
@@ -169,6 +202,8 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.ConvertFloat2Long]="convertFloat2Long";
 		funcReturnTypeDic[TriggerFunctionType.GetSLong]=STriggerObjectType.Long;
 		funcNameDic[TriggerFunctionType.GetSLong]="getSLong";
+		funcReturnTypeDic[TriggerFunctionType.GetLocalLong]=STriggerObjectType.Long;
+		funcNameDic[TriggerFunctionType.GetLocalLong]="getLocalLong";
 		funcReturnTypeDic[TriggerFunctionType.GetTimeMillis]=STriggerObjectType.Long;
 		funcNameDic[TriggerFunctionType.GetTimeMillis]="getTimeMillis";
 		funcReturnTypeDic[TriggerFunctionType.AddStr]=STriggerObjectType.String;
@@ -183,9 +218,11 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.ConvertBool2Str]="convertBool2Str";
 		funcReturnTypeDic[TriggerFunctionType.GetSString]=STriggerObjectType.String;
 		funcNameDic[TriggerFunctionType.GetSString]="getSString";
-		funcReturnTypeDic[TriggerFunctionType.AsList]=STriggerObjectType.List;
+		funcReturnTypeDic[TriggerFunctionType.GetLocalString]=STriggerObjectType.String;
+		funcNameDic[TriggerFunctionType.GetLocalString]="getLocalString";
+		funcReturnTypeDic[TriggerFunctionType.AsList]=STriggerObjectType.Object;
 		funcNameDic[TriggerFunctionType.AsList]="asList";
-		funcReturnTypeDic[TriggerFunctionType.CreateList]=STriggerObjectType.List;
+		funcReturnTypeDic[TriggerFunctionType.CreateList]=STriggerObjectType.Object;
 		funcNameDic[TriggerFunctionType.CreateList]="createList";
 		funcReturnTypeDic[TriggerFunctionType.GetListSize]=STriggerObjectType.Int;
 		funcNameDic[TriggerFunctionType.GetListSize]="getListSize";
@@ -205,9 +242,9 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.ForeachList]="foreachList";
 		funcReturnTypeDic[TriggerFunctionType.ListIsEmpty]=STriggerObjectType.Boolean;
 		funcNameDic[TriggerFunctionType.ListIsEmpty]="listIsEmpty";
-		funcReturnTypeDic[TriggerFunctionType.AsMap]=STriggerObjectType.Map;
+		funcReturnTypeDic[TriggerFunctionType.AsMap]=STriggerObjectType.Object;
 		funcNameDic[TriggerFunctionType.AsMap]="asMap";
-		funcReturnTypeDic[TriggerFunctionType.CreateMap]=STriggerObjectType.Map;
+		funcReturnTypeDic[TriggerFunctionType.CreateMap]=STriggerObjectType.Object;
 		funcNameDic[TriggerFunctionType.CreateMap]="createMap";
 		funcReturnTypeDic[TriggerFunctionType.GetMapSize]=STriggerObjectType.Int;
 		funcNameDic[TriggerFunctionType.GetMapSize]="getMapSize";
@@ -221,9 +258,9 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.MapContains]="mapContains";
 		funcReturnTypeDic[TriggerFunctionType.MapIsEmpty]=STriggerObjectType.Boolean;
 		funcNameDic[TriggerFunctionType.MapIsEmpty]="mapIsEmpty";
-		funcReturnTypeDic[TriggerFunctionType.AsSet]=STriggerObjectType.Set;
+		funcReturnTypeDic[TriggerFunctionType.AsSet]=STriggerObjectType.Object;
 		funcNameDic[TriggerFunctionType.AsSet]="asSet";
-		funcReturnTypeDic[TriggerFunctionType.CreateSet]=STriggerObjectType.Set;
+		funcReturnTypeDic[TriggerFunctionType.CreateSet]=STriggerObjectType.Object;
 		funcNameDic[TriggerFunctionType.CreateSet]="createSet";
 		funcReturnTypeDic[TriggerFunctionType.GetSetSize]=STriggerObjectType.Int;
 		funcNameDic[TriggerFunctionType.GetSetSize]="getSetSize";
@@ -267,6 +304,8 @@ public class TriggerControl
 		funcNameDic[TriggerFunctionType.ContinueLoop]="continueLoop";
 		funcReturnTypeDic[TriggerFunctionType.SetSVar]=STriggerObjectType.Void;
 		funcNameDic[TriggerFunctionType.SetSVar]="setSVar";
+		funcReturnTypeDic[TriggerFunctionType.RemoveSVar]=STriggerObjectType.Void;
+		funcNameDic[TriggerFunctionType.RemoveSVar]="removeSVar";
 		funcReturnTypeDic[TriggerFunctionType.SetLocalVar]=STriggerObjectType.Void;
 		funcNameDic[TriggerFunctionType.SetLocalVar]="setLocalVar";
 		funcReturnTypeDic[TriggerFunctionType.GetEventIntArgs]=STriggerObjectType.Int;

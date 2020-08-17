@@ -42,12 +42,12 @@ public abstract class BasePart
 	/** 检查新增 */
 	public void checkNewAdd()
 	{
-		//空读的
-		if(_data==null || _data.isEmptyRead())
-		{
-			newInitData();
-			// onNewCreate();
-		}
+		// //空读的
+		// if(_data==null || _data.isEmptyRead())
+		// {
+		// 	newInitData();
+		// 	onNewCreate();
+		// }
 	}
 
 	/** 构建partData(深拷) */

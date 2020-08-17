@@ -45,8 +45,8 @@ public class BaseDataType
 	/** 区服客户端数据 */
 	public static final int AreaClient=211;
 	
-	/** 副本类场景进入数据 */
-	public static final int BattleSceneEnter=212;
+	/** 场景服进入数据 */
+	public static final int SceneServerEnter=212;
 	
 	/** buff数据 */
 	public static final int Buff=213;
@@ -451,8 +451,16 @@ public class BaseDataType
 	/** 事务完成数据 */
 	public static final int WorkComplete=348;
 	
+	/** 中心服初始化服务器数据 */
+	public static final int CenterInitServer=349;
+	
 	/** 区服全局数据 */
 	public static final int AreaGlobalWork=350;
+	
+	public static final int SceneInitServer=351;
+	
+	/** 副本类场景进入数据 */
+	public static final int BattleScene=352;
 	
 	/** 区服完成事务 */
 	public static final int AreaGlobalWorkComplete=353;
@@ -463,11 +471,17 @@ public class BaseDataType
 	/** 角色自身玩家群存库数据 */
 	public static final int PlayerRoleGroupSave=355;
 	
+	/** 场景服离开数据 */
+	public static final int SceneServerExit=356;
+	
 	/** 角色玩家群数据(推送客户端的) */
 	public static final int PlayerRoleGroup=357;
 	
 	/** 玩家申请进入玩家群数据(如需可补申请语) */
 	public static final int PlayerApplyRoleGroup=358;
+	
+	/** 匹配后的场景信息 */
+	public static final int MatchScene=359;
 	
 	/** 玩家群简版数据 */
 	public static final int RoleGroupSimple=360;
@@ -533,6 +547,9 @@ public class BaseDataType
 	public static final int CreateTeam=380;
 	
 	public static final int PlayerTeam=381;
+	
+	/** 玩家匹配成功事务 */
+	public static final int PlayerMatchSuccessW=382;
 	
 	/** 队伍成员数据 */
 	public static final int TeamMember=383;

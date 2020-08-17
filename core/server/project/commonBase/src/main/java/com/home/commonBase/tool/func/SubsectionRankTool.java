@@ -5,6 +5,7 @@ import com.home.commonBase.constlist.generate.FuncToolType;
 import com.home.commonBase.data.func.FuncToolData;
 import com.home.commonBase.data.social.rank.RankData;
 import com.home.commonBase.data.social.rank.SubsectionRankToolData;
+import com.home.shine.control.DateControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.DIntData;
 import com.home.shine.global.ShineSetting;
@@ -187,7 +188,7 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
     @Override
     public void onSecond(int delay)
     {
-        int i=100;
+
     }
 
     protected DIntData getSubsectionIndexData(long key)
@@ -206,58 +207,62 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
             return -1;
 
         //计算应该去的地方
-        DIntData dIntData=_subsectionDic.get(key);
-
-        if(dIntData==null)
+        if(needCheckIndex(key))
         {
-            SubsectionRankConfig subsectionRankConfig=SubsectionRankConfig.get(_funcID);
+            DIntData dIntData=_subsectionDic.get(key);
 
-            if(subsectionIndex>subsectionRankConfig.subsectionConditions.length-1)
-                subsectionIndex=subsectionRankConfig.subsectionConditions.length-1;
-
-            if(subsectionIndex<0)
-                subsectionIndex=0;
-
-            SList<SList<RankData>> sList=_data.listListMap.get(subsectionIndex);
-
-            if(!_data.listListMap.contains(subsectionIndex))
+            if(dIntData==null)
             {
-                _data.listListMap.put(subsectionIndex,sList=new SList<>());
-                _valueLimitMap.put(subsectionIndex,new IntLongMap());
-            }
+                SubsectionRankConfig subsectionRankConfig=SubsectionRankConfig.get(_funcID);
 
-            if (sList.length() == 0)
-            {
-                sList.add(new SList<>(RankData[]::new));
+                if(subsectionIndex>subsectionRankConfig.subsectionConditions.length-1)
+                    subsectionIndex=subsectionRankConfig.subsectionConditions.length-1;
+
+                if(subsectionIndex<0)
+                    subsectionIndex=0;
+
+                SList<SList<RankData>> sList=_data.listListMap.get(subsectionIndex);
+
+                if(!_data.listListMap.contains(subsectionIndex))
+                {
+                    _data.listListMap.put(subsectionIndex,sList=new SList<>());
+                    _valueLimitMap.put(subsectionIndex,new IntLongMap());
+                }
+
+                if (needAddNewRank(subsectionRankConfig,sList))
+                {
+                    sList.add(new SList<>(RankData[]::new));
+                    onAddNewRank(subsectionIndex,sList.length() - 1);
+                }
+
+                subsectionSubIndex=sList.length() - 1;
+
+                _valueLimitMap.get(subsectionIndex).put(subsectionSubIndex,_valueMin);
+
+                dIntData = new DIntData();
+                dIntData.key=subsectionIndex;
+                dIntData.value=subsectionSubIndex;
+                _subsectionDic.put(key,dIntData);
+
+                refreshSubsectionIndex(key,subsectionIndex,subsectionSubIndex);
             }
             else
             {
-                if (subsectionRankConfig.groupNum != -1 && sList.get(sList.length() - 1).length() >= subsectionRankConfig.groupNum)
+                if (dIntData.key != subsectionIndex || dIntData.value != subsectionSubIndex)
                 {
-                    sList.add(new SList<>(RankData[]::new));
+                    subsectionIndex=dIntData.key;
+                    subsectionSubIndex=dIntData.value;
+                    //同步
+                    refreshSubsectionIndex(key,subsectionIndex,subsectionSubIndex);
                 }
             }
-
-            subsectionSubIndex=sList.length() - 1;
-
-            _valueLimitMap.get(subsectionIndex).put(subsectionSubIndex,_valueMin);
-
-            dIntData = new DIntData();
-            dIntData.key=subsectionIndex;
-            dIntData.value=subsectionSubIndex;
-            _subsectionDic.put(key,dIntData);
-
-            refreshSubsectionIndex(key,subsectionIndex,subsectionSubIndex);
         }
         else
         {
-            if (dIntData.key != subsectionIndex || dIntData.value != subsectionSubIndex)
-            {
-                subsectionIndex=dIntData.key;
-                subsectionSubIndex=dIntData.value;
-                //同步
-                refreshSubsectionIndex(key,subsectionIndex,subsectionSubIndex);
-            }
+            DIntData dIntData = new DIntData();
+            dIntData.key=subsectionIndex;
+            dIntData.value=subsectionSubIndex;
+            _subsectionDic.put(key,dIntData);
         }
 
         RankData oldData;
@@ -280,6 +285,8 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
         {
             if(value<_valueLimitMap.get(subsectionIndex).get(subsectionSubIndex))
                 return -1;
+
+            tempData.valueRefreshTime=DateControl.getTimeMillis();
 
             int insertIndex=getInsertIndex(tempData);
 
@@ -320,6 +327,7 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
 
                 //添加dic
                 _dic.put(data.key,data);
+                data.valueRefreshTime= tempData.valueRefreshTime;
 
                 //有上限
                 if(_maxNum>0)
@@ -344,12 +352,26 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
         else
         {
             int oldRank=oldData.rank;
+            long oldValue=oldData.value;
 
             if(vData!=null)
             {
+                long oldValueRefreshTime=oldData.valueRefreshTime;
                 //更新插入数据
-                oldData=vData;
-                _dic.put(key,vData);
+                oldData.copy(vData);
+                oldData.rank=oldRank;
+                oldData.valueRefreshTime=oldValueRefreshTime;
+            }
+
+            //值不同时更新
+            if(oldValue!=value)
+            {
+                tempData.valueRefreshTime= DateControl.getTimeMillis();
+                oldData.valueRefreshTime= tempData.valueRefreshTime;
+            }
+            else
+            {
+                tempData.valueRefreshTime=oldData.valueRefreshTime;
             }
 
             int rank=toRefreshData(oldData,tempData,oldRank);
@@ -363,6 +385,18 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
 
             return rank;
         }
+    }
+
+    /** 为了g层机器人 */
+    protected boolean needCheckIndex(long key)
+    {
+        return true;
+    }
+
+    /**为了g层机器人*/
+    protected boolean needAddNewRank(SubsectionRankConfig subsectionRankConfig,SList<SList<RankData>> sList)
+    {
+        return sList.length() == 0 || (subsectionRankConfig.groupNum != -1 && sList.get(sList.length() - 1).length() >= subsectionRankConfig.groupNum);
     }
 
     /** 获取插入的位置 */
@@ -540,7 +574,19 @@ public abstract class SubsectionRankTool extends FuncTool implements ISubsection
             return _needReverseCompare?-re:re;
         }
 
+        re = Long.compare(arg0.valueRefreshTime,arg1.valueRefreshTime);
+
+        if(re!=0)
+        {
+            return re;
+        }
+
         return Long.compare(arg0.key,arg1.key);
+    }
+
+    protected void onAddNewRank(int subsectionIndex,int subsectionSubIndex)
+    {
+
     }
 
     /** 创建rankData(只创建类) */

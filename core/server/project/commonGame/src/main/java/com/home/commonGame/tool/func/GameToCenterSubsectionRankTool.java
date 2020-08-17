@@ -53,7 +53,7 @@ public class GameToCenterSubsectionRankTool extends FuncTool implements IGameSub
 	public GameSubsectionPageShowTool bindPageShowTool(int showMaxNum,int eachPageShowNum)
 	{
 		//这里还是用GamePageShowTool,不从中心服取
-		_pageShowTool=new GameSubsectionPageShowTool(_funcID,showMaxNum,eachPageShowNum);
+		_pageShowTool=GameC.factory.createGameSubsectionPageShowTool(_funcID,showMaxNum,eachPageShowNum);
 		_pageShowTool.setRankTool(this);
 		
 		GameC.global.func.registFuncTool(_pageShowTool);
@@ -94,7 +94,7 @@ public class GameToCenterSubsectionRankTool extends FuncTool implements IGameSub
 		{
 			for(int i=sListSList.length()-1;i<subsectionSubIndex;++i)
 			{
-				sListSList.add(new SList<>());
+				sListSList.add(new SList<>(RankData[]::new));
 			}
 
 			return sListSList.getLast();

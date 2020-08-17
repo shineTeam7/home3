@@ -3,11 +3,12 @@ package com.home.shine.support.collection;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.IIntLongConsumer;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.IntArrays;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class IntLongMap extends BaseHash
 {
@@ -21,7 +22,7 @@ public class IntLongMap extends BaseHash
 	
 	public IntLongMap()
 	{
-	
+		init(_minSize);
 	}
 	
 	public IntLongMap(int capacity)
@@ -44,21 +45,18 @@ public class IntLongMap extends BaseHash
 	
 	public final int[] getKeys()
 	{
-		checkInit();
-		
 		return _set;
 	}
 	
 	public final long[] getValues()
 	{
-		checkInit();
-		
 		return _values;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
 		_set=new int[capacity<<1];
 		
@@ -129,7 +127,17 @@ public class IntLongMap extends BaseHash
 	private int changeFree()
 	{
 		int newFree=findNewFreeOrRemoved();
-		IntArrays.replaceAll(_set,_freeValue,newFree);
+		
+		int free=_freeValue;
+		int[] keys=_set;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			if(keys[i]==free)
+			{
+				keys[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -229,8 +237,6 @@ public class IntLongMap extends BaseHash
 	
 	public void put(int key,long value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -247,8 +253,6 @@ public class IntLongMap extends BaseHash
 	/** 增加值 */
 	public long addValue(int key,long value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -393,28 +397,8 @@ public class IntLongMap extends BaseHash
 		}
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_set==null)
-			{
-				init(t);
-			}
-			else if(t>_set.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	public long putIfAbsent(int key,long value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -494,6 +478,32 @@ public class IntLongMap extends BaseHash
 			}
 		}
 		
+	}
+	
+	/** 转化为原生集合 */
+	public HashMap<Integer,Long> toNatureMap()
+	{
+		HashMap<Integer,Long> re=new HashMap<>(size());
+		
+		int free=_freeValue;
+		int[] keys=_set;
+		long[] vals=_values;
+		for(int i=(keys.length) - 1;i >= 0;--i)
+		{
+			int key;
+			if((key=keys[i])!=free)
+			{
+				re.put(key,vals[i]);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Map<Integer,Long> map)
+	{
+		ensureCapacity(map.size());
+		map.forEach(this::put);
 	}
 	
 	public EntrySet entrySet()

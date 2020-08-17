@@ -29,6 +29,7 @@ import com.home.commonBase.data.item.auction.AuctionToolData;
 import com.home.commonBase.data.item.auction.GameAuctionToolData;
 import com.home.commonBase.data.item.auction.IntAuctionQueryConditionData;
 import com.home.commonBase.data.item.auction.PlayerAuctionToolData;
+import com.home.commonBase.data.login.CenterInitServerData;
 import com.home.commonBase.data.login.ClientLoginData;
 import com.home.commonBase.data.login.ClientLoginExData;
 import com.home.commonBase.data.login.ClientLoginResultData;
@@ -48,6 +49,7 @@ import com.home.commonBase.data.login.PlayerLoginData;
 import com.home.commonBase.data.login.PlayerLoginToEachGameData;
 import com.home.commonBase.data.login.PlayerSwitchGameData;
 import com.home.commonBase.data.login.RePlayerLoginFromEachGameData;
+import com.home.commonBase.data.login.SceneInitServerData;
 import com.home.commonBase.data.mail.AddMailOWData;
 import com.home.commonBase.data.mail.MailData;
 import com.home.commonBase.data.queryResult.IntQueryResultData;
@@ -81,11 +83,13 @@ import com.home.commonBase.data.scene.fight.DamageOneData;
 import com.home.commonBase.data.scene.fight.FrameSyncCommandData;
 import com.home.commonBase.data.scene.fight.FrameSyncData;
 import com.home.commonBase.data.scene.fight.SkillTargetData;
+import com.home.commonBase.data.scene.match.MatchSceneData;
 import com.home.commonBase.data.scene.match.PlayerMatchData;
+import com.home.commonBase.data.scene.match.PlayerMatchSuccessWData;
 import com.home.commonBase.data.scene.role.RoleAttributeData;
 import com.home.commonBase.data.scene.role.RoleForceData;
 import com.home.commonBase.data.scene.role.SceneRoleData;
-import com.home.commonBase.data.scene.scene.BattleSceneEnterData;
+import com.home.commonBase.data.scene.scene.BattleSceneData;
 import com.home.commonBase.data.scene.scene.CreateSceneData;
 import com.home.commonBase.data.scene.scene.FieldItemBagBindData;
 import com.home.commonBase.data.scene.scene.SceneEnterArgData;
@@ -93,6 +97,8 @@ import com.home.commonBase.data.scene.scene.SceneEnterData;
 import com.home.commonBase.data.scene.scene.SceneLocationData;
 import com.home.commonBase.data.scene.scene.SceneLocationRoleShowChangeData;
 import com.home.commonBase.data.scene.scene.ScenePreInfoData;
+import com.home.commonBase.data.scene.scene.SceneServerEnterData;
+import com.home.commonBase.data.scene.scene.SceneServerExitData;
 import com.home.commonBase.data.scene.unit.UnitAIData;
 import com.home.commonBase.data.scene.unit.UnitAvatarData;
 import com.home.commonBase.data.scene.unit.UnitData;
@@ -251,7 +257,7 @@ public class BaseDataMaker extends DataMaker
 		list[BaseDataType.ApplyAddFriend-offSet]=this::createApplyAddFriendData;
 		list[BaseDataType.ApplyAddFriendOW-offSet]=this::createApplyAddFriendOWData;
 		list[BaseDataType.AreaClient-offSet]=this::createAreaClientData;
-		list[BaseDataType.BattleSceneEnter-offSet]=this::createBattleSceneEnterData;
+		list[BaseDataType.SceneServerEnter-offSet]=this::createSceneServerEnterData;
 		list[BaseDataType.Buff-offSet]=this::createBuffData;
 		list[BaseDataType.Bullet-offSet]=this::createBulletData;
 		list[BaseDataType.CD-offSet]=this::createCDData;
@@ -386,12 +392,17 @@ public class BaseDataMaker extends DataMaker
 		list[BaseDataType.PetIdentity-offSet]=this::createPetIdentityData;
 		list[BaseDataType.PlayerWorkComplete-offSet]=this::createPlayerWorkCompleteData;
 		list[BaseDataType.WorkComplete-offSet]=this::createWorkCompleteData;
+		list[BaseDataType.CenterInitServer-offSet]=this::createCenterInitServerData;
 		list[BaseDataType.AreaGlobalWork-offSet]=this::createAreaGlobalWorkData;
+		list[BaseDataType.SceneInitServer-offSet]=this::createSceneInitServerData;
+		list[BaseDataType.BattleScene-offSet]=this::createBattleSceneData;
 		list[BaseDataType.AreaGlobalWorkComplete-offSet]=this::createAreaGlobalWorkCompleteData;
 		list[BaseDataType.CreateRoleGroup-offSet]=this::createCreateRoleGroupData;
 		list[BaseDataType.PlayerRoleGroupSave-offSet]=this::createPlayerRoleGroupSaveData;
+		list[BaseDataType.SceneServerExit-offSet]=this::createSceneServerExitData;
 		list[BaseDataType.PlayerRoleGroup-offSet]=this::createPlayerRoleGroupData;
 		list[BaseDataType.PlayerApplyRoleGroup-offSet]=this::createPlayerApplyRoleGroupData;
+		list[BaseDataType.MatchScene-offSet]=this::createMatchSceneData;
 		list[BaseDataType.RoleGroupSimple-offSet]=this::createRoleGroupSimpleData;
 		list[BaseDataType.CreateRoleGroupResultOW-offSet]=this::createCreateRoleGroupResultOWData;
 		list[BaseDataType.CreateRoleGroupW-offSet]=this::createCreateRoleGroupWData;
@@ -414,6 +425,7 @@ public class BaseDataMaker extends DataMaker
 		list[BaseDataType.Team-offSet]=this::createTeamData;
 		list[BaseDataType.CreateTeam-offSet]=this::createCreateTeamData;
 		list[BaseDataType.PlayerTeam-offSet]=this::createPlayerTeamData;
+		list[BaseDataType.PlayerMatchSuccessW-offSet]=this::createPlayerMatchSuccessWData;
 		list[BaseDataType.TeamMember-offSet]=this::createTeamMemberData;
 		list[BaseDataType.TeamSimple-offSet]=this::createTeamSimpleData;
 		list[BaseDataType.PlayerCreatedW-offSet]=this::createPlayerCreatedWData;
@@ -647,11 +659,6 @@ public class BaseDataMaker extends DataMaker
 	private BaseData createPlayerMatchData()
 	{
 		return new PlayerMatchData();
-	}
-	
-	private BaseData createBattleSceneEnterData()
-	{
-		return new BattleSceneEnterData();
 	}
 	
 	private BaseData createSceneEnterArgData()
@@ -1607,6 +1614,41 @@ public class BaseDataMaker extends DataMaker
 	private BaseData createMUnitIdentityData()
 	{
 		return new MUnitIdentityData();
+	}
+	
+	private BaseData createCenterInitServerData()
+	{
+		return new CenterInitServerData();
+	}
+	
+	private BaseData createSceneInitServerData()
+	{
+		return new SceneInitServerData();
+	}
+	
+	private BaseData createBattleSceneData()
+	{
+		return new BattleSceneData();
+	}
+	
+	private BaseData createSceneServerEnterData()
+	{
+		return new SceneServerEnterData();
+	}
+	
+	private BaseData createSceneServerExitData()
+	{
+		return new SceneServerExitData();
+	}
+	
+	private BaseData createMatchSceneData()
+	{
+		return new MatchSceneData();
+	}
+	
+	private BaseData createPlayerMatchSuccessWData()
+	{
+		return new PlayerMatchSuccessWData();
 	}
 	
 }

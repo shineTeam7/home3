@@ -11,6 +11,7 @@ import com.home.shine.control.WatchControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
 import com.home.shine.net.base.BaseRequest;
+import com.home.shine.net.request.SocketCloseRequest;
 import com.home.shine.net.request.SocketReconnectFailedRequest;
 import com.home.shine.net.request.SocketReconnectSuccessRequest;
 import com.home.shine.support.pool.StringBuilderPool;
@@ -110,6 +111,8 @@ public abstract class BaseSocket
 	/** 心跳计时(秒) */
 	private int _pingKeepTime;
 	
+	/** 已发送ping包 */
+	protected boolean _pingSending=false;
 	/** ping序号 */
 	protected int _pingIndex=0;
 	/** 发送ping时间 */
@@ -286,22 +289,10 @@ public abstract class BaseSocket
 		}
 	}
 	
-	/** io析构(io线程) */
-	public void ioDispose()
-	{
-		removeFromIO();
-		
-		if(_writeStream!=null)
-		{
-			ThreadControl.getIOThread(ioIndex).bytesWriteStreamPool.back(_writeStream);
-			_writeStream=null;
-		}
-	}
-	
 	/** 每帧调用(io线程) */
-	public void onFrame()
+	public void onFrame(int delay)
 	{
-		_timeIndex+=ShineSetting.ioThreadFrameDelay;
+		_timeIndex+=delay;
 		
 		if(_timeIndex >= 1000)
 		{
@@ -313,6 +304,18 @@ public abstract class BaseSocket
 		if(isConnect())
 		{
 			toFlush();
+		}
+	}
+	
+	/** io析构(io线程) */
+	public void ioDispose()
+	{
+		removeFromIO();
+		
+		if(_writeStream!=null)
+		{
+			ThreadControl.getIOThread(ioIndex).bytesWriteStreamPool.back(_writeStream);
+			_writeStream=null;
 		}
 	}
 	
@@ -401,6 +404,8 @@ public abstract class BaseSocket
 		_sendMsgIndex=0;
 		_receiveMsgIndex=0;
 		_pingTimePass=0;
+		_pingSending=false;
+		_ping=-1;
 	}
 	
 	//close部分
@@ -412,6 +417,7 @@ public abstract class BaseSocket
 		
 		ThreadControl.addIOFunc(ioIndex,()->
 		{
+			sendAbsForIO(SocketCloseRequest.create());
 			closeForIO(Close_Initiative);
 		});
 	}
@@ -882,7 +888,6 @@ public abstract class BaseSocket
 	}
 	
 	/** 发送消息(逻辑线程调用)(支持多线程访问) */
-	//关注点 发送消息
 	public void send(BaseRequest request)
 	{
 		if(ShineSetting.needShowMessage)

@@ -11,6 +11,7 @@ import com.home.commonBase.data.item.auction.AuctionSoldItemOWData;
 import com.home.commonBase.data.login.PlayerBindPlatformAWData;
 import com.home.commonBase.data.mail.AddMailOWData;
 import com.home.commonBase.data.queryResult.IntQueryResultData;
+import com.home.commonBase.data.scene.match.PlayerMatchSuccessWData;
 import com.home.commonBase.data.social.QueryPlayerAWData;
 import com.home.commonBase.data.social.ReGetRoleSocialDataWData;
 import com.home.commonBase.data.social.ReQueryPlayerOWData;
@@ -54,6 +55,7 @@ public class PlayerWorkControl extends BasePlayerWorkControl
 		registOne(AuctionSoldItemOWData.dataID,this::doAuctionSoldItemOW);
 		registOne(PlayerBindPlatformAWData.dataID,this::doPlayerBindPlatformAW);
 		registOne(AddMailOWData.dataID,this::doAddMailOW);
+		registOne(PlayerMatchSuccessWData.dataID,this::doPlayerMatchSuccessW);
 		registOne(QueryPlayerAWData.dataID,this::doQueryPlayerAW);
 		registOne(ReGetRoleSocialDataWData.dataID,this::doReGetRoleSocialDataW);
 		registOne(ReQueryPlayerOWData.dataID,this::doReQueryPlayerOW);
@@ -347,6 +349,14 @@ public class PlayerWorkControl extends BasePlayerWorkControl
 		AuctionRemoveSellItemOWData data=(AuctionRemoveSellItemOWData)wData;
 		
 		me.func.getAuctionTool(data.funcID).onRemoveSellItem(data.instanceID,data.lastNum,data.code);
+	}
+	
+	/** 玩家匹配成功事务 */
+	private void doPlayerMatchSuccessW(Player me,PlayerWorkData wData)
+	{
+		PlayerMatchSuccessWData data=(PlayerMatchSuccessWData)wData;
+		
+		me.scene.onMatchSuccess(data.data);
 	}
 	
 }

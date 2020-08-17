@@ -10,6 +10,7 @@ import com.home.commonBase.data.scene.unit.UnitData;
 import com.home.commonBase.data.system.PlayerWorkData;
 import com.home.commonBase.dataEx.scene.AttackData;
 import com.home.commonBase.dataEx.scene.RingLightBuffCountData;
+import com.home.commonBase.dataEx.scene.SceneAOITowerData;
 import com.home.commonBase.dataEx.scene.UnitReference;
 import com.home.commonBase.global.BaseC;
 import com.home.commonBase.global.CommonSetting;
@@ -52,6 +53,8 @@ public class LogicExecutorBase extends AbstractLogicExecutor
 	public ObjectPool<Region> regionPool;
 	/** 光环buff统计数据池 */
 	public ObjectPool<RingLightBuffCountData> ringLightBuffCountPool=new ObjectPool<>(RingLightBuffCountData::new);
+	/** 单位字典池 */
+	public ObjectPool<SceneAOITowerData> towerDataPool=new ObjectPool<>(SceneAOITowerData::new,65536);
 	
 	//逻辑部分
 	/** 物品数据池 */
@@ -68,6 +71,8 @@ public class LogicExecutorBase extends AbstractLogicExecutor
 	/** 初始化(池线程) */
 	public void init()
 	{
+		super.init();
+		
 		initTick();
 		
 		(_fightDataLogicPool=new ObjectPool<UnitFightDataLogic>(()->

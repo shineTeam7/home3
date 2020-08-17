@@ -56,6 +56,12 @@ public class SceneFightLogic:SceneLogicBase
 		}
 	}
 
+	/** 击杀单位(系统击杀) */
+	public void killUnit(Unit unit)
+	{
+		unit.fight.doDead(null);
+	}
+
 	//公式部分
 
 	/** 计算完整技能值 */
@@ -1084,7 +1090,7 @@ public class SceneFightLogic:SceneLogicBase
 
 						if(realDamage>0)
 						{
-							_scene.play.onUnitTakeDamage(target,realDamage,attacker);
+							_scene.method.onUnitTakeDamage(target,realDamage,attacker);
 						}
 
 						if(target==mTarget)
@@ -1151,7 +1157,7 @@ public class SceneFightLogic:SceneLogicBase
 
 	}
 
-	protected virtual void doAttackMoment(int moment,Unit @from,Unit attacker,Unit target,AttackData lastData,DamageOneData damageOneData)
+	protected virtual void doAttackMoment(int moment,Unit from,Unit attacker,Unit target,AttackData lastData,DamageOneData damageOneData)
 	{
 		int[][] intArr;
 

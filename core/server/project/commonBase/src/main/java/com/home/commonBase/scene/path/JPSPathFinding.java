@@ -28,7 +28,7 @@ public abstract class JPSPathFinding implements IPathFinding
 	private ObjectPool<Node> _nodePool=new ObjectPool<>(Node::new,256);
 	
 	/** 优先队列 */
-	private PriorityQueue<Node> _queue;
+	private SList<Node> _queue;
 	/** 字典 */
 	private IntObjectMap<Node> _dic=new IntObjectMap<>(Node[]::new);
 	/** 邻居组 */
@@ -101,7 +101,8 @@ public abstract class JPSPathFinding implements IPathFinding
 	
 	public JPSPathFinding()
 	{
-		_queue=new PriorityQueue<>(JPSPathFinding::nodeCompare);
+		//_queue=new PriorityQueue<>(JPSPathFinding::nodeCompare);
+		_queue=new SList<>(Node[]::new);
 	}
 	
 	@Override
@@ -112,7 +113,7 @@ public abstract class JPSPathFinding implements IPathFinding
 		if(!isEnable(moveType,needCrowed,ex,ey))
 			return;
 		
-		PriorityQueue<Node> queue=_queue;
+		SList<Node> queue=_queue;
 		int t=_maxTryTimes;
 		
 		queue.clear();
@@ -140,7 +141,9 @@ public abstract class JPSPathFinding implements IPathFinding
 				return;
 			}
 			
-			p=queue.poll();
+			//queue.sort(JPSPathFinding::nodeCompare);
+			
+			p=queue.shift();
 			
 			if(p.x==ex && p.y==ey)
 			{
@@ -225,7 +228,7 @@ public abstract class JPSPathFinding implements IPathFinding
 					if(g<node.g)
 					{
 						//更新队列
-						_queue.remove(node);
+						_queue.removeObj(node);
 						
 						node.parent=p;
 						node.g=g;

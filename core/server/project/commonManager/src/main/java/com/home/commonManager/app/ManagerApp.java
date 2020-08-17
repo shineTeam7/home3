@@ -16,13 +16,6 @@ public class ManagerApp extends App
 	}
 	
 	@Override
-	protected void messageRegist()
-	{
-		super.messageRegist();
-		
-	}
-	
-	@Override
 	protected void onStart()
 	{
 		super.onStart();

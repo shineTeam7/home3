@@ -228,6 +228,18 @@ public class UnitFightLogic:UnitLogicBase
 		if(!isSkilling())
 			return;
 
+		bool needOver=false;
+
+		if(_currentSkillLastTime>0)
+		{
+			if((_currentSkillLastTime-=delay)<=0)
+			{
+				_currentSkillLastTime=0;
+
+				needOver=true;
+			}
+		}
+
 		if(_fightExData.currentSkillStep>0)
 		{
 			if(_stepTimeMax>0)
@@ -257,14 +269,9 @@ public class UnitFightLogic:UnitLogicBase
 			}
 		}
 
-		if(_currentSkillLastTime>0)
+		if(needOver)
 		{
-			if((_currentSkillLastTime-=delay)<=0)
-			{
-				_currentSkillLastTime=0;
-
-				skillOver();
-			}
+			skillOver();
 		}
 	}
 
@@ -1641,7 +1648,11 @@ public class UnitFightLogic:UnitLogicBase
 		//引导技能不靠这个结束
 		if(_currentSkillConfig.useType==SkillUseType.Facilitation)
 		{
-			resetStep(0);
+			//还有剩余时间，才继续
+			if(_currentSkillLastTime>0)
+			{
+				resetStep(0);
+			}
 
 			return;
 		}
@@ -1973,7 +1984,7 @@ public class UnitFightLogic:UnitLogicBase
 		if(!_unit.isDriveAll())
 			return;
 
-		doDead(_unit,UnitDeadType.Skill);
+		doDead(_unit,UnitDeadType.KillSelf);
 	}
 
 	/** 执行死亡 */
@@ -2387,7 +2398,7 @@ public class UnitFightLogic:UnitLogicBase
 		{
 			onRealDead(attacker);
 			//玩法单位死亡
-			_scene.play.onUnitDead(_unit,attacker);
+			_scene.method.onUnitDead(_unit,attacker);
 		}
 	}
 
@@ -2400,7 +2411,7 @@ public class UnitFightLogic:UnitLogicBase
 	/** 单位死亡结束 */
 	protected virtual void onDeadOver()
 	{
-		_scene.play.onUnitDeadOver(_unit);
+		_scene.method.onUnitDeadOver(_unit);
 	}
 
 	/** 单位复活 */

@@ -101,7 +101,7 @@ public class VConfigExportTool extends ConfigExportToolBase
 	}
 	
 	@Override
-	protected int addOneDefine(String cName,String des)
+	protected int addOneDefine(String cName,String des,String qName)
 	{
 		String useName=_makeTool.upperNameToUseName(cName);
 		
@@ -110,7 +110,7 @@ public class VConfigExportTool extends ConfigExportToolBase
 		//存在,才写,（并且为防止重复写，只有server写)
 		if(_makeTool.getProjectType()==ProjectType.Common)//&& !_isClient
 		{
-			re=super.addOneDefine(cName,des);
+			re=super.addOneDefine(cName,des,qName);
 			
 			_makeTool.getConfigKeyDic().put(useName,re);
 			_makeTool.getConfigProjectTypeDic().put(useName,_makeTool.getProjectType());

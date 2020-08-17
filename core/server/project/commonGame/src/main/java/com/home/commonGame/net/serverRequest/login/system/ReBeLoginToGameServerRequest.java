@@ -14,6 +14,9 @@ public class ReBeLoginToGameServerRequest extends GameToLoginServerRequest
 	/** 承载区服列表 */
 	public IntObjectMap<AreaServerData> areas;
 	
+	/** 该game服是否已达在线满人 */
+	public boolean isGameFull;
+	
 	/** 数据类型ID */
 	public static final int dataID=ServerMessageType.ReBeLoginToGame;
 	
@@ -105,6 +108,8 @@ public class ReBeLoginToGameServerRequest extends GameToLoginServerRequest
 			nullObjError("areas");
 		}
 		
+		stream.writeBoolean(this.isGameFull);
+		
 	}
 	
 	/** 转文本输出 */
@@ -160,6 +165,12 @@ public class ReBeLoginToGameServerRequest extends GameToLoginServerRequest
 		}
 		
 		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.append("isGameFull");
+		writer.sb.append(':');
+		writer.sb.append(this.isGameFull);
+		
+		writer.writeEnter();
 	}
 	
 	/** 回池 */
@@ -190,13 +201,15 @@ public class ReBeLoginToGameServerRequest extends GameToLoginServerRequest
 			}
 			this.areas.justClearSize();
 		}
+		this.isGameFull=false;
 	}
 	
 	/** 创建实例 */
-	public static ReBeLoginToGameServerRequest create(IntObjectMap<AreaServerData> areas)
+	public static ReBeLoginToGameServerRequest create(IntObjectMap<AreaServerData> areas,boolean isGameFull)
 	{
 		ReBeLoginToGameServerRequest re=(ReBeLoginToGameServerRequest)BytesControl.createRequest(dataID);
 		re.areas=areas;
+		re.isGameFull=isGameFull;
 		return re;
 	}
 	

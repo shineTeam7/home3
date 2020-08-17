@@ -20,8 +20,7 @@
 #define RECASTALLOC_H
 
 #include <stddef.h>
-//#include <stdint.h>
-#include <cstdint>
+#include <stdint.h>
 
 #include <RecastAssert.h>
 

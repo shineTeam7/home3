@@ -58,7 +58,7 @@ public class TableBatchData
 			{
 				case TableStateType.NeedInsert:
 				{
-					table.setNormal();
+					//table.setNormal();
 					_insertTables.add(table);
 					
 					if(_insertBatch==null)

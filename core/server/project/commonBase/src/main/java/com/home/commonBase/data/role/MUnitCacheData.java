@@ -147,15 +147,13 @@ public class MUnitCacheData extends BaseData
 			if(!this.currentAttributes.isEmpty())
 			{
 				int currentAttributesKFreeValue=this.currentAttributes.getFreeValue();
-				long[] currentAttributesKTable=this.currentAttributes.getTable();
-				long currentAttributesKEntry;
-				for(int currentAttributesKI=currentAttributesKTable.length-1;currentAttributesKI>=0;--currentAttributesKI)
+				int[] currentAttributesKTable=this.currentAttributes.getTable();
+				for(int currentAttributesKI=currentAttributesKTable.length-2;currentAttributesKI>=0;currentAttributesKI-=2)
 				{
-					currentAttributesKEntry=currentAttributesKTable[currentAttributesKI];
-					int currentAttributesK=(int)currentAttributesKEntry;
-					if(currentAttributesK!=currentAttributesKFreeValue)
+					if(currentAttributesKTable[currentAttributesKI]!=currentAttributesKFreeValue)
 					{
-						int currentAttributesV=(int)(currentAttributesKEntry>>>32);
+						int currentAttributesK=currentAttributesKTable[currentAttributesKI];
+						int currentAttributesV=currentAttributesKTable[currentAttributesKI+1];
 						stream.writeInt(currentAttributesK);
 						
 						stream.writeInt(currentAttributesV);
@@ -314,15 +312,13 @@ public class MUnitCacheData extends BaseData
 			if(!this.currentAttributes.isEmpty())
 			{
 				int currentAttributesKFreeValue=this.currentAttributes.getFreeValue();
-				long[] currentAttributesKTable=this.currentAttributes.getTable();
-				long currentAttributesKEntry;
-				for(int currentAttributesKI=currentAttributesKTable.length-1;currentAttributesKI>=0;--currentAttributesKI)
+				int[] currentAttributesKTable=this.currentAttributes.getTable();
+				for(int currentAttributesKI=currentAttributesKTable.length-2;currentAttributesKI>=0;currentAttributesKI-=2)
 				{
-					currentAttributesKEntry=currentAttributesKTable[currentAttributesKI];
-					int currentAttributesK=(int)currentAttributesKEntry;
-					if(currentAttributesK!=currentAttributesKFreeValue)
+					if(currentAttributesKTable[currentAttributesKI]!=currentAttributesKFreeValue)
 					{
-						int currentAttributesV=(int)(currentAttributesKEntry>>>32);
+						int currentAttributesK=currentAttributesKTable[currentAttributesKI];
+						int currentAttributesV=currentAttributesKTable[currentAttributesKI+1];
 						stream.writeInt(currentAttributesK);
 						
 						stream.writeInt(currentAttributesV);
@@ -438,15 +434,13 @@ public class MUnitCacheData extends BaseData
 			if(!mData.currentAttributes.isEmpty())
 			{
 				int currentAttributesKFreeValue=mData.currentAttributes.getFreeValue();
-				long[] currentAttributesKTable=mData.currentAttributes.getTable();
-				long currentAttributesKEntry;
-				for(int currentAttributesKI=currentAttributesKTable.length-1;currentAttributesKI>=0;--currentAttributesKI)
+				int[] currentAttributesKTable=mData.currentAttributes.getTable();
+				for(int currentAttributesKI=currentAttributesKTable.length-2;currentAttributesKI>=0;currentAttributesKI-=2)
 				{
-					currentAttributesKEntry=currentAttributesKTable[currentAttributesKI];
-					int currentAttributesK=(int)currentAttributesKEntry;
-					if(currentAttributesK!=currentAttributesKFreeValue)
+					if(currentAttributesKTable[currentAttributesKI]!=currentAttributesKFreeValue)
 					{
-						int currentAttributesV=(int)(currentAttributesKEntry>>>32);
+						int currentAttributesK=currentAttributesKTable[currentAttributesKI];
+						int currentAttributesV=currentAttributesKTable[currentAttributesKI+1];
 						int currentAttributesW;
 						int currentAttributesU;
 						currentAttributesW=currentAttributesK;
@@ -570,15 +564,13 @@ public class MUnitCacheData extends BaseData
 			if(!this.currentAttributes.isEmpty())
 			{
 				int currentAttributesKFreeValue=this.currentAttributes.getFreeValue();
-				long[] currentAttributesKTable=this.currentAttributes.getTable();
-				long currentAttributesKEntry;
-				for(int currentAttributesKI=currentAttributesKTable.length-1;currentAttributesKI>=0;--currentAttributesKI)
+				int[] currentAttributesKTable=this.currentAttributes.getTable();
+				for(int currentAttributesKI=currentAttributesKTable.length-2;currentAttributesKI>=0;currentAttributesKI-=2)
 				{
-					currentAttributesKEntry=currentAttributesKTable[currentAttributesKI];
-					int currentAttributesK=(int)currentAttributesKEntry;
-					if(currentAttributesK!=currentAttributesKFreeValue)
+					if(currentAttributesKTable[currentAttributesKI]!=currentAttributesKFreeValue)
 					{
-						int currentAttributesV=(int)(currentAttributesKEntry>>>32);
+						int currentAttributesK=currentAttributesKTable[currentAttributesKI];
+						int currentAttributesV=currentAttributesKTable[currentAttributesKI+1];
 						int currentAttributesU=currentAttributesR.get(currentAttributesK);
 						if(currentAttributesV!=currentAttributesU)
 							return false;
@@ -701,15 +693,13 @@ public class MUnitCacheData extends BaseData
 			if(!this.currentAttributes.isEmpty())
 			{
 				int currentAttributesKFreeValue=this.currentAttributes.getFreeValue();
-				long[] currentAttributesKTable=this.currentAttributes.getTable();
-				long currentAttributesKEntry;
-				for(int currentAttributesKI=currentAttributesKTable.length-1;currentAttributesKI>=0;--currentAttributesKI)
+				int[] currentAttributesKTable=this.currentAttributes.getTable();
+				for(int currentAttributesKI=currentAttributesKTable.length-2;currentAttributesKI>=0;currentAttributesKI-=2)
 				{
-					currentAttributesKEntry=currentAttributesKTable[currentAttributesKI];
-					int currentAttributesK=(int)currentAttributesKEntry;
-					if(currentAttributesK!=currentAttributesKFreeValue)
+					if(currentAttributesKTable[currentAttributesKI]!=currentAttributesKFreeValue)
 					{
-						int currentAttributesV=(int)(currentAttributesKEntry>>>32);
+						int currentAttributesK=currentAttributesKTable[currentAttributesKI];
+						int currentAttributesV=currentAttributesKTable[currentAttributesKI+1];
 						writer.writeTabs();
 						writer.sb.append(currentAttributesK);
 						

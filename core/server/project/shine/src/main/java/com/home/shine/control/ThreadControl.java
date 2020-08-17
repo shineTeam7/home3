@@ -73,6 +73,7 @@ public class ThreadControl
 		
 		addThread(_mainThread=new CoreThread("mainThread",ThreadType.Main,0));
 		addThread(_mixedThread=new BaseThread("mixedThread",ThreadType.Mixed,0));
+		_mixedThread.setNeedNotify(ShineSetting.needThreadNotify);
 		addThread(_logThread=new CoreThread("logThread",ThreadType.Log,0));
 		
 		_ioThreadList=new IOThread[ShineSetting.ioThreadNum];
@@ -104,7 +105,8 @@ public class ThreadControl
 			for(int i=0;i<_dbPoolThreadList.length;i++)
 			{
 				addThread(_dbPoolThreadList[i]=new DBPoolThread(i));
-				_dbPoolThreadList[i].setSleepTime(ShineSetting.poolThreadFixedFrameDelay);
+				_dbPoolThreadList[i].setTickDelay(ShineSetting.poolThreadFixedFrameDelay);
+				_dbPoolThreadList[i].setNeedNotify(ShineSetting.needThreadNotify);
 			}
 			
 			addThread(_dbWriteThread=new BaseThread("dbWriteThread",ThreadType.DBWrite,0));

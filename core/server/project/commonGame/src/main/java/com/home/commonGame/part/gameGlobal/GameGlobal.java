@@ -438,27 +438,17 @@ public class GameGlobal extends LogicEntity
 		construct();
 		init();
 		
-		if(GameC.main.isAssist())
+		//新的
+		if(GameC.db.isNewGlobal())
 		{
-			Ctrl.log("新开Game服(Assist)");
+			Ctrl.log("新开Game服");
 			newInitData();
 			onNewCreate();
 			afterReadData();
 		}
 		else
 		{
-			//新的
-			if(GameC.db.isNewGlobal())
-			{
-				Ctrl.log("新开Game服");
-				newInitData();
-				onNewCreate();
-				afterReadData();
-			}
-			else
-			{
-				loadCustom(GameC.db.getGlobalTable());
-			}
+			loadCustom(GameC.db.getGlobalTable());
 		}
 	}
 	

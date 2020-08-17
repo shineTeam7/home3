@@ -10,6 +10,7 @@ import com.home.shineTool.app.DataExportApp;
 import com.home.shineTool.app.FixCppProjApp;
 import com.home.shineTool.app.FixHotfixProjApp;
 import com.home.shineTool.app.TriggerExportApp;
+import com.home.shineTool.app.TriggerUIApp;
 import com.home.shineTool.app.UIModelApp;
 import com.home.shineTool.constlist.ExecuteReleaseType;
 
@@ -108,7 +109,12 @@ public class AllToolsApp
 				break;
 			case "trigger":
 			{
-				new TriggerExportApp().executeAll(args.length>1 && Boolean.parseBoolean(args[1]));
+				new TriggerExportApp().executeAll();
+			}
+				break;
+			case "triggerUI":
+			{
+				new TriggerUIApp().execute();
 			}
 				break;
 			case "exportNav":

@@ -29,6 +29,11 @@ public class PushNotifyConfig:BaseConfig
 	public int topicType;
 	
 	/// <summary>
+	/// 本地还是远程推送
+	/// </summary>
+	public int pushType;
+	
+	/// <summary>
 	/// 文字
 	/// </summary>
 	public string text;
@@ -100,6 +105,8 @@ public class PushNotifyConfig:BaseConfig
 		
 		this.topicType=stream.readInt();
 		
+		this.pushType=stream.readInt();
+		
 	}
 	
 	/// <summary>
@@ -155,6 +162,8 @@ public class PushNotifyConfig:BaseConfig
 		stream.writeUTF(this.text);
 		
 		stream.writeInt(this.topicType);
+		
+		stream.writeInt(this.pushType);
 		
 	}
 	

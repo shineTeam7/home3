@@ -427,8 +427,19 @@ public class SceneControl
 		}
 		else
 		{
-			//推送到服务器
-			PreEnterSceneReadyRequest.create().send();
+			if(CommonSetting.useSceneServer)
+			{
+				Ctrl.print("A3");
+
+				//推送到服务器
+				PreEnterSceneReadyForSceneRequest.create().send();
+			}
+			else
+			{
+				//推送到服务器
+				PreEnterSceneReadyRequest.create().send();
+			}
+
 		}
 	}
 
@@ -439,10 +450,11 @@ public class SceneControl
 
 		if(!_scene.isSimple())
 		{
-			_scene.play.makeScenePosData(uData);
+			_scene.method.makeScenePosData(uData);
 		}
 
-		_scene.play.makeCharacterData(uData);
+		_scene.battle.makeCharacterData(uData);
+		_scene.method.makeCharacterData(uData);
 	}
 
 	/** 执行进入空场景 */
@@ -470,7 +482,7 @@ public class SceneControl
 	/** 进入客户端场景 */
 	private void toEnterClientScene()
 	{
-		SceneEnterData enterData=_scene.play.createSceneEnterData();
+		SceneEnterData enterData=_scene.method.createSceneEnterData();
 
 		//有进出逻辑
 		if(_scene.inout!=null)
@@ -481,7 +493,8 @@ public class SceneControl
 			enterData.units=new SList<UnitData>();
 		}
 
-		_scene.play.makeSceneEnterData(enterData);
+		_scene.battle.makeSceneEnterData(enterData);
+		_scene.method.makeSceneEnterData(enterData);
 
 		enterScene(enterData);
 	}

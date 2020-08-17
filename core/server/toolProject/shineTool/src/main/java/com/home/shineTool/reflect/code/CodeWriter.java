@@ -182,6 +182,26 @@ public abstract class CodeWriter
 		_sb.append(Enter);
 	}
 	
+	/** 写右边大括号(右缩进,不加回车) */
+	public void writeRightBraceWithOutEnter()
+	{
+		_off--;
+		_cls.writeMethodTab(_sb,_off);
+		_sb.append("}");
+	}
+	
+	/** 写当前缩进 */
+	public void writeOff()
+	{
+		_cls.writeMethodTab(_sb,_off);
+	}
+	
+	/** 书写回车 */
+	public void writeEnter()
+	{
+		_sb.append(Enter);
+	}
+	
 	/** 写空行 */
 	public void writeEmptyLine()
 	{
@@ -851,5 +871,10 @@ public abstract class CodeWriter
 		{
 			writeCustom("writer.sb.append("+content+");");
 		}
+	}
+	
+	public void writeShouldDo(String mark)
+	{
+		writeCustom("Ctrl.warnLog(\"function "+mark+",need implement\");");
 	}
 }

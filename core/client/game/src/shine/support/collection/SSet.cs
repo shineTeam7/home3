@@ -16,6 +16,7 @@ namespace ShineEngine
 		public SSet()
 		{
 			_defaultKey=default(K);
+			init(_minSize);
 		}
 
 		public SSet(int capacity)
@@ -24,24 +25,15 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
-		}
-
 		/** 获取表 */
 		public K[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new K[capacity<<1];
 		}
@@ -53,8 +45,6 @@ namespace ShineEngine
 				Ctrl.throwError("key不能为空");
 				return false;
 			}
-
-			checkInit();
 
 			K[] keys=_set;
 			int capacityMask;
@@ -266,24 +256,6 @@ namespace ShineEngine
 			ObjectUtils.arrayFill(_set,default(K));
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
-
 		/** 添加一组 */
 		public void addAll(SList<K> list)
 		{
@@ -364,6 +336,35 @@ namespace ShineEngine
 			re._defaultKey=_defaultKey;
 			re.copyBase(this);
 			return re;
+		}
+
+		/** 转化为原生集合 */
+		public HashSet<K> toNatureList()
+		{
+			HashSet<K> re=new HashSet<K>();
+
+			K[] set=_set;
+			K key;
+
+			for(int i=set.Length - 1;i >= 0;--i)
+			{
+				if(!Equals(_defaultKey,key=set[i]))
+				{
+					re.Add(key);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(HashSet<K> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(K v in map)
+			{
+				this.add(v);
+			}
 		}
 
 		/** 遍历 */

@@ -27,4 +27,7 @@ public class SceneEnterDO
 	/** 视野绑定单位数据 */
 	@MaybeNull
 	Map<Integer,UnitSimpleDO> bindVisionUnits;
+	/** 副本数据 */
+	@MaybeNull
+	BattleSceneDO battleData;
 }

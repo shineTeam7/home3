@@ -4,7 +4,7 @@ import com.home.commonBase.control.FactoryControl;
 import com.home.commonBase.tool.DataRegister;
 import com.home.commonCenter.part.centerGlobal.CenterGlobal;
 import com.home.commonCenter.server.CenterServer;
-import com.home.commonCenter.tool.CenterDataRegister;
+import com.home.commonCenter.tool.func.CenterPlayerSubsectionRankTool;
 import com.home.commonCenter.tool.func.CenterUnionTool;
 import com.home.shine.control.WatchControl;
 
@@ -12,12 +12,6 @@ import com.home.shine.control.WatchControl;
 public class CenterFactoryControl extends FactoryControl
 {
 	//--控制组--//
-	
-	@Override
-	public DataRegister createDataRegister()
-	{
-		return new CenterDataRegister();
-	}
 	
 	@Override
 	public WatchControl createWatchControl()
@@ -86,5 +80,10 @@ public class CenterFactoryControl extends FactoryControl
 	{
 		return new CenterUnionTool();
 	}
-	
+
+	/** 中心服分组排行工具 */
+	public CenterPlayerSubsectionRankTool createCenterPlayerSubsectionRankTool(int funcID, int maxNum, int valueMin)
+	{
+		return new CenterPlayerSubsectionRankTool(funcID,maxNum,valueMin);
+	}
 }

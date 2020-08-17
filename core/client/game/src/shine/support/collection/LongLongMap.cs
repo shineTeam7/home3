@@ -16,20 +16,12 @@ namespace ShineEngine
 
 		public LongLongMap()
 		{
-
+			init(_minSize);
 		}
 
 		public LongLongMap(int capacity)
 		{
 			init(countCapacity(capacity));
-		}
-
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
 		}
 
 		public long getFreeValue()
@@ -39,28 +31,26 @@ namespace ShineEngine
 
 		public long[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
 		public long[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity >> 1;
+			_capacity=capacity;
 
-			_set=new long[capacity];
+			_set=new long[capacity<<1];
 
 			if(_freeValue!=0)
 			{
 				ObjectUtils.arrayFill(_set,_freeValue);
 			}
 
-			_values=new long[capacity];
+			_values=new long[capacity<<1];
 		}
 
 		private int index(long key)
@@ -224,8 +214,6 @@ namespace ShineEngine
 
 		public void put(long key,long value)
 		{
-			checkInit();
-
 			int index=insert(key,value);
 
 			if(index<0)
@@ -387,8 +375,6 @@ namespace ShineEngine
 		/** 加值 */
 		public long addValue(long key,long value)
 		{
-			checkInit();
-
 			int index=insert(key,value);
 
 			if(index<0)
@@ -401,28 +387,8 @@ namespace ShineEngine
 			}
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
-
 		public long putIfAbsent(long key,long value)
 		{
-			checkInit();
-
 			int index=insert(key,value);
 
 			if(index<0)
@@ -446,6 +412,36 @@ namespace ShineEngine
 			re.setFreeValue(_freeValue);
 			Array.Copy(_set,0,re.getKeys(),0,_set.Length);
 			return re;
+		}
+
+		/** 转化为原生集合 */
+		public Dictionary<long,long> toNatureMap()
+		{
+			Dictionary<long,long> re=new Dictionary<long,long>(size());
+
+			long free=_freeValue;
+			long[] keys=_set;
+			long[] vals=_values;
+			for(int i=(keys.Length) - 1;i >= 0;--i)
+			{
+				long key;
+				if((key=keys[i])!=free)
+				{
+					re.Add(key,vals[i]);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(Dictionary<long,long> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(KeyValuePair<long,long> kv in map)
+			{
+				this.put(kv.Key,kv.Value);
+			}
 		}
 
 		/** 遍历 */

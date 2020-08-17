@@ -37,9 +37,9 @@ import com.home.commonGame.net.request.role.LevelUpRequest;
 import com.home.commonGame.net.request.role.RefreshCurrencyRequest;
 import com.home.commonGame.net.request.role.RefreshExpRequest;
 import com.home.commonGame.net.request.role.RefreshFightForceRequest;
-import com.home.commonGame.net.request.scene.unit.CharacterRefreshPartRoleShowDataRequest;
 import com.home.commonGame.net.serverRequest.login.login.ClientApplyBindPlatformToLoginServerRequest;
 import com.home.commonGame.part.player.base.PlayerBasePart;
+import com.home.commonSceneBase.net.sceneBaseRequest.unit.CharacterRefreshPartRoleShowDataRequest;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.data.BaseData;
 import com.home.shine.data.DIntData;
@@ -197,7 +197,9 @@ public class RolePart extends PlayerBasePart
 		{
 			for(DIntData v : config.currency)
 			{
-				addCurrency(v.key,v.value,CallWayType.InitCreate);
+				_d.currencies[v.key]+=v.value;
+				//toLogAddCurrency(type,value,CallWayType.InitCreate);
+				//addCurrency(v.key,v.value,CallWayType.InitCreate);
 			}
 		}
 		else
@@ -794,9 +796,9 @@ public class RolePart extends PlayerBasePart
 	/** 刷新部分外显数据 */
 	public void refreshPartRoleShowData(RoleShowChangeData data)
 	{
-		//不在线
-		if(!me.system.isStateOnline())
-			return;
+		////现在无论是否在线，都需要修改
+		//if(!me.system.isStateOnline())
+		//	return;
 		
 		//先改自己的
 		_selfRoleShowData.onChange(data);

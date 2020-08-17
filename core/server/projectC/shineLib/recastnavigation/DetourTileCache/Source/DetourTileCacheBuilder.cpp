@@ -263,12 +263,11 @@ dtStatus dtBuildTileCacheRegions(dtTileCacheAlloc* alloc,
 			}
 			else
 			{
-				//FIXME:Modified
-				//if (regId == 255)
-				//{
-				//	// Region ID's overflow.
-				//	return DT_FAILURE | DT_BUFFER_TOO_SMALL;
-				//}
+				if (regId == 255)
+				{
+					// Region ID's overflow.
+					return DT_FAILURE | DT_BUFFER_TOO_SMALL;
+				}
 				sweeps[i].id = regId++;
 			}
 		}
@@ -1778,12 +1777,12 @@ dtStatus dtBuildTileCachePolyMesh(dtTileCacheAlloc* alloc,
 	if (!mesh.areas)
 		return DT_FAILURE | DT_OUT_OF_MEMORY;
 
-	mesh.flags = (unsigned short*)alloc->alloc(sizeof(unsigned short) * maxTris);
+	mesh.flags = (unsigned int*)alloc->alloc(sizeof(unsigned int) * maxTris);
 	if (!mesh.flags)
 		return DT_FAILURE | DT_OUT_OF_MEMORY;
 
 	// Just allocate and clean the mesh flags array. The user is resposible for filling it.
-	memset(mesh.flags, 0, sizeof(unsigned short) * maxTris);
+	memset(mesh.flags, 0, sizeof(unsigned int) * maxTris);
 
 	mesh.nverts = 0;
 	mesh.npolys = 0;

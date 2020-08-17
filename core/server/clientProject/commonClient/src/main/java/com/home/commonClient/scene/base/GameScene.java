@@ -4,7 +4,9 @@ import com.home.commonBase.constlist.generate.RobotTestModeType;
 import com.home.commonBase.constlist.generate.SceneInstanceType;
 import com.home.commonBase.constlist.generate.UnitAIModeType;
 import com.home.commonBase.constlist.generate.UnitType;
+import com.home.commonBase.data.scene.role.SceneRoleData;
 import com.home.commonBase.data.scene.scene.SceneEnterData;
+import com.home.commonBase.data.scene.scene.ScenePreInfoData;
 import com.home.commonBase.data.scene.unit.UnitData;
 import com.home.commonBase.data.scene.unit.identity.CharacterIdentityData;
 import com.home.commonBase.data.scene.unit.identity.MUnitIdentityData;
@@ -13,13 +15,12 @@ import com.home.commonBase.logic.unit.UnitFightDataLogic;
 import com.home.commonBase.scene.base.Scene;
 import com.home.commonBase.scene.base.Unit;
 import com.home.commonBase.scene.scene.SceneAOILogic;
-import com.home.commonBase.scene.scene.ScenePlayLogic;
+import com.home.commonBase.scene.scene.SceneBattleLogic;
 import com.home.commonClient.global.ClientGlobal;
 import com.home.commonClient.logic.unit.CharacterUseLogic;
 import com.home.commonClient.logic.unit.MUnitUseLogic;
 import com.home.commonClient.part.player.Player;
-import com.home.commonClient.scene.scene.BattleScenePlayLogic;
-import com.home.commonClient.scene.scene.GameScenePlayLogic;
+import com.home.commonClient.scene.scene.GameSceneBattleLogic;
 import com.home.commonClient.scene.scene.SceneClientAOILogic;
 import com.home.commonClient.scene.unit.GameUnitMoveLogic;
 import com.home.shine.ctrl.Ctrl;
@@ -33,6 +34,8 @@ public class GameScene extends Scene
 	/** 主角 */
 	private Unit _hero;
 	
+	private ScenePreInfoData _preInfo;
+	
 	@Override
 	protected SceneAOILogic createAOILogic()
 	{
@@ -40,9 +43,9 @@ public class GameScene extends Scene
 	}
 	
 	@Override
-	protected ScenePlayLogic createPlayLogic()
+	protected SceneBattleLogic createBattleLogic()
 	{
-		return new GameScenePlayLogic();
+		return new GameSceneBattleLogic();
 	}
 	
 	@Override
@@ -65,10 +68,53 @@ public class GameScene extends Scene
 		return re;
 	}
 	
+	/** 预备信息 */
+	public void setPreInfo(ScenePreInfoData preInfo)
+	{
+		_preInfo=preInfo;
+	}
+	
+	/** 获取预备信息 */
+	public ScenePreInfoData getPreInfo()
+	{
+		return _preInfo;
+	}
+	
 	/** 初始化进入数据 */
 	public void initEnterData(SceneEnterData enterData)
 	{
+		//有玩家角色
+		if(enterData.roles!=null)
+		{
+			for(SceneRoleData roleData : enterData.roles)
+			{
+				role.addRole(roleData);
+			}
+		}
+		
+		if(enterData.bindVisionUnits!=null)
+		{
+			//_bindVisionUnits=enterData.bindVisionUnits;
+		}
+		
 		addHero(enterData.hero);
+		
+		//SList<SceneLogicBase> logics=_logics;
+		//SceneLogicBase logic;
+		//
+		//for(int i=0,len=logics.length();i<len;++i)
+		//{
+		//	if((logic=logics.get(i)).enabled)
+		//	{
+		//		logic.afterHero();
+		//	}
+		//}
+		
+		//先处理掉落包数据
+		if(enterData.selfBindFieldItemBags!=null)
+		{
+			//role.initFieldItemBagBindDic(enterData.selfBindFieldItemBags);
+		}
 		
 		//添加单位
 		for(UnitData v : enterData.units)
@@ -76,7 +122,17 @@ public class GameScene extends Scene
 			addUnit(v);
 		}
 		
-		onSceneStart();
+		//if(unitFactory!=null)
+		//{
+		//	//初始化起始单位
+		//	unitFactory.initFirst();
+		//}
+		
+		//后调用play的
+		((GameSceneBattleLogic)battle).initEnterData(enterData);
+		//method.initEnterData(enterData);
+		
+		onStart();
 	}
 	
 	/** 主角 */
@@ -193,7 +249,7 @@ public class GameScene extends Scene
 	}
 	
 	/** 场景开始 */
-	protected void onSceneStart()
+	protected void onStart()
 	{
 		switch(ClientGlobal.mode)
 		{
@@ -204,13 +260,5 @@ public class GameScene extends Scene
 			}
 				break;
 		}
-	}
-	
-	//--快捷方式--//
-	
-	/** 获取副本玩法逻辑 */
-	public BattleScenePlayLogic getBattleScenePlayLogic()
-	{
-		return (BattleScenePlayLogic)play;
 	}
 }

@@ -299,22 +299,32 @@ public class JavaCodeWriter extends CodeWriter
 			{
 				vt=_code.Int;
 				
-				String lt=_code.Long;
-				
 				//双int
-				
 				writeVarCreate(kName + "FreeValue",kt,name + ".getFreeValue()");
-				writeVarCreate(kName + "Table",lt + "[]",name + ".getTable()");
-				writeVarCreate(kName + "Entry",lt);
+				writeVarCreate(kName + "Table",vt + "[]",name + ".getTable()");
 				
-				toWriteForIAndLeftBraceBack(name,kName,kName + "Table.length");
-				
-				writeVarSet(kName + "Entry",kName + "Table[" + kName + "I]");
-				writeVarCreate(kName,kt,_code.getVarTypeTrans(kName + "Entry",kt));
-				writeCustom("if(" + kName + "!=" + kName + "FreeValue" + ")");
+				writeCustom("for(int " + kName + "I=" + kName + "Table.length" + "-2;" + kName + "I>=0;" + kName + "I-=2)");
 				writeLeftBrace();
 				
-				writeVarCreate(vName,vt,_code.getVarTypeTrans("(" + kName + "Entry>>>32)",vt));
+				writeCustom("if(" + kName + "Table[" + kName + "I]" + "!="+kName + "FreeValue"+")");
+				writeLeftBrace();
+				
+				writeVarCreate(kName,kt,kName + "Table[" + kName + "I]");
+				writeVarCreate(vName,vt,kName + "Table[" + kName + "I+1]");
+				
+				//
+				//writeVarCreate(kName + "FreeValue",kt,name + ".getFreeValue()");
+				//writeVarCreate(kName + "Table",lt + "[]",name + ".getTable()");
+				//writeVarCreate(kName + "Entry",lt);
+				//
+				//toWriteForIAndLeftBraceBack(name,kName,kName + "Table.length");
+				//
+				//writeVarSet(kName + "Entry",kName + "Table[" + kName + "I]");
+				//writeVarCreate(kName,kt,_code.getVarTypeTrans(kName + "Entry",kt));
+				//writeCustom("if(" + kName + "!=" + kName + "FreeValue" + ")");
+				//writeLeftBrace();
+				//
+				//writeVarCreate(vName,vt,_code.getVarTypeTrans("(" + kName + "Entry>>>32)",vt));
 				
 				return;
 			}

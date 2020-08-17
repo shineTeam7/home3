@@ -58,10 +58,10 @@ public class TriggerObjectDefineTool extends BaseExportTool
 				String fName=field.name+_mark;
 				
 				_makeTool.objectDefineDic.put(fName,Integer.parseInt(field.defaultValue));
-				
 				_makeTool.objectStrDefineDic.put(fName,cls.clsName+"."+field.name);
 			}
 		}
 		
 	}
+	
 }

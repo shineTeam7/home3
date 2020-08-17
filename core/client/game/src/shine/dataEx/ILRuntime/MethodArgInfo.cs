@@ -11,6 +11,8 @@
 		/** 是否变长参数 */
 		public bool autoLength=false;
 
+		/** 是否为in类型(C#用) */
+		public bool isIn;
 		/** 是否为引用类型(C#用) */
 		public bool isRef;
 		/** 是否为输出类型(C#用) */

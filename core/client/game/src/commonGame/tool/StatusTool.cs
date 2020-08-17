@@ -88,6 +88,21 @@ public abstract class StatusTool
 		_dirty=false;
 	}
 
+	/** 写入拷贝 */
+	public void writeForCopy()
+	{
+		IntBooleanMap dic=_statusDataDic;
+		dic.clear();
+
+		int[] statusCounts=_statusCounts;
+
+		for(int i=statusCounts.Length - 1;i >= 0;--i)
+		{
+			if(statusCounts[i]>0)
+				dic.put(i,true);
+		}
+	}
+
 	/** 获取状态 */
 	public bool getStatus(int type)
 	{

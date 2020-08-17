@@ -23,7 +23,7 @@
     <RootNamespace>commonGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -44,32 +44,37 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
-  <Import Project="..\shine\include.props"/>
-  <ImportGroup Label="ExtensionSettings"/>
-  <ImportGroup Label="Shared"/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="..\shine\include.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Label="LocalAppDataPlatform" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\shine\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\shine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -87,7 +92,6 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\shine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,34 +128,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\app\GameApp.h"/>
-    <ClInclude Include="src\control\GameFactoryControl.h"/>
-    <ClInclude Include="src\control\SceneControl.h"/>
-    <ClInclude Include="src\extern\ExportCall.h"/>
-    <ClInclude Include="src\extern\JavaExportMethod.h"/>
-    <ClInclude Include="src\extern\UnityExportMethod.h"/>
-    <ClInclude Include="src\global\GameC.h"/>
-    <ClInclude Include="src\navmesh\NavMesh.h"/>
-    <ClInclude Include="src\navmesh\NavMeshHit.h"/>
-    <ClInclude Include="src\navmesh\NavMeshPath.h"/>
-    <ClInclude Include="src\scene\Scene.h"/>
+    <ClInclude Include="src\app\GameApp.h" />
+    <ClInclude Include="src\control\GameFactoryControl.h" />
+    <ClInclude Include="src\control\SceneControl.h" />
+    <ClInclude Include="src\extern\ExportCall.h" />
+    <ClInclude Include="src\extern\JavaExportMethod.h" />
+    <ClInclude Include="src\extern\UnityExportMethod.h" />
+    <ClInclude Include="src\global\GameC.h" />
+    <ClInclude Include="src\navmesh\NavMesh.h" />
+    <ClInclude Include="src\scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\app\GameApp.cpp"/>
-    <ClCompile Include="src\control\SceneControl.cpp"/>
-    <ClCompile Include="src\extern\JavaExportMethod.cpp"/>
-    <ClCompile Include="src\extern\UnityExportMethod.cpp"/>
-    <ClCompile Include="src\global\GameC.cpp"/>
-    <ClCompile Include="src\navmesh\NavMesh.cpp"/>
-    <ClCompile Include="src\navmesh\NavMeshHit.cpp"/>
-    <ClCompile Include="src\navmesh\NavMeshPath.cpp"/>
-    <ClCompile Include="src\scene\Scene.cpp"/>
+    <ClCompile Include="src\app\GameApp.cpp" />
+    <ClCompile Include="src\control\SceneControl.cpp" />
+    <ClCompile Include="src\extern\JavaExportMethod.cpp" />
+    <ClCompile Include="src\extern\UnityExportMethod.cpp" />
+    <ClCompile Include="src\global\GameC.cpp" />
+    <ClCompile Include="src\navmesh\NavMesh.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\shine\shine.vcxproj">
       <Project>{016fa774-5cbb-4f97-8170-10d363287a58}</Project>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
-  <ImportGroup Label="ExtensionTargets"/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

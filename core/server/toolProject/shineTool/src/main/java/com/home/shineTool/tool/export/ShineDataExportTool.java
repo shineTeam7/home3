@@ -1,5 +1,6 @@
 package com.home.shineTool.tool.export;
 
+import com.home.shineTool.constlist.DataSectionType;
 import com.home.shineTool.global.ShineToolGlobal;
 import com.home.shineTool.tool.data.DataExportTool;
 
@@ -26,20 +27,24 @@ public class ShineDataExportTool extends BaseDataExportTool
 		_dataProjectRoot=ShineToolGlobal.dataPath + "/shineData/src/main/java/com/home/shineData";
 		_serverProjectRoot=ShineToolGlobal.serverProjectPath + "/shine/src/main/java/com/home/shine";
 		_clientProjectRoot=ShineToolGlobal.clientMainSrcPath + "/shine";
+		
+		addSection(DataSectionType.Data,1,39);
+		addSection(DataSectionType.GameRequest,40,20);
 	}
+	
 	
 	@Override
 	protected void toExecute()
 	{
 		//shine组公用100
 		
-		DataExportTool data=makeOneData("shineData","Shine",false,_dataProjectRoot + "/data",_serverProjectRoot,_clientProjectRoot,null,1,39,false,this::inputCheck,null);
+		DataExportTool data=makeOneData("shineData","Shine",false,_dataProjectRoot + "/data",_serverProjectRoot,_clientProjectRoot,null,DataSectionType.Data,this::inputCheck,null);
 		
 		data.executeAll();
 		
 		//game
-		DataExportTool rquestTool=makeOneRequest("","Shine",false,_dataProjectRoot + "/message",_serverProjectRoot,_clientProjectRoot,null,40,20,false,null);
-		makeOneResponse("","Shine",false,_dataProjectRoot + "/message",_serverProjectRoot,_clientProjectRoot,null,40,20,rquestTool,null);
+		DataExportTool rquestTool=makeOneRequest("","Shine",false,_dataProjectRoot + "/message",_serverProjectRoot,_clientProjectRoot,null,DataSectionType.GameRequest,null);
+		makeOneResponse("","Shine",false,_dataProjectRoot + "/message",_serverProjectRoot,_clientProjectRoot,null,DataSectionType.GameRequest,rquestTool,null);
 	}
 	
 	private int inputCheck(String fileName)

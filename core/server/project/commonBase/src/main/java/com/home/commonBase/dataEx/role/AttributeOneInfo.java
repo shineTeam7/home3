@@ -15,6 +15,8 @@ public class AttributeOneInfo
 	public int currentMaxID;
 	/** 当前属性默认空满 */
 	public boolean isCurrentDefaultFull;
+	/** 当前属性是否可超过上限 */
+	public boolean isCurrentCanOverMax;
 	/** 逻辑层是否派发 */
 	public boolean needDispatchChange;
 	/** 推送角色自己方式 */

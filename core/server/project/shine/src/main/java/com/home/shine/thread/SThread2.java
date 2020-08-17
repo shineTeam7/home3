@@ -96,92 +96,141 @@ public class SThread2 extends AbstractThread
 		Runnable run;
 		
 		long lastTime=Ctrl.getTimer();
-		int delay;
 		long time;
+		int delay;
+		int tickMax=_tickDelay;
+		int tickTime=0;
 		
 		while(_running)
 		{
-			++_runIndex;
-			
-			time=Ctrl.getTimer();
-			delay=(int)(time - lastTime);
-			lastTime=time;
-			
-			_passTime+=delay;
-			++_roundNum;
-			
-			//先时间
-			
-			try
+			if(_pause)
 			{
-				tick(delay);
-			}
-			catch(Exception e)
-			{
-				Ctrl.errorLog("线程tick出错",e);
-			}
-			
-			//再事务
-			
-			availableSequence=cursor.get();
-			
-			if(availableSequence >= nextSequence)
-			{
-				for(sequence=nextSequence;sequence<=availableSequence;++sequence)
+				if(_resume)
 				{
-					index=((int)sequence) & sizeMark;
-					flag=(int)(sequence >>> sizeShift);
-					bufferAddress=(index << _availbleScaleShift) + _availbleBase;
+					_resume=false;
+					_pause=false;
 					
-					//不是
-					if(UNSAFE.getIntVolatile(availableBuffer,bufferAddress)!=flag)
+					Runnable resumeFunc=_resumeFunc;
+					_resumeFunc=null;
+					if(resumeFunc!=null)
 					{
-						availableSequence=sequence - 1L;
-						break;
+						try
+						{
+							resumeFunc.run();
+						}
+						catch(Exception e)
+						{
+							Ctrl.errorLog(e);
+						}
 					}
 				}
+			}
+			else
+			{
+				++_runIndex;
 				
-				while(_running && nextSequence<=availableSequence)
+				time=Ctrl.getTimer();
+				delay=(int)(time - lastTime);
+				lastTime=time;
+				
+				//防止系统时间改小
+				if(delay<0)
+					delay=0;
+				
+				if(delay>0)
 				{
-					index=(int)nextSequence & sizeMark;
-					bufferAddress=(index << _queueScaleShift) + _queueBase;
-					
-					run=(Runnable)UNSAFE.getObjectVolatile(queue,bufferAddress);
-					UNSAFE.putOrderedObject(queue,bufferAddress,null);
-					
-					try
+					if((tickTime+=delay)>=tickMax)
 					{
-						run.run();
-					}
-					catch(Exception e)
-					{
-						Ctrl.errorLog(e);
+						try
+						{
+							tick(tickTime);
+						}
+						catch(Exception e)
+						{
+							Ctrl.errorLog("线程tick出错",e);
+						}
+						
+						tickTime=0;
 					}
 					
-					++nextSequence;
+					_passTime+=delay;
 				}
 				
-				consumerSequence.set(availableSequence);
-			}
-			
-			if(_hasCQueue)
-			{
-				_hasCQueue=false;
-
-				while(_running)
+				try
 				{
-					if((run=cQueue.poll())==null)
+					runEx();
+				}
+				catch(Exception e)
+				{
+					Ctrl.errorLog("线程runEx出错",e);
+				}
+				
+				//再事务
+				
+				availableSequence=cursor.get();
+				
+				if(availableSequence >= nextSequence)
+				{
+					for(sequence=nextSequence;sequence<=availableSequence;++sequence)
 					{
-						break;
+						index=((int)sequence) & sizeMark;
+						flag=(int)(sequence >>> sizeShift);
+						bufferAddress=(index << _availbleScaleShift) + _availbleBase;
+						
+						//不是
+						if(UNSAFE.getIntVolatile(availableBuffer,bufferAddress)!=flag)
+						{
+							availableSequence=sequence - 1L;
+							break;
+						}
 					}
-
-					try
+					
+					while(_running && nextSequence<=availableSequence)
 					{
-						run.run();
+						index=(int)nextSequence & sizeMark;
+						bufferAddress=(index << _queueScaleShift) + _queueBase;
+						
+						run=(Runnable)UNSAFE.getObjectVolatile(queue,bufferAddress);
+						UNSAFE.putOrderedObject(queue,bufferAddress,null);
+						
+						try
+						{
+							run.run();
+						}
+						catch(Exception e)
+						{
+							Ctrl.errorLog(e);
+						}
+						
+						++nextSequence;
+						
+						++_funcNum;
 					}
-					catch(Exception e)
+					
+					consumerSequence.set(availableSequence);
+				}
+				
+				if(_hasCQueue)
+				{
+					_hasCQueue=false;
+					
+					while(_running)
 					{
-						Ctrl.errorLog(e);
+						if((run=cQueue.poll())==null)
+						{
+							break;
+						}
+						
+						try
+						{
+							run.run();
+						}
+						catch(Exception e)
+						{
+							Ctrl.errorLog(e);
+						}
+						
+						++_funcNum;
 					}
 				}
 			}

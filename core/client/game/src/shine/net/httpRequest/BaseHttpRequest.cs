@@ -5,6 +5,7 @@ namespace ShineEngine
 	/// <summary>
 	/// 基础http请求
 	/// </summary>
+	[Hotfix(needChildren = false)]
 	public class BaseHttpRequest:BaseData
 	{
 		/** www对象 */

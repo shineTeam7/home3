@@ -38,11 +38,15 @@ public class UnitShowLogic:UnitLogicBase
 	private SList<UnitEffect> _effectList=new SList<UnitEffect>();
 
 	//motionUse
-	private int _currentMotionID=-1;
+	protected int _currentMotionID=-1;
+
+	private int _currentMotionUseID=-1;
 
 	private float _currentMotionSpeed;
 
-	private float _currentMotionStartTime;
+	private float _currentMotionMaxTime;
+
+	private float _currentMotionPassTime;
 
 	private bool _currentIsLoop;
 
@@ -152,7 +156,7 @@ public class UnitShowLogic:UnitLogicBase
 		_partDic.clear();
 		_partReady.clear();
 
-		_currentMotionID=-1;
+		clearMotion();
 
 		base.dispose();
 	}
@@ -167,6 +171,21 @@ public class UnitShowLogic:UnitLogicBase
 		get {return _transform;}
 	}
 
+	public override void onFrame(int delay)
+	{
+		base.onFrame(delay);
+
+		//非循环动作
+		if(_currentMotionID>0 && !_currentIsLoop)
+		{
+			if((_currentMotionPassTime+=delay)>=_currentMotionMaxTime)
+			{
+				_currentMotionPassTime=0;
+
+				motionOver();
+			}
+		}
+	}
 
 	//--位置部分--//
 
@@ -473,24 +492,46 @@ public class UnitShowLogic:UnitLogicBase
 		if((modelID=_data.avatar!=null ? _data.avatar.modelID : -1)<=0)
 			return;
 
+		_currentMotionID=id;
+
 		ModelMotionConfig config=findUseMotionConfig(modelID,id);
 
 		if(config!=null)
 		{
 			id=config.id;
+			_currentMotionMaxTime=config.motionTime;
+		}
+		else
+		{
+			_currentMotionMaxTime=MotionConfig.get(id).defaultMotionTime;
 		}
 
-		_currentMotionID=id;
+		_currentMotionUseID=id;
 		_currentMotionSpeed=speed;
-		_currentMotionStartTime=startTime;
+		_currentMotionPassTime=startTime;
 		_currentIsLoop=isLoop;
 
 		toPlayMotion(id,speed,startTime,isLoop);
 	}
 
+	protected void clearMotion()
+	{
+		_currentMotionID=-1;
+		_currentMotionUseID=-1;
+		_currentMotionSpeed=1f;
+		_currentMotionPassTime=0;
+		_currentMotionMaxTime=0;
+		_currentIsLoop=false;
+	}
+
+	protected virtual void motionOver()
+	{
+		clearMotion();
+	}
+
 	private void rePlayMotion()
 	{
-		toPlayMotion(_currentMotionID,_currentMotionSpeed,_currentMotionStartTime,_currentIsLoop);
+		toPlayMotion(_currentMotionUseID,_currentMotionSpeed,_currentMotionPassTime,_currentIsLoop);
 	}
 
 	/** 找到可用的动作配置 */

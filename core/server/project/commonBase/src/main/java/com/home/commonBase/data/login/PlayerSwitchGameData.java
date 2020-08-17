@@ -1,5 +1,6 @@
 package com.home.commonBase.data.login;
 import com.home.commonBase.constlist.generate.BaseDataType;
+import com.home.commonBase.data.scene.scene.SceneEnterArgData;
 import com.home.commonBase.data.social.RoleSocialData;
 import com.home.commonBase.data.social.roleGroup.PlayerRoleGroupData;
 import com.home.shine.bytes.BytesReadStream;
@@ -25,6 +26,9 @@ public class PlayerSwitchGameData extends BaseData
 	
 	/** 社交数据组 */
 	public LongObjectMap<RoleSocialData> roleSocialDatas;
+	
+	/** 下个进入场景数据 */
+	public SceneEnterArgData nextEnterSceneData;
 	
 	/** 是否需要中心服角色显示信息 */
 	public boolean needPlayerRoleShowForCenter;
@@ -146,6 +150,28 @@ public class PlayerSwitchGameData extends BaseData
 			roleGroupsT.put(roleGroupsK,roleGroupsV);
 		}
 		
+		BaseData nextEnterSceneDataT=stream.readDataFullNotNull();
+		if(nextEnterSceneDataT!=null)
+		{
+			if(nextEnterSceneDataT instanceof SceneEnterArgData)
+			{
+				this.nextEnterSceneData=(SceneEnterArgData)nextEnterSceneDataT;
+			}
+			else
+			{
+				this.nextEnterSceneData=new SceneEnterArgData();
+				if(!(nextEnterSceneDataT.getClass().isAssignableFrom(SceneEnterArgData.class)))
+				{
+					stream.throwTypeReadError(SceneEnterArgData.class,nextEnterSceneDataT.getClass());
+				}
+				this.nextEnterSceneData.shadowCopy(nextEnterSceneDataT);
+			}
+		}
+		else
+		{
+			this.nextEnterSceneData=null;
+		}
+		
 		stream.endReadObj();
 	}
 	
@@ -247,6 +273,15 @@ public class PlayerSwitchGameData extends BaseData
 			nullObjError("roleGroups");
 		}
 		
+		if(this.nextEnterSceneData!=null)
+		{
+			stream.writeDataFullNotNull(this.nextEnterSceneData);
+		}
+		else
+		{
+			nullObjError("nextEnterSceneData");
+		}
+		
 		stream.endWriteObj();
 	}
 	
@@ -312,6 +347,8 @@ public class PlayerSwitchGameData extends BaseData
 			
 			roleGroupsT.put(roleGroupsK,roleGroupsV);
 		}
+		
+		this.nextEnterSceneData=(SceneEnterArgData)stream.readDataSimpleNotNull();
 		
 	}
 	
@@ -411,6 +448,15 @@ public class PlayerSwitchGameData extends BaseData
 			nullObjError("roleGroups");
 		}
 		
+		if(this.nextEnterSceneData!=null)
+		{
+			stream.writeDataSimpleNotNull(this.nextEnterSceneData);
+		}
+		else
+		{
+			nullObjError("nextEnterSceneData");
+		}
+		
 	}
 	
 	/** 复制(潜拷贝) */
@@ -426,6 +472,7 @@ public class PlayerSwitchGameData extends BaseData
 		this.isSwitchLogin=mData.isSwitchLogin;
 		this.roleSocialDatas=mData.roleSocialDatas;
 		this.roleGroups=mData.roleGroups;
+		this.nextEnterSceneData=mData.nextEnterSceneData;
 	}
 	
 	/** 复制(深拷贝) */
@@ -563,6 +610,16 @@ public class PlayerSwitchGameData extends BaseData
 			nullObjError("roleGroups");
 		}
 		
+		if(mData.nextEnterSceneData!=null)
+		{
+			this.nextEnterSceneData=(SceneEnterArgData)mData.nextEnterSceneData.clone();
+		}
+		else
+		{
+			this.nextEnterSceneData=null;
+			nullObjError("nextEnterSceneData");
+		}
+		
 	}
 	
 	/** 是否数据一致 */
@@ -686,6 +743,19 @@ public class PlayerSwitchGameData extends BaseData
 		else
 		{
 			if(this.roleGroups!=null)
+				return false;
+		}
+		
+		if(mData.nextEnterSceneData!=null)
+		{
+			if(this.nextEnterSceneData==null)
+				return false;
+			if(!this.nextEnterSceneData.dataEquals(mData.nextEnterSceneData))
+				return false;
+		}
+		else
+		{
+			if(this.nextEnterSceneData!=null)
 				return false;
 		}
 		
@@ -836,6 +906,19 @@ public class PlayerSwitchGameData extends BaseData
 		}
 		
 		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.append("nextEnterSceneData");
+		writer.sb.append(':');
+		if(this.nextEnterSceneData!=null)
+		{
+			this.nextEnterSceneData.writeDataString(writer);
+		}
+		else
+		{
+			writer.sb.append("SceneEnterArgData=null");
+		}
+		
+		writer.writeEnter();
 	}
 	
 	/** 初始化初值 */
@@ -844,6 +927,8 @@ public class PlayerSwitchGameData extends BaseData
 	{
 		this.roleSocialDatas=new LongObjectMap<RoleSocialData>(RoleSocialData[]::new);
 		this.roleGroups=new IntObjectMap<LongObjectMap<PlayerRoleGroupData>>(LongObjectMap[]::new);
+		this.nextEnterSceneData=new SceneEnterArgData();
+		this.nextEnterSceneData.initDefault();
 	}
 	
 	/** 回池 */
@@ -854,6 +939,7 @@ public class PlayerSwitchGameData extends BaseData
 		this.isSwitchLogin=false;
 		this.roleSocialDatas=null;
 		this.roleGroups=null;
+		this.nextEnterSceneData=null;
 	}
 	
 }

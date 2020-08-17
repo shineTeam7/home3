@@ -6,8 +6,8 @@ import com.home.commonBase.global.BaseC;
 import com.home.commonBase.part.player.clientData.SceneClientPartData;
 import com.home.commonClient.global.ClientGlobal;
 import com.home.commonClient.net.request.func.match.FuncAcceptMatchRequest;
-import com.home.commonClient.net.request.scene.scene.ApplyEnterSceneRequest;
-import com.home.commonClient.net.request.scene.scene.PreEnterSceneReadyRequest;
+import com.home.commonClient.net.request.scene.ApplyEnterSceneRequest;
+import com.home.commonClient.net.request.scene.PreEnterSceneReadyRequest;
 import com.home.commonClient.part.player.base.PlayerBasePart;
 import com.home.commonClient.scene.base.GameScene;
 import com.home.shine.data.BaseData;
@@ -31,7 +31,7 @@ public class ScenePart extends PlayerBasePart
 	private boolean _hasNextScene=false;
 	
 	/** 缓存场景预进入信息 */
-	private ScenePreInfoData _infoData;
+	private ScenePreInfoData _preInfoData;
 	
 	/** 当前匹配的功能ID(-1就是没在匹配中) */
 	private int _matchingFuncID=-1;
@@ -160,7 +160,7 @@ public class ScenePart extends PlayerBasePart
 		
 		removeNowScene();
 		
-		_infoData=infoData;
+		_preInfoData=infoData;
 		
 		me.send(PreEnterSceneReadyRequest.create());
 	}
@@ -191,6 +191,8 @@ public class ScenePart extends PlayerBasePart
 		
 		_scene.me=me;
 		_scene.init();
+		_scene.setPreInfo(_preInfoData);
+		_preInfoData=null;
 		_scene.initEnterData(enterData);
 		
 		if(me.system.checkEnterFirstScene())

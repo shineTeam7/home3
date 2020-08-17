@@ -24,6 +24,11 @@ public class UILogicConfig:BaseConfig
 	public int id;
 	
 	/// <summary>
+	/// 是否有实体prefab
+	/// </summary>
+	public bool hasPrefab;
+	
+	/// <summary>
 	/// 包名
 	/// </summary>
 	public string packageName;
@@ -80,6 +85,8 @@ public class UILogicConfig:BaseConfig
 		
 		this.packageName=stream.readUTF();
 		
+		this.hasPrefab=stream.readBoolean();
+		
 	}
 	
 	/// <summary>
@@ -97,11 +104,16 @@ public class UILogicConfig:BaseConfig
 		
 		stream.writeUTF(this.packageName);
 		
+		stream.writeBoolean(this.hasPrefab);
+		
 	}
 	
 	protected override void afterReadConfig()
 	{
-		resourceNameT=BaseGameUtils.getUIModelResourceID(name + "UILogic",false);
+		if (hasPrefab)
+		{
+			resourceNameT=BaseGameUtils.getUIModelResourceID(name + "UILogic",false);
+		}
 	}
 	
 	/// <summary>

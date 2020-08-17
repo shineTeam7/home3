@@ -2,6 +2,7 @@ package com.home.commonBase.part.player.data;
 import com.home.commonBase.constlist.generate.PlayerPartDataType;
 import com.home.commonBase.data.role.MUnitCacheData;
 import com.home.commonBase.data.scene.base.PosDirData;
+import com.home.commonBase.data.scene.match.MatchSceneData;
 import com.home.commonBase.data.scene.scene.SceneEnterArgData;
 import com.home.shine.bytes.BytesReadStream;
 import com.home.shine.bytes.BytesWriteStream;
@@ -29,6 +30,9 @@ public class ScenePartData extends BaseData
 	
 	/** 主城角色保存数据 */
 	public MUnitCacheData lastTownSaveData;
+	
+	/** 匹配后的场景数据 */
+	public MatchSceneData matchSceneData;
 	
 	/** 当前场景位置 */
 	public PosDirData currentScenePosDir;
@@ -126,6 +130,35 @@ public class ScenePartData extends BaseData
 			this.lastTownSaveData=null;
 		}
 		
+		if(stream.readBoolean())
+		{
+			BaseData matchSceneDataT=stream.readDataFullNotNull();
+			if(matchSceneDataT!=null)
+			{
+				if(matchSceneDataT instanceof MatchSceneData)
+				{
+					this.matchSceneData=(MatchSceneData)matchSceneDataT;
+				}
+				else
+				{
+					this.matchSceneData=new MatchSceneData();
+					if(!(matchSceneDataT.getClass().isAssignableFrom(MatchSceneData.class)))
+					{
+						stream.throwTypeReadError(MatchSceneData.class,matchSceneDataT.getClass());
+					}
+					this.matchSceneData.shadowCopy(matchSceneDataT);
+				}
+			}
+			else
+			{
+				this.matchSceneData=null;
+			}
+		}
+		else
+		{
+			this.matchSceneData=null;
+		}
+		
 		stream.endReadObj();
 	}
 	
@@ -173,6 +206,16 @@ public class ScenePartData extends BaseData
 		{
 			stream.writeBoolean(true);
 			stream.writeDataFullNotNull(this.lastTownSaveData);
+		}
+		else
+		{
+			stream.writeBoolean(false);
+		}
+		
+		if(this.matchSceneData!=null)
+		{
+			stream.writeBoolean(true);
+			stream.writeDataFullNotNull(this.matchSceneData);
 		}
 		else
 		{
@@ -228,6 +271,15 @@ public class ScenePartData extends BaseData
 			this.lastTownSaveData=null;
 		}
 		
+		if(stream.readBoolean())
+		{
+			this.matchSceneData=(MatchSceneData)stream.readDataSimpleNotNull();
+		}
+		else
+		{
+			this.matchSceneData=null;
+		}
+		
 	}
 	
 	/** 写入字节流(简版) */
@@ -278,6 +330,16 @@ public class ScenePartData extends BaseData
 			stream.writeBoolean(false);
 		}
 		
+		if(this.matchSceneData!=null)
+		{
+			stream.writeBoolean(true);
+			stream.writeDataSimpleNotNull(this.matchSceneData);
+		}
+		else
+		{
+			stream.writeBoolean(false);
+		}
+		
 	}
 	
 	/** 复制(潜拷贝) */
@@ -295,6 +357,7 @@ public class ScenePartData extends BaseData
 		this.currentSceneEnterArg=mData.currentSceneEnterArg;
 		this.currentScenePosDir=mData.currentScenePosDir;
 		this.lastTownSaveData=mData.lastTownSaveData;
+		this.matchSceneData=mData.matchSceneData;
 	}
 	
 	/** 复制(深拷贝) */
@@ -346,6 +409,15 @@ public class ScenePartData extends BaseData
 		else
 		{
 			this.lastTownSaveData=null;
+		}
+		
+		if(mData.matchSceneData!=null)
+		{
+			this.matchSceneData=(MatchSceneData)mData.matchSceneData.clone();
+		}
+		else
+		{
+			this.matchSceneData=null;
 		}
 		
 	}
@@ -410,6 +482,19 @@ public class ScenePartData extends BaseData
 		else
 		{
 			if(this.lastTownSaveData!=null)
+				return false;
+		}
+		
+		if(mData.matchSceneData!=null)
+		{
+			if(this.matchSceneData==null)
+				return false;
+			if(!this.matchSceneData.dataEquals(mData.matchSceneData))
+				return false;
+		}
+		else
+		{
+			if(this.matchSceneData!=null)
 				return false;
 		}
 		
@@ -491,6 +576,19 @@ public class ScenePartData extends BaseData
 		}
 		
 		writer.writeEnter();
+		writer.writeTabs();
+		writer.sb.append("matchSceneData");
+		writer.sb.append(':');
+		if(this.matchSceneData!=null)
+		{
+			this.matchSceneData.writeDataString(writer);
+		}
+		else
+		{
+			writer.sb.append("MatchSceneData=null");
+		}
+		
+		writer.writeEnter();
 	}
 	
 	/** 初始化初值 */
@@ -510,6 +608,7 @@ public class ScenePartData extends BaseData
 		this.currentSceneEnterArg=null;
 		this.currentScenePosDir=null;
 		this.lastTownSaveData=null;
+		this.matchSceneData=null;
 	}
 	
 }

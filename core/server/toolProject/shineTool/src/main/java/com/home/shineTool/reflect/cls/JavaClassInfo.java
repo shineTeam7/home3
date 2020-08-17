@@ -232,7 +232,7 @@ public class JavaClassInfo extends ClassInfo
 				else if(aInfo.name.equals("MapKeyInValue"))
 				{
 					String arg1=aInfo.args[0];
-					field.mapKeyInValueKey=arg1.substring(1,arg1.length()-1);//去掉首尾的"
+					field.mapKeyInValueKey=StringUtils.cutOutsideOne(arg1);//去掉首尾的"
 				}
 				else if(aInfo.name.equals("NoUpgrade"))
 				{
@@ -379,6 +379,7 @@ public class JavaClassInfo extends ClassInfo
 		method.writeVisitStr(sb);
 		method.writeAbstractStr(sb);
 		method.writeStaticStr(sb);
+		method.writeFinalStr(sb);
 		
 		if(!method.genericTypeStr.isEmpty())
 		{
@@ -498,9 +499,18 @@ public class JavaClassInfo extends ClassInfo
 	{
 		super.toMakeOneMethodVisit(method,str);
 		
-		if(str.equals("abstract"))
+		switch(str)
 		{
-			method.isAbstract=true;
+			case "abstract":
+			{
+				method.isAbstract=true;
+			}
+				break;
+			case "final":
+			{
+				method.isFinal=true;
+			}
+				break;
 		}
 	}
 	

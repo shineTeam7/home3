@@ -84,6 +84,7 @@ import com.home.commonBase.config.game.SubsectionRankConfig;
 import com.home.commonBase.config.game.TaskConfig;
 import com.home.commonBase.config.game.TeamTargetConfig;
 import com.home.commonBase.config.game.TextConfig;
+import com.home.commonBase.config.game.UnitGroupConfig;
 import com.home.commonBase.config.game.VehicleConfig;
 import com.home.commonBase.config.game.VocationConfig;
 import com.home.commonBase.config.game.enumT.AuctionQueryConditionTypeConfig;
@@ -459,6 +460,9 @@ public class ConfigReadData
 	
 	/** 推送标签类型字典 */
 	public PushTopicTypeConfig[] pushTopicTypeDic;
+	
+	/** 单位组表字典 */
+	public IntObjectMap<UnitGroupConfig> unitGroupDic;
 	
 	/** 从流读取 */
 	public void readBytes(BytesReadStream stream)
@@ -1050,6 +1054,11 @@ public class ConfigReadData
 				TextConfig.setDic(textDic);
 			}
 				break;
+			case ConfigType.UnitGroup:
+			{
+				UnitGroupConfig.setDic(unitGroupDic);
+			}
+				break;
 			case ConfigType.UnitMoveType:
 			{
 				UnitMoveTypeConfig.setDic(unitMoveTypeDic);
@@ -1606,6 +1615,11 @@ public class ConfigReadData
 			case ConfigType.Text:
 			{
 				TextConfig.afterReadConfigAll();
+			}
+				break;
+			case ConfigType.UnitGroup:
+			{
+				UnitGroupConfig.afterReadConfigAll();
 			}
 				break;
 			case ConfigType.UnitMoveType:
@@ -2166,6 +2180,11 @@ public class ConfigReadData
 				readText(stream);
 			}
 				break;
+			case ConfigType.UnitGroup:
+			{
+				readUnitGroup(stream);
+			}
+				break;
 			case ConfigType.UnitMoveType:
 			{
 				readUnitMoveType(stream);
@@ -2702,6 +2721,11 @@ public class ConfigReadData
 			case ConfigType.Text:
 			{
 				refreshText();
+			}
+				break;
+			case ConfigType.UnitGroup:
+			{
+				refreshUnitGroup();
 			}
 				break;
 			case ConfigType.UnitMoveType:
@@ -5951,6 +5975,37 @@ public class ConfigReadData
 			PushTopicTypeConfig config=pushTopicTypeDic[configI];
 			if(config!=null)
 				config.refresh();
+		}
+	}
+	
+	/** 读取单位组表 */
+	protected void readUnitGroup(BytesReadStream stream)
+	{
+		UnitGroupConfig config;
+		int len=stream.readLen();
+		unitGroupDic=new IntObjectMap<UnitGroupConfig>(UnitGroupConfig[]::new,len);
+		for(int i=0;i<len;++i)
+		{
+			config=new UnitGroupConfig();
+			config.readBytesSimple(stream);
+			unitGroupDic.put(config.id,config);
+		}
+	}
+	
+	/** 刷新单位组表 */
+	private void refreshUnitGroup()
+	{
+		if(!unitGroupDic.isEmpty())
+		{
+			Object[] configValues=unitGroupDic.getValues();
+			for(int configI=configValues.length-1;configI>=0;--configI)
+			{
+				if(configValues[configI]!=null)
+				{
+					UnitGroupConfig config=(UnitGroupConfig)configValues[configI];
+					config.refresh();
+				}
+			}
 		}
 	}
 	

@@ -35,7 +35,7 @@ public class GameC
 	public static GameMainControl main;
 	/** 跨服控制 */
 	public static GameSwitchControl gameSwitch;
-	/** server */
+	/** 网络 */
 	public static GameServer server;
 	/** 全局数据 */
 	public static GameGlobal global;

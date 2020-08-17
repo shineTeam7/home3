@@ -123,6 +123,9 @@ public class PlayerSubsectionPageShowTool:PlayerFuncTool
 
 				list.set(from+i,v);
 			}
+
+			//有值才刷新
+			onRefreshPage(subsectionIndex,subsectionSubIndex,page);
 		}
 		
 		Ctrl.print("onReceivePageList,",list.length());

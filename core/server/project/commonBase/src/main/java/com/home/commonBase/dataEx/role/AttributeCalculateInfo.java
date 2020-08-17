@@ -1,7 +1,7 @@
 package com.home.commonBase.dataEx.role;
 
 import com.home.commonBase.constlist.generate.AttributeSendSelfType;
-import com.home.commonBase.tool.AttributeTool;
+import com.home.commonBase.tool.IAttributeTool;
 import com.home.shine.support.collection.IntList;
 import com.home.shine.support.collection.IntObjectMap;
 import com.home.shine.support.collection.SList;
@@ -17,6 +17,8 @@ public abstract class AttributeCalculateInfo
 	public int[] currentToIndex;
 	/** 当前属性默认满组 */
 	public boolean[] currentDefaultFullSet;
+	/** 当前属性是否可超过上限 */
+	public boolean[] currentCanOverMax;
 	/** 当前属性和上限的对应组(max->current) */
 	public int[] maxToCurrentMap;
 	/** 当前属性对上限的对应组(current->max) */
@@ -79,6 +81,7 @@ public abstract class AttributeCalculateInfo
 		this.size=size;
 		currentToIndex=new int[size];
 		currentDefaultFullSet=new boolean[size];
+		currentCanOverMax=new boolean[size];
 		maxToCurrentMap=new int[size];
 		currentToMaxMap=new int[size];
 		formulaTypeDic=new int[size][];
@@ -131,6 +134,11 @@ public abstract class AttributeCalculateInfo
 				if(v.isCurrentDefaultFull)
 				{
 					currentDefaultFullSet[type]=true;
+				}
+				
+				if(v.isCurrentCanOverMax)
+				{
+					currentCanOverMax[type]=true;
 				}
 			}
 			
@@ -215,5 +223,5 @@ public abstract class AttributeCalculateInfo
 	}
 	
 	/** 计算属性公式 */
-	abstract public int calculateAttribute(AttributeTool tool,int[] formula);
+	abstract public int calculateAttribute(IAttributeTool tool,int[] formula);
 }

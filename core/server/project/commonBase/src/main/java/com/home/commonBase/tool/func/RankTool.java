@@ -4,6 +4,7 @@ import com.home.commonBase.constlist.generate.FuncToolType;
 import com.home.commonBase.data.func.FuncToolData;
 import com.home.commonBase.data.social.rank.RankData;
 import com.home.commonBase.data.social.rank.RankToolData;
+import com.home.shine.control.DateControl;
 import com.home.shine.ctrl.Ctrl;
 import com.home.shine.global.ShineSetting;
 import com.home.shine.support.collection.LongObjectMap;
@@ -198,7 +199,8 @@ public abstract class RankTool extends FuncTool implements IRankTool
 		{
 			if(value<_valueLimit)
 				return -1;
-			
+
+			tempData.valueRefreshTime=DateControl.getTimeMillis();
 			int insertIndex=getInsertIndex(tempData);
 			
 			//如相同往后排
@@ -238,7 +240,7 @@ public abstract class RankTool extends FuncTool implements IRankTool
 				
 				//添加dic
 				_dic.put(data.key,data);
-				
+				data.valueRefreshTime= tempData.valueRefreshTime;
 				//有上限
 				if(_maxNum>0)
 				{
@@ -262,21 +264,44 @@ public abstract class RankTool extends FuncTool implements IRankTool
 		else
 		{
 			int oldRank=oldData.rank;
-			
+			long oldValue=oldData.value;
+
 			if(vData!=null)
 			{
+				long oldValueRefreshTime=oldData.valueRefreshTime;
 				//更新插入数据
-				oldData=vData;
-				_dic.put(key,vData);
+				oldData.copy(vData);
+				oldData.rank=oldRank;
+				oldData.valueRefreshTime=oldValueRefreshTime;
 			}
-			
+
+			//值不同时更新
+			if(oldValue!=value)
+			{
+				tempData.valueRefreshTime= DateControl.getTimeMillis();
+				oldData.valueRefreshTime= tempData.valueRefreshTime;
+			}
+			else
+			{
+				tempData.valueRefreshTime=oldData.valueRefreshTime;
+			}
+
 			int rank=toRefreshData(oldData,tempData,oldRank);
 			//更新匹配值
 			oldData.value=value;
+
+			if(oldValue!=value)
+			{
+				oldData.valueRefreshTime= DateControl.getTimeMillis();
+			}
 			
 			if(vData==null)
 			{
 				makeRankData(oldData,args);
+			}
+			else
+			{
+				oldData.rank=rank;
 			}
 			
 			return rank;
@@ -437,12 +462,19 @@ public abstract class RankTool extends FuncTool implements IRankTool
 	protected int compare(RankData arg0,RankData arg1)
 	{
 		int re = -Long.compare(arg0.value,arg1.value);
-		
+
 		if(re!=0)
 		{
 			return _needReverseCompare?-re:re;
 		}
-		
+
+		re = Long.compare(arg0.valueRefreshTime,arg1.valueRefreshTime);
+
+		if(re!=0)
+		{
+			return re;
+		}
+
 		return Long.compare(arg0.key,arg1.key);
 	}
 	

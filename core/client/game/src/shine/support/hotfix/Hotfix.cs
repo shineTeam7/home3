@@ -8,6 +8,14 @@ namespace ShineEngine
 	[AttributeUsage(AttributeTargets.Class)]
 	public class Hotfix:Attribute
 	{
+		/** 是否需要创建工厂方法 */
+		public bool needFactory=true;
+		/** 是否需要传递给子对象 */
+		public bool needChildren=true;
 
+		public Hotfix()
+		{
+
+		}
 	}
 }

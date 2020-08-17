@@ -14,7 +14,7 @@ namespace ShineEngine
 
 		public StringIntMap()
 		{
-
+			init(_minSize);
 		}
 
 		public StringIntMap(int capacity)
@@ -22,29 +22,19 @@ namespace ShineEngine
 			init(countCapacity(capacity));
 		}
 
-		private void checkInit()
-		{
-			if(_set!=null)
-				return;
-
-			init(_minSize);
-		}
-
 		public string[] getKeys()
 		{
-			checkInit();
 			return _set;
 		}
 
 		public int[] getValues()
 		{
-			checkInit();
 			return _values;
 		}
 
-		private void init(int capacity)
+		protected override void init(int capacity)
 		{
-			_maxSize=capacity;
+			_capacity=capacity;
 
 			_set=new string[capacity<<1];
 
@@ -182,8 +172,6 @@ namespace ShineEngine
 				Ctrl.throwError("key不能为空");
 				return;
 			}
-
-			checkInit();
 
 			int index=insert(key,value);
 
@@ -374,24 +362,6 @@ namespace ShineEngine
 			}
 		}
 
-		/** 扩容 */
-		public void ensureCapacity(int capacity)
-		{
-			if(capacity>_maxSize)
-			{
-				int t=countCapacity(capacity);
-
-				if(_set==null)
-				{
-					init(t);
-				}
-				else if(t>_set.Length)
-				{
-					rehash(t);
-				}
-			}
-		}
-
 		public int putIfAbsent(string key,int value)
 		{
 			if(key==null)
@@ -399,8 +369,6 @@ namespace ShineEngine
 				Ctrl.throwError("key不能为空");
 				return 0;
 			}
-
-			checkInit();
 
 			int index=insert(key,value);
 
@@ -411,6 +379,35 @@ namespace ShineEngine
 			else
 			{
 				return _values[index];
+			}
+		}
+
+		/** 转化为原生集合 */
+		public Dictionary<string,int> toNatureMap()
+		{
+			Dictionary<string,int> re=new Dictionary<string,int>(size());
+
+			string[] keys=_set;
+			int[] vals=_values;
+			for(int i=(keys.Length) - 1;i>=0;--i)
+			{
+				string key;
+				if((key=keys[i])!=null)
+				{
+					re.Add(key,vals[i]);
+				}
+			}
+
+			return re;
+		}
+
+		public void addAll(Dictionary<string,int> map)
+		{
+			ensureCapacity(map.Count);
+
+			foreach(KeyValuePair<string,int> kv in map)
+			{
+				this.put(kv.Key,kv.Value);
 			}
 		}
 

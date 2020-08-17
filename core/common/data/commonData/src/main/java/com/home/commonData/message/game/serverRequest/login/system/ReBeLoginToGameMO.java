@@ -10,4 +10,6 @@ public class ReBeLoginToGameMO
 	/** 承载区服列表 */
 	@MapKeyInValue("areaID")
 	Map<Integer,AreaServerDO> areas;
+	/** 该game服是否已达在线满人 */
+	boolean isGameFull;
 }

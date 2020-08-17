@@ -39,11 +39,17 @@ namespace ShineEngine
 			}
 		}
 
+		/// <summary>
+		/// 创建tween并执行
+		/// </summary>
 		public int create(T start,T end,int delay,Action<T> func,Action overFunc=null,int ease=EaseType.Linear)
 		{
 			return createTween(start,end,delay,func,overFunc,ease).index;
 		}
 
+		/// <summary>
+		/// 创建实际tween对象，但不执行
+		/// </summary>
 		public TweenBase<T> createTween(T start,T end,int delay,Action<T> func,Action overFunc=null,int ease=EaseType.Linear)
 		{
 			TweenBase<T> tween=_pool.getOne();

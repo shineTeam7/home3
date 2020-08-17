@@ -1,6 +1,7 @@
 package com.home.shineTool.tool.table;
 
 import com.home.shine.ctrl.Ctrl;
+import com.home.shine.global.ShineGlobal;
 import com.home.shine.support.collection.SSet;
 import com.home.shine.table.DBConnect;
 import com.home.shine.utils.FileUtils;
@@ -19,7 +20,6 @@ public class TableSqlTool
 	private String _defineClsPath;
 	
 	private String _path;
-	
 	private String _truncatePath;
 	
 	private String _content;
@@ -37,18 +37,9 @@ public class TableSqlTool
 	//是否执行过
 	private static SSet<String> _didPaths=new SSet<>();
 	
-	public TableSqlTool(String defineClsPath,String path,String truncatePath,String url,boolean isClear)
+	public TableSqlTool(String defineClsPath,String url,boolean isClear)
 	{
 		_defineClsPath=defineClsPath;
-		
-		_path=path;
-		
-		_content=(isClear && !_didPaths.contains(path)) ? "" : FileUtils.readFileForUTF(_path);
-		
-		_didPaths.add(path);
-		
-		_truncatePath=truncatePath;
-		_truncateContent=FileUtils.readFileForUTF(_truncatePath);
 		
 		int index=url.indexOf(",");
 		
@@ -67,7 +58,15 @@ public class TableSqlTool
 		
 		_dbName=aa.substring(lastIndex + 1,aa.length()).toLowerCase();//全小写
 		
+		_path=ShineGlobal.serverSqlPath+"/"+_dbName+".sql";
+		_truncatePath=ShineGlobal.serverSqlPath+"/truncate_"+_dbName+".sql";
+		
 		_connect=new DBConnect(front + "/mysql" + url.substring(index,url.length()));
+		
+		_content=(isClear && !_didPaths.contains(_path)) ? "" : FileUtils.readFileForUTF(_path);
+		_truncateContent=FileUtils.readFileForUTF(_truncatePath);
+		
+		_didPaths.add(_path);
 	}
 	
 	public void setExportTool(TableExportTool exportTool)

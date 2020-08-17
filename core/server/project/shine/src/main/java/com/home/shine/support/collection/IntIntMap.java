@@ -4,18 +4,14 @@ import com.home.shine.ctrl.Ctrl;
 import com.home.shine.support.collection.inter.IIntConsumer;
 import com.home.shine.support.collection.inter.IIntIntConsumer;
 import com.home.shine.utils.MathUtils;
-import com.koloboke.collect.impl.IntArrays;
-import com.koloboke.collect.impl.PrimitiveConstants;
-import com.koloboke.collect.impl.UnsafeConstants;
 
-import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class IntIntMap extends BaseHash
 {
-	private static final long INT_MASK=0xFFFFFFFFL;
-	
-	private long[] _table;
+	private int[] _table;
 	
 	private int _freeValue;
 	
@@ -23,7 +19,7 @@ public class IntIntMap extends BaseHash
 	
 	public IntIntMap()
 	{
-	
+		init(_minSize);
 	}
 	
 	public IntIntMap(int capacity)
@@ -31,18 +27,19 @@ public class IntIntMap extends BaseHash
 		init(countCapacity(capacity));
 	}
 	
-	private void checkInit()
-	{
-		if(_table!=null)
-			return;
-		
-		init(_minSize);
-	}
-	
 	/** 初始化设置freeValue */
 	public void setFreeValue(int value)
 	{
-		IntArrays.replaceAllKeys(_table,_freeValue,value);
+		int[] table=_table;
+		
+		for(int i=table.length - 2;i >= 0;i-=2)
+		{
+			if(table[i]==_freeValue)
+			{
+				table[i]=value;
+			}
+		}
+		
 		_freeValue=value;
 	}
 	
@@ -51,22 +48,26 @@ public class IntIntMap extends BaseHash
 		return _freeValue;
 	}
 	
-	public final long[] getTable()
+	public final int[] getTable()
 	{
-		checkInit();
-		
 		return _table;
 	}
 	
-	private void init(int capacity)
+	@Override
+	protected void init(int capacity)
 	{
-		_maxSize=capacity;
+		_capacity=capacity;
 		
-		_table=new long[capacity<<1];
+		_table=new int[capacity<<2];
 		
 		if(_freeValue!=0)
 		{
-			IntArrays.fillKeys(_table,_freeValue);
+			int[] table=_table;
+			
+			for(int i=table.length - 2;i >= 0;i-=2)
+			{
+				table[i]=_freeValue;
+			}
 		}
 	}
 	
@@ -88,7 +89,17 @@ public class IntIntMap extends BaseHash
 	private int changeFree()
 	{
 		int newFree=findNewFreeOrRemoved();
-		IntArrays.replaceAllKeys(_table,_freeValue,newFree);
+		
+		int[] table=_table;
+		
+		for(int i=table.length - 2;i >= 0;i-=2)
+		{
+			if(table[i]==_freeValue)
+			{
+				table[i]=newFree;
+			}
+		}
+		
 		_freeValue=newFree;
 		return newFree;
 	}
@@ -98,11 +109,11 @@ public class IntIntMap extends BaseHash
 		int free;
 		if(key!=(free=_freeValue))
 		{
-			long[] tab=_table;
+			int[] tab=_table;
 			int capacityMask;
 			int index;
 			int cur;
-			if((cur=((int)(tab[(index=hashInt(key) & (capacityMask=(tab.length) - 1))])))==key)
+			if((cur=((tab[(index=hashInt(key) & (capacityMask=(tab.length) - 2))])))==key)
 			{
 				return index;
 			}
@@ -116,7 +127,7 @@ public class IntIntMap extends BaseHash
 				{
 					while(true)
 					{
-						if((cur=((int)(tab[(index=(index - 1) & capacityMask)])))==key)
+						if((cur=((tab[(index=(index - 2) & capacityMask)])))==key)
 						{
 							return index;
 						}
@@ -141,12 +152,12 @@ public class IntIntMap extends BaseHash
 		{
 			free=changeFree();
 		}
-		long[] tab=_table;
+		int[] tab=_table;
 		int capacityMask;
 		int index;
 		int cur;
-		keyAbsent:
-		if((cur=((int)(tab[(index=hashInt(key) & (capacityMask=(tab.length) - 1))])))!=free)
+		
+		if((cur=((tab[(index=hashInt(key) & (capacityMask=(tab.length) - 2))])))!=free)
 		{
 			if(cur==key)
 			{
@@ -156,9 +167,9 @@ public class IntIntMap extends BaseHash
 			{
 				while(true)
 				{
-					if((cur=((int)(tab[(index=(index - 1) & capacityMask)])))==free)
+					if((cur=((tab[(index=(index - 2) & capacityMask)])))==free)
 					{
-						break keyAbsent;
+						break;
 					}
 					else if(cur==key)
 					{
@@ -167,7 +178,8 @@ public class IntIntMap extends BaseHash
 				}
 			}
 		}
-		tab[index]=(((long)(key)) & (INT_MASK)) | (((long)(value)) << 32);
+		tab[index]=key;
+		tab[index+1]=value;
 		postInsertHook(index);
 		return -1;
 	}
@@ -176,11 +188,11 @@ public class IntIntMap extends BaseHash
 	protected int toGetLastFreeIndex()
 	{
 		int free=_freeValue;
-		long[] tab=_table;
+		int[] tab=_table;
 		
-		for(int i=(tab.length) - 1;i >= 0;--i)
+		for(int i=(tab.length) - 2;i >= 0;i-=2)
 		{
-			if((int)tab[i]==free)
+			if(tab[i]==free)
 			{
 				return i;
 			}
@@ -197,28 +209,29 @@ public class IntIntMap extends BaseHash
 		++_version;
 		
 		int free=_freeValue;
-		long[] tab=_table;
-		long entry;
+		int[] tab=_table;
 		init(newCapacity);
-		long[] newTab=_table;
-		int capacityMask=(newTab.length) - 1;
-		for(int i=(tab.length) - 1;i >= 0;--i)
+		int[] newTab=_table;
+		int capacityMask=(newTab.length) - 2;
+		for(int i=(tab.length) - 2;i >= 0;i-=2)
 		{
 			int key;
-			if((key=((int)(entry=tab[i])))!=free)
+			if((key=(tab[i]))!=free)
 			{
 				int index;
-				if((UnsafeConstants.U.getInt(newTab,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_KEY_OFFSET)) + (((long)(index=hashInt(key) & capacityMask)) << (UnsafeConstants.LONG_SCALE_SHIFT)))))!=free)
+				if(((newTab[(index=hashInt(key) & capacityMask)]))!=free)
 				{
 					while(true)
 					{
-						if((UnsafeConstants.U.getInt(newTab,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_KEY_OFFSET)) + (((long)(index=(index - 1) & capacityMask)) << (UnsafeConstants.LONG_SCALE_SHIFT)))))==free)
+						if(((newTab[(index=(index - 2) & capacityMask)]))==free)
 						{
 							break;
 						}
 					}
 				}
-				newTab[index]=entry;
+				
+				newTab[index]=key;
+				newTab[index+1]=tab[i+1];
 			}
 		}
 	}
@@ -226,8 +239,6 @@ public class IntIntMap extends BaseHash
 	@SuppressWarnings("restriction")
 	public void put(int key,int value)
 	{
-		checkInit();
-		
 		int index=insert(key,value);
 		
 		if(index<0)
@@ -236,7 +247,7 @@ public class IntIntMap extends BaseHash
 		}
 		else
 		{
-			UnsafeConstants.U.putInt(_table,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_VALUE_OFFSET)) + (((long)(index)) << (UnsafeConstants.LONG_SCALE_SHIFT))),value);
+			_table[index+1]=value;
 			return;
 		}
 	}
@@ -253,8 +264,6 @@ public class IntIntMap extends BaseHash
 	@SuppressWarnings("restriction")
 	public int addValue(int key,int value)
 	{
-		checkInit();
-		
 		++_version;
 		
 		int free;
@@ -262,20 +271,19 @@ public class IntIntMap extends BaseHash
 		{
 			free=changeFree();
 		}
-		long[] tab=_table;
+		int[] tab=_table;
 		int capacityMask;
 		int index;
 		int cur;
-		long entry;
 		keyPresent:
-		if((cur=((int)(entry=tab[(index=hashInt(key) & (capacityMask=tab.length - 1))])))!=key)
+		if((cur=((tab[(index=hashInt(key) & (capacityMask=tab.length - 2))])))!=key)
 		{
 			keyAbsent:
 			if(cur!=free)
 			{
 				while(true)
 				{
-					if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==key)
+					if((cur=((tab[(index=(index - 2) & capacityMask)])))==key)
 					{
 						break keyPresent;
 					}
@@ -286,22 +294,19 @@ public class IntIntMap extends BaseHash
 				}
 			}
 			
-			int newValue=value;//defaultValue
-			tab[index]=(((long)(key)) & (PrimitiveConstants.INT_MASK)) | (((long)(newValue)) << 32);
+			tab[index]=key;
+			tab[index+1]=value;
 			postInsertHook(index);
-			return newValue;
+			return value;
 		}
 		
-		int newValue=((int)((entry >>> 32))) + value;
-		UnsafeConstants.U.putInt(tab,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_VALUE_OFFSET)) + (((long)(index)) << (UnsafeConstants.LONG_SCALE_SHIFT))),newValue);
+		int newValue=(tab[index+1]+=value);
 		return newValue;
 	}
 	
 	/** 如果addValue后，值为0,会直接remove */
 	public int addValueR(int key,int value)
 	{
-		checkInit();
-		
 		++_version;
 		
 		int free;
@@ -309,20 +314,19 @@ public class IntIntMap extends BaseHash
 		{
 			free=changeFree();
 		}
-		long[] tab=_table;
+		int[] tab=_table;
 		int capacityMask;
 		int index;
 		int cur;
-		long entry;
 		keyPresent:
-		if((cur=((int)(entry=tab[(index=hashInt(key) & (capacityMask=tab.length - 1))])))!=key)
+		if((cur=((tab[(index=hashInt(key) & (capacityMask=tab.length - 2))])))!=key)
 		{
 			keyAbsent:
 			if(cur!=free)
 			{
 				while(true)
 				{
-					if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==key)
+					if((cur=((tab[(index=(index - 2) & capacityMask)])))==key)
 					{
 						break keyPresent;
 					}
@@ -333,51 +337,56 @@ public class IntIntMap extends BaseHash
 				}
 			}
 			
-			int newValue=value;//defaultValue
+			if(value==free)
+				return value;
 			
-			if(newValue==free)
-				return newValue;
-			
-			tab[index]=(((long)(key)) & (PrimitiveConstants.INT_MASK)) | (((long)(newValue)) << 32);
+			tab[index]=key;
+			tab[index+1]=value;
 			postInsertHook(index);
-			return newValue;
+			return value;
 		}
 		
-		int newValue=((int)((entry >>> 32))) + value;
+		int newValue=tab[index+1] + value;
 		
 		if(newValue!=free)
 		{
-			UnsafeConstants.U.putInt(tab,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_VALUE_OFFSET)) + (((long)(index)) << (UnsafeConstants.LONG_SCALE_SHIFT))),newValue);
+			tab[index+1]=newValue;
 			return newValue;
 		}
 		
 		int indexToRemove=index;
 		int indexToShift=indexToRemove;
-		int shiftDistance=1;
+		int shiftDistance=2;
 		while(true)
 		{
-			indexToShift=(indexToShift - 1) & capacityMask;
+			indexToShift=(indexToShift - 2) & capacityMask;
 			int keyToShift;
-			if((keyToShift=((int)(entry=tab[indexToShift])))==free)
+			if((keyToShift=((tab[indexToShift])))==free)
 			{
 				break;
 			}
+			
 			if(((hashInt(keyToShift) - indexToShift) & capacityMask) >= shiftDistance)
 			{
-				tab[indexToRemove]=entry;
+				tab[indexToRemove]=keyToShift;
+				tab[indexToRemove+1]=tab[indexToShift+1];
 				indexToRemove=indexToShift;
-				shiftDistance=1;
+				shiftDistance=2;
 			}
 			else
 			{
-				shiftDistance++;
-				if(indexToShift==(1 + index))
-				{
-					throw new ConcurrentModificationException();
-				}
+				shiftDistance+=2;
+				
+				//if(indexToShift==(2 + index))
+				//{
+				//	throw new ConcurrentModificationException();
+				//}
 			}
 		}
-		UnsafeConstants.U.putInt(tab,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_KEY_OFFSET)) + (((long)(indexToRemove)) << (UnsafeConstants.LONG_SCALE_SHIFT))),free);
+		
+		tab[indexToRemove]=free;
+		tab[indexToRemove+1]=0;
+		
 		postRemoveHook(indexToRemove);
 		
 		return newValue;
@@ -392,14 +401,13 @@ public class IntIntMap extends BaseHash
 		int free;
 		if(key!=(free=_freeValue))
 		{
-			long[] tab=_table;
+			int[] tab=_table;
 			int capacityMask;
 			int index;
 			int cur;
-			long entry;
-			if((cur=((int)(entry=tab[(index=hashInt(key) & (capacityMask=(tab.length) - 1))])))==key)
+			if((cur=((tab[(index=hashInt(key) & (capacityMask=(tab.length) - 2))])))==key)
 			{
-				return ((int)(entry >>> 32));
+				return tab[index+1];
 			}
 			else
 			{
@@ -411,9 +419,9 @@ public class IntIntMap extends BaseHash
 				{
 					while(true)
 					{
-						if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==key)
+						if((cur=((tab[(index=(index - 2) & capacityMask)])))==key)
 						{
-							return ((int)(entry >>> 32));
+							return tab[index+1];
 						}
 						else if(cur==free)
 						{
@@ -437,14 +445,13 @@ public class IntIntMap extends BaseHash
 		int free;
 		if(key!=(free=_freeValue))
 		{
-			long[] tab=_table;
+			int[] tab=_table;
 			int capacityMask;
 			int index;
 			int cur;
-			long entry;
-			if((cur=((int)(entry=tab[(index=hashInt(key) & (capacityMask=(tab.length) - 1))])))==key)
+			if((cur=((tab[(index=hashInt(key) & (capacityMask=(tab.length) - 2))])))==key)
 			{
-				return ((int)(entry >>> 32));
+				return tab[index+1];
 			}
 			else
 			{
@@ -456,9 +463,9 @@ public class IntIntMap extends BaseHash
 				{
 					while(true)
 					{
-						if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==key)
+						if((cur=((tab[(index=(index - 2) & capacityMask)])))==key)
 						{
-							return ((int)(entry >>> 32));
+							return tab[index+1];
 						}
 						else if(cur==free)
 						{
@@ -483,13 +490,12 @@ public class IntIntMap extends BaseHash
 		int free;
 		if(key!=(free=_freeValue))
 		{
-			long[] tab=_table;
-			int capacityMask=(tab.length) - 1;
+			int[] tab=_table;
+			int capacityMask=(tab.length) - 2;
 			int index;
 			int cur;
-			long entry;
-			keyPresent:
-			if((cur=((int)(entry=tab[(index=hashInt(key) & capacityMask)])))!=key)
+			
+			if((cur=((tab[(index=hashInt(key) & capacityMask)])))!=key)
 			{
 				if(cur==free)
 				{
@@ -499,9 +505,9 @@ public class IntIntMap extends BaseHash
 				{
 					while(true)
 					{
-						if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==key)
+						if((cur=((tab[(index=(index - 2) & capacityMask)])))==key)
 						{
-							break keyPresent;
+							break;
 						}
 						else if(cur==free)
 						{
@@ -510,36 +516,41 @@ public class IntIntMap extends BaseHash
 					}
 				}
 			}
-			int val=((int)(entry >>> 32));
+			
+			int val=tab[index+1];
 			int indexToRemove=index;
 			int indexToShift=indexToRemove;
-			int shiftDistance=1;
+			int shiftDistance=2;
 			while(true)
 			{
-				indexToShift=(indexToShift - 1) & capacityMask;
+				indexToShift=(indexToShift - 2) & capacityMask;
 				int keyToShift;
-				if((keyToShift=((int)(entry=tab[indexToShift])))==free)
+				if((keyToShift=((tab[indexToShift])))==free)
 				{
 					break;
 				}
+				
 				if(((hashInt(keyToShift) - indexToShift) & capacityMask) >= shiftDistance)
 				{
-					tab[indexToRemove]=entry;
+					tab[indexToRemove]=keyToShift;
+					tab[indexToRemove+1]=tab[indexToShift+1];
 					indexToRemove=indexToShift;
-					shiftDistance=1;
+					shiftDistance=2;
 				}
 				else
 				{
-					shiftDistance++;
-					if(indexToShift==(1 + index))
-					{
-						throw new ConcurrentModificationException();
-					}
+					shiftDistance+=2;
+					
+					//if(indexToShift==(2 + index))
+					//{
+					//	throw new ConcurrentModificationException();
+					//}
 				}
 			}
-			UnsafeConstants.U.putInt(tab,(((UnsafeConstants.LONG_BASE) + (UnsafeConstants.INT_KEY_OFFSET)) + (((long)(indexToRemove)) << (UnsafeConstants.LONG_SCALE_SHIFT))),free);
-			postRemoveHook(indexToRemove);
 			
+			tab[indexToRemove]=free;
+			tab[indexToRemove+1]=0;
+			postRemoveHook(indexToRemove);
 			return val;
 		}
 		else
@@ -555,7 +566,15 @@ public class IntIntMap extends BaseHash
 			return;
 		
 		justClearSize();
-		IntArrays.fillKeys(_table,_freeValue);
+		
+		int free=_freeValue;
+		int[] tab=_table;
+		
+		for(int i=(tab.length) - 2;i >= 0;i-=2)
+		{
+			tab[i]=free;
+			tab[i+1]=0;
+		}
 	}
 	
 	public IntList getSortedKeyList()
@@ -566,12 +585,12 @@ public class IntIntMap extends BaseHash
 			return re;
 		
 		int free=_freeValue;
-		long[] tab=_table;
+		int[] tab=_table;
 		int key;
 		
-		for(int i=(tab.length) - 1;i >= 0;--i)
+		for(int i=(tab.length) - 2;i >= 0;i-=2)
 		{
-			if((key=((int)(tab[i])))!=free)
+			if((key=tab[i])!=free)
 			{
 				re.add(key);
 			}
@@ -581,112 +600,32 @@ public class IntIntMap extends BaseHash
 		return re;
 	}
 	
-	/** 扩容 */
-	public final void ensureCapacity(int capacity)
-	{
-		if(capacity>_maxSize)
-		{
-			int t=countCapacity(capacity);
-			
-			if(_table==null)
-			{
-				init(t);
-			}
-			else if(t>_table.length)
-			{
-				rehash(t);
-			}
-		}
-	}
-	
 	public int putIfAbsent(int key,int value)
 	{
-		checkInit();
+		int index=insert(key,value);
 		
-		int free;
-		if(key==(free=_freeValue))
+		if(index<0)
 		{
-			free=changeFree();
-		}
-		long[] tab=_table;
-		int capacityMask;
-		int index;
-		int cur;
-		long entry;
-		if((cur=((int)(entry=tab[(index=hashInt(key) & (capacityMask=(tab.length) - 1))])))==free)
-		{
-			tab[index]=(((long)(key)) & (PrimitiveConstants.INT_MASK)) | (((long)(value)) << 32);
-			postInsertHook(index);
 			return 0;
 		}
 		else
 		{
-			if(cur==key)
-			{
-				return ((int)(entry >>> 32));
-			}
-			else
-			{
-				while(true)
-				{
-					if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==free)
-					{
-						tab[index]=(((long)(key)) & (PrimitiveConstants.INT_MASK)) | (((long)(value)) << 32);
-						postInsertHook(index);
-						return 0;
-					}
-					else if(cur==key)
-					{
-						return ((int)(entry >>> 32));
-					}
-				}
-			}
+			return _table[index + 1];
 		}
 	}
 	
 	/** 与computeIfAbsent一致,都是没有就添加，有就返回 */
 	public int putIfAbsent2(int key,int value)
 	{
-		checkInit();
+		int index=insert(key,value);
 		
-		int free;
-		if(key==(free=_freeValue))
+		if(index<0)
 		{
-			free=changeFree();
-		}
-		long[] tab=_table;
-		int capacityMask;
-		int index;
-		int cur;
-		long entry;
-		if((cur=((int)(entry=tab[(index=hashInt(key) & (capacityMask=(tab.length) - 1))])))==free)
-		{
-			tab[index]=(((long)(key)) & (PrimitiveConstants.INT_MASK)) | (((long)(value)) << 32);
-			postInsertHook(index);
 			return value;
 		}
 		else
 		{
-			if(cur==key)
-			{
-				return ((int)(entry >>> 32));
-			}
-			else
-			{
-				while(true)
-				{
-					if((cur=((int)(entry=tab[(index=(index - 1) & capacityMask)])))==free)
-					{
-						tab[index]=(((long)(key)) & (PrimitiveConstants.INT_MASK)) | (((long)(value)) << 32);
-						postInsertHook(index);
-						return value;
-					}
-					else if(cur==key)
-					{
-						return ((int)(entry >>> 32));
-					}
-				}
-			}
+			return _table[index + 1];
 		}
 	}
 	
@@ -713,15 +652,14 @@ public class IntIntMap extends BaseHash
 		
 		int version=_version;
 		int free=_freeValue;
-		long[] tab=_table;
-		long entry;
+		int[] tab=_table;
 		int key;
 		
-		for(int i=(tab.length) - 1;i >= 0;--i)
+		for(int i=(tab.length) - 2;i >= 0;i-=2)
 		{
-			if((key=((int)(entry=tab[i])))!=free)
+			if((key=((tab[i])))!=free)
 			{
-				consumer.accept(key,((int)(entry >>> 32)));
+				consumer.accept(key,tab[i+1]);
 			}
 		}
 		
@@ -740,33 +678,32 @@ public class IntIntMap extends BaseHash
 		}
 		
 		int free=_freeValue;
-		long[] tab=_table;
-		long entry;
+		int[] tab=_table;
 		int key;
 		int safeIndex=getLastFreeIndex();
 		
-		for(int i=safeIndex - 1;i >= 0;--i)
+		for(int i=safeIndex - 2;i >= 0;i-=2)
 		{
-			if((key=((int)(entry=tab[i])))!=free)
+			if((key=((tab[i])))!=free)
 			{
-				consumer.accept(key,((int)(entry >>> 32)));
+				consumer.accept(key,tab[i+1]);
 				
-				if(key!=(int)tab[i])
+				if(key!=tab[i])
 				{
-					++i;
+					i+=2;
 				}
 			}
 		}
 		
-		for(int i=tab.length - 1;i > safeIndex;--i)
+		for(int i=tab.length - 2;i > safeIndex;i-=2)
 		{
-			if((key=((int)(entry=tab[i])))!=free)
+			if((key=((tab[i])))!=free)
 			{
-				consumer.accept(key,((int)(entry >>> 32)));
+				consumer.accept(key,tab[i+1]);
 				
-				if(key!=(int)tab[i])
+				if(key!=tab[i])
 				{
-					++i;
+					i+=2;
 				}
 			}
 		}
@@ -782,13 +719,12 @@ public class IntIntMap extends BaseHash
 		
 		int version=_version;
 		int free=_freeValue;
-		long[] tab=_table;
-		long entry;
+		int[] tab=_table;
 		for(int i=(tab.length) - 1;i >= 0;--i)
 		{
-			if(((int)(entry=tab[i]))!=free)
+			if(((tab[i]))!=free)
 			{
-				consumer.accept((int)(entry >>> 32));
+				consumer.accept(tab[i+1]);
 			}
 		}
 		
@@ -796,6 +732,32 @@ public class IntIntMap extends BaseHash
 		{
 			Ctrl.throwError("ForeachModificationException");
 		}
+	}
+	
+	/** 转化为原生集合 */
+	public HashMap<Integer,Integer> toNatureMap()
+	{
+		HashMap<Integer,Integer> re=new HashMap<>(size());
+		
+		int free=_freeValue;
+		int[] tab=_table;
+		int key;
+		
+		for(int i=(tab.length) - 2;i >= 0;i-=2)
+		{
+			if((key=((tab[i])))!=free)
+			{
+				re.put(key,tab[i+1]);
+			}
+		}
+		
+		return re;
+	}
+	
+	public void addAll(Map<Integer,Integer> map)
+	{
+		ensureCapacity(map.size());
+		map.forEach(this::put);
 	}
 	
 	public EntrySet entrySet()
@@ -824,7 +786,7 @@ public class IntIntMap extends BaseHash
 	private class EntryIterator extends BaseIterator implements Iterator<Entry>
 	{
 		private int _tFv;
-		private long[] _tTable;
+		private int[] _tTable;
 		private Entry _entry=new Entry();
 		
 		public EntryIterator()
@@ -836,22 +798,21 @@ public class IntIntMap extends BaseHash
 		@Override
 		public boolean hasNext()
 		{
-			if(_entry.key!=_tFv && _entry.key!=((int)_tTable[_index]))
+			if(_entry.key!=_tFv && _entry.key!=(_tTable[_index]))
 			{
-				++_index;
+				_index+=2;
 			}
 			
 			int key;
-			long entry;
 			
 			if(_index<=_tSafeIndex)
 			{
 				while(--_index >= 0)
 				{
-					if((key=(int)(entry=_tTable[_index]))!=_tFv)
+					if((key=(_tTable[_index]))!=_tFv)
 					{
 						_entry.key=key;
-						_entry.value=(int)(entry>>>32);
+						_entry.value=_tTable[_index+1];
 						return true;
 					}
 				}
@@ -864,10 +825,10 @@ public class IntIntMap extends BaseHash
 			{
 				while(--_index > _tSafeIndex)
 				{
-					if((key=(int)(entry=_tTable[_index]))!=_tFv)
+					if((key=(_tTable[_index]))!=_tFv)
 					{
 						_entry.key=key;
-						_entry.value=(int)(entry>>>32);
+						_entry.value=_tTable[_index+1];
 						return true;
 					}
 				}

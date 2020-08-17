@@ -13,7 +13,7 @@ public class ShineRequestType
 	/// <summary>
 	/// 计数
 	/// </summary>
-	public const int count=47;
+	public const int count=48;
 	
 	/// <summary>
 	/// ping包第一步
@@ -49,5 +49,10 @@ public class ShineRequestType
 	/// socket重连失败消息
 	/// </summary>
 	public const int SocketReconnectFailed=46;
+	
+	/// <summary>
+	/// 连接主动关闭(阻止重连)
+	/// </summary>
+	public const int SocketClose=47;
 	
 }

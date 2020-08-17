@@ -311,32 +311,53 @@ public class BaseLogicControl
 	{
 		switch(formulaType)
 		{
-			case AttributeFormulaType.Single:
+			case SkillVarFormulaType.Single:
 			{
 				return getOneSVar(args,0,self,target,selfValues,start);
 			}
-			case AttributeFormulaType.Normal2:
+			case SkillVarFormulaType.Normal2:
 			{
 				return (int)(getOneSVar(args,0,self,target,selfValues,start)*
 						getOneSVarAddRatio(args,1,self,target,selfValues,start));
 			}
-			case AttributeFormulaType.Normal3:
+			case SkillVarFormulaType.Normal3:
 			{
 				return (int)(getOneSVar(args,0,self,target,selfValues,start)*
 						getOneSVarAddRatio(args,1,self,target,selfValues,start)+
 						getOneSVar(args,2,self,target,selfValues,start));
 			}
-			case AttributeFormulaType.Normal4:
+			case SkillVarFormulaType.Normal4:
 			{
 				return (int)((getOneSVar(args,0,self,target,selfValues,start)*
 						getOneSVarAddRatio(args,1,self,target,selfValues,start)+
 						getOneSVar(args,2,self,target,selfValues,start))*
 						getOneSVarAddRatio(args,3,self,target,selfValues,start));
 			}
-			case AttributeFormulaType.TwoPlus:
+			case SkillVarFormulaType.TwoPlus:
 			{
 				return getOneSVar(args,0,self,target,selfValues,start)+
 						getOneSVar(args,1,self,target,selfValues,start);
+			}
+			case SkillVarFormulaType.ThreePlus:
+			{
+				return getOneSVar(args,0,self,target,selfValues,start)+
+				       getOneSVar(args,1,self,target,selfValues,start)+
+				       getOneSVar(args,2,self,target,selfValues,start);
+			}
+			case SkillVarFormulaType.FourPlus:
+			{
+				return getOneSVar(args,0,self,target,selfValues,start)+
+				       getOneSVar(args,1,self,target,selfValues,start)+
+				       getOneSVar(args,2,self,target,selfValues,start)+
+				       getOneSVar(args,3,self,target,selfValues,start);
+			}
+			case SkillVarFormulaType.FivePlus:
+			{
+				return getOneSVar(args,0,self,target,selfValues,start)+
+				       getOneSVar(args,1,self,target,selfValues,start)+
+				       getOneSVar(args,2,self,target,selfValues,start)+
+				       getOneSVar(args,3,self,target,selfValues,start)+
+				       getOneSVar(args,4,self,target,selfValues,start);
 			}
 		}
 
@@ -362,7 +383,7 @@ public class BaseLogicControl
 
 		bool isTarget;
 
-		if((isTarget=BaseC.constlist.skillVarSource_isTarget(arr[index])) || selfValues==null)
+		if((isTarget=BaseC.constlist.skillVarSource_isTarget(arr[0])) || selfValues==null)
 		{
 			if(isTarget)
 			{

@@ -44,6 +44,10 @@ public class GameApp:App
 		GameC.scene=factory.createSceneControl();
 		GameC.player=factory.createPlayer();
 		GameC.server=factory.createGameServer();
+		if(CommonSetting.useSceneServer)
+		{
+			GameC.sceneServer=factory.createSceneServer();
+		}
 		GameC.keyboard=factory.createKeyboardControl();
 		GameC.playerSave=factory.createPlayerSaveControl();
 
@@ -82,10 +86,16 @@ public class GameApp:App
 		{
 			//server
 			GameC.server.init();
+
+			if(CommonSetting.useSceneServer)
+				GameC.sceneServer.init();
 		}
 		else
 		{
 			GameC.server.initMessage();
+
+			if(CommonSetting.useSceneServer)
+				GameC.sceneServer.initMessage();
 		}
 
 		//日志初始化

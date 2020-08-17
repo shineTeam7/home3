@@ -176,7 +176,7 @@ public class SingleBagPart:BagPart
 		return _mainBag.addItems(list,num,way);
 	}
 	
-	protected bool toAddNewItemToIndex(int index,ItemData data,int way)
+	protected override bool toAddNewItemToIndex(int index,ItemData data,int way)
 	{
 		return _mainBag.addNewItemToIndex(index,data,way);
 	}

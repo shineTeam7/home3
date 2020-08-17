@@ -1,10 +1,24 @@
 ﻿#include "GameApp.h"
 #include "../global/GameC.h"
+#include "global/ShineToolSetup.h"
 
 void GameApp::start()
 {
-	preInit();
+	initSetting();
 
+	preInit();
+}
+
+
+void GameApp::startE()
+{
+	initSetting();
+
+	ShineToolSetup::init();
+}
+
+void GameApp::initSetting()
+{
 
 }
 

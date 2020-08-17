@@ -47,12 +47,6 @@
     <ClInclude Include="src\navmesh\NavMesh.h">
       <Filter>src\navmesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\navmesh\NavMeshHit.h">
-      <Filter>src\navmesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\navmesh\NavMeshPath.h">
-      <Filter>src\navmesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\scene\Scene.h">
       <Filter>src\scene</Filter>
     </ClInclude>
@@ -74,12 +68,6 @@
       <Filter>src\global</Filter>
     </ClCompile>
     <ClCompile Include="src\navmesh\NavMesh.cpp">
-      <Filter>src\navmesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\navmesh\NavMeshHit.cpp">
-      <Filter>src\navmesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\navmesh\NavMeshPath.cpp">
       <Filter>src\navmesh</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\Scene.cpp">
